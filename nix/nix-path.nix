@@ -2,7 +2,7 @@
 
 let
 
-  inherit (import ../channels) __nixPath nixPath;
+  inherit (import ./channels.nix) __nixPath nixPath;
   inherit (lib) mkForce;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
 

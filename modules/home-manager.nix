@@ -2,7 +2,7 @@
 
 let
   inherit (lib) optional flatten;
-  inherit (import ../channels) __nixPath;
+  inherit (import ../nix/channels.nix) __nixPath;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
 in {
   imports = flatten [

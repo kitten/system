@@ -1,7 +1,7 @@
 { options, pkgs, ... }:
 
 let
-  inherit (import ../channels) __nixPath;
+  inherit (import ../nix/channels.nix) __nixPath;
 in {
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true;
