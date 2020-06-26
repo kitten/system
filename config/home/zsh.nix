@@ -10,6 +10,7 @@ in {
     enableCompletion = !sysconfig.programs.zsh.enable;
 
     shellAliases = {
+      nix-encrypt = "openssl enc -e -aes-256-cbc -pbkdf2 -salt -base64 -kfile ${/usr/local/secret}";
       ls = "ls --color=auto";
       ll = "ls -l";
     };
