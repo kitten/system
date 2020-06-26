@@ -34,7 +34,7 @@ in {
 
     settings = {
       add_newline = false;
-      character.symbol = "➜";
+      character.symbol = "→";
       aws.disabled = true;
       cmd_duration.disabled = true;
     };

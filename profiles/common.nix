@@ -9,12 +9,14 @@ in {
   ];
 
   imports = flatten [
-    ./users.nix
     ../config/shell.nix
     ../config/nvim/default.nix
     ../config/nodejs.nix
     ../config/gpg.nix
     ../config/fonts.nix
+    ../config/kitty.nix
+
+    ./users.nix
 
     (optional isDarwin ./darwin.nix)
   ];
