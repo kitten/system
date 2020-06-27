@@ -25,8 +25,8 @@ let
   nixpkgs_unstable_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "801b645b2a327d4a7322226e854c2b1476000d6a";
-    sha256 = "0mbfykklwj298m24l19i1m7wpfakqd1pg1z73vwml5jqp13xx0rk";
+    rev = "f253fc13eccf42e689e6ec4e5dd846f3e1d97430";
+    sha256 = "0zklqlvmwm3l2an78bmsrnngxz0hq6ql4sgkmjfa1bnvgc9f449c";
   };
 in
 
