@@ -1,11 +1,29 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 
+let
+  yabai = pkgs.stdenv.mkDerivation rec {
+    pname = "yabai";
+    version = "3.2.1";
+    dontBuild = true;
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
+      sha256 = "1y3macjkz9qk3vxkw4d6ldgszb76jgg1p46prnj9zz035aia705d";
+    };
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp ./bin/yabai $out/bin/yabai
+    '';
+  };
+in
 {
-  system.defaults.spaces.spans-displays = true;
+  system.defaults.spaces.spans-displays = false;
+  security.accessibilityPrograms = [ "${yabai}/bin/yabai" ];
 
   services.yabai = {
     enable = true;
-    package = pkgs-unstable.yabai;
+    package = yabai;
     enableScriptingAddition = true;
 
     config = {

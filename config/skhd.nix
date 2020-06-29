@@ -1,6 +1,8 @@
 { pkgs-unstable, ... }:
 
 {
+  security.accessibilityPrograms = [ "${pkgs-unstable.skhd}/bin/skhd" ];
+
   services.skhd = {
     enable = true;
     package = pkgs-unstable.skhd;
@@ -71,7 +73,6 @@
       screen < s       : yabai -m window --toggle sticky
       screen < cmd - f : yabai -m window --toggle native-fullscreen
 
-      # toggle sticky, topmost and resize to picture-in-picture size
       screen < p : yabai -m window --toggle sticky;\
                    yabai -m window --toggle topmost;\
                    yabai -m window --grid 5:5:4:0:1:1
