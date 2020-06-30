@@ -6,6 +6,7 @@ let
 in {
   imports = flatten [
     ./home-manager.nix
+    ./dnscrypt.nix
     (optional isDarwin ./darwin.nix)
   ];
 }
