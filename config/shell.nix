@@ -3,12 +3,17 @@
 let
   inherit (lib) mkMerge optionalAttrs;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
+  inherit (import ../nix/secrets.nix) readSecretFileContents;
 in
 
 mkMerge [
   {
     environment.systemPackages = [ pkgs.zsh ];
     environment.pathsToLink = [ "/share/zsh" ];
+
+    environment.variables = {
+      GITHUB_TOKEN = readSecretFileContents ../assets/github-token;
+    };
 
     programs.zsh = {
       enable = true;
