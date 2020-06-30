@@ -67,6 +67,8 @@ in {
   environment.variables = { EDITOR = "vim"; };
 
   environment.systemPackages = with pkgs; [
+    fzf
+    silver-searcher
     (neovim.override {
       viAlias = true;
       vimAlias = true;

@@ -8,7 +8,13 @@ in
 
 mkMerge [
   {
-    environment.systemPackages = [ pkgs.zsh ];
+    environment.systemPackages = with pkgs; [
+      zsh
+      ripgrep
+      curl
+      sd
+    ];
+
     environment.pathsToLink = [ "/share/zsh" ];
 
     environment.variables = {
