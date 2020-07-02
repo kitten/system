@@ -17,6 +17,7 @@ in {
     ../config/fonts.nix
     ../config/kitty.nix
 
+    ./tools.nix
     ./users.nix
 
     (optional isDarwin ./darwin.nix)

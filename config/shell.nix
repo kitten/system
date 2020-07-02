@@ -10,9 +10,6 @@ mkMerge [
   {
     environment.systemPackages = with pkgs; [
       zsh
-      ripgrep
-      curl
-      sd
     ];
 
     environment.pathsToLink = [ "/share/zsh" ];
