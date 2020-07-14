@@ -6,6 +6,9 @@ set hidden
 " Encoding
 set encoding=utf8
 
+" Mouse stuff
+set mouse+=a
+
 " Indentation
 filetype plugin indent off
 set autoindent

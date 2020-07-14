@@ -1,3 +1,6 @@
+" Filetype for prisma
+au BufRead,BufNewFile *.prisma setfiletype graphql
+
 " coc.nvim
 let g:coc_global_extensions = [ 'coc-tsserver', 'coc-eslint', 'coc-json' ]
 
