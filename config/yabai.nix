@@ -29,7 +29,7 @@ in
     config = {
       status_bar = "off";
       mouse_follows_focus = "on";
-      focus_follows_mouse = "autofocus";
+      focus_follows_mouse = "off";
 
       window_placement = "second_child";
       window_topmost = "on";
