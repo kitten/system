@@ -4,15 +4,14 @@ let
   inherit (import ../nix/channels.nix) __nixPath;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
 
-  cfg = config.services.dnscrypt;
+  cfg = config.services.dnscrypt2;
 in
 
 {
-  imports = flatten [
-    (optional isDarwin <darwin/modules/launchd>)
-  ];
+  options.launchd = {
+  };
 
-  options.services.dnscrypt = {
+  options.services.dnscrypt2 = {
     enable = mkEnableOption "dnscrypt-proxy2";
 
     package = mkOption {

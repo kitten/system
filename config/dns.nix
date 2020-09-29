@@ -1,5 +1,9 @@
 {
-  services.dnscrypt = {
+  imports = [
+    ../modules/dnscrypt.nix
+  ];
+
+  services.dnscrypt2 = {
     enable = true;
 
     settings = {

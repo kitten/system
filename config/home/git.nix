@@ -30,14 +30,6 @@
       glog = "log --oneline --decorate --all --graph";
     };
 
-    delta = {
-      enable = true;
-      options = [
-        "--tabs=2"
-        "--theme=base16"
-      ];
-    };
-
     extraConfig = {
       status.showUntrackedFiles = "all";
       push.default = "simple";

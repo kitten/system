@@ -4,15 +4,15 @@ let
   darwin_src = fetchFromGitHub {
     owner = "LnL7";
     repo = "nix-darwin";
-    rev = "47fe6db9c9cd22c4ba57df3281f98f454880bea7";
-    sha256 = "198lxy1q7z6cmlyxd0rigrabjab4i49w2dk3xqm3bs4y0s0qimwy";
+    rev = "828879f93084fdd5b12925acc016497d2410bdc4";
+    sha256 = "137mdg921lw0mmir9ycx5v1166hmdn5z20brdcbdvyc1jd7m09sx";
   };
 
   home-manager_src = fetchFromGitHub {
     owner = "rycee";
     repo = "home-manager";
-    rev = "1f174f668109765183f96b43d56ee24ab02c1c05";
-    sha256 = "06ba3nxkzva9q6dxzymyy62x75kf1qf7y8x711jwjravgda14bsq";
+    rev = "e6f96b6aa3e99495f9f6f3488ecf78dd316e5bec";
+    sha256 = "1xvxqw5cldlhcl7xsbw11n2s3x1h2vmbm1b9b69a641rzj3srg11";
   };
 
   nixpkgs_src = fetchFromGitHub {
