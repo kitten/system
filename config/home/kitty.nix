@@ -6,7 +6,7 @@ in {
 
   xdg.configFile."kitty/kitty.conf".text = ''
     # See ~/nix-system/config/kitty.nix
-    font_family Dank Mono Neue
+    font_family Dank Mono
     background #14161a
     color0 #191b1f
     color1 #e54b4b

@@ -18,15 +18,15 @@ let
   nixpkgs_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs-channels";
-    rev = "13c15f26d44cf7f54197891a6f0c78ce8149b037";
-    sha256 = "0f2zc0wia9nx6i1mn1s7wd7xx7iqxb8l6mpx7nd0iazkkafwcgls";
+    rev = "360e2af4f876e2580de12d477a6167ed756ab65e";
+    sha256 = "1i3i9cpn6m3r07pgw4w3xinbqmxkm7pmnqjlz96x424ngbc21sg2";
   };
 
   nixpkgs_unstable_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "f253fc13eccf42e689e6ec4e5dd846f3e1d97430";
-    sha256 = "0zklqlvmwm3l2an78bmsrnngxz0hq6ql4sgkmjfa1bnvgc9f449c";
+    rev = "a7f375d3354af159eab45896e012fb9e856b93cb";
+    sha256 = "1kskrplv144vcnig6mpzwd3kpac3sy3ss6023h0i65lc1qp4hgrl";
   };
 in
 

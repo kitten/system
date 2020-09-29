@@ -16,20 +16,9 @@ let
       target = "share/fonts/opentype/DankMono-Italic.otf";
       source = readSecretFile ../assets/DankMono-Italic.otf;
     }
-  ];
-
-  dank-mono-neue = copyFiles "font-dank-mono-neue" [
     {
-      target = "share/fonts/opentype/DankMonoNeue-Regular.otf";
-      source = readSecretFile ../assets/DankMonoNeue-Regular.otf;
-    }
-    {
-      target = "share/fonts/opentype/DankMonoNeue-Italic.otf";
-      source = readSecretFile ../assets/DankMonoNeue-Italic.otf;
-    }
-    {
-      target = "share/fonts/opentype/DankMonoNeue-Bold.otf";
-      source = readSecretFile ../assets/DankMonoNeue-Bold.otf;
+      target = "share/fonts/opentype/DankMono-Bold.otf";
+      source = readSecretFile ../assets/DankMono-Bold.otf;
     }
   ];
 
@@ -52,9 +41,8 @@ in
 mkMerge [
   {
     fonts.fonts = with pkgs; flatten [
-      dank-mono
-      dank-mono-neue
       monolisa
+      dank-mono
       (optional isLinux emojione)
     ];
   }
