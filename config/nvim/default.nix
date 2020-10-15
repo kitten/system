@@ -63,6 +63,18 @@ let
     };
     meta.homepage = "https://github.com/Valloric/ListToggle";
   };
+
+  plugins.coc-nvim = buildVimPluginFrom2Nix {
+    pname = "coc-nvim";
+    version = "2020-10-15";
+    src = fetchFromGitHub {
+      owner = "neoclide";
+      repo = "coc.nvim";
+      rev = "e539054f57234b485a3fc418857b8741426ddb14";
+      sha256 = "09a6vlcwkivva7qbdrpbxnbrjiz8yhsnxjjkadzbxccqdyqkrafi";
+    };
+    meta.homepage = "https://github.com/neoclide/coc.nvim";
+  };
 in {
   environment.variables = { EDITOR = "vim"; };
 
