@@ -22,6 +22,7 @@ in {
           ${plugins}
           ${keymap}
         '';
+
         vam.knownPlugins = pkgs.vimPlugins;
         vam.pluginDictionaries = [
           { name = "palenight-vim"; }
