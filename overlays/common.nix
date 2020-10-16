@@ -1,7 +1,7 @@
 self: super:
 
 let
-  inherit (import ../../nix/channels.nix) __nixPath;
+  inherit (import ../nix/channels.nix) __nixPath;
   inherit (super) callPackage fetchFromGitHub openssl python3;
 
   unstable = import <nixpkgs-unstable> {};
@@ -27,6 +27,15 @@ rec {
       export HOME=$out/home
     '' + old.buildCommand);
   });
+
+  nodePackages = (import ./nodePackages/node-packages.nix) {
+    inherit (super) fetchurl fetchgit;
+    nodeEnv = import ./nodePackages/node-env.nix {
+      inherit (super) stdenv python2 utillinux runCommand writeTextFile;
+      inherit nodejs;
+      libtool = null;
+    };
+  };
 
   vimPlugins = super.vimPlugins // (import ./vim-plugins.nix) {
     inherit (super) fetchFromGitHub;

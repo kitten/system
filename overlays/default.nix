@@ -1,3 +1,3 @@
 [
-  (import ./common)
+  (import ./common.nix)
 ]
