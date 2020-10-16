@@ -39,6 +39,7 @@ rec {
     { prefix = "nixos"; path = nixpkgs_src; }
     { prefix = "nixos-config"; path = ../configuration.nix; }
     { prefix = "nixpkgs"; path = nixpkgs_src; }
+    { prefix = "nixpkgs-overlays"; path = ../overlays/default.nix; }
     { prefix = "nixpkgs-unstable"; path = nixpkgs_unstable_src; }
   ];
 
