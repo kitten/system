@@ -64,15 +64,39 @@
     meta.homepage = "https://github.com/Valloric/ListToggle";
   };
 
-  coc-nvim = buildVimPluginFrom2Nix {
-    pname = "coc-nvim";
-    version = "2020-10-15";
+  deoplete-nvim = buildVimPluginFrom2Nix {
+    pname = "deoplete-nvim";
+    version = "2020-10-16";
     src = fetchFromGitHub {
-      owner = "neoclide";
-      repo = "coc.nvim";
-      rev = "e539054f57234b485a3fc418857b8741426ddb14";
-      sha256 = "09a6vlcwkivva7qbdrpbxnbrjiz8yhsnxjjkadzbxccqdyqkrafi";
+      owner = "shougo";
+      repo = "deoplete.nvim";
+      rev = "8d208ee0c4e9697b8482f35494e557cd5955e6f5";
+      sha256 = "1ywah5ql78jf9n3hlw1ksh2jmh6f7j4blxgr55sazp68wa88k2y8";
     };
-    meta.homepage = "https://github.com/neoclide/coc.nvim";
+    meta.homepage = "https://github.com/Shougo/deoplete.nvim";
+  };
+
+  deoplete-lsp = buildVimPluginFrom2Nix {
+    pname = "deoplete-lsp";
+    version = "2020-09-18";
+    src = fetchFromGitHub {
+      owner = "shougo";
+      repo = "deoplete-lsp";
+      rev = "17cd3fae3044eb8148bc22167257d4ae13165eb1";
+      sha256 = "1xag51j71ifjn64xyaz7whml796pdl8vsw0ad22wndwzb95kyxdm";
+    };
+    meta.homepage = "https://github.com/Shougo/deoplete-lsp";
+  };
+
+  nvim-lspconfig = buildVimPluginFrom2Nix {
+    pname = "nvim-lspconfig";
+    version = "2020-09-07";
+    src = fetchFromGitHub {
+      owner = "neovim";
+      repo = "nvim-lspconfig";
+      rev = "60133c47e0fd82556d7ca092546ebfa8d047466e";
+      sha256 = "15ysbbvxlgy1qx8rjv2i9pgjshldcs3m1ff0my2y5mnr3cpqb3s6";
+    };
+    meta.homepage = "https://github.com/neovim/nvim-lspconfig";
   };
 }

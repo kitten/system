@@ -11,8 +11,9 @@ rec {
   nodejs = unstable.nodejs-14_x;
   yarn = (super.yarn.override { inherit nodejs; });
 
-  neovim = super.wrapNeovim(
+  neovim = (super.wrapNeovim(
     super.neovim-unwrapped.overrideAttrs(old: {
+      version = "0.5.0-nightly";
       src = super.fetchFromGitHub {
         owner = "neovim";
         repo = "neovim";
@@ -20,7 +21,12 @@ rec {
         sha256 = "0ki16a12ga88xby9d70raqr7g5m3bf6ihl0dl1jp08wwp2wwxh3l";
       };
     })
-  ) {};
+  ) {}).overrideAttrs(old: {
+    buildCommand = (''
+      mkdir -p $out/home
+      export HOME=$out/home
+    '' + old.buildCommand);
+  });
 
   vimPlugins = super.vimPlugins // (import ./vim-plugins.nix) {
     inherit (super) fetchFromGitHub;

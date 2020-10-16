@@ -1,10 +1,20 @@
-{ pkgs, fetchgit, ... }:
+{ pkgs, pkgs-unstable, fetchgit, ... }:
 
 let
   basic = builtins.readFile ./basic.vim;
   theme = builtins.readFile ./theme.vim;
   plugins = builtins.readFile ./plugins.vim;
   keymap = builtins.readFile ./keymap.vim;
+
+  lsp = ("lua <<EOF\n" + ''
+    require'nvim_lsp'.tsserver.setup{
+      cmd = { "${pkgs-unstable.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
+    }
+
+    require'nvim_lsp'.vimls.setup{
+      cmd = { "${pkgs-unstable.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
+    }
+  '' + "\nEOF");
 in {
   environment.variables = { EDITOR = "vim"; };
 
@@ -19,6 +29,7 @@ in {
         customRC = ''
           ${basic}
           ${theme}
+          ${lsp}
           ${plugins}
           ${keymap}
         '';
@@ -42,7 +53,9 @@ in {
           { name = "vim-polyglot"; }
           { name = "vim-easymotion"; }
           { name = "vim-surround"; }
-          { name = "coc-nvim"; }
+          { name = "nvim-lspconfig"; }
+          { name = "deoplete-nvim"; }
+          { name = "deoplete-lsp"; }
         ];
       };
     }

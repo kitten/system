@@ -1,8 +1,8 @@
 " Filetype for prisma
 au BufRead,BufNewFile *.prisma setfiletype graphql
 
-" coc.nvim
-let g:coc_global_extensions = [ 'coc-tsserver', 'coc-eslint', 'coc-json' ]
+" Deoplete
+let g:deoplete#enable_at_startup = 1
 
 " Polyglot
 let g:javascript_plugin_flow = 1
