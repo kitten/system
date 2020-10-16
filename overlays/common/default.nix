@@ -1,16 +1,16 @@
 self: super:
 
 let
+  inherit (import ../../nix/channels.nix) __nixPath;
+  inherit (super) callPackage fetchFromGitHub openssl python3;
 
-  inherit (import ../../channels) __nixPath;
-  inherit (super) callPackage fetchFromGitHub;
-  inherit (super.lib) replaceStrings;
-
-  mkPackage = args: pkg: callPackage pkg args;
-
+  unstable = import <nixpkgs-unstable> {};
 in
 
 rec {
+  nodejs = unstable.nodejs-14_x;
+  yarn = (super.yarn.override { inherit nodejs; });
+
   neovim = super.wrapNeovim(
     super.neovim-unwrapped.overrideAttrs(old: {
       src = super.fetchFromGitHub {
