@@ -59,6 +59,9 @@ set nowritebackup
 set nowb
 set noswapfile
 
+set shortmess+=I
+set shortmess+=c
+
 " Line numbers
 set number
 

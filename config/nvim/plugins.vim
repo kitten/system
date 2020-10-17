@@ -8,6 +8,23 @@ let g:completion_timer_cycle = 100
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
+" Configure the completion chains
+let g:completion_chain_complete_list = {
+  \'default' : {
+  \	 'default' : [
+  \		 {'complete_items' : ['lsp', 'buffer']},
+  \		 {'mode' : 'file'}
+  \	 ],
+  \	 'comment' : [],
+  \	 'string' : []
+  \},
+  \'json' : [{'complete_items': ['ts']}],
+  \'javascript' : [{'complete_items': ['lsp']}],
+  \'typescript' : [{'complete_items': ['lsp']}],
+  \'jsx' : [{'complete_items': ['lsp']}],
+  \'tsx' : [{'complete_items': ['lsp']}]
+\}
+
 " Diagnostic
 let g:diagnostic_enable_virtual_text = 1
 let g:diagnostic_virtual_text_prefix = '←'
