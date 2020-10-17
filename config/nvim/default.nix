@@ -59,6 +59,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     ripgrep
+    bat
     (neovim.override {
       viAlias = true;
       vimAlias = true;
