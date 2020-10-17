@@ -82,9 +82,6 @@ set foldmethod=indent
 set foldnestmax=9
 set foldlevelstart=3
 
-set shortmess+=I
-set shortmess+=c
-
 " Persist undo history
 if has('persistent_undo')
   if !isdirectory($HOME."/.cache/vim")

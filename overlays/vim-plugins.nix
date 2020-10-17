@@ -64,28 +64,52 @@
     meta.homepage = "https://github.com/Valloric/ListToggle";
   };
 
-  deoplete-nvim = buildVimPluginFrom2Nix {
-    pname = "deoplete-nvim";
-    version = "2020-10-16";
+  diagnostic-nvim = buildVimPluginFrom2Nix {
+    pname = "diagnostic-nvim";
+    version = "2020-10-01";
     src = fetchFromGitHub {
-      owner = "shougo";
-      repo = "deoplete.nvim";
-      rev = "8d208ee0c4e9697b8482f35494e557cd5955e6f5";
-      sha256 = "1ywah5ql78jf9n3hlw1ksh2jmh6f7j4blxgr55sazp68wa88k2y8";
+      owner = "nvim-lua";
+      repo = "diagnostic-nvim";
+      rev = "bef1c6140563cb6416081b2517ae9953cd4e05ab";
+      sha256 = "05f2hr3229zph3x9lhmabb9rzdf61r92f3ybj2gs40hfbak0c3pb";
     };
-    meta.homepage = "https://github.com/Shougo/deoplete.nvim";
+    meta.homepage = "https://github.com/nvim-lua/diagnostic-nvim";
   };
 
-  deoplete-lsp = buildVimPluginFrom2Nix {
-    pname = "deoplete-lsp";
-    version = "2020-09-18";
+  completion-nvim = buildVimPluginFrom2Nix {
+    pname = "completion-nvim";
+    version = "2020-10-15";
     src = fetchFromGitHub {
-      owner = "shougo";
-      repo = "deoplete-lsp";
-      rev = "17cd3fae3044eb8148bc22167257d4ae13165eb1";
-      sha256 = "1xag51j71ifjn64xyaz7whml796pdl8vsw0ad22wndwzb95kyxdm";
+      owner = "nvim-lua";
+      repo = "completion-nvim";
+      rev = "fb169917228b1df184996c98525e893a60fa235d";
+      sha256 = "1asspimdfkb1lskmzak5wb48w35hvmwccrky5sxd1832xzjqz7g8";
     };
-    meta.homepage = "https://github.com/Shougo/deoplete-lsp";
+    meta.homepage = "https://github.com/nvim-lua/completion-nvim";
+  };
+
+  completion-buffers = buildVimPluginFrom2Nix {
+    pname = "completion-buffers";
+    version = "2020-09-27";
+    src = fetchFromGitHub {
+      owner = "steelsojka";
+      repo = "completion-buffers";
+      rev = "441a58b77c04409e8ccb35fd4970598ae551462f";
+      sha256 = "14q5n7h5kaqf71cfd9mlhwb0xsihm6d3kizrxhlfnzxk6zkn8p0s";
+    };
+    meta.homepage = "https://github.com/steelsojka/completion-buffers";
+  };
+
+  lsp-status-nvim = buildVimPluginFrom2Nix {
+    pname = "lsp-status.nvim";
+    version = "2020-08-03";
+    src = fetchFromGitHub {
+      owner = "nvim-lua";
+      repo = "lsp-status.nvim";
+      rev = "e1a26944039040bf0f6e7716d19878ec1907f50a";
+      sha256 = "0lpq7fr4qlxllq86k8w7n3mvnsvqvrbid0395znc9vj8g2nkpa32";
+    };
+    meta.homepage = "https://github.com/nvim-lua/lsp-status.nvim";
   };
 
   nvim-lspconfig = buildVimPluginFrom2Nix {

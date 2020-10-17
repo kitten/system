@@ -7,11 +7,22 @@ let
   keymap = builtins.readFile ./keymap.vim;
 
   lsp = ("lua <<EOF\n" + ''
-    require'nvim_lsp'.tsserver.setup{
+    local diagnostic = require('diagnostic')
+    local completion = require('completion')
+    local nvim_lsp = require('nvim_lsp')
+
+    local on_attach = function(client, bufnr)
+      diagnostic.on_attach(client, bufnr)
+      completion.on_attach(client, bufnr)
+    end
+
+    nvim_lsp.tsserver.setup{
+      on_attach = on_attach,
       cmd = { "${pkgs-unstable.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
     }
 
-    require'nvim_lsp'.vimls.setup{
+    nvim_lsp.vimls.setup{
+      on_attach = on_attach,
       cmd = { "${pkgs-unstable.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
     }
   '' + "\nEOF");
@@ -54,8 +65,9 @@ in {
           { name = "vim-easymotion"; }
           { name = "vim-surround"; }
           { name = "nvim-lspconfig"; }
-          { name = "deoplete-nvim"; }
-          { name = "deoplete-lsp"; }
+          { name = "diagnostic-nvim"; }
+          { name = "completion-nvim"; }
+          { name = "completion-buffers"; }
         ];
       };
     }
