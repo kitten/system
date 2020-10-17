@@ -84,12 +84,12 @@ in {
           { name = "vim-zipper"; }
           { name = "goyo-vim"; }
           { name = "limelight-vim"; }
-          { name = "vim-dirvish"; }
           { name = "vim-fugitive"; }
           { name = "vim-polyglot"; }
           { name = "vim-easymotion"; }
           { name = "nvim-lspconfig"; }
           { name = "vim-golden-size"; }
+          { name = "defx-nvim"; }
           { name = "plenary-nvim"; }
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }

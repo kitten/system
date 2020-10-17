@@ -52,6 +52,18 @@
     meta.homepage = "https://github.com/dm1try/golden_size";
   };
 
+  defx-nvim = buildVimPluginFrom2Nix {
+    pname = "defx-nvim";
+    version = "2020-10-11";
+    src = fetchFromGitHub {
+      owner = "shougo";
+      repo = "defx.nvim";
+      rev = "3e89447030e1be35d477d4378b3632a328ea2db0";
+      sha256 = "157y778v2m3224d2777p1syczxw2vyd1sbjqaf589ff0sarqyh0j";
+    };
+    meta.homepage = "https://github.com/Shougo/defx.nvim";
+  };
+
   plenary-nvim = buildVimPluginFrom2Nix {
     pname = "plenary-nvim";
     version = "2020-10-16";

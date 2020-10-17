@@ -63,14 +63,15 @@ call ResetTheme()
 function! s:goyo_enter()
   silent !tmux set status off
   silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-  set listchars=
-  set scrolloff=999
+  lua vim.api.nvim_set_var("golden_size_off", 1)
+  set scrolloff=10
   Limelight
 endfunction
 
 function! s:goyo_leave()
   silent !tmux set status on
   silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  lua vim.api.nvim_set_var("golden_size_off", 0)
   set scrolloff=2
   Limelight!
   call ResetTheme()

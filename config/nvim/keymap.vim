@@ -53,13 +53,7 @@ nnoremap <leader>j <C-^>
 nnoremap <silent> <leader>k :bp <BAR> bd #<CR>
 
 " List buffers
-nnoremap <silent> <leader>b :Buffers<CR>
-
-" List buffer commits
-nnoremap <silent> <leader>c :BCommits<CR>
-
-" List git status files
-nnoremap <silent> <leader>c :GFiles?<CR>
+nnoremap <silent> <leader>b <cmd>lua require'telescope.builtin'.buffers()<CR>
 
 " Toggle zen mode
 nnoremap <silent> <leader>z :Goyo<CR>
@@ -106,6 +100,37 @@ nmap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 " Use K to show documentation in preview window
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
 
-autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+" Bind - to directory explorer
+nnoremap <silent> - :Defx `expand('%:p:h')` -search=`expand('%:p')`<CR>
+" Defx Mappings
+autocmd FileType defx call s:defx_settings()
+function! s:defx_settings() abort
+  nnoremap <silent><buffer><expr> <CR>
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> -
+  \ defx#do_action('cd', ['..'])
+  nnoremap <silent><buffer><expr> h
+  \ defx#do_action('cd', ['..'])
+  nnoremap <silent><buffer><expr> l
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> <CR>
+  \ defx#do_action('open')
+  nnoremap <silent><buffer><expr> K
+  \ defx#do_action('new_directory')
+  nnoremap <silent><buffer><expr> N
+  \ defx#do_action('new_file')
+  nnoremap <silent><buffer><expr> r
+  \ defx#do_action('rename')
+  nnoremap <silent><buffer><expr> !
+  \ defx#do_action('execute_command')
+  nnoremap <silent><buffer><expr> q
+  \ defx#do_action('quit')
+  nnoremap <silent><buffer><expr> <Space>
+  \ defx#do_action('toggle_select') . 'j'
+  nnoremap <silent><buffer><expr> j
+  \ line('.') == line('$') ? 'gg' : 'j'
+  nnoremap <silent><buffer><expr> k
+  \ line('.') == 1 ? 'G' : 'k'
+  nnoremap <silent><buffer><expr> cd
+  \ defx#do_action('change_vim_cwd')
+endfunction
