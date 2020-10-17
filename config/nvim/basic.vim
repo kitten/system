@@ -108,5 +108,3 @@ autocmd BufWritePre * :call TrimWhiteSpace()
 if has('nvim')
   set inccommand=nosplit
 endif
-
-

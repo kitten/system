@@ -52,16 +52,40 @@
     meta.homepage = "https://github.com/roman/golden-ratio";
   };
 
-  vim-listtoggle = buildVimPluginFrom2Nix {
-    pname = "vim-listtoggle";
-    version = "2019-03-13";
+  plenary-nvim = buildVimPluginFrom2Nix {
+    pname = "plenary-nvim";
+    version = "2020-10-16";
     src = fetchFromGitHub {
-      owner = "Valloric";
-      repo = "ListToggle";
-      rev = "63fb8acb57d57380b2e30e7a831247140559c95f";
-      sha256 = "1fbshc3pjm0d1nnig2wnbj9yf39iagva44k2qhl85zfz1pv7sv57";
+      owner = "nvim-lua";
+      repo = "plenary.nvim";
+      rev = "9dc605ec987122dc79fa22f6a3732a46b6567261";
+      sha256 = "1hnz1g5s48mw1jw9lmvqwasy7g6qpnjjpqh84qwjfv4mzx5kc0lb";
     };
-    meta.homepage = "https://github.com/Valloric/ListToggle";
+    meta.homepage = "https://github.com/nvim-lua/plenary.nvim";
+  };
+
+  popup-nvim = buildVimPluginFrom2Nix {
+    pname = "popup-nvim";
+    version = "2020-10-09";
+    src = fetchFromGitHub {
+      owner = "nvim-lua";
+      repo = "popup.nvim";
+      rev = "8f128cc7b2a1d759ce343ef92ea311526c6bbe13";
+      sha256 = "1jxy6lp7r1wvd296x4ql6c9w43iwdwaf8jzyg5azs3x9cdyx9b73";
+    };
+    meta.homepage = "https://github.com/nvim-lua/popup.nvim";
+  };
+
+  telescope-nvim = buildVimPluginFrom2Nix {
+    pname = "telescope-nvim";
+    version = "2020-10-16";
+    src = fetchFromGitHub {
+      owner = "nvim-lua";
+      repo = "telescope.nvim";
+      rev = "5a7a3147a4553146342aeb5a112c72606367fea5";
+      sha256 = "05nid5ia1im0xi1nmzpyvsvn56hmbd95mr4dvmjjpnnnahm9lksx";
+    };
+    meta.homepage = "https://github.com/nvim-lua/popup.nvim";
   };
 
   diagnostic-nvim = buildVimPluginFrom2Nix {

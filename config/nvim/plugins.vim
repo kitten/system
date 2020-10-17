@@ -29,10 +29,6 @@ let g:Gitv_OpenHorizontal = 1
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_DoNotMapCtrlKey = 1
 
-" fzf
-let g:fzf_layout = { 'down': '~30%' }
-let g:fzf_buffers_jump = 1
-
 " Vitality
 let g:vitality_always_assume_iterm = 1
 

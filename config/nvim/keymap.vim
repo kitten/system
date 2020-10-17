@@ -14,18 +14,13 @@ nnoremap <C-w>. :sp<CR>
 noremap ; :
 
 " Quick/Location list Toggle
-let g:lt_location_list_toggle_map = '<leader>p'
-let g:lt_quickfix_list_toggle_map = '<leader>q'
+nnoremap <silent> <Leader>q <cmd>lua require('telescope.builtin').quickfix()<CR>
+nnoremap <silent> <Leader>p <cmd>lua require('telescope.builtin').loclist()<CR>
 
-" fzf
-nnoremap <silent> <Leader>o :GFiles<CR>
-
-" Agerium
-function! Agerium()
-  let params = input('Search files for: ')
-  execute 'Ag ' . params
-endfunction
-nnoremap <Leader>f :call Agerium()<CR>
+" File Search
+nnoremap <silent> <Leader>o <cmd>lua require('telescope.builtin').git_files()<CR>
+nnoremap <silent> <Leader>f <cmd>lua require('telescope.builtin').live_grep()<CR>
+nnoremap <silent> <Leader>n <cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>
 
 " Easymotion Shortcuts
 map n <Plug>(easymotion-next)

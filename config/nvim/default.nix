@@ -30,8 +30,7 @@ in {
   environment.variables = { EDITOR = "vim"; };
 
   environment.systemPackages = with pkgs; [
-    fzf
-    silver-searcher
+    ripgrep
     (neovim.override {
       viAlias = true;
       vimAlias = true;
@@ -54,17 +53,17 @@ in {
           { name = "lightline-vim"; }
           { name = "vitality-vim"; }
           { name = "vim-zipper"; }
-          { name = "vim-golden-ratio"; }
           { name = "goyo-vim"; }
           { name = "limelight-vim"; }
-          { name = "fzf-vim"; }
           { name = "vim-dirvish"; }
           { name = "vim-fugitive"; }
-          { name = "vim-listtoggle"; }
           { name = "vim-polyglot"; }
           { name = "vim-easymotion"; }
           { name = "vim-surround"; }
           { name = "nvim-lspconfig"; }
+          { name = "plenary-nvim"; }
+          { name = "popup-nvim"; }
+          { name = "telescope-nvim"; }
           { name = "diagnostic-nvim"; }
           { name = "completion-nvim"; }
           { name = "completion-buffers"; }
