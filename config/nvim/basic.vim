@@ -24,7 +24,7 @@ set textwidth=0
 set lazyredraw
 
 " Lower default updatetime
-set updatetime=300
+set updatetime=666
 
 " No wrapping except onmarkdown and html
 set nowrap

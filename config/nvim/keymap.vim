@@ -97,11 +97,6 @@ xnoremap <c-c> <ESC>
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
 " Remap keys for gotos
 nmap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nmap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
@@ -111,3 +106,6 @@ nmap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 " Use K to show documentation in preview window
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
 
+autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
