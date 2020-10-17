@@ -25,6 +25,34 @@ let
       on_attach = on_attach,
       cmd = { "${pkgs-unstable.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
     }
+
+    require'nvim-treesitter.configs'.setup {
+      ensure_installed = { "typescript", "regex", "json", "javascript", "css" },
+      highlight = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          node_incremental = "]",
+          scope_incremental = "=",
+          node_decremental = "[",
+        },
+      },
+      refactor = {
+        highlight_definitions = { enable = true },
+        smart_rename = { enable = true, keymaps = { smart_rename = "gn" } },
+      },
+      textobjects = {
+        select = {
+          enable = true,
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@call.outer",
+            ["ic"] = "@call.inner",
+          },
+        },
+      },
+    }
   '' + "\nEOF");
 in {
   environment.variables = { EDITOR = "vim"; };
@@ -67,6 +95,10 @@ in {
           { name = "diagnostic-nvim"; }
           { name = "completion-nvim"; }
           { name = "completion-buffers"; }
+          { name = "completion-treesitter"; }
+          { name = "nvim-treesitter"; }
+          { name = "nvim-treesitter-refactor"; }
+          { name = "nvim-treesitter-textobjects"; }
         ];
       };
     }

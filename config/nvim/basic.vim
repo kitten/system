@@ -24,7 +24,7 @@ set textwidth=0
 set lazyredraw
 
 " Lower default updatetime
-set updatetime=666
+set updatetime=500
 
 " No wrapping except onmarkdown and html
 set nowrap
@@ -52,9 +52,6 @@ set statusline=%F%m%r%h%w\ [%l,%c]\ [%L,%p%%]
 
 " Scrolling
 set scrolloff=2
-
-" No code folding
-set nofoldenable
 
 " No Backup
 set nobackup
@@ -103,6 +100,18 @@ function! TrimWhiteSpace()
   %s/\s\+$//e
 endfunction
 autocmd BufWritePre * :call TrimWhiteSpace()
+
+augroup JavaScriptFolds
+  autocmd!
+  autocmd FileType javascript setlocal foldmethod=expr
+  autocmd FileType javascript set foldexpr=nvim_treesitter#foldexpr()
+augroup END
+
+augroup TypeScriptFolds
+  autocmd!
+  autocmd FileType typescript setlocal foldmethod=expr
+  autocmd FileType typescript set foldexpr=nvim_treesitter#foldexpr()
+augroup END
 
 " Command livepreview for nvim
 if has('nvim')

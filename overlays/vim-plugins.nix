@@ -85,7 +85,7 @@
       rev = "5a7a3147a4553146342aeb5a112c72606367fea5";
       sha256 = "05nid5ia1im0xi1nmzpyvsvn56hmbd95mr4dvmjjpnnnahm9lksx";
     };
-    meta.homepage = "https://github.com/nvim-lua/popup.nvim";
+    meta.homepage = "https://github.com/nvim-lua/telescope.nvim";
   };
 
   diagnostic-nvim = buildVimPluginFrom2Nix {
@@ -124,6 +124,18 @@
     meta.homepage = "https://github.com/steelsojka/completion-buffers";
   };
 
+  completion-treesitter = buildVimPluginFrom2Nix {
+    pname = "completion-treesitter";
+    version = "2020-06-26";
+    src = fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "completion-treesitter";
+      rev = "45c9b2faff4785539a0d0c655440c2465fed985a";
+      sha256 = "19pgdzzk7zq85b1grfjf0nncvs5vxrd4rj1p90iw2amq4mvqrx3l";
+    };
+    meta.homepage = "https://github.com/nvim-treesitter/completion-treesitter";
+  };
+
   lsp-status-nvim = buildVimPluginFrom2Nix {
     pname = "lsp-status.nvim";
     version = "2020-08-03";
@@ -146,5 +158,41 @@
       sha256 = "15ysbbvxlgy1qx8rjv2i9pgjshldcs3m1ff0my2y5mnr3cpqb3s6";
     };
     meta.homepage = "https://github.com/neovim/nvim-lspconfig";
+  };
+
+  nvim-treesitter = buildVimPluginFrom2Nix {
+    pname = "nvim-treesitter";
+    version = "2020-10-16";
+    src = fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "nvim-treesitter";
+      rev = "7f3276450be20ec3cd8241bdb9196659289c3d31";
+      sha256 = "1akq19vbyjanwk8n6gm8hjavpvfx107ljlh2iznyrkcsf9821nm9";
+    };
+    meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter";
+  };
+
+  nvim-treesitter-refactor = buildVimPluginFrom2Nix {
+    pname = "nvim-treesitter-refactor";
+    version = "2020-10-16";
+    src = fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "nvim-treesitter-refactor";
+      rev = "9d4b9daf2f138a5de538ee094bd899591004f8e2";
+      sha256 = "0ma5zsl70mi92b9y8nhgkppdiqfjj0bl3gklhjv1c3lg7kny7511";
+    };
+    meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter-refactor";
+  };
+
+  nvim-treesitter-textobjects = buildVimPluginFrom2Nix {
+    pname = "nvim-treesitter-textobjects";
+    version = "2020-10-16";
+    src = fetchFromGitHub {
+      owner = "nvim-treesitter";
+      repo = "nvim-treesitter-textobjects";
+      rev = "036fe1f64daa544681bb35ee45b20a8a5bc72a9a";
+      sha256 = "1ag5rzknc0xpakggq1rvwnjhbjc1zrkfsqzs5qcr6v6c035p02pd";
+    };
+    meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects";
   };
 }

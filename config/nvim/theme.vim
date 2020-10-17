@@ -45,9 +45,16 @@ function! ResetTheme()
   hi VertSplit ctermfg=235 ctermbg=235 cterm=NONE guifg=#282c34 guibg=#282c34 gui=NONE
   hi Normal guifg=#f8f8f2 guibg=NONE gui=NONE
 
-  " Some theming for LDP Diagnostics
+  " LSP
   hi LspDiagnosticsWarning ctermfg=70 ctermbg=NONE cterm=NONE guifg=#4BAE16 guibg=NONE gui=NONE
   hi LspDiagnosticsError ctermfg=166 ctermbg=NONE cterm=NONE guifg=#D3422E guibg=NONE gui=NONE
+
+  " Treesitter
+  hi TSDefinition ctermfg=39 ctermbg=59 cterm=bold guifg=#82b1ff guibg=#697098" gui=bold
+
+  " Telescope / Easymotion
+  hi TelescopeMatching ctermfg=39 cterm=bold guifg=#82b1ff gui=bold
+  hi EasyMotionIncSearch ctermfg=39 cterm=bold guifg=#82b1ff gui=bold
 endfunction
 
 call ResetTheme()
