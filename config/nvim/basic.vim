@@ -104,13 +104,17 @@ autocmd BufWritePre * :call TrimWhiteSpace()
 augroup JavaScriptFolds
   autocmd!
   autocmd FileType javascript setlocal foldmethod=expr
-  autocmd FileType javascript set foldexpr=nvim_treesitter#foldexpr()
+  autocmd FileType javascript setlocal foldexpr=nvim_treesitter#foldexpr()
+  autocmd FileType jsx setlocal foldmethod=expr
+  autocmd FileType jsx setlocal foldexpr=nvim_treesitter#foldexpr()
 augroup END
 
 augroup TypeScriptFolds
   autocmd!
   autocmd FileType typescript setlocal foldmethod=expr
-  autocmd FileType typescript set foldexpr=nvim_treesitter#foldexpr()
+  autocmd FileType typescript setlocal foldexpr=nvim_treesitter#foldexpr()
+  autocmd FileType tsx setlocal foldmethod=expr
+  autocmd FileType tsx setlocal foldexpr=nvim_treesitter#foldexpr()
 augroup END
 
 " Command livepreview for nvim
