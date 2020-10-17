@@ -40,16 +40,16 @@
     meta.homepage = "https://github.com/sts10/vim-zipper";
   };
 
-  vim-golden-ratio = buildVimPluginFrom2Nix {
-    pname = "vim-golden-ratio";
-    version = "2020-04-03";
+  vim-golden-size = buildVimPluginFrom2Nix {
+    pname = "vim-golden-size";
+    version = "2020-04-29";
     src = fetchFromGitHub {
-      owner = "roman";
-      repo = "golden-ratio";
-      rev = "8313b6d6723c9e77ef1d3760af2cdd244e8db043";
-      sha256 = "03nm1wr0qsrirg4z4171f4nygnqgb6w06ldr6rbbz4a1f7j8j654";
+      owner = "dm1try";
+      repo = "golden_size";
+      rev = "301907c3bd877912ca3d4125c602a23f8c4a7c95";
+      sha256 = "01fqm86hjgfhh5i7xrkphn7mpv4fwcq0xij3qhvhbh4xbfwpr49l";
     };
-    meta.homepage = "https://github.com/roman/golden-ratio";
+    meta.homepage = "https://github.com/dm1try/golden_size";
   };
 
   plenary-nvim = buildVimPluginFrom2Nix {

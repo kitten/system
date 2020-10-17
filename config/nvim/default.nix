@@ -87,8 +87,8 @@ in {
           { name = "vim-fugitive"; }
           { name = "vim-polyglot"; }
           { name = "vim-easymotion"; }
-          { name = "vim-surround"; }
           { name = "nvim-lspconfig"; }
+          { name = "vim-golden-size"; }
           { name = "plenary-nvim"; }
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }
