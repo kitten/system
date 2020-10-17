@@ -104,6 +104,14 @@ function! TrimWhiteSpace()
 endfunction
 autocmd BufWritePre * :call TrimWhiteSpace()
 
+" Clear message line 3s after holding
+function! s:empty_message(timer)
+  if mode() ==# 'n'
+    echon ''
+  endif
+endfunction
+autocmd CursorHold * call timer_start(3000, funcref('s:empty_message'))
+
 augroup JavaScriptFolds
   autocmd!
   autocmd FileType javascript setlocal foldmethod=expr
