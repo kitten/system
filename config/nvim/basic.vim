@@ -26,10 +26,8 @@ set lazyredraw
 " Lower default updatetime
 set updatetime=500
 
-" No wrapping except onmarkdown and html
+" No wrapping
 set nowrap
-autocmd FileType markdown setlocal wrap
-autocmd FileType html setlocal wrap
 
 " Make backspace usable
 set backspace=indent,eol,start

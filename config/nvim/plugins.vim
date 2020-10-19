@@ -40,6 +40,8 @@ autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 " Polyglot
 let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 0
+let g:vim_markdown_fenced_languages = ['jsx=javascript', 'js=javascript', 'ts=typescript', 'bash=sh']
+let g:vim_markdown_json_frontmatter = 1
 
 " EasyMotion
 let g:EasyMotion_do_mapping = 0
