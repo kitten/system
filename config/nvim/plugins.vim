@@ -83,3 +83,20 @@ function! LightlineFilename()
   let modified = &modified ? ' +' : ''
   return filename . modified
 endfunction
+
+" Defx
+function! s:open_defx_if_directory()
+  try
+    let l:dir = expand(expand('%:p'))
+  catch
+    return
+  endtry
+
+  if !empty(l:dir) && (isdirectory(l:dir) ||
+    \ (!empty($SYSTEMDRIVE) && isdirectory('/'.tolower($SYSTEMDRIVE[0]).l:dir)))
+    execute "Defx `expand('%:p')` | bd " . expand('%:r')
+  endif
+endfunction
+
+autocmd VimEnter * sil! au! FileExplorer *
+autocmd BufEnter * call s:open_defx_if_directory()
