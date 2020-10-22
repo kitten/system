@@ -90,12 +90,12 @@
 
   telescope-nvim = buildVimPluginFrom2Nix {
     pname = "telescope-nvim";
-    version = "2020-10-16";
+    version = "2020-10-20";
     src = fetchFromGitHub {
       owner = "nvim-lua";
       repo = "telescope.nvim";
-      rev = "5a7a3147a4553146342aeb5a112c72606367fea5";
-      sha256 = "05nid5ia1im0xi1nmzpyvsvn56hmbd95mr4dvmjjpnnnahm9lksx";
+      rev = "7eda4e80f9fa0b16b2030e81528f17bdaf118041";
+      sha256 = "01h0mqkgknv1f9zifig7wz0vmkmzcs4j1yn30ymlzfidwr7y6f8g";
     };
     meta.homepage = "https://github.com/nvim-lua/telescope.nvim";
   };
