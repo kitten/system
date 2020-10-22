@@ -24,6 +24,7 @@ in {
 
     extraConfig = ''
       set -g mouse on
+      set -g set-clipboard on
 
       set -g status-left-length 32
       set -g status-right-length 150

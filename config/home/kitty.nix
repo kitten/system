@@ -32,5 +32,6 @@ in {
     selection_background #ffcc00
     selection_foreground #000000
     term xterm-256color
+    clipboard_control write-clipboard write-primary no-append
   '';
 }
