@@ -2,11 +2,13 @@
 
 let
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux;
+  colors = (import ../colors.nix).colors;
 
-  defaultActiveColor = "yellow";
-  defaultInactiveColor = "colour241";
-  defaultFeatureColor = "colour14";
-  defaultBorderColor = "colour10";
+  defaultActiveColor = colors.yellow.gui;
+  defaultInactiveColor = colors.brightWhite.gui;
+  defaultFeatureColor = colors.blue.gui;
+  defaultBorderColor = colors.green.gui;
+  defaultSplitColor = colors.split.gui;
 in {
   programs.tmux = {
     enable = true;
@@ -32,27 +34,27 @@ in {
 
       set-option -ga terminal-overrides ",xterm-256color*:Tc:smso"
 
-      set-option -g status-style fg=${defaultActiveColor},bg=default
+      set-option -g status-style fg="${defaultActiveColor}",bg=default
 
-      set-window-option -g window-status-style fg=${defaultInactiveColor},bg=default
+      set-window-option -g window-status-style fg="${defaultInactiveColor}",bg=default
 
-      set-window-option -g window-status-current-style fg=${defaultActiveColor},bg=default
+      set-window-option -g window-status-current-style fg="${defaultActiveColor}",bg=default
       set-window-option -g window-status-current-format "#[bold]#I #W"
-      set-option -g pane-border-style fg=${defaultInactiveColor}
-      set-option -g pane-active-border-style fg=${defaultBorderColor}
-      set-option -g message-style fg=${defaultActiveColor},bg=default
-      set-option -g display-panes-active-colour ${defaultActiveColor}
-      set-option -g display-panes-colour ${defaultInactiveColor}
+      set-option -g pane-border-style fg="${defaultInactiveColor}"
+      set-option -g pane-active-border-style fg="${defaultBorderColor}"
+      set-option -g message-style fg="${defaultActiveColor}",bg=default
+      set-option -g display-panes-active-colour "${defaultActiveColor}"
+      set-option -g display-panes-colour "${defaultInactiveColor}"
 
-      set-window-option -g clock-mode-colour ${defaultActiveColor}
+      set-window-option -g clock-mode-colour "${defaultActiveColor}"
 
       set -g window-status-format "#I #W"
 
       set -g status-left "#[fg=${defaultFeatureColor},bold]#S "
       set -g status-right "#[fg=${defaultInactiveColor}] %R %d %b"
 
-      set -g pane-border-style fg=colour238,bg=colour238
-      set -g pane-active-border-style fg=colour238,bg=colour238
+      set -g pane-border-style fg="${defaultSplitColor}",bg="${defaultSplitColor}"
+      set -g pane-active-border-style fg="${defaultSplitColor}",bg="${defaultSplitColor}"
 
       unbind C-p
       bind C-p paste-buffer
