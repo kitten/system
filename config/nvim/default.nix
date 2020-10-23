@@ -1,12 +1,24 @@
 { pkgs, pkgs-unstable, fetchgit, ... }:
 
 let
-  basic = builtins.readFile ./basic.vim;
-  theme = builtins.readFile ./theme.vim;
-  plugins = builtins.readFile ./plugins.vim;
-  keymap = builtins.readFile ./keymap.vim;
+  colors = import ../colors.nix;
 
-  lsp = ("lua <<EOF\n" + ''
+  vim-basic = builtins.readFile ./basic.vim;
+  vim-theme = builtins.readFile ./theme.vim;
+  vim-plugins = builtins.readFile ./plugins.vim;
+  vim-keymap = builtins.readFile ./keymap.vim;
+
+  my-theme = pkgs.vimUtils.buildVimPluginFrom2Nix {
+    pname = "my-theme";
+    version = "2020-10-23";
+    src = pkgs.writeTextFile {
+      name = "theme.vim";
+      text = colors.vim;
+      destination = "/colors/theme.vim";
+    };
+  };
+
+  vim-lsp = ("lua <<EOF\n" + ''
     local diagnostic = require('diagnostic')
     local completion = require('completion')
     local nvim_lsp = require('nvim_lsp')
@@ -66,16 +78,16 @@ in {
 
       configure = {
         customRC = ''
-          ${basic}
-          ${theme}
-          ${lsp}
-          ${plugins}
-          ${keymap}
+          ${vim-basic}
+          ${vim-theme}
+          ${vim-lsp}
+          ${vim-plugins}
+          ${vim-keymap}
         '';
 
-        vam.knownPlugins = pkgs.vimPlugins;
+        vam.knownPlugins = pkgs.vimPlugins // { my-theme = my-theme; };
         vam.pluginDictionaries = [
-          { name = "palenight-vim"; }
+          { name = "my-theme"; }
           { name = "vim-repeat"; }
           { name = "editorconfig-vim"; }
           { name = "vim-purge-undodir"; }

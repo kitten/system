@@ -2,14 +2,22 @@ self: super:
 
 let
   inherit (import ../nix/channels.nix) __nixPath;
-  inherit (super) callPackage fetchFromGitHub openssl python3;
+  inherit (super) callPackage fetchzip fetchFromGitHub openssl python3;
 
   unstable = import <nixpkgs-unstable> {};
 in
 
 rec {
   nodejs = unstable.nodejs-14_x;
-  yarn = (super.yarn.override { inherit nodejs; });
+
+  yarn = (super.yarn.overrideAttrs(old: {
+    version = "1.22.5";
+    buildInputs = [ nodejs ];
+    src = fetchzip {
+      url = "https://github.com/yarnpkg/yarn/releases/download/v1.22.5/yarn-v1.22.5.tar.gz";
+      sha256 = "1yb1pb80jhw6mx1r28hf7zd54dygmnrf30r3fz7kn9nrgdpl5in8";
+    };
+  }));
 
   neovim = (super.wrapNeovim(
     super.neovim-unwrapped.overrideAttrs(old: {
