@@ -68,7 +68,7 @@ let g:goyo_width = '80%'
 set noshowmode
 
 let g:lightline = {
-  \ 'colorscheme': 'one',
+  \ 'colorscheme': 'theme',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ],
   \             [ 'readonly', 'filename' ] ],

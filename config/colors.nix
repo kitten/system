@@ -1,5 +1,5 @@
 let
-  inherit (import ../modules/color-utils.nix) mkKittyTheme mkVimSyntax mkColor mkHighlight;
+  inherit (import ../modules/color-utils.nix) mkKittyTheme mkVimSyntax mkVimLightlineSyntax mkColor mkHighlight;
 in rec {
   colors = {
     gutter = (mkColor "#16181c" "232" "15"); # gutter fg grey
@@ -35,6 +35,8 @@ in rec {
   };
 
   kitty = mkKittyTheme colors;
+
+  vim-lightline = mkVimLightlineSyntax "theme" colors;
 
   vim = with colors; mkVimSyntax "theme" {
     # Syntax Groups (descriptions and ordering from `:h w18`)
@@ -310,6 +312,26 @@ in rec {
       EndTag = { fg = red; };
       Tag = { fg = red; };
       TagName = { fg = red; };
+    };
+
+    php = {
+      Include = { fg = purple; };
+      Class = { fg = yellow; };
+      Classes = { fg = yellow; };
+      Function = { fg = blue; };
+      Type = { fg = purple; };
+      Keyword = { fg = purple; };
+      VarSelector = { fg = purple; };
+      Identifier = { fg = white; };
+      Method = { fg = blue; };
+      Boolean = { fg = blue; };
+      Parent = { fg = white; };
+      Operator = { fg = purple; };
+      Region = { fg = purple; };
+      UseNamespaceSeparator = { fg = white; };
+      ClassNamespaceSeparator = { fg = white; };
+      DocTags = { fg = purple; style="italic"; };
+      DocParam = { fg = purple; style="italic"; };
     };
 
     debug = {

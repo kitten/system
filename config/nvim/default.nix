@@ -79,6 +79,7 @@ in {
       configure = {
         customRC = ''
           ${vim-basic}
+          ${colors.vim-lightline}
           ${vim-theme}
           ${vim-lsp}
           ${vim-plugins}
