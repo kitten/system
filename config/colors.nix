@@ -10,9 +10,8 @@ in rec {
     black = (mkColor "#14161A" "235" "0");
     grey = (mkColor "#3E4452" "237" "15");
 
-    red = (mkColor "#FF5370" "204" "1");
-    brightRed = (mkColor "#BE5046" "196" "9");
-    darkRed = (mkColor "#FF869A" "204" "1");
+    red = (mkColor "#ED95A8" "204" "1");
+    brightRed = (mkColor "#EF5350" "196" "9");
 
     green = (mkColor "#C3E88D" "114" "2");
     brightGreen = (mkColor "#C3E88D" "114" "2");
@@ -73,7 +72,7 @@ in rec {
     Ignore = mkHighlight {};
     SpecialComment = { fg = brightWhite; };
     Underlined = mkHighlight { style = "underline"; };
-    Error = { fg = red; };
+    Error = { fg = brightRed; };
     Todo = { fg = purple; };
 
     # Highlighting Groups (descriptions and ordering from `:h hitest.vim`)
@@ -99,7 +98,7 @@ in rec {
       Thumb = { bg = white; };
     };
 
-    ErrorMsg = { fg = red; };
+    ErrorMsg = { fg = brightRed; };
     WarningMsg = { fg = yellow; };
     VertSplit = { fg = split; bg = split; };
     Folded = { bg = cursor; fg = brightWhite; };
@@ -230,7 +229,7 @@ in rec {
       Null = { fg = brightYellow; };
       StorageClass = { fg = purple; };
       Super = { fg = red; };
-      TemplateBraces = { fg = darkRed; };
+      TemplateBraces = { fg = brightRed; };
       TemplateVar = { fg = green; };
       This = { fg = red; };
       Undefined = { fg = brightYellow; };
@@ -255,7 +254,7 @@ in rec {
       OpSymbol = { fg = cyan; };
       OpSymbols = { fg = cyan; };
       PropertyName = { fg = green; };
-      TemplateSB = { fg = darkRed; };
+      TemplateSB = { fg = brightRed; };
       Variable = { fg = purple; };
     };
 
@@ -272,11 +271,11 @@ in rec {
       Number = { fg = brightYellow; };
       Quote = { fg = white; };
       String = { fg = green; };
-      MissingCommaError = { fg = red; style = "reverse"; };
-      NoQuotesError = { fg = red; style = "reverse"; };
-      NumError = { fg = red; style = "reverse"; };
-      StringSQError = { fg = red; style = "reverse"; };
-      SemicolonError = { fg = red; style = "reverse"; };
+      MissingCommaError = { fg = brightRed; style = "reverse"; };
+      NoQuotesError = { fg = brightRed; style = "reverse"; };
+      NumError = { fg = brightRed; style = "reverse"; };
+      StringSQError = { fg = brightRed; style = "reverse"; };
+      SemicolonError = { fg = brightRed; style = "reverse"; };
     };
 
     markdown = {
@@ -301,10 +300,10 @@ in rec {
     mkd = {
       Italic = { fg = purple; style = "italic"; };
       Bold = { fg = purple; style = "bold"; };
-      InlineURL = { fg = brightRed; };
+      InlineURL = { fg = red; };
       ListItem = { fg = yellow; };
       Link = { fg = white; };
-      URL = { fg = brightRed; };
+      URL = { fg = red; };
     };
 
     xml = {
@@ -392,24 +391,24 @@ in rec {
     Signify = {
       Add = { fg = green; };
       Change = { fg = yellow; };
-      Delete = { fg = red; };
+      Delete = { fg = brightRed; };
     };
 
     GitGutter = {
       Add = { fg = green; };
       Change = { fg = yellow; };
-      Delete = { fg = red; };
+      Delete = { fg = brightRed; };
     };
 
     Neomake = {
       WarningSign = { fg = yellow; };
-      ErrorSign = { fg = red; };
+      ErrorSign = { fg = brightRed; };
       InfoSign = { fg = blue; };
     };
 
     LspDiagnostics = {
       Warning = { fg = yellow; };
-      Error = { fg = red; };
+      Error = { fg = brightRed; };
     };
 
     TS.Definition = { fg = blue; bg = brightWhite; };
