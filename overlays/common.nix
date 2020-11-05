@@ -14,19 +14,19 @@ rec {
     version = "1.22.5";
     buildInputs = [ nodejs ];
     src = fetchzip {
-      url = "https://github.com/yarnpkg/yarn/releases/download/v1.22.5/yarn-v1.22.5.tar.gz";
-      sha256 = "1yb1pb80jhw6mx1r28hf7zd54dygmnrf30r3fz7kn9nrgdpl5in8";
+      url = "https://github.com/yarnpkg/yarn/releases/download/v1.22.10/yarn-v1.22.10.tar.gz";
+      sha256 = "0pdimll8lhsnqfafhdaxd6h6mgxhj1c7h56r111cmxhzw462y3mr";
     };
   }));
 
   neovim = (super.wrapNeovim(
     super.neovim-unwrapped.overrideAttrs(old: {
-      version = "0.5.0-nightly";
+      version = "0.5.0-nightly.a061d53";
       src = super.fetchFromGitHub {
         owner = "neovim";
         repo = "neovim";
-        rev = "0af18a6a4325d24bf4c386edb81c2f3776dab787";
-        sha256 = "0ki16a12ga88xby9d70raqr7g5m3bf6ihl0dl1jp08wwp2wwxh3l";
+        rev = "a061d53e18168130aad537a9e8012390834ff8c2";
+        sha256 = "13brbz7lxks5jp09dnaiiwgxymacfnv5yhh0mcz1hksij9ibw938";
       };
     })
   ) {}).overrideAttrs(old: {

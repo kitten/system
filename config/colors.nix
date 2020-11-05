@@ -259,6 +259,7 @@ in rec {
     };
 
     typescript = {
+      Identifier = { fg = red; };
       Reserved = { fg = purple; };
       EndColons = { fg = white; };
       Braces = { fg = white; };

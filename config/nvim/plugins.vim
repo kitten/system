@@ -18,6 +18,7 @@ let g:completion_chain_complete_list = {
   \	 'comment' : [],
   \	 'string' : []
   \},
+  \'terraform' : [{'complete_items': ['lsp', 'buffer']}],
   \'json' : [{'complete_items': ['ts']}],
   \'javascript' : [{'complete_items': ['lsp']}],
   \'typescript' : [{'complete_items': ['lsp']}],
