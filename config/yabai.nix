@@ -3,12 +3,12 @@
 let
   yabai = pkgs.stdenv.mkDerivation rec {
     pname = "yabai";
-    version = "3.2.1";
+    version = "3.3.2";
     dontBuild = true;
 
     src = pkgs.fetchurl {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "1y3macjkz9qk3vxkw4d6ldgszb76jgg1p46prnj9zz035aia705d";
+      sha256 = "0magaqf94vgf7xzisy2wq7lrgwklww18dx8zl2ncx8g09q7513w4";
     };
 
     installPhase = ''
