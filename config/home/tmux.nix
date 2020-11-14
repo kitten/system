@@ -19,6 +19,7 @@ in {
     keyMode = "vi";
     shortcut = "a";
     terminal = "xterm-256color";
+    sensibleOnTop = false;
 
     secureSocket = isLinux;
 
@@ -27,6 +28,8 @@ in {
     extraConfig = ''
       set -g mouse on
       set -g set-clipboard on
+
+      set-option -g focus-events on
 
       set -g status-left-length 32
       set -g status-right-length 150
@@ -37,7 +40,7 @@ in {
       set-option -g status-style fg="${defaultActiveColor}",bg=default
 
       set-window-option -g window-status-style fg="${defaultInactiveColor}",bg=default
-
+      set-window-option -g aggressive-resize on
       set-window-option -g window-status-current-style fg="${defaultActiveColor}",bg=default
       set-window-option -g window-status-current-format "#[bold]#I #W"
       set-option -g pane-border-style fg="${defaultInactiveColor}"
@@ -45,7 +48,6 @@ in {
       set-option -g message-style fg="${defaultActiveColor}",bg=default
       set-option -g display-panes-active-colour "${defaultActiveColor}"
       set-option -g display-panes-colour "${defaultInactiveColor}"
-
       set-window-option -g clock-mode-colour "${defaultActiveColor}"
 
       set -g window-status-format "#I #W"
