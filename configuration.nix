@@ -1,7 +1,7 @@
 {
   imports = [
     ./nix/nix-path.nix
-    ./modules
+    ./modules/default.nix
     ./profiles/common.nix
   ];
 }

@@ -1,7 +1,7 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   environment.systemPackages = [
-    pkgs-unstable.rustup
+    pkgs.rustup
   ];
 }

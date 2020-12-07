@@ -1,9 +1,9 @@
+{ pkgs, ... }:
+
 let
-  inherit (import ../../nix/channels.nix) __nixPath;
-  pkgs-unstable = import <nixpkgs-unstable> {};
   colors = import ../colors.nix;
 in {
-  home.packages = [ pkgs-unstable.kitty ];
+  home.packages = [ pkgs.kitty ];
 
   xdg.configFile."kitty/kitty.conf".text = ''
     # See ~/nix-system/config/kitty.nix

@@ -1,6 +1,7 @@
 let
   inherit (import ../nix/channels.nix) __nixPath nixPath;
   lib = import <nixpkgs/lib>;
+
   inherit (lib.strings) concatStrings;
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.lists) last init;

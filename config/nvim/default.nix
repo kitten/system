@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, fetchgit, ... }:
+{ pkgs, fetchgit, ... }:
 
 let
   colors = import ../colors.nix;
@@ -30,17 +30,17 @@ let
 
     nvim_lsp.tsserver.setup{
       on_attach = on_attach,
-      cmd = { "${pkgs-unstable.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
+      cmd = { "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
     }
 
     nvim_lsp.terraformls.setup{
       on_attach = on_attach,
-      cmd = { "${pkgs-unstable.terraform-ls}/bin/terraform-ls" }
+      cmd = { "${pkgs.terraform-ls}/bin/terraform-ls" }
     }
 
     nvim_lsp.vimls.setup{
       on_attach = on_attach,
-      cmd = { "${pkgs-unstable.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
+      cmd = { "${pkgs.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
     }
 
     require'nvim-treesitter.configs'.setup {
@@ -120,6 +120,6 @@ in {
           { name = "nvim-treesitter-textobjects"; }
         ];
       };
-    }
-  )];
+    })
+  ];
 }

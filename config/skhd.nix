@@ -1,11 +1,11 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
-  security.accessibilityPrograms = [ "${pkgs-unstable.skhd}/bin/skhd" ];
+  security.accessibilityPrograms = [ "${pkgs.skhd}/bin/skhd" ];
 
   services.skhd = {
     enable = true;
-    package = pkgs-unstable.skhd;
+    package = pkgs.skhd;
 
     skhdConfig = ''
       :: default  : yabai -m config status_bar_background_color 0xff191b1f;\

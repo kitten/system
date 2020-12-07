@@ -1,16 +1,13 @@
 { config, lib, pkgs, ... }: with lib;
 
 let
-  inherit (import ../nix/channels.nix) __nixPath;
+  inherit (lib) optional flatten;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
 
   cfg = config.services.dnscrypt2;
 in
 
 {
-  options.launchd = {
-  };
-
   options.services.dnscrypt2 = {
     enable = mkEnableOption "dnscrypt-proxy2";
 

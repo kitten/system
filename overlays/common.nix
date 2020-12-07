@@ -1,14 +1,26 @@
 self: super:
 
 let
-  inherit (import ../nix/channels.nix) __nixPath;
   inherit (super) callPackage fetchzip fetchFromGitHub openssl python3;
+  inherit (import ../nix/channels.nix) __nixPath nixPath;
+  pkgs = import <nixpkgs> {};
 
-  unstable = import <nixpkgs-unstable> {};
+  neovim-nightly-overlay = (import (builtins.fetchTarball {
+    url = https://github.com/mjlbach/neovim-nightly-overlay/archive/master.tar.gz;
+  }) self super);
 in
 
 rec {
-  nodejs = unstable.nodejs-14_x;
+  nodejs = pkgs.nodejs-14_x;
+
+  neovim = (super.wrapNeovim(
+    neovim-nightly-overlay.neovim-nightly
+  ) {}).overrideAttrs(old: {
+    buildCommand = (''
+      mkdir -p $out/home
+      export HOME=$out/home
+    '' + old.buildCommand);
+  });
 
   yarn = (super.yarn.overrideAttrs(old: {
     version = "1.22.5";
@@ -18,23 +30,6 @@ rec {
       sha256 = "0pdimll8lhsnqfafhdaxd6h6mgxhj1c7h56r111cmxhzw462y3mr";
     };
   }));
-
-  neovim = (super.wrapNeovim(
-    super.neovim-unwrapped.overrideAttrs(old: {
-      version = "0.5.0-nightly.a061d53";
-      src = super.fetchFromGitHub {
-        owner = "neovim";
-        repo = "neovim";
-        rev = "a061d53e18168130aad537a9e8012390834ff8c2";
-        sha256 = "13brbz7lxks5jp09dnaiiwgxymacfnv5yhh0mcz1hksij9ibw938";
-      };
-    })
-  ) {}).overrideAttrs(old: {
-    buildCommand = (''
-      mkdir -p $out/home
-      export HOME=$out/home
-    '' + old.buildCommand);
-  });
 
   nodePackages = (import ./nodePackages/node-packages.nix) {
     inherit (super) fetchurl fetchgit;

@@ -1,13 +1,11 @@
 { pkgs, ... }:
 
-let
-	sysconfig = (import <nixpkgs/nixos> {}).config;
-in {
+{
   programs.zsh = {
     enable = true;
     enableAutosuggestions = true;
 
-    enableCompletion = !sysconfig.programs.zsh.enable;
+    enableCompletion = false;
 
     shellAliases = {
       nix-encrypt = "openssl enc -e -aes-256-cbc -pbkdf2 -salt -base64 -kfile ${/usr/local/secret}";

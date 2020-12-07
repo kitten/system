@@ -1,8 +1,9 @@
 { lib, pkgs, ... }:
 
 let
-  inherit (lib) mkMerge optionalAttrs;
+  inherit (lib) mkMerge mkForce optionalAttrs;
   inherit (lib.systems.elaborate { system = builtins.currentSystem; }) isLinux isDarwin;
+  inherit (import ../nix/channels.nix) nixPath;
   inherit (import ../nix/secrets.nix) readSecretFileContents;
 in
 
@@ -16,6 +17,8 @@ mkMerge [
 
     environment.variables = {
       GITHUB_TOKEN = readSecretFileContents ../assets/github-token;
+      NIX_PATH = mkForce nixPath;
+      SHELL = "${pkgs.zsh}/bin/zsh";
     };
 
     programs.zsh = {
@@ -26,7 +29,6 @@ mkMerge [
 
   (optionalAttrs isDarwin {
     environment.shells = [ pkgs.zsh ];
-    environment.loginShell = pkgs.zsh;
   })
 
   (optionalAttrs isLinux {
