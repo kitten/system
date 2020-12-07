@@ -19,12 +19,18 @@ let
   };
 
   vim-lsp = ("lua <<EOF\n" + ''
-    local diagnostic = require('diagnostic')
     local completion = require('completion')
-    local nvim_lsp = require('nvim_lsp')
+    local nvim_lsp = require('lspconfig')
+
+    vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+      vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = true,
+        signs = true,
+        update_in_insert = false,
+      }
+    )
 
     local on_attach = function(client, bufnr)
-      diagnostic.on_attach(client, bufnr)
       completion.on_attach(client, bufnr)
     end
 
@@ -44,7 +50,7 @@ let
     }
 
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = { "typescript", "tsx", "regex", "json", "javascript", "css" },
+      ensure_installed = { "typescript", "tsx", "graphql", "regex", "json", "javascript", "jsdoc", "css" },
       highlight = { enable = true },
       incremental_selection = {
         enable = true,
@@ -111,7 +117,6 @@ in {
           { name = "plenary-nvim"; }
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }
-          { name = "diagnostic-nvim"; }
           { name = "completion-nvim"; }
           { name = "completion-buffers"; }
           { name = "completion-treesitter"; }

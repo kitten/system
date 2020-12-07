@@ -27,16 +27,8 @@ let g:completion_chain_complete_list = {
 \}
 
 " Diagnostic
-let g:diagnostic_enable_virtual_text = 1
-let g:diagnostic_virtual_text_prefix = '←'
-let g:diagnostic_insert_delay = 1
 call sign_define("LspDiagnosticsErrorSign", {"text" : "●", "texthl" : "LspDiagnosticsError"})
 call sign_define("LspDiagnosticsWarningSign", {"text" : "◐", "texthl" : "LspDiagnosticsWarning"})
-
-" LSP
-autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 
 " Polyglot
 let g:javascript_plugin_flow = 1
