@@ -39,11 +39,6 @@ let
       cmd = { "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
     }
 
-    nvim_lsp.terraformls.setup{
-      on_attach = on_attach,
-      cmd = { "${pkgs.terraform-ls}/bin/terraform-ls" }
-    }
-
     nvim_lsp.vimls.setup{
       on_attach = on_attach,
       cmd = { "${pkgs.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
