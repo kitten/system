@@ -32,10 +32,10 @@ rec {
   }));
 
   nodePackages = (import ./nodePackages/node-packages.nix) {
-    inherit (super) fetchurl fetchgit;
+    inherit (super) stdenv nix-gitignore lib fetchurl fetchgit;
     nodeEnv = import ./nodePackages/node-env.nix {
-      inherit (super) stdenv python2 utillinux runCommand writeTextFile;
-      inherit nodejs;
+      inherit (super) stdenv lib python2 runCommand writeTextFile;
+      inherit pkgs nodejs;
       libtool = null;
     };
   };

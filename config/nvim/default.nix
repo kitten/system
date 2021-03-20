@@ -20,7 +20,9 @@ let
 
   vim-lsp = ("lua <<EOF\n" + ''
     local completion = require('completion')
-    local nvim_lsp = require('lspconfig')
+    local lsp = require('lspconfig')
+    local lsp_configs = require('lspconfig/configs')
+    local lsp_util = require('lspconfig/util')
 
     vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
       vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -31,17 +33,50 @@ let
     )
 
     local on_attach = function(client, bufnr)
+      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
       completion.on_attach(client, bufnr)
+
+      buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+      buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+      buf_set_keymap('n', 'gy', '<Cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+      buf_set_keymap('n', 'gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+      buf_set_keymap('n', 'gr', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
+      buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+      buf_set_keymap('n', '<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+      buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+      buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
     end
 
-    nvim_lsp.tsserver.setup{
+    lsp_configs.prosemd = {
+      default_config = {
+        cmd = { "/Users/phil/Development/prosemd-lsp/target/release/prosemd-lsp", "--stdio" },
+        filetypes = { "markdown" },
+        root_dir = function(fname)
+          return lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
+        end,
+        settings = {},
+      }
+    }
+
+    lsp.prosemd.setup{
+      on_attach = on_attach
+    }
+
+    lsp.tsserver.setup{
       on_attach = on_attach,
       cmd = { "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server", "--stdio" }
     }
 
-    nvim_lsp.vimls.setup{
+    lsp.vimls.setup{
       on_attach = on_attach,
       cmd = { "${pkgs.nodePackages.vim-language-server}/bin/vim-language-server", "--stdio" }
+    }
+
+    lsp.rls.setup{
+      on_attach = on_attach,
+      cmd = { "${pkgs.rls}/bin/rls" }
     }
 
     require'nvim-treesitter.configs'.setup {

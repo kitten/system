@@ -99,15 +99,17 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Remap keys for gotos
 nmap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nmap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
 nmap <silent> gy <cmd>lua vim.lsp.buf.type_definition()<CR>
 nmap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nmap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 
-nmap <silent> g<Right> :NextDiagnosticCycle<CR>
-nmap <silent> g<Left> :PrevDiagnosticCycle<CR>
+nmap <silent> [d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nmap <silent> ]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 " Use K to show documentation in preview window
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
 " Bind - to directory explorer
 nnoremap <silent> - :Defx `expand('%:p:h')` -search=`expand('%:p')`<CR>
