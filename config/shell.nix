@@ -16,7 +16,7 @@ mkMerge [
     environment.pathsToLink = [ "/share/zsh" ];
 
     environment.variables = {
-      GITHUB_TOKEN = readSecretFileContents ../assets/github-token;
+      # GITHUB_TOKEN = readSecretFileContents ../assets/github-token;
       NIX_PATH = mkForce nixPath;
       SHELL = "${pkgs.zsh}/bin/zsh";
     };

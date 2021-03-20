@@ -2,6 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    magic-wormhole
     pngquant
     ripgrep
     httpie
