@@ -24,7 +24,7 @@ in
   services.yabai = {
     enable = true;
     package = yabai;
-    enableScriptingAddition = true;
+    enableScriptingAddition = false;
 
     config = {
       status_bar = "off";
