@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ../config/yabai.nix
-    ../config/skhd.nix
+    # ../config/yabai.nix
+    # ../config/skhd.nix
   ];
 
   system.keyboard = {
