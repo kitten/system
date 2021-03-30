@@ -80,7 +80,7 @@ let
     }
 
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = { "typescript", "tsx", "graphql", "regex", "json", "javascript", "jsdoc", "css" },
+      ensure_installed = { "typescript", "tsx", "graphql", "regex", "json", "javascript", "jsdoc", "css", "rust" },
       highlight = { enable = true },
       incremental_selection = {
         enable = true,
