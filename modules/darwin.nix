@@ -8,5 +8,8 @@
   programs.bash.enable = true;
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+  # Auto-configure build users
+  users.nix.configureBuildUsers = true;
+  # Manage Nix package via channels
   nix.package = pkgs.nix;
 }
