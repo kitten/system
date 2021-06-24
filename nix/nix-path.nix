@@ -18,25 +18,13 @@ rec {
 
   _module.args =
     let
-
       pkgsConf = {
         inherit (config.nixpkgs) localSystem crossSystem;
         overlays = config.nixpkgs.overlays ++ nixpkgs.overlays;
         config = config.nixpkgs.config // nixpkgs.config;
       };
-
-    in
-
-    rec {
+    in rec {
       pkgs = import <nixpkgs> (
-        if isLinux then {
-          inherit (pkgsConf) overlays config localSystem crossSystem;
-        } else {
-          inherit (pkgsConf) overlays config;
-        }
-      );
-
-      pkgs-unstable = import <nixpkgs-unstable> (
         if isLinux then {
           inherit (pkgsConf) overlays config localSystem crossSystem;
         } else {

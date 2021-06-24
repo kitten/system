@@ -25,8 +25,6 @@ let
 in
 
 rec {
-  nixpkgs = nixpkgs_src;
-
   __nixPath = [
     { prefix = "binary-caches"; path = ./binary-caches; }
     { prefix = "darwin"; path = darwin_src; }

@@ -2,9 +2,6 @@ self: super:
 
 let
   inherit (super) callPackage fetchzip fetchFromGitHub openssl python3;
-  inherit (import ../nix/channels.nix) __nixPath nixPath;
-
-  pkgs = import <nixpkgs> {};
 
   neovim-nightly-overlay = (import (builtins.fetchTarball {
     url = https://github.com/mjlbach/neovim-nightly-overlay/archive/472c2233b80cf02c637bee5948fb4b671ae8c963.tar.gz;
@@ -12,7 +9,7 @@ let
 in
 
 rec {
-  nodejs = pkgs.nodejs-14_x;
+  nodejs = self.nodejs-14_x;
 
   neovim = (super.wrapNeovim(
     neovim-nightly-overlay.neovim-nightly
@@ -51,7 +48,8 @@ rec {
     inherit (super) stdenv nix-gitignore lib fetchurl fetchgit;
     nodeEnv = import ./nodePackages/node-env.nix {
       inherit (super) stdenv lib python2 runCommand writeTextFile;
-      inherit pkgs nodejs;
+      inherit nodejs;
+      pkgs = super;
       libtool = null;
     };
   };

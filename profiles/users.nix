@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   inherit (lib) optionalAttrs mkMerge mkIf mkDefault;
@@ -7,7 +7,16 @@ in
 
 mkMerge [
   {
-    home-manager.users.phil = (import ../config/home/default.nix);
+    home-manager = {
+      users.phil = _: {
+        nixpkgs = {
+          overlays = import <nixpkgs-overlays>;
+          config.allowUnfree = true;
+        };
+        imports = [ ../config/home/default.nix ];
+      };
+    };
+
     users.users.phil.home = mkIf isDarwin "/Users/phil";
   }
 

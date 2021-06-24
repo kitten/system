@@ -163,10 +163,10 @@ in
   vim-language-server = nodeEnv.buildNodePackage {
     name = "vim-language-server";
     packageName = "vim-language-server";
-    version = "2.1.3";
+    version = "2.2.3";
     src = fetchurl {
-      url = "https://registry.npmjs.org/vim-language-server/-/vim-language-server-2.1.3.tgz";
-      sha512 = "BZAMbgNXq9GFg0HrXbQoPs+VLzJasM/UyN34v0wEMOo8jj/h8K1LUKHuHJkGhAEhyq80BwDbByDLrbcu7Sn6Zg==";
+      url = "https://registry.npmjs.org/vim-language-server/-/vim-language-server-2.2.3.tgz";
+      sha512 = "dUaWfvqNM0IVwinwYHv6prKYEw4o/ayZtvceFBKdMCf91uYzKt64MLqD8ZA597JLheul/oEV1XKgpzLLPcfVVw==";
     };
     buildInputs = globalBuildInputs;
     meta = {

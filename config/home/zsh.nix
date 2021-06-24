@@ -32,7 +32,6 @@
 
     settings = {
       add_newline = false;
-      character.symbol = "→";
       aws.disabled = true;
       cmd_duration.disabled = true;
     };
