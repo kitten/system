@@ -2,23 +2,10 @@ self: super:
 
 let
   inherit (super) callPackage fetchzip fetchFromGitHub openssl python3;
-
-  neovim-nightly-overlay = (import (builtins.fetchTarball {
-    url = https://github.com/mjlbach/neovim-nightly-overlay/archive/472c2233b80cf02c637bee5948fb4b671ae8c963.tar.gz;
-  }) self super);
 in
 
 rec {
   nodejs = self.nodejs-14_x;
-
-  neovim = (super.wrapNeovim(
-    neovim-nightly-overlay.neovim-nightly
-  ) {}).overrideAttrs(old: {
-    buildCommand = (''
-      mkdir -p $out/home
-      export HOME=$out/home
-    '' + old.buildCommand);
-  });
 
   flyctl = super.stdenv.mkDerivation {
     name = "flyctl";

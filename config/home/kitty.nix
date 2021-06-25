@@ -7,6 +7,7 @@ in {
 
   xdg.configFile."kitty/kitty.conf".text = ''
     # See ~/nix-system/config/kitty.nix
+    shell ${pkgs.zsh}/bin/zsh
     font_family Dank Mono
     ${colors.kitty}
     cursor_blink_interval -1
