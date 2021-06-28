@@ -31,6 +31,20 @@ in
     '' + old.buildCommand);
   });
 
+  kitty = (pkgsM1.kitty.overrideAttrs(old: rec {
+    version = "0.21.2-90164df";
+    buildInputs = old.buildInputs ++ (with pkgsM1.darwin.apple_sdk.frameworks; [ UserNotifications ]);
+    patches = [
+      ../assets/patches/kitty/fix-user-notifications-setup.diff
+    ];
+    src = fetchFromGitHub {
+      owner = "kovidgoyal";
+      repo = "kitty";
+      rev = "90164dfee799ccf999b8b65d421efa48d0755593";
+      sha256 = "sha256-/+OSVjC4++A4kaxEfI2kIgjXxL67lfoXCdH2PykLWxB=";
+    };
+  }));
+
   skhd = (pkgsM1.skhd.overrideAttrs(old: {
     version = "0.3.5-b659b90";
     buildInputs = with pkgsM1.darwin.apple_sdk.frameworks; [ Carbon Cocoa ];

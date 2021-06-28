@@ -16,7 +16,7 @@ in {
     ../config/rust.nix
     ../config/gpg.nix
     ../config/fonts.nix
-    ../config/kitty.nix
+    ../config/term.nix
 
     ./tools.nix
     ./users.nix
