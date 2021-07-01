@@ -49,14 +49,6 @@ let g:Gitv_DoNotMapCtrlKey = 1
 " Vitality
 let g:vitality_always_assume_iterm = 1
 
-" Limelight
-let g:limelight_conceal_ctermfg = '#4c5259'
-let g:limelight_conceal_guifg = '#4c5259'
-
-" Goyo
-let g:goyo_height = '85%'
-let g:goyo_width = '80%'
-
 " Lightline
 set noshowmode
 

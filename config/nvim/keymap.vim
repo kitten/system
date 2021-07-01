@@ -55,9 +55,6 @@ nnoremap <silent> <leader>k :bp <BAR> bd #<CR>
 " List buffers
 nnoremap <silent> <leader>b <cmd>lua require'telescope.builtin'.buffers()<CR>
 
-" Toggle zen mode
-nnoremap <silent> <leader>z :Goyo<CR>
-
 " Blackhole all x commands and make X behave like d
 nnoremap X "_d
 nnoremap XX "_dd

@@ -12,42 +12,17 @@ endif
 " Enable cursor shape switching
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
-function! ResetTheme()
-  " Don't reset background colour
-  let &t_ut=''
+" Don't reset background colour
+let &t_ut=''
 
-  " Better display for messages
-  set cmdheight=2
+" Better display for messages
+set cmdheight=2
 
-  " Always show signcolumns
-  set signcolumn=yes
+" Always show signcolumns
+set signcolumn=yes
 
-  " Syntax highlighting
-  syntax enable
-  set cursorline
-  set background=dark
-  colorscheme theme
-endfunction
-
-call ResetTheme()
-
-" Goyo Hooks
-function! s:goyo_enter()
-  silent !tmux set status off
-  silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-  lua vim.api.nvim_set_var("golden_size_off", 1)
-  set scrolloff=10
-  Limelight
-endfunction
-
-function! s:goyo_leave()
-  silent !tmux set status on
-  silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
-  lua vim.api.nvim_set_var("golden_size_off", 0)
-  set scrolloff=2
-  Limelight!
-  call ResetTheme()
-endfunction
-
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" Syntax highlighting
+syntax enable
+set cursorline
+set background=dark
+colorscheme theme

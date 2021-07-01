@@ -136,8 +136,6 @@ in {
           { name = "lightline-vim"; }
           { name = "vitality-vim"; }
           { name = "vim-zipper"; }
-          { name = "goyo-vim"; }
-          { name = "limelight-vim"; }
           { name = "vim-fugitive"; }
           { name = "vim-polyglot"; }
           { name = "vim-easymotion"; }
