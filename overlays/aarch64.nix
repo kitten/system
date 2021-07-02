@@ -20,8 +20,8 @@ in
       src = fetchFromGitHub {
         owner = "neovim";
         repo = "neovim";
-        rev = "bbd13aadd7e55172d4c29c667f38949d8a19e1c0";
-        sha256 = "1vq01z8zha1kk2fi98dg9432pdw1nh19b0g2hn3swyq9502hdydl";
+        rev = "v0.5.0";
+        sha256 = "0lgbf90sbachdag1zm9pmnlbn35964l3khs27qy4462qzpqyi9fi";
       };
     })
   ) {}).overrideAttrs(old: {
