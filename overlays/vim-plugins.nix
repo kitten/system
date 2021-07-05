@@ -4,30 +4,6 @@
 }:
 
 {
-  vim-purge-undodir = buildVimPluginFrom2Nix {
-    pname = "purge_undodir.vim";
-    version = "2017-09-11";
-    src = fetchFromGitHub {
-      owner = "jsfaint";
-      repo = "purge_undodir.vim";
-      rev = "7115b2462b7738dd796e9febecbd24055793789f";
-      sha256 = "1c20bk4g3a930pqs6w1wcw34wj7xpcp6zi1wkx7jadxqjjwgcclp";
-    };
-    meta.homepage = "https://github.com/jsfaint/purge_undodir.vim";
-  };
-
-  vitality-vim = buildVimPluginFrom2Nix {
-    pname = "vitality.vim";
-    version = "2017-01-30";
-    src = fetchFromGitHub {
-      owner = "sjl";
-      repo = "vitality.vim";
-      rev = "0f693bff572689ad52b781c012dad4926cd924f6";
-      sha256 = "06zjlyp86clv3airxaw45d94kcrznd36m5r4dpj6lfrijwc4xhly";
-    };
-    meta.homepage = "https://github.com/sjl/vitality.vim";
-  };
-
   vim-zipper = buildVimPluginFrom2Nix {
     pname = "vim-zipper";
     version = "2016-09-13";
@@ -50,6 +26,42 @@
       sha256 = "01fqm86hjgfhh5i7xrkphn7mpv4fwcq0xij3qhvhbh4xbfwpr49l";
     };
     meta.homepage = "https://github.com/dm1try/golden_size";
+  };
+
+  nvim-compe = buildVimPluginFrom2Nix {
+    pname = "nvim-compe";
+    version = "2021-07-01";
+    src = fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "nvim-compe";
+      rev = "077329e6bd1704d1acdff087ef1a73df23e92789";
+      sha256 = "0spnybax3zqcac1by0785v5zh4gl07lpgq6ivnnx1wyhfky87jx3";
+    };
+    meta.homepage = "https://github.com/hrsh7th/nvim-compe";
+  };
+
+  hop-nvim = buildVimPluginFrom2Nix {
+    pname = "hop-nvim";
+    version = "2021-07-01";
+    src = fetchFromGitHub {
+      owner = "phaazon";
+      repo = "hop.nvim";
+      rev = "0e9d4b4585f8a37d6cccbe9dd5993900b96a595b";
+      sha256 = "0gpah47azk1miybwm2aa6m3vm08683z85rgrjfywx76fnih9rs66";
+    };
+    meta.homepage = "https://github.com/phaazon/hop.nvim";
+  };
+
+  lualine-nvim = buildVimPluginFrom2Nix {
+    pname = "lualine-nvim";
+    version = "2021-05-27";
+    src = fetchFromGitHub {
+      owner = "hoob3rt";
+      repo = "lualine.nvim";
+      rev = "9726824f1dcc8907632bc7c32f9882f26340f815";
+      sha256 = "0gmbv0pbswkxjd4qw7dq66gp3fj594di0pgkb47yh3b46id8vkyj";
+    };
+    meta.homepage = "https://github.com/hoob3rt/lualine.nvim";
   };
 
   defx-nvim = buildVimPluginFrom2Nix {
@@ -98,54 +110,6 @@
       sha256 = "1k2glya8cd000kzfvx5fif9fcqvcq1k2vrkwyzhfm4yngz7bxm1p";
     };
     meta.homepage = "https://github.com/nvim-telescope/telescope.nvim";
-  };
-
-  completion-nvim = buildVimPluginFrom2Nix {
-    pname = "completion-nvim";
-    version = "2021-06-11";
-    src = fetchFromGitHub {
-      owner = "nvim-lua";
-      repo = "completion-nvim";
-      rev = "d62fff879b29fa1ce915887a75305af0fff57d32";
-      sha256 = "0hfsz06djyja8phj099fmbg2sa9jj89rqxvizwhwdxadshmr1f20";
-    };
-    meta.homepage = "https://github.com/nvim-lua/completion-nvim";
-  };
-
-  completion-buffers = buildVimPluginFrom2Nix {
-    pname = "completion-buffers";
-    version = "2021-01-17";
-    src = fetchFromGitHub {
-      owner = "steelsojka";
-      repo = "completion-buffers";
-      rev = "c36871b2a44b59761387f4972c617b44dcec5e75";
-      sha256 = "14rxmy3cjrl7lr4yvrk7nkhc5h8rlpj7xjixzgr0vmnbsl885kyh";
-    };
-    meta.homepage = "https://github.com/steelsojka/completion-buffers";
-  };
-
-  completion-treesitter = buildVimPluginFrom2Nix {
-    pname = "completion-treesitter";
-    version = "2020-06-26";
-    src = fetchFromGitHub {
-      owner = "nvim-treesitter";
-      repo = "completion-treesitter";
-      rev = "45c9b2faff4785539a0d0c655440c2465fed985a";
-      sha256 = "19pgdzzk7zq85b1grfjf0nncvs5vxrd4rj1p90iw2amq4mvqrx3l";
-    };
-    meta.homepage = "https://github.com/nvim-treesitter/completion-treesitter";
-  };
-
-  lsp-status-nvim = buildVimPluginFrom2Nix {
-    pname = "lsp-status.nvim";
-    version = "2021-05-20";
-    src = fetchFromGitHub {
-      owner = "nvim-lua";
-      repo = "lsp-status.nvim";
-      rev = "54c395248539d65fddda46f7d92e3421856874c1";
-      sha256 = "08dlfm3f9qa4p77zznmgjrmx09yngpcfzmxmyc5z3gp51b6bbixc";
-    };
-    meta.homepage = "https://github.com/nvim-lua/lsp-status.nvim";
   };
 
   nvim-lspconfig = buildVimPluginFrom2Nix {
