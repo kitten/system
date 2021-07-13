@@ -181,7 +181,10 @@ vim.api.nvim_set_keymap('', '<Right>', "<cmd>lua require('hop').hint_words({ dir
 -- telescope
 require('telescope').setup{
   defaults = {
-    vimgrep_arguments = { nix_bins.ripgrep, '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case' },
+    vimgrep_arguments = {
+      nix_bins.ripgrep,
+      '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case'
+    },
     prompt_prefix = '→ ',
     selection_caret = '→ ',
   },
@@ -220,14 +223,6 @@ vim.fn.sign_define("LspDiagnosticsWarningSign", { text = "◐", texthl = "LspDia
 local lsp = require('lspconfig')
 local lsp_util = require('lspconfig/util')
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    update_in_insert = false,
-  }
-)
-
 require('lspconfig/configs').prosemd = {
   default_config = {
     cmd = { "/Users/phil/Development/prosemd-lsp/target/release/prosemd-lsp", "--stdio" },
@@ -256,6 +251,11 @@ lsp.vimls.setup {
 lsp.rls.setup {
   on_attach = on_attach,
   cmd = { nix_bins.rls }
+}
+
+lsp.terraformls.setup {
+  on_attach = on_attach,
+  cmd = { nix_bins.tfls }
 }
 
 -- treesitter
