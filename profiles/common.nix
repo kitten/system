@@ -17,6 +17,7 @@ in {
     ../config/gpg.nix
     ../config/fonts.nix
     ../config/term.nix
+    ../config/postgres.nix
 
     ./tools.nix
     ./users.nix

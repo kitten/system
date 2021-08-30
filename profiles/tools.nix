@@ -12,5 +12,7 @@
     httpie
     curl
     sd
+    doppler
+    wrangler
   ];
 }

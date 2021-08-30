@@ -8,7 +8,7 @@ let
 in
 
 (if isDarwin then {
-  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x;
+  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x postgresql_13;
 
   nodejs = pkgsM1.nodejs-14_x;
 
@@ -56,14 +56,14 @@ in
     };
   }));
 
-  yabai = (pkgsM1.yabai.overrideAttrs(old: {
-    version = "3.3.10";
+  yabai = (super.yabai.overrideAttrs(old: {
+    version = "3.3.11-donaldguy.0";
     buildInputs = old.buildInputs ++ [ pkgsM1.darwin.apple_sdk.frameworks.SkyLight ];
     src = fetchFromGitHub {
-      owner = "koekeishiya";
+      owner = "donaldguy";
       repo = old.pname;
-      rev = "8777db43b8551e0bc4e5c55d1e15bcbed52501a1";
-      sha256 = "1gd88s3a05qvvyjhk5wpw1crb7p1gik1gdxn7pv2vq1x7zyvzvph";
+      rev = "db3e811238850352cb63b6c8bc090a7157a4abcb";
+      sha256 = "09lx8s19rrcydbjavfknkh945sdkl9qgic3sym4z731y79fb4sg3";
     };
   }));
 } else {})
