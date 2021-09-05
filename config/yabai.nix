@@ -18,7 +18,7 @@
       window_topmost = "on";
       window_shadow = "on";
 
-      window_border = "on";
+      window_border = "off";
       window_border_placement = "inset";
       window_border_width = 2;
 
@@ -35,11 +35,11 @@
       mouse_action2 = "resize";
 
       layout = "bsp";
-      top_padding = 10;
-      bottom_padding = 10;
-      left_padding = 10;
-      right_padding = 10;
-      window_gap = 10;
+      top_padding = 3;
+      bottom_padding = 3;
+      left_padding = 4;
+      right_padding = 4;
+      window_gap = 4;
     };
   };
 }

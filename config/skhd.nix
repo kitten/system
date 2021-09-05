@@ -8,14 +8,8 @@
     package = pkgs.skhd;
 
     skhdConfig = ''
-      :: default  : yabai -m config status_bar_background_color 0xff191b1f;\
-                    yabai -m config active_window_border_color  0xff6d3ab0;\
-                    yabai -m config normal_window_border_color  0xff505050;\
-                    yabai -m config window_border_width         2
-      :: screen @ : yabai -m config status_bar_background_color 0xffd14783;\
-                    yabai -m config active_window_border_color  0xffd14783;\
-                    yabai -m config normal_window_border_color  0xffd14783;\
-                    yabai -m config window_border_width         3
+      :: default  : yabai -m config window_border off
+      :: screen @ : yabai -m config window_border on
 
       default < ctrl - s ; screen
       screen  < ctrl - s ; default
