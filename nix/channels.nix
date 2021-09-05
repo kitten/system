@@ -4,8 +4,8 @@ let
   darwin_src = fetchFromGitHub {
     owner = "LnL7";
     repo = "nix-darwin";
-    rev = "a7492a8c76dcc702d0a65cd820a5f9baa8702684";
-    sha256 = "0d5mb454sxa45z3mcl8p3wd3sqg1qd1cqqr9hwkay71j9ydv1vpz";
+    rev = "007d700e644ac588ad6668e6439950a5b6e2ff64";
+    sha256 = "1rjq6ng6ic8dzhcj4cjyyq8k3lzs99dd5wflxv5sqzrjn2z6bxc4";
   };
 
   home-manager_src = fetchFromGitHub {
@@ -19,8 +19,8 @@ let
   nixpkgs_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "14afd6e5f98a105ba9c5ce66186564d908c56ee1";
-    sha256 = "13y51w50dzm2crhg4sr4yr3df6dxvch8gic8fhq4m6qcadccc29j";
+    rev = "d924c2327b5a0b083035c168549aa40685ed47a8";
+    sha256 = "1w3irlh0wg7g8788wszvzgd3v7hyd7381gcp0dljl2yikp13c91n";
   };
 in
 

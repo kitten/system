@@ -18,8 +18,7 @@ let
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
       vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
-      rls = '${pkgs.rls}/bin/rls',
-      tfls = '${pkgs.terraform-lsp}/bin/terraform-lsp'
+      rls = '${pkgs.rls}/bin/rls'
     }
   '' + (builtins.readFile ./init.lua) + "\nEOF";
 in {
