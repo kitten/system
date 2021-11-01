@@ -28,16 +28,64 @@
     meta.homepage = "https://github.com/dm1try/golden_size";
   };
 
-  nvim-compe = buildVimPluginFrom2Nix {
-    pname = "nvim-compe";
+  nvim-cmp = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp";
     version = "2021-08-31";
     src = fetchFromGitHub {
       owner = "hrsh7th";
-      repo = "nvim-compe";
-      rev = "efd9f425383ec57756a74c60a6e85d190b110ed7";
-      sha256 = "0vqmpgrvgn0923dadf9y1clxpaxf56brscsx31l96v2qghwac7m8";
+      repo = "nvim-cmp";
+      rev = "674d2b1389615f8c9c9366d4d01d0c26c0ba939d";
+      sha256 = "1dknmk7y9wsqw8sm0slhvhd8nhjnn97icm52s447pzfrb0xq4h71";
     };
-    meta.homepage = "https://github.com/hrsh7th/nvim-compe";
+    meta.homepage = "https://github.com/hrsh7th/nvim-cmp";
+  };
+
+  nvim-cmp-lsp = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp-lsp";
+    version = "2021-10-17";
+    src = fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "cmp-nvim-lsp";
+      rev = "accbe6d97548d8d3471c04d512d36fa61d0e4be8";
+      sha256 = "1dqx6yrd60x9ncjnpja87wv5zgnij7qmzbyh5xfyslk67c0i6mwm";
+    };
+    meta.homepage = "https://github.com/hrsh7th/cmp-nvim-lsp";
+  };
+
+  nvim-cmp-buffer = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp-buffer";
+    version = "2021-09-02";
+    src = fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "cmp-buffer";
+      rev = "5dde5430757696be4169ad409210cf5088554ed6";
+      sha256 = "0fdywbv4b0z1kjnkx9vxzvc4cvjyp9mnyv4xi14zndwjgf1gmcwl";
+    };
+    meta.homepage = "https://github.com/hrsh7th/cmp-buffer";
+  };
+
+  nvim-cmp-path = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp-path";
+    version = "2021-10-27";
+    src = fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "cmp-path";
+      rev = "97661b00232a2fe145fe48e295875bc3299ed1f7";
+      sha256 = "160jidd951qz1byjhbmd7ijp6hd37bdxbpg5wmzhprihwwpm628j";
+    };
+    meta.homepage = "https://github.com/hrsh7th/cmp-path";
+  };
+
+  nvim-cmp-cmdline = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp-cmdline";
+    version = "2021-10-29";
+    src = fetchFromGitHub {
+      owner = "hrsh7th";
+      repo = "cmp-cmdline";
+      rev = "a5cf11a8cd3a99294bc78e609d7c9323fef88831";
+      sha256 = "10b0smfww4g6kajy5sjrxknid3lc43kfviaq94rvq05r322kldh4";
+    };
+    meta.homepage = "https://github.com/hrsh7th/cmp-cmdline";
   };
 
   hop-nvim = buildVimPluginFrom2Nix {

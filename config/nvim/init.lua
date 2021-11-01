@@ -138,18 +138,6 @@ vim.api.nvim_set_keymap('n', '<M-v>', '"+P', key_opt)
 vim.api.nvim_set_keymap('v', '<', '<gv', key_opt)
 vim.api.nvim_set_keymap('v', '>', '>gv', key_opt)
 
--- pum tabbing
-function _G.smart_tab()
-  return vim.fn.pumvisible() == 1 and t'<C-n>' or t'<Tab>'
-end
-
-function _G.s_smart_tab()
-  return vim.fn.pumvisible() == 1 and t'<C-p>' or t'<S-Tab>'
-end
-
-vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.smart_tab()', { expr = true, noremap = true })
-vim.api.nvim_set_keymap('i', '<S-Tab>', 'v:lua.s_smart_tab()', { expr = true, noremap = true })
-
 -- macros per line
 vim.api.nvim_set_keymap('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', key_opt)
 
@@ -221,39 +209,28 @@ vim.fn.sign_define("LspDiagnosticsWarningSign", { text = "◐", texthl = "LspDia
 
 -- lspconfig
 local lsp = require('lspconfig')
-local lsp_util = require('lspconfig/util')
-
-require('lspconfig/configs').prosemd = {
-  default_config = {
-    cmd = { "/Users/phil/Development/prosemd-lsp/target/release/prosemd-lsp", "--stdio" },
-    filetypes = { "markdown" },
-    root_dir = function(fname)
-      return lsp_util.find_git_ancestor(fname) or vim.fn.getcwd()
-    end,
-    settings = {},
-  }
-}
-
-lsp.prosemd.setup {
-  on_attach = on_attach
-}
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 lsp.tsserver.setup {
+  capabilities = capabilities,
   on_attach = on_attach,
   cmd = { nix_bins.tsserver, "--stdio" }
 }
 
 lsp.vimls.setup {
+  capabilities = capabilities,
   on_attach = on_attach,
   cmd = { nix_bins.vimls, "--stdio" }
 }
 
 lsp.rls.setup {
+  capabilities = capabilities,
   on_attach = on_attach,
   cmd = { nix_bins.rls }
 }
 
 lsp.terraformls.setup {
+  capabilities = capabilities,
   on_attach = on_attach,
   cmd = { nix_bins.tfls }
 }
@@ -346,34 +323,37 @@ vim.api.nvim_exec([[
 ]], false)
 
 -- completion
-require'compe'.setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 3,
-  preselect = 'enable',
-  throttle_time = 100,
-  source_timeout = 200,
-  resolve_timeout = 800,
-  incomplete_delay = 400,
-  max_abbr_width = 100,
-  max_kind_width = 100,
-  max_menu_width = 100,
-  documentation = {
-    border = { '', '' ,'', ' ', '', '', '', ' ' },
-    winhighlight = 'NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder',
-    max_width = 120,
-    min_width = 60,
-    max_height = math.floor(vim.o.lines * 0.3),
-    min_height = 1,
+local cmp = require('cmp')
+
+cmp.setup({
+  mapping = {
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<Tab>'] = function(fallback)
+      return cmp.visible() and cmp.select_next_item() or fallback()
+    end,
+    ['<S-Tab>'] = function(fallback)
+      return cmp.visible() and cmp.select_prev_item() or fallback()
+    end,
   },
-  source = {
-    path = true;
-    buffer = true;
-    nvim_lsp = true;
-    nvim_lua = true;
+  completion = {
+    keyword_length = 3,
   },
-}
+  sources = cmp.config.sources(
+    {{ name = 'nvim_lsp' }},
+    {{ name = 'buffer' }}
+  ),
+})
+
+cmp.setup.cmdline('/', {
+  sources = {{ name = 'buffer' }}
+})
+
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources(
+    {{ name = 'path' }},
+    {{ name = 'cmdline' }}
+  ),
+})
 
 -- lualine
 require('lualine').setup {

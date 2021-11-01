@@ -47,7 +47,11 @@ in {
           { name = "telescope-nvim"; }
           { name = "lualine-nvim"; }
           { name = "hop-nvim"; }
-          { name = "nvim-compe"; }
+          { name = "nvim-cmp"; }
+          { name = "nvim-cmp-lsp"; }
+          { name = "nvim-cmp-buffer"; }
+          { name = "nvim-cmp-path"; }
+          { name = "nvim-cmp-cmdline"; }
           { name = "nvim-treesitter"; }
           { name = "nvim-treesitter-refactor"; }
           { name = "nvim-treesitter-textobjects"; }
