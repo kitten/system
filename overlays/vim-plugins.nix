@@ -42,24 +42,24 @@
 
   hop-nvim = buildVimPluginFrom2Nix {
     pname = "hop-nvim";
-    version = "2021-07-14";
+    version = "2021-10-25";
     src = fetchFromGitHub {
       owner = "phaazon";
       repo = "hop.nvim";
-      rev = "9c849dac4b8efe6ad30aabec995dabfb5b251046";
-      sha256 = "0z0ddrqhpirjdck9j0dmaxx0ra5hlcll0iawqb0078xg181bhnwh";
+      rev = "59bc934bdfa7d8fa8dab61b3cf0f667586c69fe1";
+      sha256 = "0mkapij49vlaav2kzpbgbip3g30x2xivamabl4fbvp6p29nr3v1f";
     };
     meta.homepage = "https://github.com/phaazon/hop.nvim";
   };
 
   lualine-nvim = buildVimPluginFrom2Nix {
     pname = "lualine-nvim";
-    version = "2021-05-27";
+    version = "2021-10-29";
     src = fetchFromGitHub {
       owner = "hoob3rt";
       repo = "lualine.nvim";
-      rev = "9726824f1dcc8907632bc7c32f9882f26340f815";
-      sha256 = "0gmbv0pbswkxjd4qw7dq66gp3fj594di0pgkb47yh3b46id8vkyj";
+      rev = "7eff9bbeb4e3ff93381f8f631536c59f1b65ffc9";
+      sha256 = "1hprfgzzn8d309cwvym2hyxpa771q95kp8349gpbyvvh491qp63j";
     };
     meta.homepage = "https://github.com/hoob3rt/lualine.nvim";
   };
@@ -78,12 +78,12 @@
 
   plenary-nvim = buildVimPluginFrom2Nix {
     pname = "plenary-nvim";
-    version = "2021-09-01";
+    version = "2021-10-29";
     src = fetchFromGitHub {
       owner = "nvim-lua";
       repo = "plenary.nvim";
-      rev = "06266e7bf675ba9af887fb6d1661b289fdd9bcf4";
-      sha256 = "02c1y9ygzq8fmcgy7l4khpb141v2fww3gbl8vf0ds2f70zgglxs4";
+      rev = "96e821e8001c21bc904d3c15aa96a70c11462c5f";
+      sha256 = "0y05pwc4kbjqgj1zjjhvmrll3d53wz55zgqavxd4bvj2gwhvnd2k";
     };
     meta.homepage = "https://github.com/nvim-lua/plenary.nvim";
   };
@@ -102,36 +102,36 @@
 
   telescope-nvim = buildVimPluginFrom2Nix {
     pname = "telescope-nvim";
-    version = "2021-09-05";
+    version = "2021-10-31";
     src = fetchFromGitHub {
       owner = "nvim-telescope";
       repo = "telescope.nvim";
-      rev = "5fc94cdd784ee1e4d79c850102b1035b58b5e435";
-      sha256 = "1i8p3l4srmx8clyxmslim32gs0nwwfk298w574scy41w06y90jr2";
+      rev = "0caec3d6e4d3c3c71339eb18a9aae7ed0f24badc";
+      sha256 = "0jq65g2769csgi4saw5d6mmy141wl1bkplv59jqmzhalz0k5dqr4";
     };
     meta.homepage = "https://github.com/nvim-telescope/telescope.nvim";
   };
 
   nvim-lspconfig = buildVimPluginFrom2Nix {
     pname = "nvim-lspconfig";
-    version = "2020-09-05";
+    version = "2020-11-01";
     src = fetchFromGitHub {
       owner = "neovim";
       repo = "nvim-lspconfig";
-      rev = "cbd7c91530d62a72bf4a5a5a1aac384883077d81";
-      sha256 = "0v10ai0061x4wb67igzrbvs7x2w7mky3vj3cxpvyymz2bw8isp26";
+      rev = "8cd75c8fdfe6f5122b077fc990bb1fa9fbcbb50c";
+      sha256 = "1hcl770lmzxcgwim1fksy7qfcznyh08bdylmijvlc3f8xdh07rgm";
     };
     meta.homepage = "https://github.com/neovim/nvim-lspconfig";
   };
 
   nvim-treesitter = buildVimPluginFrom2Nix {
     pname = "nvim-treesitter";
-    version = "2021-09-03";
+    version = "2021-11-01";
     src = fetchFromGitHub {
       owner = "nvim-treesitter";
       repo = "nvim-treesitter";
-      rev = "8c105dedec9c6671697b5e68cd96d34a726db76d";
-      sha256 = "0aiscb0jwr79zn8j28s5gpyvycch0kvs92hs8iywgdjcymnlj7ij";
+      rev = "6d08b25f0e1e054a06241e2897a45fffe9fe6f8d";
+      sha256 = "09p2msrhqvb3501hjw3vlpzmkp1a66jgjyy9bj7xg4zd83j72lza";
     };
     meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter";
   };
@@ -150,12 +150,12 @@
 
   nvim-treesitter-textobjects = buildVimPluginFrom2Nix {
     pname = "nvim-treesitter-textobjects";
-    version = "2021-09-03";
+    version = "2021-10-19";
     src = fetchFromGitHub {
       owner = "nvim-treesitter";
       repo = "nvim-treesitter-textobjects";
-      rev = "4cf4feaa893fc1e379d49942bc3d94034f5c9f61";
-      sha256 = "1lp2nxscqvl4ay3pz3yj76wak2arnvrr098ml06ah261rd7548ai";
+      rev = "ba9be1b0369d77c76ad09ea6f7048d55c3905e75";
+      sha256 = "0qdnx62shnsblhhxwwz7m48ib4390l1vrlpkkwd4bk07lhcafdm3";
     };
     meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects";
   };
