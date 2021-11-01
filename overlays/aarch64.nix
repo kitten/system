@@ -14,14 +14,14 @@ in
 
   neovim = (pkgsM1.wrapNeovim(
     pkgsM1.neovim-unwrapped.overrideAttrs(old: {
-      version = "0.5.0-bbd13aa";
+      version = "0.5.1-0lgbf90";
       buildInputs = old.buildInputs ++ [ pkgsM1.tree-sitter ];
       cmakeFlags = old.cmakeFlags ++ [ "-DUSE_BUNDLED=OFF" ];
       src = fetchFromGitHub {
         owner = "neovim";
         repo = "neovim";
-        rev = "v0.5.0";
-        sha256 = "0lgbf90sbachdag1zm9pmnlbn35964l3khs27qy4462qzpqyi9fi";
+        rev = "v0.5.1";
+        sha256 = "0b2gda9h14lvwahrr7kq3ix8wsw99g4ngy1grmhv5544n93ypcyk";
       };
     })
   ) {}).overrideAttrs(old: {
@@ -32,7 +32,7 @@ in
   });
 
   kitty = (pkgsM1.kitty.overrideAttrs(old: rec {
-    version = "0.21.2-90164df";
+    version = "0.23.1-cd7b4fc";
     buildInputs = old.buildInputs ++ (with pkgsM1.darwin.apple_sdk.frameworks; [ UserNotifications ]);
     patches = [
       ../assets/patches/kitty/fix-user-notifications-setup.diff
@@ -40,8 +40,8 @@ in
     src = fetchFromGitHub {
       owner = "kovidgoyal";
       repo = "kitty";
-      rev = "90164dfee799ccf999b8b65d421efa48d0755593";
-      sha256 = "sha256-/+OSVjC4++A4kaxEfI2kIgjXxL67lfoXCdH2PykLWxB=";
+      rev = "cd7b4fcd8e0cda6fa2d5ca18a308630bffc7bba9";
+      sha256 = "0vpc17j8nxkq3w4kk05bfx4slv2k7mc29938pds6298fl59h676r";
     };
   }));
 
