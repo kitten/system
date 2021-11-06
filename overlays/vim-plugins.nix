@@ -100,16 +100,16 @@
     meta.homepage = "https://github.com/phaazon/hop.nvim";
   };
 
-  lualine-nvim = buildVimPluginFrom2Nix {
-    pname = "lualine-nvim";
-    version = "2021-10-29";
+  hardline-nvim = buildVimPluginFrom2Nix {
+    pname = "hardline-nvim";
+    version = "2021-09-03";
     src = fetchFromGitHub {
-      owner = "hoob3rt";
-      repo = "lualine.nvim";
-      rev = "7eff9bbeb4e3ff93381f8f631536c59f1b65ffc9";
-      sha256 = "1hprfgzzn8d309cwvym2hyxpa771q95kp8349gpbyvvh491qp63j";
+      owner = "ojroques";
+      repo = "nvim-hardline";
+      rev = "9a6998ff2af04ee86cf87e710fd9daa279726bdc";
+      sha256 = "1zh6ab0zvrs6jxivngq7l5lnz1g61h31y9bzibgmnq2ab6qm7rn9";
     };
-    meta.homepage = "https://github.com/hoob3rt/lualine.nvim";
+    meta.homepage = "https://github.com/ojroques/nvim-hardline";
   };
 
   defx-nvim = buildVimPluginFrom2Nix {

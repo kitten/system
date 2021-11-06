@@ -20,6 +20,8 @@ let
       vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
       rls = '${pkgs.rls}/bin/rls'
     }
+
+    hardline_colors = ${colors.vim-hardline}
   '' + (builtins.readFile ./init.lua) + "\nEOF";
 in {
   environment.variables = { EDITOR = "vim"; };
@@ -39,13 +41,13 @@ in {
           { name = "vim-repeat"; }
           { name = "editorconfig-vim"; }
           { name = "vim-polyglot"; }
+          { name = "hardline-nvim"; }
           { name = "nvim-lspconfig"; }
           { name = "vim-golden-size"; }
           { name = "defx-nvim"; }
           { name = "plenary-nvim"; }
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }
-          { name = "lualine-nvim"; }
           { name = "hop-nvim"; }
           { name = "nvim-cmp"; }
           { name = "nvim-cmp-lsp"; }

@@ -37,6 +37,23 @@ in rec {
       endif
     '' else "");
 
+  mkVimHardlineColors = colors:
+    with colors; ''
+      {
+        text = {gui = "${gutter.gui}", cterm = "${gutter.cterm}", cterm16 = "${gutter.cterm16}"},
+        normal = {gui = "${green.gui}", cterm = "${green.cterm}", cterm16 = "${green.cterm16}"},
+        insert = {gui = "${blue.gui}", cterm = "${blue.cterm}", cterm16 = "${blue.cterm16}"},
+        replace = {gui = "${yellow.gui}", cterm = "${yellow.cterm}", cterm16 = "${yellow.cterm16}"},
+        inactive_comment = {gui = "${brightWhite.gui}", cterm = "${brightWhite.cterm}", cterm16 = "${brightWhite.cterm16}"},
+        inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
+        inactive_menu = {gui = "${split.gui}", cterm = "${split.cterm}", cterm16 = "${split.cterm16}"},
+        visual = {gui = "${brightCyan.gui}", cterm = "${brightCyan.cterm}", cterm16 = "${brightCyan.cterm16}"},
+        command = {gui = "${brightPurple.gui}", cterm = "${brightPurple.cterm}", cterm16 = "${brightPurple.cterm16}"},
+        alt_text = {gui = "${darkWhite.gui}", cterm = "${darkWhite.cterm}", cterm16 = "${darkWhite.cterm16}"},
+        warning = {gui = "${brightYellow.gui}", cterm = "${brightYellow.cterm}", cterm16 = "${brightYellow.cterm16}"},
+      }
+    '';
+
   mkVimLightlineSyntax = name: colors:
     with colors; ''
       let g:lightline#colorscheme#${name}#palette = lightline#colorscheme#flatten({

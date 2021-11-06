@@ -355,29 +355,21 @@ cmp.setup.cmdline(':', {
   ),
 })
 
--- lualine
-require('lualine').setup {
-  options = {
-    icons_enabled = false,
-    theme = 'ayu_mirage',
-    component_separators = {'', ''},
-    section_separators = {'', ''},
-    disabled_filetypes = {}
-  },
+-- hardline
+require('hardline').setup {
+  bufferline = false,
+  theme = 'custom',
+  custom_theme = hardline_colors,
   sections = {
-    lualine_a = {'mode'},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
+    {class = 'mode', item = require('hardline.parts.mode').get_item},
+    -- {class = 'high', item = require('hardline.parts.git').get_item, hide = 100},
+    {class = 'high', item = require('hardline.parts.filename').get_item},
+    '%<',
+    {class = 'med', item = '%='},
+    {class = 'error', item = require('hardline.parts.lsp').get_error},
+    {class = 'warning', item = require('hardline.parts.lsp').get_warning},
+    {class = 'warning', item = require('hardline.parts.whitespace').get_item},
+    {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
+    {class = 'mode', item = require('hardline.parts.line').get_item},
   },
 }

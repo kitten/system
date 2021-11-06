@@ -1,5 +1,5 @@
 let
-  inherit (import ../modules/color-utils.nix) mkKittyTheme mkVimSyntax mkVimLightlineSyntax mkColor mkHighlight;
+  inherit (import ../modules/color-utils.nix) mkKittyTheme mkVimSyntax mkVimHardlineColors mkColor mkHighlight;
 in rec {
   colors = {
     gutter = (mkColor "#16181c" "232" "15"); # gutter fg grey
@@ -34,8 +34,7 @@ in rec {
   };
 
   kitty = mkKittyTheme colors;
-
-  vim-lightline = mkVimLightlineSyntax "theme" colors;
+  vim-hardline = mkVimHardlineColors colors;
 
   vim = with colors; mkVimSyntax "theme" {
     # Syntax Groups (descriptions and ordering from `:h w18`)
