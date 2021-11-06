@@ -99,7 +99,7 @@ in rec {
 
     ErrorMsg = { fg = brightRed; };
     WarningMsg = { fg = yellow; };
-    VertSplit = { fg = split; bg = split; };
+    VertSplit = { fg = gutter; };
     Folded = { bg = gutter; fg = brightWhite; };
     FoldColumn = mkHighlight {};
     SignColumn = mkHighlight {};

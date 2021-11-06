@@ -66,6 +66,7 @@ vim.wo.number = true
 -- splitting options
 vim.go.splitbelow = true
 vim.go.splitright = true
+vim.go.fillchars = 'vert:│'
 
 -- undo history
 local undodir = vim.fn.expand('$HOME') .. '/.cache/nvim/undo'
