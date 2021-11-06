@@ -36,6 +36,13 @@ let
       source = readSecretFile ../assets/MonoLisa-BoldItalic.otf;
     }
   ];
+
+  codicons = copyFiles "font-codicon" [
+    {
+      target = "share/fonts/opentype/codicon.otf";
+      source = readSecretFile ../assets/codicon.otf;
+    }
+  ];
 in
 
 mkMerge [
@@ -43,6 +50,7 @@ mkMerge [
     fonts.fonts = with pkgs; flatten [
       monolisa
       dank-mono
+      codicons
       (optional isLinux emojione)
     ];
   }

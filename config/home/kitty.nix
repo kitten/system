@@ -9,6 +9,7 @@ in {
     # See ~/nix-system/config/kitty.nix
     shell ${pkgs.zsh}/bin/zsh
     font_family Dank Mono
+    symbol_map U+ea60-U+ebd1 codicon
     ${colors.kitty}
     cursor_blink_interval -1
     font_size 14.0
