@@ -207,8 +207,14 @@ vim.diagnostic.config({
   },
 })
 
--- callback for LSP init
-local on_attach = function(client, buf)
+-- lspconfig
+local lsp = require('lspconfig')
+
+local function lsp_on_attach(client, buf)
+  if client.config.flags then
+    client.config.flags.allow_incremental_sync = true
+  end
+
   local function buf_set_option(...) vim.api.nvim_buf_set_option(buf, ...) end
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(buf, ...) end
 
@@ -225,32 +231,32 @@ local on_attach = function(client, buf)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
 end
 
--- lspconfig
-local lsp = require('lspconfig')
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local function lsp_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.codeLens = { dynamicRegistration = false }
+  capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
+  return require('cmp_nvim_lsp').update_capabilities(capabilities)
+end
 
 lsp.tsserver.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { nix_bins.tsserver, "--stdio" }
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.tsserver, "--stdio" },
+  flags = { debounce_text_changes = 200 },
 }
 
 lsp.vimls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { nix_bins.vimls, "--stdio" }
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.vimls, "--stdio" },
+  flags = { debounce_text_changes = 200 },
 }
 
 lsp.rls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { nix_bins.rls }
-}
-
-lsp.terraformls.setup {
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { nix_bins.tfls }
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.rls },
+  flags = { debounce_text_changes = 200 },
 }
 
 -- treesitter
