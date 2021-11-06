@@ -42,6 +42,7 @@ in {
           { name = "editorconfig-vim"; }
           { name = "vim-polyglot"; }
           { name = "hardline-nvim"; }
+          { name = "gitsigns-nvim"; }
           { name = "nvim-lspconfig"; }
           { name = "vim-golden-size"; }
           { name = "defx-nvim"; }
@@ -57,6 +58,7 @@ in {
           { name = "nvim-treesitter"; }
           { name = "nvim-treesitter-refactor"; }
           { name = "nvim-treesitter-textobjects"; }
+          { name = "nvim-treesitter-context"; }
         ];
       };
     })

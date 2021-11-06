@@ -2,12 +2,12 @@ let
   inherit (import ../modules/color-utils.nix) mkKittyTheme mkVimSyntax mkVimHardlineColors mkColor mkHighlight;
 in rec {
   colors = {
-    gutter = (mkColor "#16181c" "232" "15"); # gutter fg grey
+    gutter = (mkColor "#16171d" "232" "15"); # gutter fg grey
     cursor = (mkColor "#2C323C" "236" "8"); # cursor grey
     element = (mkColor "#404449" "238" "15"); # special grey
     split = (mkColor "#282c34" "59" "15");
 
-    black = (mkColor "#14161A" "235" "0");
+    black = (mkColor "#13131a" "235" "0");
     grey = (mkColor "#3E4452" "237" "15");
 
     red = (mkColor "#ED95A8" "204" "1");
@@ -100,11 +100,11 @@ in rec {
     ErrorMsg = { fg = brightRed; };
     WarningMsg = { fg = yellow; };
     VertSplit = { fg = split; bg = split; };
-    Folded = { bg = cursor; fg = brightWhite; };
+    Folded = { bg = gutter; fg = brightWhite; };
     FoldColumn = mkHighlight {};
     SignColumn = mkHighlight {};
     IncSearch = { fg = blue; style = "reverse"; };
-    LineNr = { fg = gutter; bg = gutter; };
+    LineNr = { fg = black; bg = black; };
     CursorLineNr = { fg = brightWhite; bg = gutter; style = "bold"; };
     MatchParen = { fg = blue; style = "underline"; };
     ModeMsg = mkHighlight {};
@@ -134,6 +134,8 @@ in rec {
     Visual = { bg = grey; };
     VisualNOS = { fg = grey; };
     WildMenu = { fg = black; bg = blue; };
+    NormalFloat = { bg = split; };
+    TreesitterContext = { bg = gutter; };
 
     dockerfile.Keyword = { fg = purple; };
 
@@ -388,15 +390,21 @@ in rec {
       brightWhite = { fg = brightWhite; };
     };
 
+    GitSigns = {
+      Add = { fg = green; };
+      Change = { fg = brightBlue; };
+      Delete = { fg = brightRed; };
+    };
+
     Signify = {
       Add = { fg = green; };
-      Change = { fg = yellow; };
+      Change = { fg = brightBlue; };
       Delete = { fg = brightRed; };
     };
 
     GitGutter = {
       Add = { fg = green; };
-      Change = { fg = yellow; };
+      Change = { fg = brightBlue; };
       Delete = { fg = brightRed; };
     };
 

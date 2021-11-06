@@ -84,7 +84,7 @@ vim.o.showmode = false
 vim.o.termguicolors = true
 vim.o.cmdheight = 1
 vim.o.background = 'dark'
-vim.wo.signcolumn = 'yes'
+vim.wo.signcolumn = 'number'
 vim.wo.cursorline = true
 vim.cmd('colorscheme theme')
 
@@ -264,6 +264,20 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+-- treesitter context
+require('treesitter-context').setup {
+  enable = true,
+  throttle = true,
+  max_lines = 1,
+  patterns = {
+    default = {
+      'class',
+      'function',
+      'method',
+    },
+  },
+}
+
 -- defx settings
 vim.api.nvim_exec([[
   function! DefxSettings() abort
@@ -355,6 +369,31 @@ cmp.setup.cmdline(':', {
   ),
 })
 
+-- gitsigns
+require('gitsigns').setup {
+  signcolumn = true,
+  numhl      = false,
+  linehl     = false,
+  word_diff  = false,
+  current_line_blame = false,
+  keymaps = {
+    noremap = true,
+    ['n ]c'] = { expr = true, "&diff ? ']c' : \"<cmd>lua require('gitsigns.actions').next_hunk()<CR>\""},
+    ['n [c'] = { expr = true, "&diff ? '[c' : \"<cmd>lua require('gitsigns.actions').prev_hunk()<CR>\""},
+    ['n gb'] = "<cmd>lua require('gitsigns').blame_line(false)<CR>",
+    ['n gh'] = "<cmd>lua require('gitsigns').preview_hunk(true)<CR>",
+    ['o ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
+    ['x ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
+  },
+  preview_config = {
+    border = 'none',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 1,
+    col = 0
+  },
+}
+
 -- hardline
 require('hardline').setup {
   bufferline = false,
@@ -362,8 +401,8 @@ require('hardline').setup {
   custom_theme = hardline_colors,
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
-    -- {class = 'high', item = require('hardline.parts.git').get_item, hide = 100},
     {class = 'high', item = require('hardline.parts.filename').get_item},
+    {class = 'med', item = require('hardline.parts.git').get_item, hide = 100},
     '%<',
     {class = 'med', item = '%='},
     {class = 'error', item = require('hardline.parts.lsp').get_error},

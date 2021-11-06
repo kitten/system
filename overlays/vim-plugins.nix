@@ -112,6 +112,18 @@
     meta.homepage = "https://github.com/ojroques/nvim-hardline";
   };
 
+  gitsigns-nvim = buildVimPluginFrom2Nix {
+    pname = "gitsigns-nvim";
+    version = "2021-11-04";
+    src = fetchFromGitHub {
+      owner = "lewis6991";
+      repo = "gitsigns.nvim";
+      rev = "61a81b0c003de3e12555a5626d66fb6a060d8aca";
+      sha256 = "0ya0vgwlmy2mpkgqhz0lyxh19iwilm5vwvk4c9ygsxwq3561vfcw";
+    };
+    meta.homepage = "https://github.com/lewis6991/gitsigns.nvim";
+  };
+
   defx-nvim = buildVimPluginFrom2Nix {
     pname = "defx-nvim";
     version = "2021-08-18";
@@ -206,5 +218,17 @@
       sha256 = "0qdnx62shnsblhhxwwz7m48ib4390l1vrlpkkwd4bk07lhcafdm3";
     };
     meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects";
+  };
+
+  nvim-treesitter-context = buildVimPluginFrom2Nix {
+    pname = "nvim-treesitter-context";
+    version = "2021-10-05";
+    src = fetchFromGitHub {
+      owner = "romgrk";
+      repo = "nvim-treesitter-context";
+      rev = "e1f54e1627176337b3803a11403ac0e9d09de818";
+      sha256 = "0xg3c8msd9fsmwlxgpxwbz2h9aizc3f7jn9p1q23pjlpcxr8xwll";
+    };
+    meta.homepage = "https://github.com/romgrk/nvim-treesitter-context";
   };
 }
