@@ -14,14 +14,14 @@ in
 
   neovim = (pkgsM1.wrapNeovim(
     pkgsM1.neovim-unwrapped.overrideAttrs(old: {
-      version = "0.5.1-0lgbf90";
+      version = "0.6.0-dev+560-g1fdbd29df";
       buildInputs = old.buildInputs ++ [ pkgsM1.tree-sitter ];
       cmakeFlags = old.cmakeFlags ++ [ "-DUSE_BUNDLED=OFF" ];
       src = fetchFromGitHub {
         owner = "neovim";
         repo = "neovim";
-        rev = "v0.5.1";
-        sha256 = "0b2gda9h14lvwahrr7kq3ix8wsw99g4ngy1grmhv5544n93ypcyk";
+        rev = "1fdbd29dfa6366f8346693d0bf67f4f782ab0f32";
+        sha256 = "04x0ddisxiqwhd99pmrdj649i06hf50a3lzq9ii0xvkhsaarwbr4";
       };
     })
   ) {}).overrideAttrs(old: {

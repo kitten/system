@@ -186,6 +186,27 @@ vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin')
 vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", key_opt)
 
+-- lsp setup
+vim.fn.sign_define("DiagnosticSignError", { text = "●", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarning", { text = "◐", texthl = "DiagnosticSignWarning" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSignInformation" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "◎", texthl = "DiagnosticSignWarning" })
+
+vim.diagnostic.config({
+  underline = true,
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    show_header = true,
+    source = "if_many",
+    border = "rounded",
+    focusable = false,
+    severity_sort = true,
+  },
+})
+
 -- callback for LSP init
 local on_attach = function(client, buf)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(buf, ...) end
@@ -203,10 +224,6 @@ local on_attach = function(client, buf)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
 end
-
--- lsp signs
-vim.fn.sign_define("LspDiagnosticsErrorSign", { text = "●", texthl = "LspDiagnosticsError" })
-vim.fn.sign_define("LspDiagnosticsWarningSign", { text = "◐", texthl = "LspDiagnosticsWarning" })
 
 -- lspconfig
 local lsp = require('lspconfig')

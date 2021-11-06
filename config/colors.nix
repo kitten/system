@@ -414,9 +414,11 @@ in rec {
       InfoSign = { fg = blue; };
     };
 
-    LspDiagnostics = {
+    DiagnosticSign = {
       Warning = { fg = yellow; };
       Error = { fg = brightRed; };
+      Information = { fg = blue; };
+      Hint = { fg = brightBlue; };
     };
 
     TS.Definition = { fg = blue; bg = brightWhite; };
