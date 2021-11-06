@@ -207,6 +207,11 @@ vim.diagnostic.config({
   },
 })
 
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  max_width = math.max(math.floor(vim.o.columns * 0.7), 100),
+  max_height = math.max(math.floor(vim.o.lines * 0.3), 30),
+})
+
 -- lspconfig
 local lsp = require('lspconfig')
 
