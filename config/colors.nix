@@ -418,7 +418,7 @@ in rec {
       Warning = { fg = yellow; };
       Error = { fg = brightRed; };
       Information = { fg = blue; };
-      Hint = { fg = brightBlue; };
+      Hint = { fg = yellow; };
     };
 
     TS.Definition = { fg = blue; bg = brightWhite; };

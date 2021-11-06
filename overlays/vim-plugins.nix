@@ -196,6 +196,30 @@
     meta.homepage = "https://github.com/neovim/nvim-lspconfig";
   };
 
+  lspkind-nvim = buildVimPluginFrom2Nix {
+    pname = "lspkind-nvim";
+    version = "2020-10-25";
+    src = fetchFromGitHub {
+      owner = "onsails";
+      repo = "lspkind-nvim";
+      rev = "1557ce5b3b8e497c1cb1d0b9d967a873136b0c23";
+      sha256 = "0qrfrwd7mz311hjmpkjfjg1d2dkar675vflizpj0p09b5dp8zkbv";
+    };
+    meta.homepage = "https://github.com/onsails/lspkind-nvim";
+  };
+
+  null-ls-nvim = buildVimPluginFrom2Nix {
+    pname = "null-ls-nvim";
+    version = "2020-11-04";
+    src = fetchFromGitHub {
+      owner = "jose-elias-alvarez";
+      repo = "null-ls.nvim";
+      rev = "64b269b51c7490660dcb2008f59ae260f2cdbbe4";
+      sha256 = "1vp5y8cd3ljhshg2hrisbgxxb1zz5xqqxldngv3ll98pd98f9yjy";
+    };
+    meta.homepage = "https://github.com/jose-elias-alvarez/null-ls.nvim";
+  };
+
   nvim-treesitter = buildVimPluginFrom2Nix {
     pname = "nvim-treesitter";
     version = "2021-11-01";

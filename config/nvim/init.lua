@@ -192,11 +192,11 @@ vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin')
 vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", key_opt)
 
--- lsp setup
+-- define signs
 vim.fn.sign_define("DiagnosticSignError", { text = "●", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarning", { text = "◐", texthl = "DiagnosticSignWarning" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSignInformation" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "◎", texthl = "DiagnosticSignWarning" })
 
 vim.diagnostic.config({
   underline = true,
@@ -218,6 +218,14 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   max_height = math.max(math.floor(vim.o.lines * 0.3), 30),
 })
 
+-- null-ls
+local null_ls = require('null-ls')
+null_ls.config {
+  sources = {
+    null_ls.builtins.code_actions.gitsigns,
+  }
+}
+
 -- lspconfig
 local lsp = require('lspconfig')
 
@@ -235,6 +243,7 @@ local function lsp_on_attach(client, buf)
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', key_opt)
   buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', key_opt)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', key_opt)
+  buf_set_keymap('n', 'gf', '<cmd>lua require("telescope.builtin").lsp_code_actions()<CR>', key_opt)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', key_opt)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', key_opt)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
@@ -248,6 +257,8 @@ local function lsp_capabilities()
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   return require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
+
+lsp["null-ls"].setup({ on_attach = lsp_on_attach, })
 
 lsp.tsserver.setup {
   capabilities = lsp_capabilities(),
@@ -297,6 +308,12 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+}
+
+-- lspkind
+require('lspkind').init {
+  with_text = true,
+  preset = 'codicons',
 }
 
 -- treesitter context
@@ -374,7 +391,7 @@ vim.api.nvim_exec([[
 -- completion
 local cmp = require('cmp')
 
-cmp.setup({
+cmp.setup {
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
     ['<Tab>'] = function(fallback)
@@ -391,7 +408,10 @@ cmp.setup({
     {{ name = 'nvim_lsp' }},
     {{ name = 'buffer' }}
   ),
-})
+  formatting = {
+    format = require('lspkind').cmp_format(),
+  },
+}
 
 cmp.setup.cmdline('/', {
   sources = {{ name = 'buffer' }}

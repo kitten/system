@@ -44,6 +44,8 @@ in {
           { name = "hardline-nvim"; }
           { name = "gitsigns-nvim"; }
           { name = "nvim-lspconfig"; }
+          { name = "lspkind-nvim"; }
+          { name = "null-ls-nvim"; }
           { name = "vim-golden-size"; }
           { name = "defx-nvim"; }
           { name = "plenary-nvim"; }
