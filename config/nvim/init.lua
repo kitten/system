@@ -421,8 +421,18 @@ require('gitsigns').setup {
 -- hardline
 require('hardline').setup {
   bufferline = false,
-  theme = 'custom',
-  custom_theme = hardline_colors,
+  theme = vim.tbl_deep_extend(
+    "force",
+    require('hardline.themes.custom_colors').set(hardline_colors),
+    {
+      mode = {
+        inactive = {
+          guibg = hardline_colors.inactive_menu.gui,
+          ctermbg = hardline_colors.inactive_menu.cterm,
+        },
+      },
+    }
+  ),
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
     {class = 'high', item = require('hardline.parts.filename').get_item},
