@@ -124,6 +124,18 @@
     meta.homepage = "https://github.com/lewis6991/gitsigns.nvim";
   };
 
+  trouble-nvim = buildVimPluginFrom2Nix {
+    pname = "trouble-nvim";
+    version = "2021-10-25";
+    src = fetchFromGitHub {
+      owner = "folke";
+      repo = "trouble.nvim";
+      rev = "756f09de113a775ab16ba6d26c090616b40a999d";
+      sha256 = "016aivnqq9lh33in5611phhl7h6sz9xqgmiaq5swk4pk7vyl4nqq";
+    };
+    meta.homepage = "https://github.com/folke/trouble.nvim";
+  };
+
   defx-nvim = buildVimPluginFrom2Nix {
     pname = "defx-nvim";
     version = "2021-08-18";

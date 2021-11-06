@@ -176,11 +176,17 @@ require('telescope').setup{
     },
     prompt_prefix = '→ ',
     selection_caret = '→ ',
+    mappings = {
+      i = { ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble },
+      n = { ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble },
+    },
   },
 }
 
-vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>lua require('telescope.builtin').quickfix()<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>p', "<cmd>lua require('telescope.builtin').loclist()<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>TroubleToggle quickfix<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>p', "<cmd>TroubleToggle loclist<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>d', "<cmd>TroubleToggle lsp_document_diagnostics<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>D', "<cmd>TroubleToggle lsp_workspace_diagnostics<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>o', "<cmd>lua require('telescope.builtin').git_files()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin').live_grep()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", key_opt)
@@ -229,11 +235,11 @@ local function lsp_on_attach(client, buf)
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', key_opt)
   buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', key_opt)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', key_opt)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', key_opt)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', key_opt)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', key_opt)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
+  buf_set_keymap('n', 'gr', '<cmd>TroubleToggle lsp_references<CR>', key_opt)
 end
 
 local function lsp_capabilities()
@@ -449,5 +455,21 @@ require('hardline').setup {
     {class = 'warning', item = require('hardline.parts.whitespace').get_item},
     {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
     {class = 'mode', item = require('hardline.parts.line').get_item},
+  },
+}
+
+-- trouble
+require('trouble').setup {
+  height = 13,
+  fold_open = "↓",
+  fold_closed = "→",
+  padding = false,
+  indent_lines = false,
+  use_lsp_diagnostic_signs = true,
+  action_keys = {
+    close = {},
+    close_folds = {"zM", "zm"}, -- close all folds
+    open_folds = {"zR", "zr", "zn"}, -- open all folds
+    toggle_fold = {"zA", "za", "<bar>", "<bslash>"},
   },
 }
