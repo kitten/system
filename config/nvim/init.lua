@@ -64,9 +64,10 @@ vim.o.shortmess = vim.o.shortmess .. 'cI'
 vim.wo.number = true
 
 -- splitting options
+vim.go.diffopt = 'filler,vertical,foldcolumn:0,closeoff,indent-heuristic,iwhite,algorithm:patience'
+vim.go.fillchars = 'vert:│,diff:╱'
 vim.go.splitbelow = true
 vim.go.splitright = true
-vim.go.fillchars = 'vert:│'
 
 -- undo history
 local undodir = vim.fn.expand('$HOME') .. '/.cache/nvim/undo'
@@ -174,11 +175,17 @@ require('telescope').setup{
       nix_bins.ripgrep,
       '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case'
     },
-    prompt_prefix = '→ ',
+    prompt_prefix = ' ',
     selection_caret = '→ ',
     mappings = {
-      i = { ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble },
-      n = { ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble },
+      i = {
+        ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble,
+        ['<c-c>'] = require('telescope.actions').close,
+      },
+      n = {
+        ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble,
+        ['<esc>'] = require('telescope.actions').close,
+      },
     },
   },
 }
@@ -508,17 +515,21 @@ require('trouble').setup {
   fold_closed = "",
   padding = false,
   indent_lines = false,
+  icons = false,
   signs = {
     error = "",
     warning = "",
     hint = "",
     information = "",
-    other = ""
+    other = ""
   },
   action_keys = {
-    close = {},
-    close_folds = {"zM", "zm"}, -- close all folds
-    open_folds = {"zR", "zr", "zn"}, -- open all folds
+    cancel = {},
+    close = {"<esc>", "<c-c>"},
+    close_folds = {"zM", "zm"},
+    open_folds = {"zR", "zr", "zn"},
     toggle_fold = {"zA", "za", "<bar>", "<bslash>"},
+    previous = {"k", "<s-tab>"},
+    next = {"j", "<tab>"},
   },
 }

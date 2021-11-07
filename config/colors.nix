@@ -84,10 +84,10 @@ in rec {
     Directory = { fg = blue; };
 
     Diff = {
-      Add = { bg = green; fg = black; };
-      Change = { bg = yellow; fg = black; };
-      Delete = { bg = red; fg = black; };
-      Text = { bg = black; fg = yellow; };
+      Add = { bg = gutter; };
+      Change = mkHighlight {};
+      Delete = { fg = brightWhite; };
+      Text = { style = "strikethrough"; };
     };
 
     Pmenu = {
