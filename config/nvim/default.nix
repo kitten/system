@@ -14,6 +14,8 @@ let
   };
 
   initContents = "lua <<EOF\n" + ''
+    require('impatient')
+
     nix_bins = {
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
@@ -39,6 +41,7 @@ in {
         vam.knownPlugins = pkgs.vimPlugins // { my-theme = my-theme; };
         vam.pluginDictionaries = [
           { name = "my-theme"; }
+          { name = "impatient-nvim"; }
           { name = "vim-repeat"; }
           { name = "editorconfig-vim"; }
           { name = "vim-polyglot"; }

@@ -267,4 +267,16 @@
     };
     meta.homepage = "https://github.com/romgrk/nvim-treesitter-context";
   };
+
+  impatient-nvim = buildVimPluginFrom2Nix {
+    pname = "impatient-nvim";
+    version = "2021-11-03";
+    src = fetchFromGitHub {
+      owner = "lewis6991";
+      repo = "impatient.nvim";
+      rev = "f4a45e4be49ce417ef2e15e34861994603e3deab";
+      sha256 = "0q034irf77rlk07fd350zbg73p4daj7bakklk0q0rf3z31npwx8l";
+    };
+    meta.homepage = "https://github.com/lewis6991/impatient.nvim";
+  };
 }
