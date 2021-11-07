@@ -413,8 +413,9 @@ vim.api.nvim_exec([[
 local cmp = require('cmp')
 
 cmp.setup {
+  preselect = cmp.PreselectMode.None,
   mapping = {
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<Tab>'] = function(fallback)
       return cmp.visible() and cmp.select_next_item() or fallback()
     end,
