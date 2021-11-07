@@ -421,8 +421,12 @@ in rec {
       Hint = { fg = yellow; };
     };
 
+    Telescope = {
+      Border = { fg = split; };
+      Matching = { fg = blue; style = "bold"; };
+    };
+
     TS.Definition = { fg = blue; bg = brightWhite; };
-    Telescope.Matching = { fg = blue; style = "bold"; };
     EasyMotion.IncSearch = { fg = blue; style = "bold"; };
   };
 }
