@@ -254,12 +254,12 @@ local function lsp_on_attach(client, buf)
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', key_opt)
   buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', key_opt)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', key_opt)
-  buf_set_keymap('n', 'gf', '<cmd>lua require("telescope.builtin").lsp_code_actions()<CR>', key_opt)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', key_opt)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', key_opt)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
   buf_set_keymap('n', 'gr', '<cmd>TroubleToggle lsp_references<CR>', key_opt)
+  buf_set_keymap('n', 'gf', "<cmd>lua require('telescope.builtin').lsp_code_actions(require('telescope.themes').get_cursor())<CR>", key_opt)
 end
 
 local function lsp_capabilities()
@@ -395,14 +395,14 @@ vim.api.nvim_exec([[
 
 -- customise fold text
 vim.api.nvim_exec([[
-function! FoldText()
-  let nl = v:foldend - v:foldstart + 1
-  let start = substitute(getline(v:foldstart), "^ *", "", 1)
-  let end = substitute(getline(v:foldend),"^ *", "", 1)
-  let txt = '  ' . start . ' … ' . end . ' (' . nl . ' lines) '
-  return txt
-endfunction
-set foldtext=FoldText()
+  function! FoldText()
+    let nl = v:foldend - v:foldstart + 1
+    let start = substitute(getline(v:foldstart), "^ *", "", 1)
+    let end = substitute(getline(v:foldend),"^ *", "", 1)
+    let txt = '  ' . start . ' … ' . end . ' (' . nl . ' lines) '
+    return txt
+  endfunction
+  set foldtext=FoldText()
 ]], false)
 
 -- completion
