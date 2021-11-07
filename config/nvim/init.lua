@@ -497,11 +497,17 @@ require('hardline').setup {
 -- trouble
 require('trouble').setup {
   height = 13,
-  fold_open = "↓",
-  fold_closed = "→",
+  fold_open = "",
+  fold_closed = "",
   padding = false,
   indent_lines = false,
-  use_lsp_diagnostic_signs = true,
+  signs = {
+    error = "",
+    warning = "",
+    hint = "",
+    information = "",
+    other = ""
+  },
   action_keys = {
     close = {},
     close_folds = {"zM", "zm"}, -- close all folds
