@@ -447,6 +447,13 @@ require('gitsigns').setup {
   linehl     = false,
   word_diff  = false,
   current_line_blame = false,
+  signs = {
+    add = { hl = 'GitSignsAdd', text = '│' },
+    change = { hl = 'GitSignsChange', text = '│' },
+    delete = { hl = 'GitSignsDelete', text = '' },
+    topdelete = { hl = 'GitSignsDelete', text = '' },
+    changedelete = { hl = 'GitSignsChange', text = '' },
+  },
   keymaps = {
     noremap = true,
     ['n ]c'] = { expr = true, "&diff ? ']c' : \"<cmd>lua require('gitsigns.actions').next_hunk()<CR>\""},
