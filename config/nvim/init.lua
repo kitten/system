@@ -3,6 +3,10 @@ local function t(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
+local function hi(group, str)
+  return str ~= '' and string.format('%%#%s#%s', group, str) or ''
+end
+
 -- terminal options
 vim.api.nvim_exec([[
   set t_ZH=^\[\[3m
@@ -474,6 +478,35 @@ require('gitsigns').setup {
 }
 
 -- hardline
+local function status_diagnostic_handler(prefix, severity)
+  return function()
+    local count = vim.lsp.diagnostic.get_count(0, severity)
+    if count > 0 then
+      return string.format('%s %d', prefix, count)
+    else
+      return ''
+    end
+  end
+end
+
+local function status_git()
+  local b = vim.b
+  if b.gitsigns_status_dict then
+    return table.concat({
+      hi('GitGutterAdd', string.format(' %d', b.gitsigns_status_dict.added or 0)),
+      hi('GitGutterChange', string.format(' %d', b.gitsigns_status_dict.changed or 0)),
+      hi('GitGutterDelete', string.format(' %d', b.gitsigns_status_dict.removed or 0)),
+      hi('DiagnosticSignInformation', b.gitsigns_head ~= nil and string.format('( %s)', b.gitsigns_head) or ''),
+    }, ' ')
+  else
+    return ''
+  end
+end
+
+local function status_filetype()
+  return (vim.bo.filetype ~= '' and string.format('  %s', vim.bo.filetype) or '')
+end
+
 require('hardline').setup {
   bufferline = false,
   theme = vim.tbl_deep_extend(
@@ -490,14 +523,13 @@ require('hardline').setup {
   ),
   sections = {
     {class = 'mode', item = require('hardline.parts.mode').get_item},
-    {class = 'high', item = require('hardline.parts.filename').get_item},
-    {class = 'med', item = require('hardline.parts.git').get_item, hide = 100},
+    {class = 'high', item = function() return vim.fn.expand('%:~:.') end },
+    {class = 'med', item = status_git, hide = 100},
     '%<',
     {class = 'med', item = '%='},
-    {class = 'error', item = require('hardline.parts.lsp').get_error},
-    {class = 'warning', item = require('hardline.parts.lsp').get_warning},
-    {class = 'warning', item = require('hardline.parts.whitespace').get_item},
-    {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
+    {class = 'error', item = status_diagnostic_handler('', 'Error') },
+    {class = 'warning', item = status_diagnostic_handler('', 'Warning') },
+    {class = 'high', item = status_filetype, hide = 80},
     {class = 'mode', item = require('hardline.parts.line').get_item},
   },
 }

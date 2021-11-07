@@ -340,11 +340,6 @@ in rec {
       PC = { bg = brightBlue; fg = black; };
     };
 
-    diff = {
-      Added = { fg = green; };
-      Removed = { fg = red; };
-    };
-
     gitcommit = {
       Comment = { fg = brightWhite; };
       Untracked = { fg = brightWhite; };
