@@ -57,6 +57,10 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
 
+-- disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- no completion or startup messages
 vim.o.shortmess = vim.o.shortmess .. 'cI'
 
@@ -157,8 +161,8 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':bnext<CR>', key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>j', '<c-^>', key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>k', ':bp <BAR> bd #<CR>', key_opt)
 
--- defx
-vim.api.nvim_set_keymap('n', '-', ":Defx `expand('%:p:h')` -search=`expand('%:p')`<CR>", key_opt)
+-- lir
+vim.api.nvim_set_keymap('n', '-', ":e %:p:h<CR>", key_opt)
 
 -- hop
 require('hop').setup({ teasing = false })
@@ -353,61 +357,39 @@ require('treesitter-context').setup {
   },
 }
 
--- defx settings
+-- lir settings
+local lir_actions = require('lir.actions')
+require('lir').setup {
+  show_hidden_files = false,
+  devicons_enable = false,
+  hide_cursor = true,
+  mappings = {
+    ['l'] = lir_actions.edit,
+    ['<cr>'] = lir_actions.edit,
+    ['h'] = lir_actions.up,
+    ['-'] = lir_actions.up,
+    ['<esc>'] = lir_actions.quit,
+    ['<c-c>'] = lir_actions.quit,
+    ['@'] = lir_actions.cd,
+    ['.'] = lir_actions.toggle_show_hidden,
+  },
+}
+
+-- hide statusline for lir
 vim.api.nvim_exec([[
-  function! DefxSettings() abort
-    nnoremap <silent><buffer><expr> <CR>
-    \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> -
-    \ defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> h
-    \ defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> l
-    \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> <CR>
-    \ defx#do_action('open')
-    nnoremap <silent><buffer><expr> K
-    \ defx#do_action('new_directory')
-    nnoremap <silent><buffer><expr> N
-    \ defx#do_action('new_file')
-    nnoremap <silent><buffer><expr> r
-    \ defx#do_action('rename')
-    nnoremap <silent><buffer><expr> !
-    \ defx#do_action('execute_command')
-    nnoremap <silent><buffer><expr> q
-    \ defx#do_action('quit')
-    nnoremap <silent><buffer><expr> <Space>
-    \ defx#do_action('toggle_select') . 'j'
-    nnoremap <silent><buffer><expr> j
-    \ line('.') == line('$') ? 'gg' : 'j'
-    nnoremap <silent><buffer><expr> k
-    \ line('.') == 1 ? 'G' : 'k'
-    nnoremap <silent><buffer><expr> cd
-    \ defx#do_action('change_vim_cwd')
+  function! LirSettings()
+    let &l:statusline='%{getline(line("w$")+1)}'
   endfunction
+  autocmd Filetype lir call LirSettings()
+]], false)
 
-  function! DefxOpen()
-    try
-      let l:dir = expand(expand('%:p'))
-    catch
-      return
-    endtry
-
-    if !empty(l:dir) && (isdirectory(l:dir) ||
-      \ (!empty($SYSTEMDRIVE) && isdirectory('/'.tolower($SYSTEMDRIVE[0]).l:dir)))
-      execute "Defx `expand('%:p')` | bd " . expand('%:r')
-    endif
-  endfunction
-
+-- hide sticky commands
+vim.api.nvim_exec([[
   function! CursorHoldDelay(timer)
     if mode() ==# 'n'
       echon ''
     endif
   endfunction
-
-  autocmd FileType defx call DefxSettings()
-  autocmd VimEnter * sil! au! FileExplorer *
-  autocmd BufEnter * call DefxOpen()
   autocmd CursorHold * call timer_start(3000, funcref('CursorHoldDelay'))
 ]], false)
 

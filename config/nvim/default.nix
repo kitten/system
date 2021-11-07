@@ -51,7 +51,7 @@ in {
           { name = "lspkind-nvim"; }
           { name = "null-ls-nvim"; }
           { name = "vim-golden-size"; }
-          { name = "defx-nvim"; }
+          { name = "lir-nvim"; }
           { name = "plenary-nvim"; }
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }

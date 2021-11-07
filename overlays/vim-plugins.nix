@@ -136,16 +136,16 @@
     meta.homepage = "https://github.com/folke/trouble.nvim";
   };
 
-  defx-nvim = buildVimPluginFrom2Nix {
-    pname = "defx-nvim";
-    version = "2021-08-18";
+  lir-nvim = buildVimPluginFrom2Nix {
+    pname = "lir-nvim";
+    version = "2021-11-03";
     src = fetchFromGitHub {
-      owner = "shougo";
-      repo = "defx.nvim";
-      rev = "7e506d4b8cea834ef7e61a1f694540c5da418a25";
-      sha256 = "16lg72l4zixhmd7pf8aliw3gwz2m25z90h8phmjj3d93w2g4q8zd";
+      owner = "tamago324";
+      repo = "lir.nvim";
+      rev = "e340f4ee25c74aaa6d67d84a5f48024a8f6422a0";
+      sha256 = "08wbfpdirmdjnj7l7kd008iwcp466skflb3rr3rzqshmqfv7vqfk";
     };
-    meta.homepage = "https://github.com/Shougo/defx.nvim";
+    meta.homepage = "https://github.com/tamago324/lir.nvim";
   };
 
   plenary-nvim = buildVimPluginFrom2Nix {
