@@ -267,6 +267,22 @@ lsp.tsserver.setup {
   flags = { debounce_text_changes = 200 },
 }
 
+lsp.eslint.setup {
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.eslintls, "--stdio" },
+  flags = { debounce_text_changes = 200 },
+  settings = {
+    rulesCustomizations = {
+      { rule = "prettier/prettier", severity = "off" },
+      { rule = "sort-keys", severity = "off" },
+      { rule = "quotes", severity = "off" },
+      { rule = "max-len", severity = "off" },
+      { rule = "no-tabs", severity = "off" },
+    }
+  },
+}
+
 lsp.vimls.setup {
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,

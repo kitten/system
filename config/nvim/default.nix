@@ -17,6 +17,7 @@ let
     nix_bins = {
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
+      eslintls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
       vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
       rls = '${pkgs.rls}/bin/rls'
     }
