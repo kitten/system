@@ -393,6 +393,18 @@ vim.api.nvim_exec([[
   autocmd CursorHold * call timer_start(3000, funcref('CursorHoldDelay'))
 ]], false)
 
+-- customise fold text
+vim.api.nvim_exec([[
+function! FoldText()
+  let nl = v:foldend - v:foldstart + 1
+  let start = substitute(getline(v:foldstart), "^ *", "", 1)
+  let end = substitute(getline(v:foldend),"^ *", "", 1)
+  let txt = '  ' . start . ' … ' . end . ' (' . nl . ' lines) '
+  return txt
+endfunction
+set foldtext=FoldText()
+]], false)
+
 -- completion
 local cmp = require('cmp')
 
