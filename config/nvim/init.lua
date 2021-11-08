@@ -508,6 +508,17 @@ local function status_filetype()
   return (vim.bo.filetype ~= '' and string.format('  %s', vim.bo.filetype) or '')
 end
 
+local function status_progress()
+  local blocks = {'█', '▇', '▆', '▅', '▄', '▃', '▂', '▁', ' '}
+  local nbline = vim.fn.line('$')
+  local line = vim.fn.line('.')
+  local progress = blocks[math.ceil(line / (nbline / 9))]
+  return nbline ~= 1 and table.concat({
+    string.format('%s%d/%d', string.rep('·', #tostring(nbline) - #tostring(line)), line, nbline),
+    progress,
+  }, ' ') or ''
+end
+
 require('hardline').setup {
   bufferline = false,
   theme = vim.tbl_deep_extend(
@@ -531,7 +542,7 @@ require('hardline').setup {
     {class = 'error', item = status_diagnostic_handler('', 'Error') },
     {class = 'warning', item = status_diagnostic_handler('', 'Warning') },
     {class = 'high', item = status_filetype, hide = 80},
-    {class = 'mode', item = require('hardline.parts.line').get_item},
+    {class = 'mode', item = status_progress },
   },
 }
 
