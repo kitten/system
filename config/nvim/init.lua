@@ -412,23 +412,41 @@ vim.api.nvim_exec([[
 
 -- completion
 local cmp = require('cmp')
+local snippy = require('snippy')
 
 cmp.setup {
   preselect = cmp.PreselectMode.None,
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<Tab>'] = function(fallback)
-      return cmp.visible() and cmp.select_next_item() or fallback()
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif snippy.can_expand_or_advance() then
+        snippy.expand_or_advance()
+      else
+        fallback()
+      end
     end,
     ['<S-Tab>'] = function(fallback)
-      return cmp.visible() and cmp.select_prev_item() or fallback()
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif snippy.can_jump(-1) then
+        snippy.previous()
+      else
+        fallback()
+      end
+    end,
+  },
+  snippet = {
+    expand = function(args)
+      snippy.expand_snippet(args.body)
     end,
   },
   completion = {
     keyword_length = 3,
   },
   sources = cmp.config.sources(
-    {{ name = 'nvim_lsp' }},
+    {{ name = 'nvim_lsp' }, { name = 'snippy' }},
     {{ name = 'buffer' }}
   ),
   formatting = {

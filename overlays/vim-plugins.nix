@@ -28,6 +28,18 @@
     meta.homepage = "https://github.com/dm1try/golden_size";
   };
 
+  nvim-snippy = buildVimPluginFrom2Nix {
+    pname = "nvim-snippy";
+    version = "2021-11-11";
+    src = fetchFromGitHub {
+      owner = "dcampos";
+      repo = "nvim-snippy";
+      rev = "6ef9366e8f25282e054c79d86cd234d8f37ab4fe";
+      sha256 = "1ws8hrklj453jifcq2j82gsfpkl8sal75bwi63q5ci5wqx6n9jh2";
+    };
+    meta.homepage = "https://github.com/dcampos/nvim-snippy";
+  };
+
   nvim-cmp = buildVimPluginFrom2Nix {
     pname = "nvim-cmp";
     version = "2021-08-31";
@@ -75,6 +87,19 @@
     };
     meta.homepage = "https://github.com/hrsh7th/cmp-path";
   };
+
+  nvim-cmp-snippy = buildVimPluginFrom2Nix {
+    pname = "nvim-cmp-snippy";
+    version = "2021-09-20";
+    src = fetchFromGitHub {
+      owner = "dcampos";
+      repo = "cmp-snippy";
+      rev = "9af1635fe40385ffa3dabf322039cb5ae1fd7d35";
+      sha256 = "1ag31kvd2q1awasdrc6pbbbsf0l3c99crz4h03337wj1kcssiixy";
+    };
+    meta.homepage = "https://github.com/dcampos/cmp-snippy";
+  };
+
 
   nvim-cmp-cmdline = buildVimPluginFrom2Nix {
     pname = "nvim-cmp-cmdline";

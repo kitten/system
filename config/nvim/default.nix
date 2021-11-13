@@ -57,11 +57,13 @@ in {
           { name = "telescope-nvim"; }
           { name = "trouble-nvim"; }
           { name = "hop-nvim"; }
+          { name = "nvim-snippy"; }
           { name = "nvim-cmp"; }
           { name = "nvim-cmp-lsp"; }
           { name = "nvim-cmp-buffer"; }
           { name = "nvim-cmp-path"; }
           { name = "nvim-cmp-cmdline"; }
+          { name = "nvim-cmp-snippy"; }
           { name = "nvim-treesitter"; }
           { name = "nvim-treesitter-refactor"; }
           { name = "nvim-treesitter-textobjects"; }
