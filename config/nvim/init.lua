@@ -168,6 +168,19 @@ vim.api.nvim_set_keymap('n', '<Leader>k', ':bp <BAR> bd #<CR>', key_opt)
 -- lir
 vim.api.nvim_set_keymap('n', '-', ":e %:p:h<CR>", key_opt)
 
+-- golden_size
+local function ignore_trouble_window()
+  if vim.api.nvim_buf_get_option(0, 'filetype') == 'Trouble' then
+    return 1
+  end
+end
+
+require('golden_size').set_ignore_callbacks {
+  { ignore_trouble_window },
+  { require('golden_size').ignore_float_windows },
+  { require('golden_size').ignore_by_window_flag },
+}
+
 -- hop
 require('hop').setup({ teasing = false })
 
@@ -204,7 +217,7 @@ vim.api.nvim_set_keymap('n', '<Leader>d', "<cmd>TroubleToggle lsp_document_diagn
 vim.api.nvim_set_keymap('n', '<Leader>D', "<cmd>TroubleToggle lsp_workspace_diagnostics<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>o', "<cmd>lua require('telescope.builtin').git_files()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin').live_grep()<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", key_opt)
 
 -- define signs
@@ -281,6 +294,12 @@ lsp.tsserver.setup {
   on_attach = lsp_on_attach,
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
+  settings = {
+    preferences = {
+      disableAutomaticTypingAcquisition = true,
+      importModuleSpecifierPreference = 'project-relative',
+    },
+  },
 }
 
 lsp.eslint.setup {
