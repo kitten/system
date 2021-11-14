@@ -4,6 +4,6 @@
     ./zsh.nix
     ./gpg.nix
     ./tmux.nix
-    ./kitty.nix
+    ./wezterm/default.nix
   ];
 }

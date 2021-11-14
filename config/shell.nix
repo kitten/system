@@ -14,9 +14,8 @@ mkMerge [
     ];
 
     environment.pathsToLink = [ "/share/zsh" ];
-
     environment.variables = {
-      # GITHUB_TOKEN = readSecretFileContents ../assets/github-token;
+      TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:/usr/share/terminfo";
       NIX_PATH = mkForce nixPath;
       SHELL = "${pkgs.zsh}/bin/zsh";
     };

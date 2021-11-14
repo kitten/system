@@ -35,6 +35,21 @@
       add_newline = false;
       aws.disabled = true;
       cmd_duration.disabled = true;
+      battery.disabled = true;
+      nodejs.disabled = true;
+      deno.disabled = true;
+      character.success_symbol = "[➜](green)";
+      character.error_symbol = "[➜](bold red)";
+      git_branch.symbol = " ";
+      git_commit.tag_symbol = " ";
+      git_status.format = "([$all_status]($style))";
+      git_status.conflicted = " ";
+      git_status.untracked = " ";
+      git_status.modified = " ";
+      git_status.staged = " ";
+      git_status.deleted = " ";
+      git_status.renamed = " ";
+      git_status.stashed = " ";
     };
   };
 }

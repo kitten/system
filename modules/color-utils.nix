@@ -12,6 +12,7 @@ in rec {
   mkHighlight = { fg ? transparent, bg ? transparent, style ? "NONE" }: { fg=fg; bg=bg; style=style; };
   mkVimHighlight = group: { fg ? transparent, bg ? transparent, style ? "NONE" }:
     "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${fg.cterm} ctermbg=${bg.cterm} cterm=${style}";
+  mkLuaVariable = name: { gui, ... }: "${name} = \"${gui}\",";
 
   mkVimTerminalSyntax = attrs:
     (if hasAttr "terminal" attrs then ''
@@ -54,40 +55,20 @@ in rec {
       }
     '';
 
-  mkVimLightlineSyntax = name: colors:
-    with colors; ''
-      let g:lightline#colorscheme#${name}#palette = lightline#colorscheme#flatten({
-      \ 'normal': {
-      \   'left': [[['${split.gui}', ${split.cterm}], ['${green.gui}', ${green.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'middle': [[['${white.gui}', ${white.cterm}], ['NONE', 0]]],
-      \   'right': [[['${split.gui}', ${split.cterm}], ['${green.gui}', ${green.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'error': [[['${red.gui}', ${red.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'warning': [[['${yellow.gui}', ${yellow.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ },
-      \ 'inactive': {
-      \   'left': [[['${brightWhite.gui}', ${brightWhite.cterm}], ['${split.gui}', ${split.cterm}]], [['${brightWhite.gui}', ${brightWhite.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'middle': [[['${brightWhite.gui}', ${brightWhite.cterm}], ['NONE', 0]]],
-      \   'right': [[['${brightWhite.gui}', ${brightWhite.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ },
-      \ 'insert': {
-      \   'left': [[['${split.gui}', ${split.cterm}], ['${blue.gui}', ${blue.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'right': [[['${split.gui}', ${split.cterm}], ['${blue.gui}', ${blue.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ },
-      \ 'replace': {
-      \   'left': [[['${split.gui}', ${split.cterm}], ['${red.gui}', ${red.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'right': [[['${split.gui}', ${split.cterm}], ['${red.gui}', ${red.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ },
-      \ 'visual': {
-      \   'left': [[['${split.gui}', ${split.cterm}], ['${purple.gui}', ${purple.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'right': [[['${split.gui}', ${split.cterm}], ['${purple.gui}', ${purple.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ },
-      \ 'tabline': {
-      \   'left': [[['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]],
-      \   'tabsel': [[['${split.gui}', ${split.cterm}], ['${purple.gui}', ${purple.cterm}], 'bold']],
-      \   'middle': [[['${brightWhite.gui}', ${brightWhite.cterm}], ['NONE', 0]]],
-      \   'right': [[['${split.gui}', ${split.cterm}], ['${green.gui}', ${green.cterm}], 'bold'], [['${white.gui}', ${white.cterm}], ['${split.gui}', ${split.cterm}]]]
-      \ }
-      \ })
+  mkLuaSyntax = let
+    recurse = path: value:
+      if isAttrs value && !(hasAttr "gui" value) then
+        mapAttrsToList
+          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
+          value
+      else {
+        ${concatStrings path} = value;
+      };
+    toFlatAttrs = attrs:
+      lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
+  in colors:
+    ''
+    { ${concatStringsSep "\n" (mapAttrsToList mkLuaVariable (toFlatAttrs colors))} }
     '';
 
   mkVimSyntax = let
@@ -114,27 +95,4 @@ in rec {
 
     ${concatStringsSep "\n" (mapAttrsToList mkVimHighlight (toFlatAttrs attrs))}
     '' + (mkVimTerminalSyntax attrs) + "\nset background=dark";
-
-  mkKittyTheme = colors: ''
-    background ${colors.black.gui}
-    foreground ${colors.white.gui}
-    selection_background ${colors.grey.gui}
-    selection_foreground ${colors.white.gui}
-    color0 ${colors.black.gui}
-    color1 ${colors.red.gui}
-    color2 ${colors.green.gui}
-    color3 ${colors.yellow.gui}
-    color4 ${colors.blue.gui}
-    color5 ${colors.purple.gui}
-    color6 ${colors.cyan.gui}
-    color7 ${colors.white.gui}
-    color8 ${colors.grey.gui}
-    color9 ${colors.brightRed.gui}
-    color10 ${colors.brightGreen.gui}
-    color11 ${colors.brightYellow.gui}
-    color12 ${colors.brightBlue.gui}
-    color13 ${colors.brightPurple.gui}
-    color14 ${colors.brightCyan.gui}
-    color15 ${colors.brightWhite.gui}
-  '';
 }

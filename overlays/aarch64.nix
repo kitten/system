@@ -31,6 +31,45 @@ in
     '' + old.buildCommand);
   });
 
+  wezterm = (pkgsM1.wezterm.overrideAttrs(old: rec {
+    name = "wezterm";
+    version = "20211112-c47c7c6";
+    buildInputs = (with pkgsM1; [
+      openssl
+      fontconfig
+      zlib
+      libiconv
+    ]) ++ (with pkgsM1.darwin.apple_sdk.frameworks; [
+      Cocoa
+      CoreGraphics
+      Foundation
+      UserNotifications
+    ]);
+    postPatch = ''
+      echo ${version} > .tag
+    '';
+    src = fetchFromGitHub {
+      owner = "wez";
+      repo = "wezterm";
+      rev = "c47c7c6d1fe9b0282c424e3dafe8d7b58f27c4d6";
+      sha256 = "0pllcwk0wzyscrc8r2cjy4dvg3i73sjvvd49p758nyrvgxqvjyka";
+      fetchSubmodules = true;
+    };
+    dontCargoCheck = true;
+    cargoSha256 = null;
+    cargoDeps = old.cargoDeps.overrideAttrs (super.lib.const {
+      inherit src;
+      name = "${name}-vendor.tar.gz";
+      outputHash = "1wsm07ph0wh4sa7j2f91vrph1chw2c5hpa1kmpbhi2yq0wyir2fd";
+    });
+    OPENSSL_NO_VENDOR = 1;
+    preBuild = ''
+      export OPENSSL_DIR=${pkgsM1.lib.getDev pkgsM1.openssl}
+      export OPENSSL_LIB_DIR=${pkgsM1.openssl.out}/lib
+      export OPENSSL_INCLUDE_DIR=${pkgsM1.openssl.dev}/include
+    '';
+  }));
+
   kitty = (pkgsM1.kitty.overrideAttrs(old: rec {
     version = "0.23.1-cd7b4fc";
     buildInputs = old.buildInputs ++ (with pkgsM1.darwin.apple_sdk.frameworks; [ UserNotifications ]);
