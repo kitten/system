@@ -31,7 +31,8 @@ if [ "$cmd" == "_spawn" ]; then
   trap cleanup SIGTERM
   trap cleanup CHLD
 
-  wezterm-mux-server --cwd "$HOME" --config "unix_domains={{name=\"$name\",socket_path=\"$target/sock\",connect_automatically=true}}" \
+  env -i HOME=$HOME PATH=$PATH \
+    $(which wezterm-mux-server) --cwd "$HOME" --config "unix_domains={{name=\"$name\",socket_path=\"$target/sock\",connect_automatically=true}}" \
     &> "$target/daemon.log" &
   child_pid="$!"
   wait

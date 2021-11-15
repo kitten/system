@@ -26,6 +26,13 @@ end)
 return {
   default_prog = { zsh_bin, "-l" },
 
+  mux_env_remove = {
+    "SSH_AUTH_SOCK",
+    "SSH_CLIENT",
+    "SSH_CONNECTION",
+    "GPG_TTY",
+  },
+
   font = wezterm.font_with_fallback({ "Dank Mono", "codicon" }),
   allow_square_glyphs_to_overflow_width = "Always",
   freetype_load_target = "Light",

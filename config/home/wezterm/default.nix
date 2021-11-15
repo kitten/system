@@ -2,7 +2,7 @@
 
 let
   colors = (import ../../colors.nix);
-  wezmux = (pkgs.writeScriptBin "wezmux" (builtins.readFile ../../../assets/wezmux.sh));
+  wezmux = (pkgs.writeScriptBin "wezmux" (builtins.readFile ../../scripts/wezmux.sh));
 in {
   home.packages = [ pkgs.wezterm wezmux ];
   xdg.configFile."wezterm/wezterm.lua".text = ''
