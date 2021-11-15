@@ -141,6 +141,7 @@ return {
     { key = "&", mods = "LEADER|SHIFT", action = wezterm.action({ CloseCurrentTab = { confirm = true } }) },
     { key = "x", mods = "LEADER", action = wezterm.action({ CloseCurrentPane = { confirm = true } }) },
     { key = "-", mods = "LEADER", action = wezterm.action({ ClearScrollback = "ScrollbackAndViewport" }) },
+    { key = "[", mods = "LEADER", action = "ActivateCopyMode" },
     { key = "z", mods = "LEADER", action = "TogglePaneZoomState" },
     { key = "s", mods = "LEADER", action = "ShowLauncher" },
   },
