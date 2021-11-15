@@ -14,6 +14,24 @@
       http = "xh";
     };
 
+    initExtra = ''
+      function update_title_preexec {
+        emulate -L zsh
+        setopt extended_glob
+        local title=''${1[(wr)^(*=*|sudo|ssh|mosh|rake|-*)]:gs/%/%%}
+        printf "\e]0;%s\e\\" "$title"
+      }
+      function update_title_precmd {
+        emulate -L zsh
+        setopt extended_glob
+        local title=''${PWD##*/}
+        printf "\e]0;%s\e\\" "$title"
+      }
+
+      add-zsh-hook preexec update_title_preexec
+      add-zsh-hook precmd update_title_precmd
+    '';
+
     plugins = [
       {
         name = "zsh-syntax-highlighting";

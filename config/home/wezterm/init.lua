@@ -1,10 +1,24 @@
 local wezterm = require("wezterm");
 
 wezterm.on("update-right-status", function (window, pane)
+  local config = window:effective_config()
+  local session_name = "default"
+  local session_color = colors.red
+  for i, v in ipairs(config.unix_domains) do
+    if v.name ~= nil and v.name ~= "" then
+      session_name = v.name
+      session_color = colors.blue
+      break
+    end
+  end
+
   window:set_right_status(
     wezterm.format({
       { Foreground = { Color = colors.brightWhite } },
       { Text = wezterm.strftime("%H:%M %e %h") },
+      { Attribute = { Intensity = "Bold" } },
+      { Foreground = { Color = session_color } },
+      { Text = " " .. session_name },
     })
   );
 end)
@@ -28,8 +42,8 @@ return {
   bold_brightens_ansi_colors = false,
   window_decorations = "RESIZE",
 
-  hide_tab_bar_if_only_one_tab = true,
   tab_bar_at_bottom = true,
+  tab_max_width = 24,
   tab_bar_style = {
     active_tab_left = empty,
     active_tab_right = empty,
