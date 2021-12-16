@@ -5,7 +5,7 @@ let
 in
 
 rec {
-  nodejs = self.nodejs-14_x;
+  nodejs = self.nodejs-16_x;
 
   flyctl = super.stdenv.mkDerivation {
     name = "flyctl";
@@ -35,7 +35,7 @@ rec {
     inherit (super) stdenv nix-gitignore lib fetchurl fetchgit;
     nodeEnv = import ./nodePackages/node-env.nix {
       inherit (super) stdenv lib python2 runCommand writeTextFile;
-      inherit nodejs;
+      nodejs = self.nodejs-14_x;
       pkgs = super;
       libtool = null;
     };

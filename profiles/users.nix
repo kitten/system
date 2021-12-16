@@ -12,6 +12,7 @@ mkMerge [
         nixpkgs = {
           overlays = import <nixpkgs-overlays>;
           config.allowUnfree = true;
+          config.allowBroken = true;
         };
         imports = [ ../config/home/default.nix ];
       };

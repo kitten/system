@@ -8,9 +8,9 @@ let
 in
 
 (if isDarwin then {
-  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x postgresql_13;
+  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x nodejs-16_x postgresql_13;
 
-  nodejs = pkgsM1.nodejs-14_x;
+  nodejs = pkgsM1.nodejs-16_x;
 
   neovim = (pkgsM1.wrapNeovim(
     pkgsM1.neovim-unwrapped.overrideAttrs(old: {

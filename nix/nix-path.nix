@@ -12,6 +12,7 @@ rec {
   nixpkgs = {
     overlays = import <nixpkgs-overlays>;
     config.allowUnfree = true;
+    config.allowBroken = true;
   };
 
   nix.nixPath = mkForce nixPath;
