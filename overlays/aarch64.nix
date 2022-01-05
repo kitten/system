@@ -68,6 +68,9 @@ in
       export OPENSSL_LIB_DIR=${pkgsM1.openssl.out}/lib
       export OPENSSL_INCLUDE_DIR=${pkgsM1.openssl.dev}/include
     '';
+    meta = super.lib.mkMerge [old.meta ({
+      broken = false;
+    })];
   }));
 
   kitty = (pkgsM1.kitty.overrideAttrs(old: rec {
