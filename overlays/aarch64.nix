@@ -33,7 +33,7 @@ in
 
   wezterm = (pkgsM1.wezterm.overrideAttrs(old: rec {
     name = "wezterm";
-    version = "20211112-c47c7c6";
+    version = "20220105-71dae34";
     buildInputs = (with pkgsM1; [
       openssl
       fontconfig
@@ -51,8 +51,8 @@ in
     src = fetchFromGitHub {
       owner = "wez";
       repo = "wezterm";
-      rev = "c47c7c6d1fe9b0282c424e3dafe8d7b58f27c4d6";
-      sha256 = "0pllcwk0wzyscrc8r2cjy4dvg3i73sjvvd49p758nyrvgxqvjyka";
+      rev = "71dae34b7504c191333f4dac0bb51f793620d077";
+      sha256 = "1m2wcb9ziwj49jfwn0wnjk3qmns5l4k2b6gd2rqxvd3sqxd4wsd3";
       fetchSubmodules = true;
     };
     dontCargoCheck = true;
@@ -60,7 +60,7 @@ in
     cargoDeps = old.cargoDeps.overrideAttrs (super.lib.const {
       inherit src;
       name = "${name}-vendor.tar.gz";
-      outputHash = "1wsm07ph0wh4sa7j2f91vrph1chw2c5hpa1kmpbhi2yq0wyir2fd";
+      outputHash = "014cdh3ll1d45izr544lypmnphxr3sfn3ps7i28lb792ybjjsvd8";
     });
     OPENSSL_NO_VENDOR = 1;
     preBuild = ''
