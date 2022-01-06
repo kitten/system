@@ -246,14 +246,6 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   max_height = math.max(math.floor(vim.o.lines * 0.3), 30),
 })
 
--- null-ls
-local null_ls = require('null-ls')
-null_ls.config {
-  sources = {
-    null_ls.builtins.code_actions.gitsigns,
-  }
-}
-
 -- lspconfig
 local lsp = require('lspconfig')
 
@@ -287,9 +279,7 @@ local function lsp_capabilities()
   return require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
 
-lsp["null-ls"].setup({ on_attach = lsp_on_attach, })
-
-lsp.tsserver.setup {
+lsp.tsserver.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
   cmd = { nix_bins.tsserver, "--stdio" },
@@ -300,9 +290,9 @@ lsp.tsserver.setup {
       importModuleSpecifierPreference = 'project-relative',
     },
   },
-}
+})
 
-lsp.eslint.setup {
+lsp.eslint.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
   cmd = { nix_bins.eslintls, "--stdio" },
@@ -316,21 +306,29 @@ lsp.eslint.setup {
       { rule = "no-tabs", severity = "off" },
     }
   },
-}
+})
 
-lsp.vimls.setup {
+lsp.vimls.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
   cmd = { nix_bins.vimls, "--stdio" },
   flags = { debounce_text_changes = 200 },
-}
+})
 
-lsp.rls.setup {
+lsp.rls.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
   cmd = { nix_bins.rls },
   flags = { debounce_text_changes = 200 },
-}
+})
+
+-- null-ls
+require('null-ls').setup({
+  on_attach = lsp_on_attach,
+  sources = {
+    require('null-ls').builtins.code_actions.gitsigns,
+  },
+})
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
@@ -397,15 +395,13 @@ require('lir').setup {
     ['@'] = lir_actions.cd,
     ['.'] = lir_actions.toggle_show_hidden,
   },
+  on_init = function()
+    -- hide statusline for lir
+    vim.api.nvim_exec([[
+      let &l:statusline='%{getline(line("w$")+1)}'
+    ]], false)
+  end,
 }
-
--- hide statusline for lir
-vim.api.nvim_exec([[
-  function! LirSettings()
-    let &l:statusline='%{getline(line("w$")+1)}'
-  endfunction
-  autocmd Filetype lir call LirSettings()
-]], false)
 
 -- hide sticky commands
 vim.api.nvim_exec([[
@@ -519,7 +515,7 @@ require('gitsigns').setup {
 -- hardline
 local function status_diagnostic_handler(prefix, severity)
   return function()
-    local count = vim.lsp.diagnostic.get_count(0, severity)
+    local count = #vim.diagnostic.get(0, { severity = severity })
     if count > 0 then
       return string.format('%s %d', prefix, count)
     else
@@ -577,8 +573,8 @@ require('hardline').setup {
     {class = 'med', item = status_git, hide = 100},
     '%<',
     {class = 'med', item = '%='},
-    {class = 'error', item = status_diagnostic_handler('', 'Error') },
-    {class = 'warning', item = status_diagnostic_handler('', 'Warning') },
+    {class = 'error', item = status_diagnostic_handler('', vim.diagnostic.severity.ERROR) },
+    {class = 'warning', item = status_diagnostic_handler('', vim.diagnostic.severity.WARN) },
     {class = 'high', item = status_filetype, hide = 80},
     {class = 'mode', item = status_progress },
   },
