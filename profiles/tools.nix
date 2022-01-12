@@ -11,5 +11,7 @@
     sd
     doppler
     wrangler
+    fastly
+    flyctl
   ];
 }

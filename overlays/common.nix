@@ -7,18 +7,33 @@ in
 rec {
   nodejs = self.nodejs-16_x;
 
-  flyctl = super.stdenv.mkDerivation {
+  flyctl = super.stdenv.mkDerivation rec {
     name = "flyctl";
-    version = "0.0.211";
+    version = "0.0.281";
 
     src = fetchzip {
-      url = "https://github.com/superfly/flyctl/releases/download/v0.0.211/flyctl_0.0.211_macOS_x86_64.tar.gz";
-      sha256 = "1zvdjjj44ap79yyr6b9whq1s6f6p01h5hnyqj4bj66xi4b3993dy";
+      url = "https://github.com/superfly/flyctl/releases/download/v${version}/flyctl_${version}_macOS_x86_64.tar.gz";
+      sha256 = "1wr6r4x9za3nlkgxg95wpij117ghgn9h4327fid24kgjcngk83x2";
     };
 
     installPhase = ''
       mkdir -p $out/bin
       cp flyctl $out/bin
+    '';
+  };
+
+  fastly = super.stdenv.mkDerivation rec {
+    name = "fastly";
+    version = "1.4.0";
+
+    src = fetchzip {
+      url = "https://github.com/fastly/cli/releases/download/v${version}/fastly_v${version}_darwin-amd64.tar.gz";
+      sha256 = "0g9s76jdc5llyfbf8hl5lbmb34qqfksmpc4iipbc1l01z0l27zd2";
+    };
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp fastly $out/bin
     '';
   };
 
