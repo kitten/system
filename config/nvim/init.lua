@@ -213,8 +213,8 @@ require('telescope').setup{
 
 vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>TroubleToggle quickfix<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>p', "<cmd>TroubleToggle loclist<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>d', "<cmd>TroubleToggle lsp_document_diagnostics<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>D', "<cmd>TroubleToggle lsp_workspace_diagnostics<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>d', "<cmd>TroubleToggle document_diagnostics<CR>", key_opt)
+vim.api.nvim_set_keymap('n', '<Leader>D', "<cmd>TroubleToggle workspace_diagnostics<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>o', "<cmd>lua require('telescope.builtin').git_files()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin').live_grep()<CR>", key_opt)
 vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", key_opt)
@@ -361,7 +361,7 @@ require('nvim-treesitter.configs').setup {
 
 -- lspkind
 require('lspkind').init {
-  with_text = true,
+  mode = 'symbol_text',
   preset = 'codicons',
 }
 
@@ -498,7 +498,7 @@ require('gitsigns').setup {
     noremap = true,
     ['n ]c'] = { expr = true, "&diff ? ']c' : \"<cmd>lua require('gitsigns.actions').next_hunk()<CR>\""},
     ['n [c'] = { expr = true, "&diff ? '[c' : \"<cmd>lua require('gitsigns.actions').prev_hunk()<CR>\""},
-    ['n gb'] = "<cmd>lua require('gitsigns').blame_line({ full=true})<CR>",
+    ['n gb'] = "<cmd>lua require('gitsigns').blame_line({ full=true })<CR>",
     ['n gh'] = "<cmd>lua require('gitsigns').preview_hunk(true)<CR>",
     ['o ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
     ['x ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
