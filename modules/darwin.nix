@@ -12,4 +12,9 @@
   users.nix.configureBuildUsers = true;
   # Manage Nix package via channels
   nix.package = pkgs.nix;
+  # Explicitly allow aarch64 builds
+  nix.extraOptions = ''
+    system = x86_64-darwin
+    extra-platforms = x86_64-darwin aarch64-darwin
+  '';
 }
