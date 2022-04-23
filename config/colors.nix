@@ -410,7 +410,7 @@ in rec {
     };
 
     DiagnosticSign = {
-      Warning = { fg = yellow; };
+      Warn = { fg = yellow; };
       Error = { fg = brightRed; };
       Information = { fg = blue; };
       Hint = { fg = yellow; };
