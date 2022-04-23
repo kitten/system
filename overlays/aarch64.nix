@@ -98,14 +98,19 @@ in
     };
   }));
 
-  yabai = (super.yabai.overrideAttrs(old: {
-    version = "3.3.11-donaldguy.0";
-    buildInputs = old.buildInputs ++ [ pkgsM1.darwin.apple_sdk.frameworks.SkyLight ];
-    src = fetchFromGitHub {
-      owner = "donaldguy";
-      repo = old.pname;
-      rev = "db3e811238850352cb63b6c8bc090a7157a4abcb";
-      sha256 = "09lx8s19rrcydbjavfknkh945sdkl9qgic3sym4z731y79fb4sg3";
+  yabai = super.stdenv.mkDerivation rec {
+    name = "yabai";
+    version = "4.0.0";
+    dontStrip = true;
+    src = super.fetchzip {
+      url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
+      sha256 = "1rwnf55pw9fvvv5pl22rvjif8z47f1l6ll06hfrj4y753b5i26h8";
     };
-  }));
+    installPhase = ''
+      mkdir -p $out/bin
+      mkdir -p $out/share/man/man1/
+      cp ./bin/yabai $out/bin/yabai
+      cp ./doc/yabai.1 $out/share/man/man1/yabai.1
+    '';
+  };
 } else {})
