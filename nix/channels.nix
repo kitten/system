@@ -15,12 +15,12 @@ let
     sha256 = "0iksjch94wfvyq0cgwv5wq52j0dc9cavm68wka3pahhdvjlxd3js";
   };
 
-  /* master */
+  /* nixpkgs-21.11-darwin */
   nixpkgs_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "a7ecde854aee5c4c7cd6177f54a99d2c1ff28a31";
-    sha256 = "162dywda2dvfj1248afxc45kcrg83appjd0nmdb541hl7rnncf02";
+    rev = "433b4266cdde34164a43d97bcc164015511bbe80";
+    sha256 = "101s9qc2i5g42qvrdcxdxrryiiafyfwmjs1wmsqb5wyvf1i391na";
   };
 in
 
