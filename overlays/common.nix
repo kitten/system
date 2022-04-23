@@ -49,7 +49,7 @@ rec {
   nodePackages = (import ./nodePackages/node-packages.nix) {
     inherit (super) stdenv nix-gitignore lib fetchurl fetchgit;
     nodeEnv = import ./nodePackages/node-env.nix {
-      inherit (super) stdenv lib python2 runCommand writeTextFile;
+      inherit (super) stdenv lib python2 runCommand writeTextFile writeShellScript;
       nodejs = self.nodejs-14_x;
       pkgs = super;
       libtool = null;
