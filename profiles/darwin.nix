@@ -13,11 +13,18 @@
     };
 
     defaults = {
+      finder.CreateDesktop = false;
+      screencapture.location = "~/Screenshots";
+      loginwindow = {
+        GuestEnabled = false;
+        DisableConsoleAccess = true;
+      };
       dock = {
         autohide = true;
         tilesize = 46;
       };
       NSGlobalDomain = {
+        AppleShowAllExtensions = true;
         InitialKeyRepeat = 10;
         KeyRepeat = 2;
       };
