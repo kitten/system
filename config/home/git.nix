@@ -5,7 +5,7 @@ let
 in {
   programs.gh = {
     enable = true;
-    gitProtocol = "ssh";
+    settings.git_protocol = "ssh";
   };
 
   xdg.configFile."gh/hosts.yml".text = ''

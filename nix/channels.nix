@@ -8,11 +8,12 @@ let
     sha256 = "16db6yna4nbsck6iagpa1ap6d966iw4viykiiqmn4b5il2xl70k1";
   };
 
+  /* release-21.11 */
   home-manager_src = fetchFromGitHub {
     owner = "nix-community";
     repo = "home-manager";
-    rev = "63f299b3347aea183fc5088e4d6c4a193b334a41";
-    sha256 = "0iksjch94wfvyq0cgwv5wq52j0dc9cavm68wka3pahhdvjlxd3js";
+    rev = "7244c6715cb8f741f3b3e1220a9279e97b2ed8f5";
+    sha256 = "1v0gb46whw152y56flvarg5xq7gfrr7ifbqmpgbb2rsipnjhzz81";
   };
 
   /* nixpkgs-21.11-darwin */
