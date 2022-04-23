@@ -13,5 +13,9 @@
     wrangler
     fastly
     flyctl
+    stripe-cli
+    terraform
+    terraformer
+    awscli
   ];
 }

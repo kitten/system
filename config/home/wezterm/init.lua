@@ -37,7 +37,6 @@ return {
   allow_square_glyphs_to_overflow_width = "Always",
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
-  harfbuzz_features = {"liga=0"},
   font_size = 14.0,
   line_height = 1.1,
 
@@ -49,6 +48,7 @@ return {
   bold_brightens_ansi_colors = false,
   window_decorations = "RESIZE",
 
+  use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,
   tab_max_width = 24,
   tab_bar_style = {
@@ -66,11 +66,18 @@ return {
     brightness = 1.0,
   },
 
+  window_frame = {
+    font = wezterm.font_with_fallback({ "Dank Mono", "codicon" }),
+    font_size = 14.0,
+    active_titlebar_bg = colors.black,
+    inactive_titlebar_bg = colors.black,
+  },
+
   window_padding = {
-    left = 2,
-    right = 2,
-    top = 4,
-    bottom = 4,
+    left = "2px",
+    right = "2px",
+    top = "4px",
+    bottom = "4px",
   },
 
   colors = {
@@ -109,6 +116,7 @@ return {
         fg_color = colors.yellow,
         intensity = "Bold",
       },
+      inactive_tab_edge = colors.black,
       inactive_tab = {
         bg_color = colors.black,
         fg_color = colors.brightWhite,

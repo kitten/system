@@ -315,10 +315,10 @@ lsp.vimls.setup({
   flags = { debounce_text_changes = 200 },
 })
 
-lsp.rls.setup({
+lsp.rust_analyzer.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
-  cmd = { nix_bins.rls },
+  cmd = { nix_bins.rustanalyzer },
   flags = { debounce_text_changes = 200 },
 })
 
@@ -498,7 +498,7 @@ require('gitsigns').setup {
     noremap = true,
     ['n ]c'] = { expr = true, "&diff ? ']c' : \"<cmd>lua require('gitsigns.actions').next_hunk()<CR>\""},
     ['n [c'] = { expr = true, "&diff ? '[c' : \"<cmd>lua require('gitsigns.actions').prev_hunk()<CR>\""},
-    ['n gb'] = "<cmd>lua require('gitsigns').blame_line(false)<CR>",
+    ['n gb'] = "<cmd>lua require('gitsigns').blame_line({ full=true})<CR>",
     ['n gh'] = "<cmd>lua require('gitsigns').preview_hunk(true)<CR>",
     ['o ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
     ['x ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",

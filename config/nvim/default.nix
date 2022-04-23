@@ -21,7 +21,7 @@ let
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
       eslintls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
       vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
-      rls = '${pkgs.rls}/bin/rls'
+      rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer'
     }
 
     hardline_colors = ${colors.vim-hardline}
