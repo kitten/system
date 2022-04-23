@@ -39,8 +39,8 @@ let
 
   codicons = copyFiles "font-codicon" [
     {
-      target = "share/fonts/opentype/codicon.ttf";
-      source = readSecretFile ../assets/codicon.ttf;
+      target = "share/fonts/opentype/codicon.otf";
+      source = readSecretFile ../assets/codicon.otf;
     }
   ];
 in
