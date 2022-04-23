@@ -605,3 +605,6 @@ require('trouble').setup {
     next = {"j", "<tab>"},
   },
 }
+
+-- dressing
+require('dressing').setup()

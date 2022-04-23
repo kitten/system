@@ -303,4 +303,16 @@
     };
     meta.homepage = "https://github.com/lewis6991/impatient.nvim";
   };
+
+  dressing-nvim = buildVimPluginFrom2Nix {
+    pname = "dressing-nvim";
+    version = "2022-04-22";
+    src = fetchFromGitHub {
+      owner = "stevearc";
+      repo = "dressing.nvim";
+      rev = "f68a91a2817f9c766a6ab8990a74a255c4cbb413";
+      sha256 = "1sqq9c178bz9by1y9aa52himv6z0cq27j11jf2dk473fnqwvw2ja";
+    };
+    meta.homepage = "https://github.com/stevearc/dressing.nvim";
+  };
 }

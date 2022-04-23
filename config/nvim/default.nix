@@ -56,6 +56,7 @@ in {
           { name = "popup-nvim"; }
           { name = "telescope-nvim"; }
           { name = "trouble-nvim"; }
+          { name = "dressing-nvim"; }
           { name = "hop-nvim"; }
           { name = "nvim-snippy"; }
           { name = "nvim-cmp"; }
