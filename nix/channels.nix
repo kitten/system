@@ -4,8 +4,8 @@ let
   darwin_src = fetchFromGitHub {
     owner = "LnL7";
     repo = "nix-darwin";
-    rev = "44da835ac40dab5fd231298b59d83487382d2fab";
-    sha256 = "06nvl7d0zj2c02ax2v77580p8h0pjlrv1ah3qrl9c6lqadal4sf6";
+    rev = "2979028c51ba0ad7e2062dbdc1674be0f71092fc";
+    sha256 = "16db6yna4nbsck6iagpa1ap6d966iw4viykiiqmn4b5il2xl70k1";
   };
 
   home-manager_src = fetchFromGitHub {

@@ -56,6 +56,6 @@ mkMerge [
   }
 
   (mkIf isDarwin {
-    fonts.enableFontDir = true;
+    fonts.fontDir.enable = true;
   })
 ]
