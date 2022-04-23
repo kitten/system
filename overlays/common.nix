@@ -24,11 +24,11 @@ rec {
 
   fastly = super.stdenv.mkDerivation rec {
     name = "fastly";
-    version = "1.4.0";
+    version = "2.0.0";
 
     src = fetchzip {
       url = "https://github.com/fastly/cli/releases/download/v${version}/fastly_v${version}_darwin-amd64.tar.gz";
-      sha256 = "0g9s76jdc5llyfbf8hl5lbmb34qqfksmpc4iipbc1l01z0l27zd2";
+      sha256 = "01hlc8nh98d9ikpkmxcm9h2ygkhgfh4f9vr18lwb698dwx8vx3rd";
     };
 
     installPhase = ''
