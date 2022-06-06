@@ -100,6 +100,7 @@ vim.cmd('colorscheme theme')
 
 -- misc. options
 vim.o.completeopt = 'menuone,noinsert,noselect'
+vim.o.pumheight = 10
 vim.o.backspace = 'indent,eol,start'
 
 -- polyglot
@@ -257,7 +258,9 @@ local function lsp_on_attach(client, buf)
   local function buf_set_option(...) vim.api.nvim_buf_set_option(buf, ...) end
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(buf, ...) end
 
+  buf_set_option('formatexpr', 'v:lua.vim.lsp.formatexpr()')
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+  buf_set_option('tagfunc', 'v:lua.vim.lsp.tagfunc')
 
   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', key_opt)
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', key_opt)
@@ -276,6 +279,7 @@ local function lsp_capabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.codeLens = { dynamicRegistration = false }
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
   return require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
 
@@ -443,54 +447,115 @@ vim.api.nvim_exec([[
 local cmp = require('cmp')
 local snippy = require('snippy')
 
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 cmp.setup {
+  enabled = function()
+    local context = require('cmp.config.context')
+    if vim.api.nvim_get_mode().mode == 'c' then
+      return true
+    else
+      return not context.in_treesitter_capture('comment')
+        and not context.in_syntax_group('Comment')
+    end
+  end,
   preselect = cmp.PreselectMode.None,
-  mapping = {
-    ['<CR>'] = cmp.mapping.confirm({ select = false }),
-    ['<Tab>'] = function(fallback)
+  mapping = cmp.mapping.preset.insert({
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-c>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.close()
+      end
+      fallback()
+    end, {"i", "c"}),
+    ['<CR>'] = cmp.mapping({
+      i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+      c = function(fallback)
+        if cmp.visible() then
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        else
+          fallback()
+        end
+      end
+    }),
+    ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif snippy.can_expand_or_advance() then
         snippy.expand_or_advance()
+      elseif has_words_before() then
+        cmp.complete()
       else
         fallback()
       end
-    end,
-    ['<S-Tab>'] = function(fallback)
+    end, {"i", "s"}),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_next_item()
+        cmp.select_prev_item()
       elseif snippy.can_jump(-1) then
         snippy.previous()
       else
         fallback()
       end
-    end,
-  },
+    end, {"i", "s"}),
+  }),
   snippet = {
     expand = function(args)
       snippy.expand_snippet(args.body)
     end,
   },
   completion = {
-    keyword_length = 3,
+    keyword_length = 3
+  },
+  experimental = {
+    ghost_text = true,
   },
   sources = cmp.config.sources(
-    {{ name = 'nvim_lsp' }, { name = 'snippy' }},
-    {{ name = 'buffer' }}
+    {{ name = 'nvim_lsp' }, { name = 'nvim_lsp_signature_help' }, { name = 'snippy' }},
+    {{ name = 'treesitter' }, { name = 'buffer', keyword_length = 3 }}
   ),
   formatting = {
     format = require('lspkind').cmp_format(),
   },
 }
 
+cmp.setup.filetype('gitcommit', {
+  enabled = false,
+})
+
 cmp.setup.cmdline('/', {
-  sources = {{ name = 'buffer' }}
+  mapping = cmp.mapping.preset.cmdline({
+    ['<CR>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+      end
+      fallback()
+    end, {"i", "c"})
+  }),
+  sources = cmp.config.sources(
+    {{ name = 'nvim_lsp_document_symbol' }},
+    {{ name = 'cmdline_history' }},
+    {{ name = 'treesitter' }, { name = 'buffer', keyword_length = 3 }}
+  ),
 })
 
 cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline({
+    ['<CR>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+      end
+      fallback()
+    end, {"i", "c"})
+  }),
   sources = cmp.config.sources(
     {{ name = 'path' }},
-    {{ name = 'cmdline' }}
+    {{ name = 'cmdline' }, { name = 'cmdline_history' }}
   ),
 })
 

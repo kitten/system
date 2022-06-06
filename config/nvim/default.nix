@@ -61,9 +61,13 @@ in {
           { name = "nvim-snippy"; }
           { name = "nvim-cmp"; }
           { name = "nvim-cmp-lsp"; }
+          { name = "nvim-cmp-lsp-document-symbol"; }
+          { name = "nvim-cmp-lsp-signature-help"; }
+          { name = "nvim-cmp-treesitter"; }
           { name = "nvim-cmp-buffer"; }
           { name = "nvim-cmp-path"; }
           { name = "nvim-cmp-cmdline"; }
+          { name = "nvim-cmp-cmdline-history"; }
           { name = "nvim-cmp-snippy"; }
           { name = "nvim-treesitter"; }
           { name = "nvim-treesitter-refactor"; }
