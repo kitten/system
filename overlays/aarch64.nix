@@ -8,7 +8,7 @@ let
 in
 
 (if isDarwin then {
-  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x nodejs-16_x postgresql_13;
+  inherit (pkgsM1) ffmpeg imagemagick tmux zsh starship gnupg nodejs-14_x nodejs-16_x postgresql_13 rustup;
 
   nodejs = pkgsM1.nodejs-16_x;
 
@@ -113,4 +113,22 @@ in
       cp ./doc/yabai.1 $out/share/man/man1/yabai.1
     '';
   };
+
+  rust-analyzer = super.stdenv.mkDerivation rec {
+    name = "rust-analyzer";
+    version = "2022-05-09";
+    dontStrip = true;
+    buildInputs = [ pkgsM1.gzip ];
+    unpackPhase = ":";
+    src = super.fetchurl {
+      url = "https://github.com/rust-lang/rust-analyzer/releases/download/${version}/rust-analyzer-aarch64-apple-darwin.gz";
+      sha256 = "01mbwwhkhm8di7yr5jn8qqwbqqfi3527n5brg8vimqrhp4b85q70";
+    };
+    installPhase = ''
+      mkdir -p $out/bin
+      gzip -dc $src > $out/bin/rust-analyzer
+      chmod +x $out/bin/rust-analyzer
+    '';
+  };
+
 } else {})

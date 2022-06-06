@@ -320,6 +320,20 @@ lsp.rust_analyzer.setup({
   on_attach = lsp_on_attach,
   cmd = { nix_bins.rustanalyzer },
   flags = { debounce_text_changes = 200 },
+  settings = {
+    ["rust-analyzer"] = {
+      assist = {
+        importGranularity = "module",
+        importPrefix = "self",
+      },
+      cargo = {
+        loadOutDirsFromCheck = true,
+      },
+      procMacro = {
+        enable = true,
+      },
+    },
+  },
 })
 
 -- null-ls

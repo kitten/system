@@ -17,5 +17,6 @@
     terraform
     terraformer
     awscli
+    go
   ];
 }
