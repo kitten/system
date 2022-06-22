@@ -271,8 +271,8 @@ local function lsp_on_attach(client, buf)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
   buf_set_keymap('n', 'gN', '<cmd>lua vim.lsp.buf.rename()<CR>', key_opt)
+  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', key_opt)
   buf_set_keymap('n', 'gr', '<cmd>TroubleToggle lsp_references<CR>', key_opt)
-  buf_set_keymap('n', 'gf', "<cmd>lua require('telescope.builtin').lsp_code_actions(require('telescope.themes').get_cursor())<CR>", key_opt)
 end
 
 local function lsp_capabilities()
@@ -686,4 +686,8 @@ require('trouble').setup {
 }
 
 -- dressing
-require('dressing').setup()
+require('dressing').setup {
+  select = {
+    telescope = require('telescope.themes').get_cursor(),
+  },
+}

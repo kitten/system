@@ -67,7 +67,7 @@ in {
           { name = "nvim-cmp-buffer"; }
           { name = "nvim-cmp-path"; }
           { name = "nvim-cmp-cmdline"; }
-          { name = "nvim-cmp-cmdline-history"; }
+          #{ name = "nvim-cmp-cmdline-history"; }
           { name = "nvim-cmp-snippy"; }
           { name = "nvim-treesitter"; }
           { name = "nvim-treesitter-refactor"; }
