@@ -35,6 +35,7 @@ vim.o.shiftwidth = 2
 -- tweak redraw timings
 vim.o.lazyredraw = true
 vim.o.updatetime = 500
+vim.o.timeoutlen = 500
 
 -- show matching brackets
 vim.o.showmatch = true
@@ -152,22 +153,37 @@ vim.api.nvim_set_keymap('v', '>', '>gv', key_opt)
 -- macros per line
 vim.api.nvim_set_keymap('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', key_opt)
 
--- fold controls
-vim.api.nvim_set_keymap('n', '<bar>', ':<C-u>normal zc<CR>', key_opt)
-vim.api.nvim_set_keymap('n', '<bslash>', ':<C-u>normal za<CR>', key_opt)
-
 -- set space as leader
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- buffer shortcuts
-vim.api.nvim_set_keymap('n', '<Leader>h', ':bprevious<CR>', key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>h', ':bnext<CR>', key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>j', '<c-^>', key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>k', ':bp <BAR> bd #<CR>', key_opt)
+-- which-key
+local key = require('which-key')
 
--- lir
-vim.api.nvim_set_keymap('n', '-', ":e %:p:h<CR>", key_opt)
+key.setup {
+  icons = {
+    breadcrumb = " ",
+    separator = "→",
+    group = "+",
+  },
+  popup_mappings = {
+    scroll_down = '<c-f>',
+    scroll_up = '<c-d>',
+  },
+}
+
+key.register({
+  -- buffer shortcuts
+  ["<leader>h"] = { "<cmd>bp<cr>", "Previous Buffer" },
+  ["<leader>l"] = { "<cmd>bn<cr>", "Next Buffer" },
+  ["<leader>j"] = { "<cmd>enew<cr>", "New Buffer" },
+  ["<leader>j"] = { "<cmd>bp <bar> bd #<cr>", "Close Buffer" },
+  -- fold controls
+  ["<bar>"] = { "<cmd><c-u>normal zc<cr>", "Close Fold" },
+  ["<bslash>"] = { "<cmd><c-u>normal za<cr>", "Open Fold" },
+  -- lir
+  ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
+})
 
 -- golden_size
 local function ignore_trouble_window()
@@ -212,14 +228,18 @@ require('telescope').setup{
   },
 }
 
-vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>TroubleToggle quickfix<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>p', "<cmd>TroubleToggle loclist<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>d', "<cmd>TroubleToggle document_diagnostics<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>D', "<cmd>TroubleToggle workspace_diagnostics<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>o', "<cmd>lua require('telescope.builtin').git_files()<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>f', "<cmd>lua require('telescope.builtin').live_grep()<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>n', "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", key_opt)
-vim.api.nvim_set_keymap('n', '<Leader>b', "<cmd>lua require('telescope.builtin').buffers()<CR>", key_opt)
+-- global leader keybindings
+local telescope_builtins = require('telescope.builtin')
+key.register({
+  ["<leader>q"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix List" },
+  ["<leader>p"] = { "<cmd>TroubleToggle loclist<cr>", "Location List" },
+  ["<leader>d"] = { "<cmd>TroubleToggle loclist<cr>", "Document Diagnostics" },
+  ["<leader>D"] = { "<cmd>TroubleToggle loclist<cr>", "Workspace Diagnostics" },
+  ["<leader>o"] = { telescope_builtins.git_files, "Search Files in Git" },
+  ["<leader>f"] = { telescope_builtins.live_grep, "Search in Files" },
+  ["<leader>n"] = { telescope_builtins.lsp_dynamic_workspace_symbols, "Search Symbols in LSP Workspace" },
+  ["<leader>b"] = { telescope_builtins.buffers, "Search for Buffer" },
+})
 
 -- define signs
 vim.fn.sign_define("DiagnosticSignError", { text = "●", texthl = "DiagnosticSignError" })
@@ -255,24 +275,30 @@ local function lsp_on_attach(client, buf)
     client.config.flags.allow_incremental_sync = true
   end
 
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(buf, ...) end
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(buf, ...) end
+  vim.api.nvim_buf_set_option(buf, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
+  vim.api.nvim_buf_set_option(buf, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_buf_set_option(buf, 'tagfunc', 'v:lua.vim.lsp.tagfunc')
 
-  buf_set_option('formatexpr', 'v:lua.vim.lsp.formatexpr()')
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-  buf_set_option('tagfunc', 'v:lua.vim.lsp.tagfunc')
-
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', key_opt)
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', key_opt)
-  buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', key_opt)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', key_opt)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', key_opt)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', key_opt)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', key_opt)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', key_opt)
-  buf_set_keymap('n', 'gN', '<cmd>lua vim.lsp.buf.rename()<CR>', key_opt)
-  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', key_opt)
-  buf_set_keymap('n', 'gr', '<cmd>TroubleToggle lsp_references<CR>', key_opt)
+  if pcall(function()
+    return vim.api.nvim_buf_get_var(buf, 'lsp:keys_attached')
+  end) ~= true then
+    vim.api.nvim_buf_set_var(buf, 'lsp:keys_attached', true)
+    key.register({
+      g = {
+        d = { vim.lsp.buf.definition, "Go to Definition" },
+        D = { vim.lsp.buf.definition, "Go to Declaration" },
+        y = { vim.lsp.buf.definition, "Go to Type Definition" },
+        i = { vim.lsp.buf.definition, "Go to Implementation" },
+        r = { "<cmd>TroubleToggle lsp_references<cr>", "Show References" },
+        N = { vim.lsp.buf.rename, "Rename" },
+        f = { vim.lsp.buf.code_action, "Code Action" },
+      },
+      K = { vim.lsp.buf.hover, "Hover" },
+      ["C-k"] = { vim.lsp.buf.signature_help, "Signature Help" },
+      ["[d"] = { vim.diagnostic.goto_prev, "Previous Diagnostic "},
+      ["]d"] = { vim.diagnostic.goto_prev, "Next Diagnostic "},
+    }, { buffer = buf })
+  end
 end
 
 local function lsp_capabilities()
@@ -573,15 +599,6 @@ require('gitsigns').setup {
     topdelete = { hl = 'GitSignsDelete', text = '' },
     changedelete = { hl = 'GitSignsChange', text = '' },
   },
-  keymaps = {
-    noremap = true,
-    ['n ]c'] = { expr = true, "&diff ? ']c' : \"<cmd>lua require('gitsigns.actions').next_hunk()<CR>\""},
-    ['n [c'] = { expr = true, "&diff ? '[c' : \"<cmd>lua require('gitsigns.actions').prev_hunk()<CR>\""},
-    ['n gb'] = "<cmd>lua require('gitsigns').blame_line({ full=true })<CR>",
-    ['n gh'] = "<cmd>lua require('gitsigns').preview_hunk(true)<CR>",
-    ['o ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
-    ['x ih'] = ":<C-U>lua require('gitsigns.actions').select_hunk()<CR>",
-  },
   preview_config = {
     border = 'none',
     style = 'minimal',
@@ -589,6 +606,36 @@ require('gitsigns').setup {
     row = 1,
     col = 0
   },
+  on_attach = function(buf)
+    local actions = require('gitsigns.actions')
+
+    key.register({
+      ["]c"] = { actions.next_hunk, "Next Git Hunk" },
+      ["[c"] = { actions.next_hunk, "Previous Git Hunk" },
+      g = {
+        b = { function() actions.blame_line({ full = true }) end, "Blame Line" },
+        h = { function() actions.preview_hunk(true) end, "Show Git Hunk" },
+        s = { actions.stage_hunk, "Stage Git Hunk" },
+        S = { actions.undo_stage_hunk, "Unstage Git Hunk" },
+        t = { actions.diffthis, "Diff against HEAD" },
+        T = { function() actions.diffthis('~') end, "Diff against HEAD~1" },
+      },
+    }, { buffer = buf })
+
+    key.register({
+      ["ih"] = {
+        "<cmd><c-u>lua require('gitsigns.actions').select_hunk()<cr>",
+        "Select Git Hunk"
+      },
+    }, { buffer = buf, mode = "o" })
+
+    key.register({
+      ["ih"] = {
+        "<cmd><c-u>lua require('gitsigns.actions').select_hunk()<cr>",
+        "Select Git Hunk"
+      }
+    }, { buffer = buf, mode = "x" })
+  end,
 }
 
 -- hardline

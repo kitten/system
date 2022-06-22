@@ -268,6 +268,18 @@
     meta.homepage = "https://github.com/neovim/nvim-lspconfig";
   };
 
+  nvim-dap = buildVimPluginFrom2Nix {
+    pname = "nvim-dap";
+    version = "2022-06-10";
+    src = fetchFromGitHub {
+      owner = "mfussenegger";
+      repo = "nvim-dap";
+      rev = "014ebd53612cfd42ac8c131e6cec7c194572f21d";
+      sha256 = "0qp15ihgwxamnly9ng6qmf051rz6yjg86p00dz39ffy02f8fvr60";
+    };
+    meta.homepage = "https://github.com/mfussenegger/nvim-dap";
+  };
+
   lspkind-nvim = buildVimPluginFrom2Nix {
     pname = "lspkind-nvim";
     version = "2022-04-18";
@@ -362,5 +374,17 @@
       sha256 = "1i34pk9l76n8ianz9hww8kn7dnnzivv8sbyf0vf7w21r2bh1p1k4";
     };
     meta.homepage = "https://github.com/stevearc/dressing.nvim";
+  };
+
+  which-key-nvim = buildVimPluginFrom2Nix {
+    pname = "which-key-nvim";
+    version = "2022-05-04";
+    src = fetchFromGitHub {
+      owner = "folke";
+      repo = "which-key.nvim";
+      rev = "bd4411a2ed4dd8bb69c125e339d837028a6eea71";
+      sha256 = "0vf685xgdb967wmvffk1pfrvbhg1jkvzp1kb7r0vs90mg8gpv1aj";
+    };
+    meta.homepage = "https://github.com/folke/which-key.nvim";
   };
 }

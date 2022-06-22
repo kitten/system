@@ -58,6 +58,7 @@ in {
           { name = "trouble-nvim"; }
           { name = "dressing-nvim"; }
           { name = "hop-nvim"; }
+          { name = "which-key-nvim"; }
           { name = "nvim-snippy"; }
           { name = "nvim-cmp"; }
           { name = "nvim-cmp-lsp"; }
