@@ -233,8 +233,8 @@ local telescope_builtins = require('telescope.builtin')
 key.register({
   ["<leader>q"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix List" },
   ["<leader>p"] = { "<cmd>TroubleToggle loclist<cr>", "Location List" },
-  ["<leader>d"] = { "<cmd>TroubleToggle loclist<cr>", "Document Diagnostics" },
-  ["<leader>D"] = { "<cmd>TroubleToggle loclist<cr>", "Workspace Diagnostics" },
+  ["<leader>d"] = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics" },
+  ["<leader>D"] = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics" },
   ["<leader>o"] = { telescope_builtins.git_files, "Search Files in Git" },
   ["<leader>f"] = { telescope_builtins.live_grep, "Search in Files" },
   ["<leader>n"] = { telescope_builtins.lsp_dynamic_workspace_symbols, "Search Symbols in LSP Workspace" },

@@ -9,7 +9,7 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # Auto-configure build users
-  nix.configureBuildUsers = true;
+  users.nix.configureBuildUsers = true;
   # Manage Nix package via channels
   nix.package = pkgs.nix;
   # Explicitly allow aarch64 builds
