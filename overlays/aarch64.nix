@@ -117,13 +117,13 @@ in
 
   rust-analyzer = super.stdenv.mkDerivation rec {
     name = "rust-analyzer";
-    version = "2022-07-11";
+    version = "2022-08-22";
     dontStrip = true;
     buildInputs = [ pkgsM1.gzip ];
     unpackPhase = ":";
     src = super.fetchurl {
       url = "https://github.com/rust-lang/rust-analyzer/releases/download/${version}/rust-analyzer-aarch64-apple-darwin.gz";
-      sha256 = "0714nbjy12rq62n02bkcz20im680gawrqqfsc247hlpc6nwbkhwa";
+      sha256 = "0qhc88j6apb343nq92ypispfizafagiwr0w895j2l04pi0j1q3vv";
     };
     installPhase = ''
       mkdir -p $out/bin
