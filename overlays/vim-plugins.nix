@@ -4,6 +4,18 @@
 }:
 
 {
+  vim-fugitive = buildVimPluginFrom2Nix {
+    pname = "vim-fugitive";
+    version = "2022-08-17";
+    src = fetchFromGitHub {
+      owner = "tpope";
+      repo = "vim-fugitive";
+      rev = "b411b753f805b969cca856e2ae51fdbab49880df";
+      sha256 = "0bcq71hfy08q4lq83rcrwpg7jkq0aszcbaqnjhphvg8wja5q30dm";
+    };
+    meta.homepage = "https://github.com/tpope/vim-fugitive";
+  };
+
   vim-golden-size = buildVimPluginFrom2Nix {
     pname = "vim-golden-size";
     version = "2020-04-29";

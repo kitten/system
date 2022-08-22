@@ -43,6 +43,7 @@ in {
           { name = "my-theme"; }
           { name = "impatient-nvim"; }
           { name = "vim-repeat"; }
+          { name = "vim-fugitive"; }
           { name = "editorconfig-vim"; }
           { name = "vim-polyglot"; }
           { name = "hardline-nvim"; }
