@@ -101,11 +101,11 @@ in
 
   yabai = super.stdenv.mkDerivation rec {
     name = "yabai";
-    version = "4.0.0";
+    version = "4.0.2";
     dontStrip = true;
     src = super.fetchzip {
       url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-      sha256 = "1rwnf55pw9fvvv5pl22rvjif8z47f1l6ll06hfrj4y753b5i26h8";
+      sha256 = "1wmpsz3dfl3c6wb3psm86w72pjx33wlkcibpvs6yvlfymp612027";
     };
     installPhase = ''
       mkdir -p $out/bin
