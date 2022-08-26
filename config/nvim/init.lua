@@ -66,6 +66,9 @@ vim.o.swapfile = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- enable lua-based filetype module
+vim.g.do_filetype_lua = 1
+
 -- no completion or startup messages
 vim.o.shortmess = vim.o.shortmess .. 'cI'
 
@@ -267,6 +270,13 @@ vim.diagnostic.config({
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   max_width = math.max(math.floor(vim.o.columns * 0.7), 100),
   max_height = math.max(math.floor(vim.o.lines * 0.3), 30),
+})
+
+-- register custom filetypes
+vim.filetype.add({
+  extension = {
+    astro = 'astro',
+  },
 })
 
 -- lspconfig

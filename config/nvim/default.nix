@@ -13,7 +13,11 @@ let
     };
   };
 
-  initContents = "lua <<EOF\n" + ''
+  initContents = "
+    let g:do_filetype_lua = 1
+    let g:did_load_filetypes = 0
+
+    \nlua <<EOF\n" + ''
     require('impatient')
 
     nix_bins = {
@@ -36,47 +40,46 @@ in {
     (neovim.override {
       viAlias = true;
       vimAlias = true;
-
       configure = {
         customRC = initContents;
-        vam.knownPlugins = pkgs.vimPlugins // { my-theme = my-theme; };
-        vam.pluginDictionaries = [
-          { name = "my-theme"; }
-          { name = "impatient-nvim"; }
-          { name = "vim-repeat"; }
-          { name = "vim-fugitive"; }
-          { name = "editorconfig-vim"; }
-          { name = "vim-polyglot"; }
-          { name = "hardline-nvim"; }
-          { name = "gitsigns-nvim"; }
-          { name = "nvim-lspconfig"; }
-          { name = "lspkind-nvim"; }
-          { name = "null-ls-nvim"; }
-          { name = "vim-golden-size"; }
-          { name = "lir-nvim"; }
-          { name = "plenary-nvim"; }
-          { name = "popup-nvim"; }
-          { name = "telescope-nvim"; }
-          { name = "trouble-nvim"; }
-          { name = "dressing-nvim"; }
-          { name = "hop-nvim"; }
-          { name = "which-key-nvim"; }
-          { name = "nvim-snippy"; }
-          { name = "nvim-cmp"; }
-          { name = "nvim-cmp-lsp"; }
-          { name = "nvim-cmp-lsp-document-symbol"; }
-          { name = "nvim-cmp-lsp-signature-help"; }
-          { name = "nvim-cmp-treesitter"; }
-          { name = "nvim-cmp-buffer"; }
-          { name = "nvim-cmp-path"; }
-          { name = "nvim-cmp-cmdline"; }
-          #{ name = "nvim-cmp-cmdline-history"; }
-          { name = "nvim-cmp-snippy"; }
-          { name = "nvim-treesitter"; }
-          { name = "nvim-treesitter-refactor"; }
-          { name = "nvim-treesitter-textobjects"; }
-          { name = "nvim-treesitter-context"; }
-        ];
+        packages.myVimPackage = with pkgs.vimPlugins; {
+          start = [
+            my-theme
+            impatient-nvim
+            vim-repeat
+            vim-fugitive
+            editorconfig-vim
+            hardline-nvim
+            gitsigns-nvim
+            nvim-lspconfig
+            lspkind-nvim
+            null-ls-nvim
+            vim-golden-size
+            lir-nvim
+            plenary-nvim
+            popup-nvim
+            telescope-nvim
+            trouble-nvim
+            dressing-nvim
+            hop-nvim
+            which-key-nvim
+            nvim-snippy
+            nvim-cmp
+            nvim-cmp-lsp
+            nvim-cmp-lsp-document-symbol
+            nvim-cmp-lsp-signature-help
+            nvim-cmp-treesitter
+            nvim-cmp-buffer
+            nvim-cmp-path
+            nvim-cmp-cmdline
+            #nvim-cmp-cmdline-history
+            nvim-cmp-snippy
+            nvim-treesitter
+            nvim-treesitter-refactor
+            nvim-treesitter-textobjects
+            nvim-treesitter-context
+          ];
+        };
       };
     })
   ];
