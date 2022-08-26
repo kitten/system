@@ -182,8 +182,8 @@ key.register({
   ["<leader>j"] = { "<cmd>enew<cr>", "New Buffer" },
   ["<leader>j"] = { "<cmd>bp <bar> bd #<cr>", "Close Buffer" },
   -- fold controls
-  ["<bar>"] = { "<cmd><c-u>normal zc<cr>", "Close Fold" },
-  ["<bslash>"] = { "<cmd><c-u>normal za<cr>", "Open Fold" },
+  ["<bar>"] = { "<cmd>normal zc<cr>", "Close Fold" },
+  ["<bslash>"] = { "<cmd>normal za<cr>", "Open Fold" },
   -- lir
   ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
 })
