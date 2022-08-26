@@ -21,6 +21,7 @@ let
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
       eslintls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
       vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
+      astrols = '${pkgs.nodePackages."@astrojs/language-server"}/bin/astro-ls',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer'
     }
 

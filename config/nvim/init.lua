@@ -247,6 +247,7 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = "◐", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSignInformation" })
 
+-- configure vim diagnostics
 vim.diagnostic.config({
   underline = true,
   virtual_text = true,
@@ -262,6 +263,7 @@ vim.diagnostic.config({
   },
 })
 
+-- customise hover window size
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   max_width = math.max(math.floor(vim.o.columns * 0.7), 100),
   max_height = math.max(math.floor(vim.o.lines * 0.3), 30),
@@ -308,6 +310,13 @@ local function lsp_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   return require('cmp_nvim_lsp').update_capabilities(capabilities)
 end
+
+lsp.astro.setup({
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.astrols, "--stdio" },
+  flags = { debounce_text_changes = 200 },
+})
 
 lsp.tsserver.setup({
   capabilities = lsp_capabilities(),
@@ -376,7 +385,32 @@ require('null-ls').setup({
 
 -- treesitter
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "typescript", "tsx", "graphql", "regex", "json", "javascript", "jsdoc", "css", "rust" },
+  ensure_installed = {
+    "astro",
+    "typescript",
+    "tsx",
+    "graphql",
+    "regex",
+    "json",
+    "json5",
+    "javascript",
+    "markdown",
+    "markdown_inline",
+    "yaml",
+    "vue",
+    "vim",
+    "lua",
+    "make",
+    "jsdoc",
+    "comment",
+    "css",
+    "sql",
+    "rust",
+    "html",
+    "bash",
+    "c",
+    "nix"
+  },
   highlight = { enable = true },
   incremental_selection = {
     enable = true,

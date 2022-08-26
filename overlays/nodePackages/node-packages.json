@@ -1,4 +1,5 @@
 [
+  "@astrojs/language-server",
   "vim-language-server",
   "typescript-language-server",
   "vscode-langservers-extracted"
