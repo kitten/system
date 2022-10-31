@@ -47,6 +47,9 @@ in {
     };
 
     extraConfig = {
+      commit.gpgSign = true;
+      tag.gpgSign = true;
+      push.gpgSign = "if-asked";
       status.showUntrackedFiles = "all";
       push.default = "simple";
       color.ui = "auto";
