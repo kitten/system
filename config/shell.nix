@@ -15,7 +15,6 @@ mkMerge [
 
     environment.pathsToLink = [ "/share/zsh" ];
     environment.variables = {
-      TERMINFO_DIRS = "$HOME/.nix-profile/share/terminfo:/usr/share/terminfo";
       NIX_PATH = mkForce nixPath;
       SHELL = "${pkgs.zsh}/bin/zsh";
     };

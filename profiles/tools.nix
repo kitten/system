@@ -9,14 +9,6 @@
     xh
     curl
     sd
-    doppler
-    wrangler
-    fastly
-    flyctl
-    stripe-cli
-    terraform
-    terraformer
     awscli
-    go
   ];
 }

@@ -25,12 +25,12 @@ rec {
         config = config.nixpkgs.config // nixpkgs.config;
       };
     in rec {
-      pkgs = import <nixpkgs> (
+      pkgs = (lib.mkForce (import <nixpkgs> (
         if isLinux then {
           inherit (pkgsConf) overlays config localSystem crossSystem;
         } else {
           inherit (pkgsConf) overlays config;
         }
-      );
+      )));
     };
 }

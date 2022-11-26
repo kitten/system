@@ -294,24 +294,24 @@
 
   null-ls-nvim = buildVimPluginFrom2Nix {
     pname = "null-ls-nvim";
-    version = "2022-08-18";
+    version = "2022-11-26";
     src = fetchFromGitHub {
       owner = "jose-elias-alvarez";
       repo = "null-ls.nvim";
-      rev = "9d1f8dc1c8984e30efd8406aceba53dfadeaadbd";
-      sha256 = "14ix8d2w8s7k4qai8vi7q47g14kxv0ba09r62lhabbqnd4fl9qyx";
+      rev = "c51978f546a86a653f4a492b86313f4616412cec";
+      sha256 = "0wkk5dxdmcgmgh7rak85x99n11w1pygryv66vki13f46wwnbm3m6";
     };
     meta.homepage = "https://github.com/jose-elias-alvarez/null-ls.nvim";
   };
 
   nvim-treesitter = buildVimPluginFrom2Nix {
     pname = "nvim-treesitter";
-    version = "2022-08-22";
+    version = "2022-11-25";
     src = fetchFromGitHub {
       owner = "nvim-treesitter";
       repo = "nvim-treesitter";
-      rev = "09b13e9edb80d3890aa8f7dbebfdb21e34430212";
-      sha256 = "1c17j81crh238xykmimdnlfm45lgah4iaw7c5rhf759d0xpn1c6v";
+      rev = "1656f67f261ab51525288d0c4b38e1577f79eaf3";
+      sha256 = "0fwicq9bsrgk810x4vdz19xy2rc2d9r5xyrmmrz1ws9wxxdii2xi";
     };
     meta.homepage = "https://github.com/nvim-treesitter/nvim-treesitter";
   };

@@ -66,9 +66,6 @@ vim.o.swapfile = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- enable lua-based filetype module
-vim.g.do_filetype_lua = 1
-
 -- no completion or startup messages
 vim.o.shortmess = vim.o.shortmess .. 'cI'
 
@@ -357,10 +354,24 @@ lsp.eslint.setup({
   },
 })
 
-lsp.vimls.setup({
+lsp.cssls.setup({
   capabilities = lsp_capabilities(),
   on_attach = lsp_on_attach,
-  cmd = { nix_bins.vimls, "--stdio" },
+  cmd = { nix_bins.cssls, "--stdio" },
+  flags = { debounce_text_changes = 200 },
+})
+
+lsp.html.setup({
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.htmlls, "--stdio" },
+  flags = { debounce_text_changes = 200 },
+})
+
+lsp.jsonls.setup({
+  capabilities = lsp_capabilities(),
+  on_attach = lsp_on_attach,
+  cmd = { nix_bins.jsonls, "--stdio" },
   flags = { debounce_text_changes = 200 },
 })
 
@@ -394,6 +405,8 @@ require('null-ls').setup({
 })
 
 -- treesitter
+vim.opt.runtimepath:append("~/.local/share/nvim/site/parser")
+
 require('nvim-treesitter.configs').setup {
   ensure_installed = {
     "astro",
@@ -421,6 +434,7 @@ require('nvim-treesitter.configs').setup {
     "c",
     "nix"
   },
+  parser_install_dir = "~/.local/share/nvim/site/parser",
   highlight = { enable = true },
   incremental_selection = {
     enable = true,

@@ -9,6 +9,7 @@ mkMerge [
   {
     home-manager = {
       users.phil = _: {
+        manual.manpages.enable = false;
         nixpkgs = {
           overlays = import <nixpkgs-overlays>;
           config.allowUnfree = true;

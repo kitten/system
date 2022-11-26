@@ -14,9 +14,6 @@ let
   };
 
   initContents = "
-    let g:do_filetype_lua = 1
-    let g:did_load_filetypes = 0
-
     \nlua <<EOF\n" + ''
     require('impatient')
 
@@ -24,7 +21,9 @@ let
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
       eslintls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
-      vimls = '${pkgs.nodePackages.vim-language-server}/bin/vim-language-server',
+      cssls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-css-language-server',
+      htmlls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server',
+      jsonls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server',
       astrols = '${pkgs.nodePackages."@astrojs/language-server"}/bin/astro-ls',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer'
     }
