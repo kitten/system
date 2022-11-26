@@ -15,6 +15,7 @@ mkMerge [
           config.allowUnfree = true;
           config.allowBroken = true;
         };
+        xdg.enable = true;
         imports = [ ../config/home/default.nix ];
       };
     };

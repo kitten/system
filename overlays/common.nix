@@ -39,15 +39,6 @@ rec {
     '';
   };
 
-  yarn = (super.yarn.overrideAttrs(old: {
-    version = "1.22.5";
-    buildInputs = [ nodejs ];
-    src = fetchzip {
-      url = "https://github.com/yarnpkg/yarn/releases/download/v1.22.10/yarn-v1.22.10.tar.gz";
-      sha256 = "0pdimll8lhsnqfafhdaxd6h6mgxhj1c7h56r111cmxhzw462y3mr";
-    };
-  }));
-
   neovim = (super.wrapNeovim(
     super.neovim-unwrapped.overrideAttrs(old: {
       version = "0.9.0-nightly-3f47854";
