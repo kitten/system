@@ -1,4 +1,10 @@
-local wezterm = require("wezterm");
+local wezterm = require("wezterm")
+local mux = wezterm.mux
+
+wezterm.on("gui-startup", function(cmd)
+  local tab, pane, window = mux.spawn_window(cmd or {})
+  window:gui_window():maximize()
+end)
 
 wezterm.on("update-right-status", function (window, pane)
   local config = window:effective_config()
@@ -74,8 +80,8 @@ return {
   },
 
   window_padding = {
-    left = "2px",
-    right = "2px",
+    left = "3px",
+    right = "3px",
     top = "4px",
     bottom = "4px",
   },
