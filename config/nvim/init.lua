@@ -311,11 +311,11 @@ local function lsp_on_attach(client, buf)
 end
 
 local function lsp_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
   capabilities.textDocument.codeLens = { dynamicRegistration = false }
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true
-  return require('cmp_nvim_lsp').update_capabilities(capabilities)
+  return capabilities
 end
 
 lsp.astro.setup({
