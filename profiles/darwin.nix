@@ -1,11 +1,6 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    ../config/yabai.nix
-    ../config/skhd.nix
-  ];
-
   system = {
     keyboard = {
       enableKeyMapping = true;
