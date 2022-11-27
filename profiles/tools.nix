@@ -9,6 +9,7 @@
     xh
     curl
     sd
+    fd
     awscli
   ];
 }
