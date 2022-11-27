@@ -6,7 +6,7 @@ let
 in
 
 rec {
-  nodejs = self.nodejs-16_x;
+  nodejs = self.nodejs-18_x;
   v8 = super.v8;
 
   flyctl = super.stdenv.mkDerivation rec {
@@ -131,16 +131,6 @@ rec {
       gzip -dc $src > $out/bin/rust-analyzer
       chmod +x $out/bin/rust-analyzer
     '';
-  };
-
-  nodePackages = (import ./nodePackages/node-packages.nix) {
-    inherit (super) stdenv nix-gitignore lib fetchurl fetchgit;
-    nodeEnv = import ./nodePackages/node-env.nix {
-      inherit (super) stdenv lib python2 runCommand writeTextFile writeShellScript;
-      nodejs = self.nodejs-14_x;
-      pkgs = super;
-      libtool = null;
-    };
   };
 
   vimPlugins = super.vimPlugins // (import ./vim-plugins.nix) {
