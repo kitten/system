@@ -60,8 +60,8 @@ rec {
   });
 
   wezterm = super.stdenv.mkDerivation rec {
-    name = "fastly";
-    version = "2.0.0";
+    name = "wezterm";
+    version = "20221119-145034-49b9839f";
 
     src = fetchzip {
       url = "https://github.com/wez/wezterm/releases/download/20221119-145034-49b9839f/WezTerm-macos-20221119-145034-49b9839f.zip";

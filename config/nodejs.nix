@@ -10,6 +10,6 @@
   ]);
 
   environment.interactiveShellInit = ''
-    export PATH=$HOME/.yarn/bin:$HOME/.local/share/pnpm:$PATH
+    export PATH=./node_modules/.bin:$HOME/.yarn/bin:$HOME/.local/share/pnpm:$PATH
   '';
 }
