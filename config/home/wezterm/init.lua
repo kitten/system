@@ -53,6 +53,7 @@ return {
   warn_about_missing_glyphs = false,
   bold_brightens_ansi_colors = false,
   window_decorations = "RESIZE",
+  window_background_opacity = 0.999,
 
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,
