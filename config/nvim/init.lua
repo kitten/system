@@ -104,12 +104,6 @@ vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.pumheight = 10
 vim.o.backspace = 'indent,eol,start'
 
--- polyglot
-vim.g.javascript_plugin_flow = 1
-vim.g.jsx_ext_required = 0
-vim.g.vim_markdown_fenced_languages = { 'jsx=javascript', 'js=javascript', 'ts=typescript', 'bash=sh' }
-vim.g.vim_markdown_json_frontmatter = 1
-
 -- unmap special keys
 local key_opt = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('', '<Space>', '<nop>', key_opt)
@@ -412,6 +406,7 @@ require('nvim-treesitter.configs').setup {
     "astro",
     "typescript",
     "tsx",
+    "gitcommit",
     "graphql",
     "regex",
     "json",
