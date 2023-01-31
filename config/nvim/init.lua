@@ -331,8 +331,8 @@ lsp.tsserver.setup({
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
   settings = {
+    disableAutomaticTypingAcquisition = true,
     preferences = {
-      disableAutomaticTypingAcquisition = true,
       importModuleSpecifierPreference = 'project-relative',
     },
   },

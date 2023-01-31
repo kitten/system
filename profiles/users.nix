@@ -15,6 +15,7 @@ mkMerge [
           config.allowUnfree = true;
           config.allowBroken = true;
         };
+        home.stateVersion = "22.11";
         xdg.enable = true;
         imports = [ ../config/home/default.nix ];
       };
