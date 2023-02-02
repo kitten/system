@@ -11,5 +11,6 @@
     sd
     fd
     awscli
+    cloudflared
   ];
 }

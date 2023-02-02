@@ -24,6 +24,21 @@ rec {
     '';
   };
 
+  cloudflared = super.stdenv.mkDerivation rec {
+    name = "cloudflared";
+    version = "2023.1.0";
+
+    src = fetchzip {
+      url = "https://github.com/cloudflare/cloudflared/releases/download/${version}/cloudflared-darwin-amd64.tgz";
+      sha256 = "sha256-J1rHhT2MaRHQJwfcPLyA7+c3YaT8C5JeXyPy0qvLH3E=";
+    };
+
+    installPhase = ''
+      mkdir -p $out/bin
+      cp cloudflared $out/bin
+    '';
+  };
+
   fastly = super.stdenv.mkDerivation rec {
     name = "fastly";
     version = "2.0.0";
