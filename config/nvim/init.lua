@@ -312,16 +312,40 @@ local function lsp_capabilities()
   return capabilities
 end
 
-lsp.astro.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+local function lsp_setup(server, opts)
+  local config = lsp[server]
+  opts.autostart = false
+  opts.capabilities = lsp_capabilities()
+  opts.on_attach = lsp_on_attach
+  config.setup(opts)
+
+  local event
+  local pattern
+  if config.filetypes then
+    event = 'FileType'
+    pattern = table.concat(config.filetypes, ',')
+  else
+    event = 'BufReadPost'
+    pattern = '*'
+  end
+
+  vim.api.nvim_create_autocmd(event, {
+    pattern = pattern,
+    callback = function(opt)
+      if not vim.b[opt.buf or vim.api.nvim_get_current_buf()].big then
+        config.manager.try_add(opt.buf)
+      end
+    end,
+    group = lsp_group,
+  })
+end
+
+lsp_setup('astro', {
   cmd = { nix_bins.astrols, "--stdio" },
   flags = { debounce_text_changes = 200 },
 })
 
-lsp.tsserver.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
   settings = {
@@ -332,9 +356,7 @@ lsp.tsserver.setup({
   },
 })
 
-lsp.eslint.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('eslint', {
   cmd = { nix_bins.eslintls, "--stdio" },
   flags = { debounce_text_changes = 200 },
   settings = {
@@ -348,30 +370,22 @@ lsp.eslint.setup({
   },
 })
 
-lsp.cssls.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('cssls', {
   cmd = { nix_bins.cssls, "--stdio" },
   flags = { debounce_text_changes = 200 },
 })
 
-lsp.html.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('html', {
   cmd = { nix_bins.htmlls, "--stdio" },
   flags = { debounce_text_changes = 200 },
 })
 
-lsp.jsonls.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('jsonls', {
   cmd = { nix_bins.jsonls, "--stdio" },
   flags = { debounce_text_changes = 200 },
 })
 
-lsp.rust_analyzer.setup({
-  capabilities = lsp_capabilities(),
-  on_attach = lsp_on_attach,
+lsp_setup('rust_analyzer', {
   cmd = { nix_bins.rustanalyzer },
   flags = { debounce_text_changes = 200 },
   settings = {
@@ -433,15 +447,14 @@ require('nvim-treesitter.configs').setup {
   highlight = {
     enable = true,
     disable = function(lang, buf)
-      local max_filesize = 100 * 1024 -- 100 KB
-      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
+      return vim.b[buf].big
     end,
   },
   incremental_selection = {
     enable = true,
+    disable = function(lang, buf)
+      return vim.b[buf].big
+    end,
     keymaps = {
       node_incremental = "]",
       scope_incremental = "=",
@@ -449,12 +462,26 @@ require('nvim-treesitter.configs').setup {
     },
   },
   refactor = {
-    highlight_definitions = { enable = true },
-    smart_rename = { enable = true, keymaps = { smart_rename = "gn" } },
+    highlight_definitions = {
+      enable = true,
+      disable = function(lang, buf)
+        return vim.b[buf].big
+      end,
+    },
+    smart_rename = {
+      enable = true,
+      disable = function(lang, buf)
+        return vim.b[buf].big
+      end,
+      keymaps = { smart_rename = "gn" }
+    },
   },
   textobjects = {
     select = {
       enable = true,
+      disable = function(lang, buf)
+        return vim.b[buf].big
+      end,
       keymaps = {
         ["af"] = "@function.outer",
         ["if"] = "@function.inner",
@@ -510,14 +537,32 @@ require('lir').setup {
 }
 
 -- hide sticky commands
-vim.api.nvim_exec([[
-  function! CursorHoldDelay(timer)
-    if mode() ==# 'n'
-      echon ''
-    endif
-  endfunction
-  autocmd CursorHold * call timer_start(3000, funcref('CursorHoldDelay'))
-]], false)
+vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+  pattern = "*",
+  callback = function()
+    vim.defer_fn(function()
+      if vim.api.nvim_get_mode().mode == 'n' then
+        vim.cmd('echon ""')
+      end
+    end, 3000)
+  end,
+})
+
+-- mark big buffers
+vim.api.nvim_create_autocmd({ 'BufReadPre' }, {
+  pattern = "*",
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+    vim.b[buf].big = ok and stats and (stats.size > 100 * 1024)
+    if vim.b[buf].big then
+      vim.opt_local.spell = false
+      vim.opt_local.showmatch = false
+      vim.opt_local.undofile = false
+      vim.opt_local.foldmethod = 'manual'
+    end
+  end,
+})
 
 -- customise fold text
 vim.api.nvim_exec([[
@@ -543,7 +588,9 @@ end
 cmp.setup {
   enabled = function()
     local context = require('cmp.config.context')
-    if vim.api.nvim_get_mode().mode == 'c' then
+    if vim.b[vim.api.nvim_get_current_buf()].big then
+      return false
+    elseif vim.api.nvim_get_mode().mode == 'c' then
       return true
     else
       return not context.in_treesitter_capture('comment')
@@ -617,6 +664,9 @@ cmp.setup.filetype('gitcommit', {
 })
 
 cmp.setup.cmdline('/', {
+  enabled = function()
+    return not vim.b[vim.api.nvim_get_current_buf()].big
+  end,
   mapping = cmp.mapping.preset.cmdline({
     ['<CR>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
