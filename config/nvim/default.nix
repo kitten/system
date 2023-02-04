@@ -61,7 +61,6 @@ in {
             telescope-nvim
             trouble-nvim
             dressing-nvim
-            hop-nvim
             which-key-nvim
             nvim-snippy
             nvim-cmp

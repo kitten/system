@@ -109,10 +109,6 @@ local key_opt = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('', '<Space>', '<nop>', key_opt)
 vim.api.nvim_set_keymap('', '<F1>', '<nop>', key_opt)
 vim.api.nvim_set_keymap('i', '<F1>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('n', '<Up>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('n', '<Down>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('n', '<Left>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('n', '<Right>', '<nop>', key_opt)
 
 -- period command in visual mode
 vim.api.nvim_set_keymap('x', '.', ':norm.<CR>', key_opt)
@@ -191,14 +187,6 @@ require('golden_size').set_ignore_callbacks {
   { require('golden_size').ignore_float_windows },
   { require('golden_size').ignore_by_window_flag },
 }
-
--- hop
-require('hop').setup({ teasing = false })
-
-vim.api.nvim_set_keymap('', '<Up>', "<cmd>lua require('hop').hint_lines_skip_whitespace({ direction = 1 })<CR>", key_opt)
-vim.api.nvim_set_keymap('', '<Down>', "<cmd>lua require('hop').hint_lines_skip_whitespace({ direction = 2 })<CR>", key_opt)
-vim.api.nvim_set_keymap('', '<Left>', "<cmd>lua require('hop').hint_words({ direction = 1 })<CR>", key_opt)
-vim.api.nvim_set_keymap('', '<Right>', "<cmd>lua require('hop').hint_words({ direction = 2 })<CR>", key_opt)
 
 -- telescope
 require('telescope').setup{

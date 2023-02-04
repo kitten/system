@@ -160,18 +160,6 @@
     meta.homepage = "https://github.com/dmitmel/cmp-cmdline-history";
   };
 
-  hop-nvim = buildVimPluginFrom2Nix {
-    pname = "hop-nvim";
-    version = "2.0.3";
-    src = fetchFromGitHub {
-      owner = "phaazon";
-      repo = "hop.nvim";
-      rev = "v2.0.3";
-      sha256 = "18akjbplhp27di5l0bi9yd2haysgvw8yv3yk6cgwbizmk6inb5ji";
-    };
-    meta.homepage = "https://github.com/phaazon/hop.nvim";
-  };
-
   hardline-nvim = buildVimPluginFrom2Nix {
     pname = "hardline-nvim";
     version = "2021-09-03";
