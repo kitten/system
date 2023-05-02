@@ -12,5 +12,7 @@
     fd
     awscli
     cloudflared
+    woff2
+    temporal
   ];
 }

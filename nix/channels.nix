@@ -20,8 +20,8 @@ let
   nixpkgs_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "ad6d0779992a795dccddac0ee6ef510859bc366b";
-    sha256 = "0aqgqdxb47bah0f9m0cj5dkqj9vlph0p8mgivsf1mn6zh76cxh1k";
+    rev = "826418fc35e4cd6e85a88edd389cb249a7aa9671";
+    sha256 = "11kixdima3a1in55r4i3fvg0cya3b0v3142ny7gxdyi8xxxdlvn0";
   };
 in
 
