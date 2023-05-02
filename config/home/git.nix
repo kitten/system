@@ -64,6 +64,10 @@ in {
       mergetool.prompt = true;
       "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
       pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cr, by %an)";
+      "remote \"origin\"" = {
+        fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
+        pruneTags = true;
+      };
     };
   };
 }

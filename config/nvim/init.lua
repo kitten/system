@@ -140,6 +140,12 @@ vim.api.nvim_set_keymap('n', '<M-v>', '"+P', key_opt)
 vim.api.nvim_set_keymap('v', '<', '<gv', key_opt)
 vim.api.nvim_set_keymap('v', '>', '>gv', key_opt)
 
+-- swap visual gj, gk, with jk
+vim.api.nvim_set_keymap('n', 'j', 'gj', key_opt)
+vim.api.nvim_set_keymap('n', 'k', 'gk', key_opt)
+vim.api.nvim_set_keymap('n', 'gj', 'j', key_opt)
+vim.api.nvim_set_keymap('n', 'gk', 'k', key_opt)
+
 -- macros per line
 vim.api.nvim_set_keymap('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', key_opt)
 
@@ -187,6 +193,18 @@ require('golden_size').set_ignore_callbacks {
   { require('golden_size').ignore_float_windows },
   { require('golden_size').ignore_by_window_flag },
 }
+
+-- markdown
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+    vim.opt_local.formatoptions = vim.opt_local.formatoptions + 'tcn12'
+    vim.opt_local.colorcolumn = '80'
+    vim.opt_local.textwidth = 80
+  end,
+})
 
 -- telescope
 require('telescope').setup{
@@ -261,6 +279,8 @@ vim.filetype.add({
 -- lspconfig
 local lsp = require('lspconfig')
 
+vim.lsp.set_log_level('debug');
+
 local function lsp_on_attach(client, buf)
   if client.config.flags then
     client.config.flags.allow_incremental_sync = true
@@ -277,12 +297,13 @@ local function lsp_on_attach(client, buf)
     key.register({
       g = {
         d = { vim.lsp.buf.definition, "Go to Definition" },
-        D = { vim.lsp.buf.definition, "Go to Declaration" },
-        y = { vim.lsp.buf.definition, "Go to Type Definition" },
-        i = { vim.lsp.buf.definition, "Go to Implementation" },
+        D = { vim.lsp.buf.declaration, "Go to Declaration" },
+        y = { vim.lsp.buf.type_definition, "Go to Type Definition" },
+        i = { vim.lsp.buf.implementation, "Go to Implementation" },
         r = { "<cmd>TroubleToggle lsp_references<cr>", "Show References" },
         N = { vim.lsp.buf.rename, "Rename" },
         f = { vim.lsp.buf.code_action, "Code Action" },
+        k = { vim.diagnostic.open_float, "Show Diagnostic" },
       },
       K = { vim.lsp.buf.hover, "Hover" },
       ["C-k"] = { vim.lsp.buf.signature_help, "Signature Help" },
@@ -831,6 +852,14 @@ require('trouble').setup {
     next = {"j", "<tab>"},
   },
 }
+
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = "Trouble",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})
 
 -- dressing
 require('dressing').setup {
