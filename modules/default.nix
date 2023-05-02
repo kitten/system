@@ -7,5 +7,6 @@ in {
   imports = flatten [
     ./home-manager.nix
     (optional isDarwin ./darwin.nix)
+    (optional isDarwin ./mysql.nix)
   ];
 }

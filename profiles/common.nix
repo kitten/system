@@ -18,6 +18,7 @@ in {
     ../config/fonts.nix
     ../config/term.nix
     ../config/postgres.nix
+    ../config/mysql.nix
 
     ./tools.nix
     ./users.nix
