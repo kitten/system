@@ -14,5 +14,7 @@
     cloudflared
     woff2
     temporal
+    dive
+    caddy
   ];
 }

@@ -8,13 +8,9 @@ in
 mkMerge [
   {
     home-manager = {
+      useGlobalPkgs = true;
       users.phil = _: {
         manual.manpages.enable = false;
-        nixpkgs = {
-          overlays = import <nixpkgs-overlays>;
-          config.allowUnfree = true;
-          config.allowBroken = true;
-        };
         home.stateVersion = "22.11";
         xdg.enable = true;
         imports = [ ../config/home/default.nix ];
