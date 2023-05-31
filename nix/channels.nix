@@ -4,24 +4,24 @@ let
   darwin_src = fetchFromGitHub {
     owner = "LnL7";
     repo = "nix-darwin";
-    rev = "87b9d090ad39b25b2400029c64825fc2a8868943";
-    sha256 = "0c2naszb8xqi152m4b71vpi20cwacmxsx82ig8fgq61z9y05iiq2";
+    rev = "b8c286c82c6b47826a6c0377e7017052ad91353c";
+    sha256 = "0cg2zv1avmqjymkynmgc2c5v9yk9wzl2kb66jrzc1kaqhz1xm544";
   };
 
   /* release-22.11 */
   home-manager_src = fetchFromGitHub {
     owner = "nix-community";
     repo = "home-manager";
-    rev = "65c47ced082e3353113614f77b1bc18822dc731f";
-    sha256 = "1fw01zfankc80rna9ch65p7bpg6fwcnvc0pmwvkpfazb7xq92108";
+    rev = "f9edbedaf015013eb35f8caacbe0c9666bbc16af";
+    sha256 = "1cp2rpprcfl4mjsrsrpfg6278nf05a0mpl3m0snksvdalfmc5si5";
   };
 
   /* nixpkgs-22.11-darwin */
   nixpkgs_src = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "826418fc35e4cd6e85a88edd389cb249a7aa9671";
-    sha256 = "11kixdima3a1in55r4i3fvg0cya3b0v3142ny7gxdyi8xxxdlvn0";
+    rev = "9af373a61647257d16ae6062cddaa9094d24920c";
+    sha256 = "0q2vi3048b2pyqgm488s1z9ci09d31xln8dxg1h1d3aaplmzfa31";
   };
 in
 
