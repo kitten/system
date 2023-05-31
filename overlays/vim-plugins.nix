@@ -366,13 +366,25 @@
 
   which-key-nvim = buildVimPluginFrom2Nix {
     pname = "which-key-nvim";
-    version = "1.1.0";
+    version = "1.4.3";
     src = fetchFromGitHub {
       owner = "folke";
       repo = "which-key.nvim";
-      rev = "v1.1.0";
-      sha256 = "1r6zd308wqh730nafkif3pdmakb5c3h8m64lf3qjdwwzqfpx63rk";
+      rev = "v1.4.3";
+      sha256 = "1ajzsxlpqzwi4ajq1rh134712gdsk6v2y8za16bfvbi20mf3v6n0";
     };
     meta.homepage = "https://github.com/folke/which-key.nvim";
+  };
+
+  vim-prisma = buildVimPluginFrom2Nix {
+    pname = "vim-prisma";
+    version = "2023-01-24";
+    src = fetchFromGitHub {
+      owner = "prisma";
+      repo = "vim-prisma";
+      rev = "95c5b25066efb34c75bce78698baa371fe0ee7c2";
+      sha256 = "046lpazz44f6b1lcvklaq1jl0sbyiklj6kcv580rrff89511nzsy";
+    };
+    meta.homepage = "https://github.com/prisma/vim-prisma";
   };
 }

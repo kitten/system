@@ -62,6 +62,7 @@ in {
             trouble-nvim
             dressing-nvim
             which-key-nvim
+            vim-prisma
             nvim-snippy
             nvim-cmp
             nvim-cmp-lsp

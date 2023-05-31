@@ -279,8 +279,6 @@ vim.filetype.add({
 -- lspconfig
 local lsp = require('lspconfig')
 
-vim.lsp.set_log_level('debug');
-
 local function lsp_on_attach(client, buf)
   if client.config.flags then
     client.config.flags.allow_incremental_sync = true
