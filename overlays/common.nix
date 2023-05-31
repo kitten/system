@@ -76,11 +76,11 @@ rec {
 
   wezterm = super.stdenv.mkDerivation rec {
     name = "wezterm";
-    version = "20221119-145034-49b9839f";
+    version = "20230408-112425-69ae8472";
 
     src = fetchzip {
-      url = "https://github.com/wez/wezterm/releases/download/20221119-145034-49b9839f/WezTerm-macos-20221119-145034-49b9839f.zip";
-      sha256 = "1081dzqn1lff58yg7jhr83mrx07dqfrqaa7fqgjawykpk0zl89a9";
+      url = "https://github.com/wez/wezterm/releases/download/20230408-112425-69ae8472/WezTerm-macos-20230408-112425-69ae8472.zip";
+      sha256 = "1ymfv28l3z0fckbl7sghlw6v546kp33fq165jgmr8yxg58jrrh16";
     };
 
     installPhase = ''
