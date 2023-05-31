@@ -7,6 +7,8 @@ local function hi(group, str)
   return str ~= '' and string.format('%%#%s#%s', group, str) or ''
 end
 
+vim.loader.enable()
+
 -- terminal options
 vim.api.nvim_exec([[
   set t_ZH=^\[\[3m
@@ -230,12 +232,22 @@ require('telescope').setup{
 
 -- global leader keybindings
 local telescope_builtins = require('telescope.builtin')
+
+local function project_files()
+  vim.fn.system('git rev-parse --is-inside-work-tree')
+  if vim.v.shell_error == 0 then
+    telescope_builtins.git_files(opts)
+  else
+    telescope_builtins.find_files(opts)
+  end
+end
+
 key.register({
   ["<leader>q"] = { "<cmd>TroubleToggle quickfix<cr>", "Quickfix List" },
   ["<leader>p"] = { "<cmd>TroubleToggle loclist<cr>", "Location List" },
   ["<leader>d"] = { "<cmd>TroubleToggle document_diagnostics<cr>", "Document Diagnostics" },
   ["<leader>D"] = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics" },
-  ["<leader>o"] = { telescope_builtins.git_files, "Search Files in Git" },
+  ["<leader>o"] = { project_files, "Search Files in Workspace" },
   ["<leader>f"] = { telescope_builtins.live_grep, "Search in Files" },
   ["<leader>n"] = { telescope_builtins.lsp_dynamic_workspace_symbols, "Search Symbols in LSP Workspace" },
   ["<leader>b"] = { telescope_builtins.buffers, "Search for Buffer" },
@@ -427,7 +439,10 @@ require('nvim-treesitter.configs').setup {
     "astro",
     "typescript",
     "tsx",
+    "git_rebase",
     "gitcommit",
+    "gitignore",
+    "gitattributes",
     "graphql",
     "regex",
     "json",
@@ -435,6 +450,9 @@ require('nvim-treesitter.configs').setup {
     "javascript",
     "markdown",
     "markdown_inline",
+    "terraform",
+    "svelte",
+    "prisma",
     "yaml",
     "vue",
     "vim",
@@ -448,7 +466,8 @@ require('nvim-treesitter.configs').setup {
     "html",
     "bash",
     "c",
-    "nix"
+    "nix",
+    "zig",
   },
   parser_install_dir = "~/.local/share/nvim/site/parser",
   highlight = {
@@ -523,6 +542,7 @@ require('treesitter-context').setup {
 local lir_actions = require('lir.actions')
 require('lir').setup {
   show_hidden_files = false,
+  ignore = { ".DS_Store" },
   devicons_enable = false,
   hide_cursor = true,
   mappings = {
@@ -862,6 +882,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 -- dressing
 require('dressing').setup {
   select = {
+    backend = { "telescope", "builtin", "nui" },
     telescope = require('telescope.themes').get_cursor(),
   },
 }

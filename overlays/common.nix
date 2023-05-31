@@ -54,27 +54,7 @@ rec {
     '';
   };
 
-  neovim = (super.wrapNeovim(
-    super.neovim-unwrapped.overrideAttrs(old: {
-      version = "0.9.0-nightly-860fea1";
-      buildInputs = old.buildInputs ++ [ super.tree-sitter ] ++
-        (with super.darwin.apple_sdk.frameworks; [ CoreServices ]);
-      cmakeFlags = old.cmakeFlags ++ [ "-DUSE_BUNDLED=OFF" ];
-      src = fetchFromGitHub {
-        owner = "neovim";
-        repo = "neovim";
-        rev = "860fea1a3f880c2da0ac351a9523156bcfc67361";
-        sha256 = "074iz4fp4435ksdlj2819pdjndc3ir47lss9rakx1aj8rn8bxs43";
-      };
-    })
-  ) {}).overrideAttrs(old: {
-    buildCommand = (''
-      mkdir -p $out/home
-      export HOME=$out/home
-    '' + old.buildCommand);
-  });
-
-  wezterm = super.stdenv.mkDerivation rec {
+   wezterm = super.stdenv.mkDerivation rec {
     name = "wezterm";
     version = "20230408-112425-69ae8472";
 
@@ -133,13 +113,13 @@ rec {
 
   rust-analyzer = super.stdenv.mkDerivation rec {
     name = "rust-analyzer";
-    version = "2023-01-30";
+    version = "2023-05-29";
     dontStrip = true;
     buildInputs = [ super.gzip ];
     unpackPhase = ":";
     src = super.fetchurl {
       url = "https://github.com/rust-lang/rust-analyzer/releases/download/${version}/rust-analyzer-aarch64-apple-darwin.gz";
-      sha256 = "sha256-KX4Wc1vT2LP90GdMiL3R4j+s/E0frVXYBYIuEa2cLnI=";
+      sha256 = "sha256-hmEbBZLWBs3sJF7la7d1RG75yoGH10RdNDl+sxz+xGI=";
     };
     installPhase = ''
       mkdir -p $out/bin

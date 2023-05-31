@@ -15,8 +15,6 @@ let
 
   initContents = "
     \nlua <<EOF\n" + ''
-    require('impatient')
-
     nix_bins = {
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       tsserver = '${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server',
@@ -45,7 +43,6 @@ in {
         packages.myVimPackage = with pkgs.vimPlugins; {
           start = [
             my-theme
-            impatient-nvim
             vim-repeat
             vim-fugitive
             editorconfig-vim
@@ -62,7 +59,6 @@ in {
             trouble-nvim
             dressing-nvim
             which-key-nvim
-            vim-prisma
             nvim-snippy
             nvim-cmp
             nvim-cmp-lsp
