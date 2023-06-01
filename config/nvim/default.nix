@@ -2,6 +2,10 @@
 
 let
   colors = import ../colors.nix;
+  plugins = import ./plugins.nix {
+    inherit (pkgs) fetchFromGitHub;
+    inherit (pkgs.vimUtils) buildVimPluginFrom2Nix;
+  };
 
   my-theme = pkgs.vimUtils.buildVimPluginFrom2Nix {
     pname = "my-theme";
@@ -40,12 +44,11 @@ in {
       vimAlias = true;
       configure = {
         customRC = initContents;
-        packages.myVimPackage = with pkgs.vimPlugins; {
+        packages.myVimPackage = with plugins; {
           start = [
             my-theme
             vim-repeat
             vim-fugitive
-            editorconfig-vim
             hardline-nvim
             gitsigns-nvim
             nvim-lspconfig
