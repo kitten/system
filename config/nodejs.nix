@@ -5,7 +5,7 @@
 
   environment.systemPackages = (with pkgs; [
     pkgs.nodePackages.pnpm
-    nodejs
+    pkgs.nodejs-18_x
     yarn
   ]);
 
