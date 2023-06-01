@@ -3,18 +3,6 @@
 let
   inherit (import ../../nix/secrets.nix) readSecretFileContents;
 in {
-  programs.gh = {
-    enable = true;
-    settings.git_protocol = "ssh";
-  };
-
-  xdg.configFile."gh/hosts.yml".text = ''
-    github.com:
-        oauth_token: ${readSecretFileContents ../../assets/github-token}
-        git_protocol: ssh
-        user: kitten
-  '';
-
   programs.git = {
     enable = true;
     userName = "Phil Pluckthun";
