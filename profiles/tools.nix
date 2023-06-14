@@ -16,5 +16,6 @@
     temporal
     dive
     caddy
+    wasmtime
   ];
 }

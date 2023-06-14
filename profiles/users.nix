@@ -9,6 +9,7 @@ mkMerge [
   {
     home-manager = {
       useGlobalPkgs = true;
+      useUserPackages = true;
       users.phil = _: {
         manual.manpages.enable = false;
         home.stateVersion = "22.11";

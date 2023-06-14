@@ -9,11 +9,9 @@ in {
   ];
 
   imports = flatten [
-    ../config/dns.nix
     ../config/shell.nix
     ../config/nvim/default.nix
     ../config/nodejs.nix
-    ../config/rust.nix
     ../config/gpg.nix
     ../config/fonts.nix
     ../config/term.nix
