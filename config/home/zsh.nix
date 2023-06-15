@@ -8,7 +8,7 @@
     enableCompletion = false;
 
     shellAliases = {
-      nix-encrypt = "openssl enc -e -aes-256-cbc -pbkdf2 -salt -base64 -kfile ${/usr/local/secret}";
+      nix-encrypt = "openssl enc -e -aes-256-cbc -pbkdf2 -salt -base64 -kfile ${../../.nix-secret}";
       ls = "ls --color=auto";
       ll = "ls -l";
       wx = "wezmux";

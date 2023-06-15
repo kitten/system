@@ -232,14 +232,27 @@ require('telescope').setup{
 
 -- global leader keybindings
 local telescope_builtins = require('telescope.builtin')
+local telescope_themes = require('telescope.themes')
 
 local function project_files()
   vim.fn.system('git rev-parse --is-inside-work-tree')
   if vim.v.shell_error == 0 then
-    telescope_builtins.git_files(opts)
+    telescope_builtins.git_files()
   else
-    telescope_builtins.find_files(opts)
+    telescope_builtins.find_files()
   end
+end
+
+local function document_symbols()
+  telescope_builtins.lsp_document_symbols(telescope_themes.get_ivy({
+    ignore_symbols = { 'variable', 'constant', 'property' },
+  }))
+end
+
+local function workspace_symbols(opts)
+  telescope_builtins.lsp_dynamic_workspace_symbols(telescope_themes.get_ivy({
+    ignore_symbols = { 'variable', 'constant', 'property' },
+  }))
 end
 
 key.register({
@@ -249,7 +262,8 @@ key.register({
   ["<leader>D"] = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Workspace Diagnostics" },
   ["<leader>o"] = { project_files, "Search Files in Workspace" },
   ["<leader>f"] = { telescope_builtins.live_grep, "Search in Files" },
-  ["<leader>n"] = { telescope_builtins.lsp_dynamic_workspace_symbols, "Search Symbols in LSP Workspace" },
+  ["<leader>n"] = { document_symbols, "Document Symbols" },
+  ["<leader>N"] = { workspace_symbols, "Workspace Symbols" },
   ["<leader>b"] = { telescope_builtins.buffers, "Search for Buffer" },
 })
 
