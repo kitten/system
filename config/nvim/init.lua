@@ -378,6 +378,11 @@ lsp_setup('astro', {
   flags = { debounce_text_changes = 200 },
 })
 
+lsp_setup('zk', {
+  cmd = { nix_bins.zk, "lsp" },
+  flags = { debounce_text_changes = 200 },
+})
+
 lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },

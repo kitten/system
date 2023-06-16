@@ -27,7 +27,8 @@ let
       htmlls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-html-language-server',
       jsonls = '${pkgs.nodePackages.vscode-langservers-extracted}/bin/vscode-json-language-server',
       astrols = '${pkgs.nodePackages."@astrojs/language-server"}/bin/astro-ls',
-      rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer'
+      rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
+      zk = '${pkgs.zk}/bin/zk',
     }
 
     hardline_colors = ${colors.vim-hardline}
