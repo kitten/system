@@ -34,7 +34,6 @@ rec {
     { prefix = "nixos"; path = nixpkgs_src; }
     { prefix = "nixos-config"; path = ../configuration.nix; }
     { prefix = "nixpkgs"; path = nixpkgs_src; }
-    { prefix = "nixpkgs-overlays"; path = ../overlays/default.nix; }
   ];
 
   nixPath = map ({ prefix, path }: "${prefix}=${__replaceStrings [ "/mnt/" ] [ "/" ] (toString path)}") __nixPath;

@@ -10,7 +10,6 @@ in
 
 rec {
   nixpkgs = {
-    overlays = import <nixpkgs-overlays>;
     config.allowUnfree = true;
     config.allowBroken = true;
   };
@@ -21,7 +20,7 @@ rec {
     let
       pkgsConf = {
         inherit (config.nixpkgs) localSystem crossSystem;
-        overlays = config.nixpkgs.overlays ++ nixpkgs.overlays;
+        overlays = config.nixpkgs.overlays;
         config = config.nixpkgs.config // nixpkgs.config;
       };
     in rec {

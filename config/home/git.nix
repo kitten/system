@@ -31,7 +31,7 @@ in {
       lol = "log --pretty=longline";
       recommit = "commit -a --amend --no-edit";
       pushf = "push --force-with-lease";
-      glog = "log --pretty=longline --decorate --all --graph";
+      glog = "log --pretty=longline --decorate --all --graph --date=relative";
     };
 
     extraConfig = {
@@ -51,7 +51,7 @@ in {
       difftool.prompt = false;
       mergetool.prompt = true;
       "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
-      pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cr, by %an)";
+      pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cd, by %an)";
       "remote \"origin\"" = {
         fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
         pruneTags = true;
