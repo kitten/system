@@ -203,8 +203,6 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
     vim.opt_local.formatoptions = vim.opt_local.formatoptions + 'tcn12'
-    vim.opt_local.colorcolumn = '80'
-    vim.opt_local.textwidth = 80
   end,
 })
 
