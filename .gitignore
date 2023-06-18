@@ -1,3 +1,7 @@
+/result
+
 .*
-.nix-secret
 *.log
+
+**/encrypt/*
+!**/encrypt/*.age
