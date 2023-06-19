@@ -39,12 +39,20 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    nvim-plugins = {
+      url = "path:lib/flakes/nvim-plugins?narHash=sha256-sfENEWUMJXZ7249JcTor11g66JyIw4bf1QwZc8ciF5s=";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
-
     overlays = [
+      inputs.nvim-plugins.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system}) typescript-language-server vscode-langservers-extracted;
       })

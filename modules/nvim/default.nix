@@ -3,7 +3,6 @@
 let
   inherit (import ../../lib/colors.nix inputs) colors mkVimHardlineColors;
   inherit (import ./theme.nix inputs) my-theme;
-  plugins = (import ./plugins.nix inputs);
 
   initContents = "
     \nlua <<EOF\n" + ''
@@ -34,7 +33,7 @@ in {
       vimAlias = true;
       configure = {
         customRC = initContents;
-        packages.myVimPackage = with plugins; {
+        packages.myVimPackage = with pkgs.nvim-plugins; {
           start = [
             my-theme
             vim-repeat
