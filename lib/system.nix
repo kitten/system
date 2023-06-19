@@ -60,6 +60,7 @@ in {
       modules = modules ++ [
         agenix.darwinModules.default
         home-manager.darwinModules.home-manager {
+          home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users."${user}" = home;
@@ -76,6 +77,7 @@ in {
       modules = modules ++ [
         agenix.nixosModules.default
         home-manager.nixosModules.home-manager {
+          home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users."${user}" = home;
