@@ -9,5 +9,6 @@
     ./gpg.nix
     ./nvim
     ./fonts
+    ./nix
   ];
 }
