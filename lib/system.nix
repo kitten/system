@@ -5,36 +5,48 @@ let
 in {
   mkSystem = { system, hostname, user ? "phil", overlays }: let
     inherit (lib.systems.elaborate { inherit system; }) isDarwin;
+
     lib = (import nixpkgs { inherit overlays system; }).lib;
+
+    age = {
+      identityPaths = ["/var/lib/persistent/agenix"];
+    };
+
     modules = [
       ../machines/common.nix
       ../machines/${hostname}/configuration.nix
       ../modules/default.nix
       ({ config, ... }: {
+        inherit age;
+
         nixpkgs = {
           inherit overlays;
           config.allowUnfree = true;
         };
 
-        age.identityPaths = ["/var/lib/persistent/agenix"];
         networking.hostName = hostname;
         nix.extraOptions = "extra-experimental-features = nix-command flakes";
       })
     ];
+
     home = { ... }: {
+      inherit age;
+
       manual.manpages.enable = false;
       home.stateVersion = "23.05";
       xdg.enable = true;
-      age.identityPaths = ["/var/lib/persistent/agenix"];
+
       imports = [
         agenix.homeManagerModules.default
         ../home/default.nix
         ../machines/${hostname}/home.nix
       ];
     };
+
     specialArgs = inputs // {
       inherit hostname user;
     };
+
   in if isDarwin then (
     darwin.lib.darwinSystem {
       inherit system lib;
