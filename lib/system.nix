@@ -4,12 +4,19 @@ let
   inherit (nixpkgs) lib;
 in {
   mkSystem = { system, hostname, user ? "phil", overlays }: let
-    inherit (lib.systems.elaborate { inherit system; }) isDarwin;
+    inherit (lib.systems.elaborate { inherit system; }) isDarwin isLinux;
+
+    homeDir = if isDarwin then "/Users/${user}" else "/home/${user}";
+    rootDir = if isDarwin then "/var/root" else "/root";
 
     lib = (import nixpkgs { inherit overlays system; }).lib;
 
     age = {
-      identityPaths = ["/var/lib/persistent/agenix"];
+      identityPaths = [
+        "/var/lib/persistent/agenix"
+        "${rootDir}/.ssh/agenix"
+        "${homeDir}/.ssh/agenix"
+      ];
     };
 
     modules = [
@@ -60,7 +67,7 @@ in {
         }
         ({ pkgs, ... }: {
           environment.shells = [pkgs.zsh];
-          users.users."${user}".home = "/Users/${user}";
+          users.users."${user}".home = homeDir;
         })
       ];
     }
@@ -76,7 +83,7 @@ in {
         }
         ({ pkgs, ... }: {
           users.defaultUserShell = pkgs.zsh;
-          users.users."${user}".home = "/home/${user}";
+          users.users."${user}".home = homeDir;
         })
       ];
     }
