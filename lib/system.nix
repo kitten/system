@@ -56,8 +56,7 @@ in {
 
   in if isDarwin then (
     darwin.lib.darwinSystem {
-      inherit system lib;
-      inputs = specialArgs;
+      inherit system specialArgs lib;
       modules = modules ++ [
         agenix.darwinModules.default
         home-manager.darwinModules.home-manager {

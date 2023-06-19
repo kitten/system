@@ -1,10 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, nixpkgs, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
 
   nix = {
     package = pkgs.nix;
+
+    # provide for nix-shell and run
+    nixPath = [ { nixpkgs= "${nixpkgs.outPath}"; } ];
 
     settings = {
       # save space
