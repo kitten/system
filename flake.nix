@@ -43,7 +43,7 @@
     };
 
     nvim-plugins = {
-      url = "path:lib/flakes/nvim-plugins?narHash=sha256-sfENEWUMJXZ7249JcTor11g66JyIw4bf1QwZc8ciF5s=";
+      url = "github:kitten/system-nvim-plugins.nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";

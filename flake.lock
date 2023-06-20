@@ -748,14 +748,17 @@
         "which-key-nvim": "which-key-nvim"
       },
       "locked": {
-        "narHash": "sha256-sfENEWUMJXZ7249JcTor11g66JyIw4bf1QwZc8ciF5s=",
-        "path": "lib/flakes/nvim-plugins",
-        "type": "path"
+        "lastModified": 1687277085,
+        "narHash": "sha256-C+rgIxMxgDJTXfFVGk/pgUafhmIinG4N45sPbnNxLoY=",
+        "owner": "kitten",
+        "repo": "system-nvim-plugins.nix",
+        "rev": "7b9c68596cd520ae4f22f9465797a414f2521143",
+        "type": "github"
       },
       "original": {
-        "narHash": "sha256-sfENEWUMJXZ7249JcTor11g66JyIw4bf1QwZc8ciF5s=",
-        "path": "lib/flakes/nvim-plugins",
-        "type": "path"
+        "owner": "kitten",
+        "repo": "system-nvim-plugins.nix",
+        "type": "github"
       }
     },
     "nvim-snippy": {
