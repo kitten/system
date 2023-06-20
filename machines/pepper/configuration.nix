@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware.nix
+    ../../modules/desktop
   ];
 
   users.users."${user}" = {

@@ -29,6 +29,8 @@ in helpers.linuxAttrs {
   };
 
   boot = {
+    initrd.systemd.enable = true;
+
     kernelParams = [
       "nmi_watchdog=0"
       "mitigations=off"
@@ -66,4 +68,6 @@ in helpers.linuxAttrs {
     sudo.enable = true;
     polkit.enable = true;
   };
+
+  services.dbus.enable = true;
 }

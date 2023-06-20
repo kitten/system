@@ -51,10 +51,11 @@
     };
   };
 
-  outputs = { nixos-hardware, ...} @ inputs: let
+  outputs = { nixos-hardware, hyprland, ...} @ inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
     overlays = [
       inputs.nvim-plugins.overlays.default
+      inputs.hyprland.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system}) typescript-language-server vscode-langservers-extracted;
       })
@@ -70,7 +71,6 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "pepper";
-      modules = [ nixos-hardware.nixosModules.framework-12th-gen-intel ];
     };
   };
 }

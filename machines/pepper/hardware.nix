@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, nixos-hardware, modulesPath, ... }:
 
 let
   luksUUID = "8f9546b5-56bb-42d3-a230-e81aef2faba5";
@@ -7,6 +7,7 @@ let
   bootUUID = "AD1D-0BB6";
 in {
   imports = [
+    nixos-hardware.nixosModules.framework-12th-gen-intel
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
