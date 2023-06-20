@@ -3,7 +3,7 @@
 let
   inherit (nixpkgs) lib;
 in {
-  mkSystem = { system, hostname, user ? "phil", overlays }: let
+  mkSystem = { system, hostname, user ? "phil", modules ? [], overlays ? [] }: let
     inherit (lib.systems.elaborate { inherit system; }) isDarwin isLinux;
 
     homeDir = if isDarwin then "/Users/${user}" else "/home/${user}";
@@ -19,7 +19,7 @@ in {
       ];
     };
 
-    modules = [
+    systemModules = modules ++ [
       ../machines/common.nix
       ../machines/${hostname}/configuration.nix
       ../modules/default.nix
@@ -60,7 +60,7 @@ in {
   in if isDarwin then (
     darwin.lib.darwinSystem {
       inherit system specialArgs lib;
-      modules = modules ++ [
+      modules = systemModules ++ [
         agenix.darwinModules.default
         home-manager.darwinModules.home-manager {
           home-manager.extraSpecialArgs = specialArgs;
@@ -77,7 +77,7 @@ in {
   ) else (
     nixpkgs.lib.nixosSystem {
       inherit system specialArgs lib;
-      modules = modules ++ [
+      modules = systemModules ++ [
         agenix.nixosModules.default
         home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = specialArgs;

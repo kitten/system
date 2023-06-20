@@ -51,7 +51,7 @@
     };
   };
 
-  outputs = inputs: let
+  outputs = { nixos-hardware, ...} @ inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
     overlays = [
       inputs.nvim-plugins.overlays.default
@@ -70,7 +70,7 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "pepper";
+      modules = [ nixos-hardware.nixosModules.framework-12th-gen-intel ];
     };
-
   };
 }
