@@ -65,5 +65,12 @@
       system = "aarch64-darwin";
       hostname = "sprite";
     };
+
+    nixosConfigurations."pepper" = mkSystem {
+      inherit overlays;
+      system = "x86_64-linux";
+      hostname = "pepper";
+    };
+
   };
 }
