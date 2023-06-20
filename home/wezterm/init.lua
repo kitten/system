@@ -46,7 +46,7 @@ return {
   font_size = 14.0,
   line_height = 1.1,
 
-  enable_wayland = true,
+  enable_wayland = false,
   enable_scroll_bar = false,
   check_for_updates = false,
   window_close_confirmation = "NeverPrompt",

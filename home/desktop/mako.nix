@@ -9,8 +9,8 @@
   systemd.user.services.mako = {
     Unit = {
       Description = "Lightweight Wayland notification daemon";
-      PartOf = [ "hyprland-session.target" ];
-      After = [ "hyprland-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
     };
 
     Install = {
