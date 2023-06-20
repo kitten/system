@@ -1,9 +1,31 @@
-{ pkgs, helpers, ... }:
+{ lib, pkgs, helpers, ... } @ inputs:
 
-helpers.linuxAttrs {
+let
+  inherit (import ../../lib/colors.nix inputs) hex;
+in helpers.linuxAttrs {
   console = {
+    earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
     keyMap = "us";
+
+    colors = [
+      "${hex.black}"
+      "${hex.red}"
+      "${hex.green}"
+      "${hex.yellow}"
+      "${hex.blue}"
+      "${hex.purple}"
+      "${hex.cyan}"
+      "${hex.white}"
+      "${hex.grey}"
+      "${hex.brightRed}"
+      "${hex.brightGreen}"
+      "${hex.brightYellow}"
+      "${hex.brightBlue}"
+      "${hex.brightPurple}"
+      "${hex.brightCyan}"
+      "${hex.brightWhite}"
+    ];
   };
 
   boot = {

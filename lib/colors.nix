@@ -8,36 +8,60 @@ let
 
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
 in rec {
+  hex = {
+    gutter = "16171D";
+    cursor = "2C323C";
+    element = "404449";
+    split = "282C34";
+    black = "13131A";
+    grey = "3E4452";
+    red = "ED95A8";
+    brightRed = "EF5350";
+    green = "C3E88D";
+    brightGreen = "C3E88D";
+    yellow = "FFCB6B";
+    brightYellow = "F78C6C";
+    blue = "82B1FF";
+    brightBlue = "939EDE";
+    purple = "C792EA";
+    brightPurple = "FF45AE";
+    cyan = "89DDFF";
+    brightCyan = "20D6E3";
+    white = "ECEFF1";
+    brightWhite = "697098";
+    darkWhite = "F8F8F2";
+  };
+
   colors = {
-    gutter = (mkColor "#16171d" "232" "15"); # gutter fg grey
-    cursor = (mkColor "#2C323C" "236" "8"); # cursor grey
-    element = (mkColor "#404449" "238" "15"); # special grey
-    split = (mkColor "#282c34" "59" "15");
+    gutter = (mkColor "#${hex.gutter}" "232" "15"); # gutter fg grey
+    cursor = (mkColor "#${hex.cursor}" "236" "8"); # cursor grey
+    element = (mkColor "#${hex.element}" "238" "15"); # special grey
+    split = (mkColor "#${hex.split}" "59" "15");
 
-    black = (mkColor "#13131a" "235" "0");
-    grey = (mkColor "#3E4452" "237" "15");
+    black = (mkColor "#${hex.black}" "235" "0");
+    grey = (mkColor "#${hex.grey}" "237" "15");
 
-    red = (mkColor "#ED95A8" "204" "1");
-    brightRed = (mkColor "#EF5350" "196" "9");
+    red = (mkColor "#${hex.red}" "204" "1");
+    brightRed = (mkColor "#${hex.brightRed}" "196" "9");
 
-    green = (mkColor "#C3E88D" "114" "2");
-    brightGreen = (mkColor "#C3E88D" "114" "2");
+    green = (mkColor "#${hex.green}" "114" "2");
+    brightGreen = (mkColor "#${hex.brightGreen}" "114" "2");
 
-    yellow = (mkColor "#FFCB6B" "180" "3");
-    brightYellow = (mkColor "#F78C6C" "173" "11"); # dark yellow
+    yellow = (mkColor "#${hex.yellow}" "180" "3");
+    brightYellow = (mkColor "#${hex.brightYellow}" "173" "11"); # dark yellow
 
-    blue = (mkColor "#82B1FF" "39" "4");
-    brightBlue = (mkColor "#939EDE" "39" "4"); # blue purple
+    blue = (mkColor "#${hex.blue}" "39" "4");
+    brightBlue = (mkColor "#${hex.brightBlue}" "39" "4"); # blue purple
 
-    purple = (mkColor "#C792EA" "170" "5");
-    brightPurple = (mkColor "#FF45AE" "170" "5");
+    purple = (mkColor "#${hex.purple}" "170" "5");
+    brightPurple = (mkColor "#${hex.brightPurple}" "170" "5");
 
-    cyan = (mkColor "#89DDFF" "38" "6");
-    brightCyan = (mkColor "#20D6E3" "38" "6");
+    cyan = (mkColor "#${hex.cyan}" "38" "6");
+    brightCyan = (mkColor "#${hex.brightCyan}" "38" "6");
 
-    white = (mkColor "#ECEFF1" "145" "7");
-    brightWhite = (mkColor "#697098" "59" "15"); # comment grey
-    darkWhite = (mkColor "#F8F8F2" "59" "15");
+    white = (mkColor "#${hex.white}" "145" "7");
+    brightWhite = (mkColor "#${hex.brightWhite}" "59" "15"); # comment grey
+    darkWhite = (mkColor "#${hex.darkWhite}" "59" "15");
   };
 
   transparent = (mkColor "NONE" "NONE" "0");
