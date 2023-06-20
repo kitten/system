@@ -2,13 +2,12 @@
 
 {
   imports = [
-    ./shell.nix
+    ./base
     ./nodejs.nix
     ./postgres.nix
     ./mysql.nix
     ./gpg.nix
     ./nvim
     ./fonts
-    ./nix
   ];
 }

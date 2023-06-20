@@ -52,6 +52,9 @@ in {
 
     specialArgs = inputs // {
       inherit hostname user;
+      helpers = (import ./helpers.nix {
+        inherit lib system;
+      });
     };
 
   in if isDarwin then (
@@ -84,6 +87,7 @@ in {
         }
         ({ pkgs, ... }: {
           users.defaultUserShell = pkgs.zsh;
+          users.mutableUsers = false;
           users.users."${user}".home = homeDir;
         })
       ];

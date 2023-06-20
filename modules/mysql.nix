@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, helpers, ... }:
 
 {
   services.mysql = {
-    enable = true;
+    enable = helpers.isDarwin;
     package = pkgs.mariadb_1010;
     dataDir = "/var/lib/mysql";
     settings.mysqld = {
