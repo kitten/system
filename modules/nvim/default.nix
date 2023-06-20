@@ -60,12 +60,18 @@ in {
             nvim-cmp-buffer
             nvim-cmp-path
             nvim-cmp-cmdline
-            #nvim-cmp-cmdline-history
             nvim-cmp-snippy
-            nvim-treesitter
             nvim-treesitter-refactor
             nvim-treesitter-textobjects
             nvim-treesitter-context
+
+            (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
+              p.astro p.typescript p.tsx p.git_rebase p.gitcommit p.gitignore
+              p.gitattributes p.graphql p.regex p.json p.json5 p.javascript
+              p.markdown p.markdown_inline p.terraform p.svelte p.prisma
+              p.yaml p.vue p.vim p.lua p.make p.jsdoc p.comment p.css
+              p.sql p.rust p.html p.bash p.c p.nix p.zig
+            ]))
           ];
         };
       };

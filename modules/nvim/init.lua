@@ -451,42 +451,10 @@ require('null-ls').setup({
 -- treesitter
 vim.opt.runtimepath:append("~/.local/share/nvim/site/parser")
 
+require('nvim-treesitter.install').compilers = { nix_bins.clang }
+
 require('nvim-treesitter.configs').setup {
-  ensure_installed = {
-    "astro",
-    "typescript",
-    "tsx",
-    "git_rebase",
-    "gitcommit",
-    "gitignore",
-    "gitattributes",
-    "graphql",
-    "regex",
-    "json",
-    "json5",
-    "javascript",
-    "markdown",
-    "markdown_inline",
-    "terraform",
-    "svelte",
-    "prisma",
-    "yaml",
-    "vue",
-    "vim",
-    "lua",
-    "make",
-    "jsdoc",
-    "comment",
-    "css",
-    "sql",
-    "rust",
-    "html",
-    "bash",
-    "c",
-    "nix",
-    "zig",
-  },
-  parser_install_dir = "~/.local/share/nvim/site/parser",
+  auto_install = false,
   highlight = {
     enable = true,
     disable = function(lang, buf)
