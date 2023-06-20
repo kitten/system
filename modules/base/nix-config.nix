@@ -1,4 +1,4 @@
-{ pkgs, nixpkgs, ... }:
+{ pkgs, nixpkgs, helpers, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -7,7 +7,7 @@
     package = pkgs.nix;
 
     # provide for nix-shell and run
-    nixPath = [ { nixpkgs= "${nixpkgs.outPath}"; } ];
+    nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
 
     settings = {
       # save space
@@ -32,8 +32,11 @@
     # auto collect old stores
     gc = {
       automatic = true;
-      interval = { Weekday = 0; Hour = 0; Minute = 0; };
       options = "--delete-older-than 14d";
+    } // helpers.linuxAttrs {
+      dates = "weekly";
+    } // helpers.darwinAttrs {
+      interval = { Weekday = 0; Hour = 0; Minute = 0; };
     };
   };
 }
