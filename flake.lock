@@ -271,6 +271,27 @@
         "type": "github"
       }
     },
+    "hyprpaper": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1685378141,
+        "narHash": "sha256-/ehJbAtSJS86NlqHVOeR2ViBKlImKH4guFVPacTmCr8=",
+        "owner": "hyprwm",
+        "repo": "hyprpaper",
+        "rev": "cd86c196f3500f20539754d347c8378349ca0974",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "ref": "v0.3.0",
+        "repo": "hyprpaper",
+        "type": "github"
+      }
+    },
     "language-servers": {
       "inputs": {
         "flake-utils": [
@@ -880,6 +901,7 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager_2",
         "hyprland": "hyprland",
+        "hyprpaper": "hyprpaper",
         "language-servers": "language-servers",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",

@@ -1,8 +1,13 @@
-{ hyprland, ... }:
+{ hyprland, pkgs, ... }:
 
 {
   imports = [
     hyprland.nixosModules.default
+  ];
+
+  environment.systemPackages = with pkgs; [
+    wl-clipboard
+    xdg-utils
   ];
 
   services.xserver = {

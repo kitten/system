@@ -29,6 +29,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper/v0.3.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -57,6 +62,7 @@
       inputs.nvim-plugins.overlays.default
       inputs.nixpkgs-wayland.overlays.default
       inputs.hyprland.overlays.default
+      inputs.hyprpaper.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system}) typescript-language-server vscode-langservers-extracted;
       })
