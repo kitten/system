@@ -1,9 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, ... } @ inputs:
 
-{
+let
+  inherit (import ../../lib/colors.nix inputs) hex;
+in {
   services.mako = {
     enable = true;
-    font = "sans 10";
+    font = "Inter 12";
+    defaultTimeout = 2600;
+    backgroundColor = "#99${hex.split}";
+    textColor = "#FF${hex.white}";
+    borderRadius = 3;
+    borderSize = 0;
   };
 
   systemd.user.services.mako = {

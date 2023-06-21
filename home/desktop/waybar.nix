@@ -12,7 +12,6 @@ in {
         layer = "bottom";
         passthrough = false;
         fixed-center = true;
-        gtk-layer-shell = true;
         spacing = 12;
 
         modules-left = [ "custom/wofi" ];
@@ -22,13 +21,13 @@ in {
         "custom/wofi" = {
           format = "Search";
           on-click = "${pkgs.wofi}/bin/wofi";
+          tooltip = false;
         };
 
         clock = {
           interval = 60;
           format = "{:%a %b %d %H:%M}";
-          tooltip = true;
-          tooltip-format = "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>";
+          tooltip = false;
         };
 
         battery = {
@@ -44,7 +43,7 @@ in {
           format-plugged = " {capacity}%";
           format-full = " 100%";
           format-icons = [ "" "" "" "" "" ];
-          tooltip = true;
+          tooltip = false;
         };
 
         wireplumber = {
@@ -52,8 +51,7 @@ in {
           format-icons = [ "" "" "" ];
           format-muted = "";
           max-volume = 100;
-          tooltip = true;
-          tooltip-format = " {volume}% {node_name}";
+          tooltip = false;
         };
 
         network = {
@@ -62,11 +60,7 @@ in {
           format-linked = "";
           format-wifi = "{icon}";
           format-icons = [ "" "" "" ];
-          tooltip = true;
-          tooltip-format = "{icon} {ifname} to {gwaddr}";
-          tooltip-format-wifi = "{icon} {essid} ({signalStrength}%)";
-          tooltip-format-ethernet = "{icon} {ifname} via {ipaddr}";
-          tooltip-format-disconnected = "Disconnected";
+          tooltip = false;
         };
       };
     };
