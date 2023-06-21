@@ -1,6 +1,8 @@
-{ ... }:
+{ ... } @ inputs:
 
-{
+let
+  inherit (import ../../lib/colors.nix inputs) shell colors;
+in {
   programs.wofi = {
     enable = true;
 
@@ -45,10 +47,10 @@
       }
 
       #window {
-        background-color: --wofi-color0;
-        color: --wofi-color2;
-        border: 2px solid --wofi-color1;
-        border-radius: 0px;
+        background: ${shell};
+        color: ${colors.white.gui}
+        border-radius: 14px;
+        border: none;
       }
 
       #outer-box {
@@ -56,28 +58,26 @@
       }
 
       #input {
-        background-color: --wofi-color1;
-        border: 0px solid --wofi-color3;
         padding: 8px 12px;
+        background: none;
+        border: none;
       }
 
       #scroll {
         margin-top: 20px;
       }
 
-      #inner-box {
-      }
 
       #img {
         padding-right: 8px;
       }
 
       #text {
-        color: --wofi-color2;
+        color: ${colors.white.gui};
       }
 
       #text:selected {
-        color: --wofi-color0;
+        color: ${colors.purple.gui};
       }
 
       #entry {
@@ -85,14 +85,8 @@
       }
 
       #entry:selected {
-        background-color: --wofi-color3;
-        color: --wofi-color0;
-      }
-
-      #unselected {
-      }
-
-      #selected {
+        background-color: ${colors.grey.gui};
+        color: ${colors.white.gui};
       }
 
       #input, #entry:selected {

@@ -8,6 +8,8 @@ let
 
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
 in rec {
+  shell = "rgba(40, 44, 52, 0.8)";
+
   hex = {
     gutter = "16171D";
     cursor = "2C323C";

@@ -44,6 +44,9 @@ in {
       env = GDK_SCALE, 2
       env = XCURSOR_SIZE, 32
 
+      layerrule = blur, wofi
+      layerrule = ignorezero, wofi
+
       layerrule = blur, waybar
       layerrule = ignorezero, waybar
 
