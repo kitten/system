@@ -8,11 +8,17 @@
 
   users.users."${user}" = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "networkmanager" ];
     hashedPassword = "$6$DEmCOeiSFe6ymGox$WMWddbT9PkkfDT6JS4WuJsM3mQHI0e9kg0t42UowO79dWAcSU0K//KKlcebSosoMRz5mUEw5TFvbrv1aRHqYa/";
   };
 
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    wifi = {
+      backend = "iwd";
+      powersave = true;
+    };
+  };
 
   time.timeZone = "Europe/London";
 
