@@ -6,29 +6,6 @@ wezterm.on("gui-startup", function(cmd)
   window:gui_window():maximize()
 end)
 
-wezterm.on("update-right-status", function (window, pane)
-  local config = window:effective_config()
-  local session_name = "default"
-  local session_color = colors.red
-  for i, v in ipairs(config.unix_domains) do
-    if v.name ~= nil and v.name ~= "" then
-      session_name = v.name
-      session_color = colors.blue
-      break
-    end
-  end
-
-  window:set_right_status(
-    wezterm.format({
-      { Foreground = { Color = colors.brightWhite } },
-      { Text = wezterm.strftime("%H:%M %e %h") },
-      { Attribute = { Intensity = "Bold" } },
-      { Foreground = { Color = session_color } },
-      { Text = " " .. session_name },
-    })
-  );
-end)
-
 return {
   default_prog = { zsh_bin, "-l" },
 
@@ -43,7 +20,7 @@ return {
   allow_square_glyphs_to_overflow_width = "Always",
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
-  font_size = 14.0,
+  font_size = 13.0,
   line_height = 1.1,
 
   enable_wayland = true,
