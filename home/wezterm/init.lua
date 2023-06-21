@@ -55,6 +55,7 @@ return {
   bold_brightens_ansi_colors = false,
   window_decorations = "RESIZE",
   window_background_opacity = 0.999,
+  hide_mouse_cursor_when_typing = false,
 
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,

@@ -38,9 +38,11 @@
       env = XCURSOR_SIZE, 32
 
       input {
+        kb_options = ctrl:nocaps
         touchpad {
           clickfinger_behavior = true
           tap-to-click = false
+          scroll_factor = 0.2
         }
       }
     '';
