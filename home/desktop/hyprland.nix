@@ -33,7 +33,7 @@
       bind =, XF86AudioPrev, exec, $player previous
       bind =, XF86AudioNext, exec, $player next
 
-      exec-once=xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 32c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 1.44
+      exec-once=xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 32c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 2
       env = GDK_SCALE, 2
       env = XCURSOR_SIZE, 32
 
