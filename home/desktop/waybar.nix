@@ -1,7 +1,7 @@
 { pkgs, ... } @ inputs:
 
 let
-  inherit (import ../../lib/colors.nix inputs) colors mkLuaSyntax;
+  inherit (import ../../lib/colors.nix inputs) colors shell;
 in {
   programs.waybar = {
     enable = true;
@@ -9,11 +9,10 @@ in {
 
     settings = {
       mainBar = {
-        layer = "top";
-        exclusive = true;
+        layer = "bottom";
         passthrough = false;
         fixed-center = true;
-        gtk-layer-shell = false;
+        gtk-layer-shell = true;
         spacing = 12;
 
         modules-left = [ "custom/wofi" ];
@@ -92,13 +91,13 @@ in {
       }
 
       .modules-left, .modules-right, .modules-center {
-        background: alpha(${colors.split.gui}, 0.8);
+        background: ${shell};
         padding: 5px 10px 5px 10px;
         border-radius: 1rem;
       }
 
       tooltip {
-        background: alpha(${colors.split.gui}, 0.8);
+        background: ${shell};
         padding: 5px 10px 5px 10px;
         border: none;
       }
