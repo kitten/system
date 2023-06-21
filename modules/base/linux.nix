@@ -2,6 +2,7 @@
 
 let
   inherit (import ../../lib/colors.nix inputs) hex;
+  inherit (lib) mkDefault;
 in helpers.linuxAttrs {
   console = {
     earlySetup = true;
@@ -29,6 +30,11 @@ in helpers.linuxAttrs {
   };
 
   boot = {
+    loader = {
+      timeout = mkDefault 2;
+      systemd-boot.configurationLimit = mkDefault 3;
+    };
+
     initrd.systemd.enable = true;
 
     kernelParams = [
