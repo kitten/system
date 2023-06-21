@@ -35,6 +35,13 @@ in lib.mkMerge [
       path = "${fontsDir}/codicon.otf";
       mode = "755";
     };
+
+    age.secrets."faicon.ttf" = {
+      symlink = false;
+      file = ./encrypt/faicon.ttf.age;
+      path = "${fontsDir}/faicon.ttf";
+      mode = "755";
+    };
   }
 
   (helpers.linuxAttrs {
