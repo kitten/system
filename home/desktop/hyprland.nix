@@ -19,14 +19,16 @@ in {
     recommendedEnvironment = true;
 
     extraConfig = ''
+      $search = ${pkgs.wofi}/bin/wofi
+      $terminal = ${pkgs.wezterm}/bin/wezterm
       $volume_set = ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@
       $mute_set = ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@
       $light_up = ${pkgs.light}/bin/light -A 10
       $light_down = ${pkgs.light}/bin/light -U 10
       $player = ${pkgs.playerctl}/bin/playerctl
 
-      bind = SUPER, Return, exec, wezterm
-      bind = SUPER, Space, exec, wofi
+      bind = SUPER, Return, exec, $terminal
+      bind = SUPER, Space, exec, $search
       bind = SUPER, Q, killactive
 
       binde =, XF86AudioRaiseVolume, exec, $volume_set 5%+
@@ -45,11 +47,15 @@ in {
       layerrule = blur, waybar
       layerrule = ignorezero, waybar
 
+      layerrule = blur, gtk-layer-shell
+      layerrule = ignorezero, gtk-layer-shell
+
       general {
         gaps_in = 6
         gaps_out = 10
         col.inactive_border = 0xff${hex.gutter}
         col.active_border = 0xff${hex.split}
+        no_border_on_floating = true
       }
 
       decoration {

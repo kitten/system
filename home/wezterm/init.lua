@@ -39,7 +39,7 @@ return {
     "GPG_TTY",
   },
 
-  font = wezterm.font_with_fallback({ "Dank Mono", "codicon" }),
+  font = wezterm.font_with_fallback({ "Dank Mono", "codicon", "Font Awesome 6 Pro" }),
   allow_square_glyphs_to_overflow_width = "Always",
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
