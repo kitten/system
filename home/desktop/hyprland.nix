@@ -20,7 +20,7 @@ in {
 
     extraConfig = ''
       $search = ${pkgs.wofi}/bin/wofi
-      $pwmanager = rofi-rbw
+      $pwmanager = ${pkgs.rofi-rbw}/bin/rofi-rbw
       $terminal = ${pkgs.wezterm}/bin/wezterm
       $volume_set = ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@
       $mute_set = ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@
