@@ -7,6 +7,7 @@ in {
 
   xdg.configFile."wezterm/wezterm.lua".text = ''
     local font_size = ${if helpers.isDarwin then "14" else "12"};
+    local is_linux = ${if helpers.isLinux then "true" else "false"};
     local zsh_bin = "${pkgs.zsh}/bin/zsh";
     local colors = ${mkLuaSyntax colors};
   '' + (builtins.readFile ./init.lua);

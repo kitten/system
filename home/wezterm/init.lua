@@ -3,7 +3,9 @@ local mux = wezterm.mux
 
 wezterm.on("gui-startup", function(cmd)
   local tab, pane, window = mux.spawn_window(cmd or {})
-  window:gui_window():maximize()
+  if is_linux then
+    window:gui_window():maximize()
+  end
 end)
 
 return {
@@ -54,7 +56,7 @@ return {
 
   window_frame = {
     font = wezterm.font_with_fallback({ "Dank Mono", "codicon" }),
-    font_size = 14.0,
+    font_size = font_size,
     active_titlebar_bg = colors.black,
     inactive_titlebar_bg = colors.black,
   },
