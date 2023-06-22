@@ -11,7 +11,12 @@
   ];
 
   services = {
+    power-profiles-daemon.enable = false;
     geoclue2.enable = true;
+
+    dbus.packages = [ pkgs.gcr ];
+    udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
+    gnome.gnome-keyring.enable = true;
 
     xserver = {
       enable = true;
@@ -24,6 +29,11 @@
         };
       };
     };
+  };
+
+  security = {
+    polkit.enable = true;
+    pam.services.gdm.enableGnomeKeyring = true;
   };
 
   programs.hyprland = {
@@ -49,7 +59,7 @@
     after = [ "graphical-session.target" ];
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${pkgs.mate.mate-polkit}/libexec/polkit-mate-authentication-agent-1";
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
       Restart = "on-failure";
       RestartSec = 1;
       TimeoutStopSec = 10;
