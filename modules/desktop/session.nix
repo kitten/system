@@ -7,6 +7,7 @@
 
   environment.systemPackages = with pkgs; [
     wl-clipboard
+    wtype
     xdg-utils
   ];
 

@@ -20,6 +20,7 @@ in {
 
     extraConfig = ''
       $search = ${pkgs.wofi}/bin/wofi
+      $pwmanager = rofi-rbw
       $terminal = ${pkgs.wezterm}/bin/wezterm
       $volume_set = ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@
       $mute_set = ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@
@@ -30,6 +31,8 @@ in {
       bind = SUPER, Return, exec, $terminal
       bind = SUPER, Space, exec, $search
       bind = SUPER, Q, killactive
+
+      bind = SUPER, backslash, exec, $pwmanager
 
       binde =, XF86AudioRaiseVolume, exec, $volume_set 5%+
       binde =, XF86AudioLowerVolume, exec, $volume_set 5%-

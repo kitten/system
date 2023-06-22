@@ -1,6 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
+  home.packages = [ pkgs.rofi-rbw ];
+
   programs.rbw = {
     enable = true;
     settings = {
@@ -9,6 +11,10 @@
       pinentry = "gnome3";
     };
   };
+
+  xdg.configFile."rofi-rbw.rc".text = ''
+    action=copy
+    selector=wofi
+    clear-after=120
+  '';
 }
-
-
