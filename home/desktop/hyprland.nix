@@ -47,6 +47,10 @@ in {
       env = GDK_SCALE, 2
       env = XCURSOR_SIZE, 32
 
+      windowrule = float, title:^(Firefox — Sharing Indicator)$
+      windowrule = nofocus, title:^(Firefox — Sharing Indicator)$
+      windowrule = move 20 100%-60, title:^(Firefox — Sharing Indicator)$
+
       layerrule = blur, wofi
       layerrule = ignorezero, wofi
 
