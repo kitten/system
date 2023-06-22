@@ -1,4 +1,4 @@
-{ hyprland, pkgs, ... }:
+{ hyprland, pkgs, lib, ... }:
 
 {
   imports = [
@@ -23,18 +23,28 @@
       enable = true;
       desktopManager.xterm.enable = false;
       displayManager = {
+        lightdm.enable = lib.mkForce false;
+        gdm.enable = lib.mkForce false;
         defaultSession = "hyprland";
-        gdm = {
-          enable = true;
-          wayland = true;
-        };
+      };
+    };
+  };
+
+  fonts.fonts = [ pkgs.inter ];
+
+  programs.regreet = {
+    enable = true;
+    settings = {
+      GTK = {
+        application_prefer_dark_theme = true;
+        font_name = "Inter 14";
       };
     };
   };
 
   security = {
     polkit.enable = true;
-    pam.services.gdm.enableGnomeKeyring = true;
+    pam.services.greetd.enableGnomeKeyring = true;
   };
 
   programs.hyprland = {
