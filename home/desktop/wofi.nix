@@ -49,7 +49,7 @@ in {
       #window {
         background: ${shell};
         color: ${colors.white.gui}
-        border-radius: 14px;
+        border-radius: 18px;
         border: none;
       }
 

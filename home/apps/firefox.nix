@@ -4,6 +4,22 @@
   programs.firefox = {
     enable = true;
     enableGnomeExtensions = false;
+    profiles.default.settings = {
+      "browser.aboutConfig.showWarning" = false;
+      "browser.contentblocking.category" = "strict";
+      "browser.newtabpage.enabled" = false;
+      "browser.shell.checkDefaultBrowser" = false;
+      "privacy.annotate_channels.strict_list.enabled" = true;
+      "privacy.trackingprotection.enabled" = true;
+      "privacy.trackingprotection.socialtracking.enabled" = true;
+      "browser.startup.homepage" = "about:blank";
+      "trailhead.firstrun.didSeeAboutWelcome" = true;
+      "media.ffmpeg.vaapi.enabled" = true;
+      "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+      "font.default.x-western" = "sans-serif";
+      "font.name.sans-serif.x-western" = "Inter";
+      "dom.ipc.processCount" = 4;
+    };
   };
 
   home.sessionVariables = {
