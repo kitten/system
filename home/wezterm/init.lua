@@ -20,7 +20,7 @@ return {
   allow_square_glyphs_to_overflow_width = "Always",
   freetype_load_target = "Light",
   freetype_render_target = "HorizontalLcd",
-  font_size = 13.0,
+  font_size = font_size,
   line_height = 1.1,
 
   enable_wayland = true,
