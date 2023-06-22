@@ -1,4 +1,4 @@
-{ hyprland, pkgs, lib, ... }:
+{ hyprland, pkgs, lib, user, ... }:
 
 {
   imports = [
@@ -30,14 +30,30 @@
     };
   };
 
-  fonts.fonts = [ pkgs.inter ];
-
-  programs.regreet = {
+  services.greetd = let
+    hyprland_config = pkgs.writeText "greetd-hyprland-config" ''
+      exec-once = ${lib.getExe pkgs.greetd.gtkgreet} -l --cmd ${hyprland_shell}; ${pkgs.hyprland}/bin/hyprctl dispatch exit
+      misc {
+        disable_hyprland_logo = true
+        disable_splash_rendering = true
+      }
+    '';
+    hyprland_shell = pkgs.writeShellScript "hyprland-shell" ''
+      exec ${pkgs.hyprland}/bin/Hyprland
+    '';
+    hyprland_login = pkgs.writeShellScript "hyprland-login" ''
+      exec ${pkgs.hyprland}/bin/Hyprland --config ${hyprland_config};
+    '';
+  in {
     enable = true;
     settings = {
-      GTK = {
-        application_prefer_dark_theme = true;
-        font_name = "Inter 14";
+      terminal.vt = 2;
+      default_session = {
+        command = "${pkgs.greetd.greetd}/bin/agreety --cmd ${hyprland_shell}";
+      };
+      initial_session = {
+        command = "${hyprland_shell}";
+        user = "${user}";
       };
     };
   };
