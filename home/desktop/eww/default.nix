@@ -1,11 +1,15 @@
 { lib, pkgs, ... } @ inputs:
 
 let
-  inherit (import ../../../lib/colors.nix inputs) colors mkScssSyntax;
+  inherit (import ../../../lib/colors.nix inputs) colors shell lightStroke darkStroke mkScssSyntax;
 in {
   home.packages = [ pkgs.eww-wayland ];
 
-  xdg.configFile."eww/_colors.scss".text = mkScssSyntax colors;
+  xdg.configFile."eww/_colors.scss".text = mkScssSyntax (colors // {
+    shell.gui = shell;
+    lightStroke.gui = lightStroke;
+    darkStroke.gui = darkStroke;
+  });
 
   xdg.configFile."eww/_variables.yuck".text = "";
 

@@ -9,6 +9,8 @@ let
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
 in rec {
   shell = "rgba(40, 44, 52, 0.6)";
+  lightStroke = "rgba(248, 248, 241, 0.5)";
+  darkStroke = "rgba(22, 23, 29, 0.6)";
 
   hex = {
     gutter = "16171D";
@@ -72,7 +74,7 @@ in rec {
   mkVimHighlight = group: { fg ? transparent, bg ? transparent, style ? "NONE" }:
     "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${fg.cterm} ctermbg=${bg.cterm} cterm=${style}";
   mkLuaVariable = name: { gui, ... }: "${name} = \"${gui}\",";
-  mkScssVariable = name: { gui, ... }: "\$${name}: ${gui};";
+  mkScssVariable = name: { gui, ... }: "\$color-${name}: ${gui};";
 
   mkVimTerminalSyntax = attrs:
     (if hasAttr "terminal" attrs then ''

@@ -1,14 +1,18 @@
 @import 'colors';
 
 * {
-  all: unset; //Unsets everything so you can style everything from scratch
+  all: unset;
+  font-size: 0.9rem;
+  font-feature-settings: "tnum";
+  font-family: Inter, FontAwesome6Pro;
+  color: $color-white;
 }
 
 //Global Styles
 .bar {
-  background-color: #3a3a3a;
-  color: #b0b4bc;
-  padding: 10px;
+  background-color: $color-shell;
+  border-radius: 1rem;
+  padding: 15px;
 }
 
 // Styles on classes (see eww.yuck for more information)
