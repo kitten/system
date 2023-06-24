@@ -79,6 +79,8 @@
     ];
   };
 
+  security.pam.services.swaylock = {};
+
   systemd.user.services.polkit-agent = {
     description = "Polkit Authentication Agent";
     wantedBy = [ "graphical-session.target" ];

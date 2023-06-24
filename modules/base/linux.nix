@@ -30,6 +30,8 @@ in helpers.linuxAttrs {
   };
 
   boot = {
+    consoleLogLevel = 2;
+
     loader = {
       timeout = mkDefault 2;
       systemd-boot.configurationLimit = mkDefault 3;

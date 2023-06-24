@@ -58,6 +58,23 @@ in {
     { device = "/dev/disk/by-uuid/${swapUUID}"; }
   ];
 
+  boot.resumeDevice = "/dev/disk/by-uuid/${swapUUID}";
+
+  # prefer suspend-then-hibernate
+  services.logind = {
+    lidSwitch = "suspend-then-hibernate";
+    extraConfig = ''
+      HandlePowerKey=hybrid-sleep
+      LidSwitchIgnoreInhibited=no
+      IdleAction=suspend-then-hibernate
+      IdleActionSec=1m
+    '';
+  };
+
+  systemd.sleep.extraConfig = ''
+    HibernateDelaySec=2h
+  '';
+
   # set host and allow unfree
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   nixpkgs.config.allowUnfree = true;

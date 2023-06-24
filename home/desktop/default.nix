@@ -8,6 +8,7 @@
     ./waybar.nix
     ./mako.nix
     ./wofi.nix
+    ./lock.nix
   ];
 
   fonts.fontconfig.enable = true;
