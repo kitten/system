@@ -16,6 +16,8 @@
         "browser.startup.homepage" = "about:blank";
         "trailhead.firstrun.didSeeAboutWelcome" = true;
         "media.ffmpeg.vaapi.enabled" = true;
+        "media.hardware-video-decoding.force-enabled" = true;
+        "media.hardwaremediakeys.enabled" = true;
         "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
         "font.default.x-western" = "sans-serif";
         "font.name.sans-serif.x-western" = "Inter";
