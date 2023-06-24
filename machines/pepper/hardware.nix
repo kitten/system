@@ -64,7 +64,7 @@ in {
   services.logind = {
     lidSwitch = "suspend-then-hibernate";
     extraConfig = ''
-      HandlePowerKey=hybrid-sleep
+      HandlePowerKey=suspend-then-hibernate
       LidSwitchIgnoreInhibited=no
       IdleAction=suspend-then-hibernate
       IdleActionSec=1m
