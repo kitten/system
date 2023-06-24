@@ -9,6 +9,17 @@ in {
 
   services.playerctld.enable = true;
 
+  services.xsettingsd = {
+    enable = true;
+    settings = {
+      "Xft/Antialias" = true;
+      "Xft/Hinting" = true;
+      "Xft/HintStyle" = "hintslight";
+      "Xft/RGBA" = "rgb";
+      "Xft/dpi" = 163;
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland = {
@@ -44,8 +55,6 @@ in {
       bind =, XF86AudioNext, exec, $player next
 
       exec-once=xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 32c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 2
-      env = GDK_SCALE, 2
-      env = XCURSOR_SIZE, 32
 
       windowrule = float, title:^(Firefox — Sharing Indicator)$
       windowrule = nofocus, title:^(Firefox — Sharing Indicator)$
