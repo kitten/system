@@ -70,7 +70,7 @@ in {
               p.gitattributes p.graphql p.regex p.json p.json5 p.javascript
               p.markdown p.markdown_inline p.terraform p.svelte p.prisma
               p.yaml p.vue p.vim p.lua p.make p.jsdoc p.comment p.css
-              p.sql p.rust p.html p.bash p.c p.nix p.zig
+              p.sql p.rust p.html p.bash p.c p.nix p.zig p.yuck
             ]))
           ];
         };

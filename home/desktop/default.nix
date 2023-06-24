@@ -9,6 +9,7 @@
     ./mako.nix
     ./wofi.nix
     ./lock.nix
+    ./eww
   ];
 
   fonts.fontconfig.enable = true;

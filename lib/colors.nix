@@ -72,6 +72,7 @@ in rec {
   mkVimHighlight = group: { fg ? transparent, bg ? transparent, style ? "NONE" }:
     "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${fg.cterm} ctermbg=${bg.cterm} cterm=${style}";
   mkLuaVariable = name: { gui, ... }: "${name} = \"${gui}\",";
+  mkScssVariable = name: { gui, ... }: "\$${name}: ${gui};";
 
   mkVimTerminalSyntax = attrs:
     (if hasAttr "terminal" attrs then ''
@@ -129,6 +130,20 @@ in rec {
     ''
     { ${concatStringsSep "\n" (mapAttrsToList mkLuaVariable (toFlatAttrs colors))} }
     '';
+
+  mkScssSyntax = let
+    recurse = path: value:
+      if isAttrs value && !(hasAttr "gui" value) then
+        mapAttrsToList
+          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
+          value
+      else {
+        ${concatStrings path} = value;
+      };
+    toFlatAttrs = attrs:
+      lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
+  in colors:
+    (concatStringsSep "\n" (mapAttrsToList mkScssVariable (toFlatAttrs colors)));
 
   mkVimSyntax = let
     recurse = path: value:
