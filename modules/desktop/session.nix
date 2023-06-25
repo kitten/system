@@ -39,7 +39,7 @@
       }
     '';
     hyprland_shell = pkgs.writeShellScript "hyprland-shell" ''
-      exec ${pkgs.hyprland}/bin/Hyprland
+      exec systemd-cat -t hyprland ${pkgs.hyprland}/bin/Hyprland
     '';
     hyprland_login = pkgs.writeShellScript "hyprland-login" ''
       exec ${pkgs.hyprland}/bin/Hyprland --config ${hyprland_config};
