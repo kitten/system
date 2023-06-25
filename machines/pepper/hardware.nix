@@ -1,4 +1,4 @@
-{ config, lib, pkgs, nixos-hardware, modulesPath, ... }:
+{ config, lib, pkgs, nixos-hardware, lanzaboote, modulesPath, ... }:
 
 let
   luksUUID = "8f9546b5-56bb-42d3-a230-e81aef2faba5";
@@ -8,22 +8,38 @@ let
 in {
   imports = [
     nixos-hardware.nixosModules.framework-12th-gen-intel
+    lanzaboote.nixosModules.lanzaboote
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-  boot.supportedFilesystems = [ "btrfs" ];
+  boot = {
+    bootspec.enable = true;
 
-  boot.initrd.luks.devices."enc" = {
-    device = "/dev/disk/by-uuid/${luksUUID}";
-    preLVM = true;
+    initrd = {
+      availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+      kernelModules = [ "dm-snapshot" ];
+      luks.devices."enc" = {
+        device = "/dev/disk/by-uuid/${luksUUID}";
+        preLVM = true;
+      };
+    };
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+    supportedFilesystems = [ "btrfs" ];
+
+    loader = {
+      systemd-boot.enable = lib.mkForce false;
+      efi.canTouchEfiVariables = true;
+    };
+
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/etc/secureboot";
+      configurationLimit = 3;
+    };
+
+    resumeDevice = "/dev/disk/by-uuid/${swapUUID}";
   };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/${rootUUID}";
@@ -57,8 +73,6 @@ in {
   swapDevices = [
     { device = "/dev/disk/by-uuid/${swapUUID}"; }
   ];
-
-  boot.resumeDevice = "/dev/disk/by-uuid/${swapUUID}";
 
   # prefer suspend-then-hibernate
   services.logind = {

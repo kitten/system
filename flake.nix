@@ -10,6 +10,11 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     agenix.url = "github:ryantm/agenix";
 
     flake-utils.url = "github:numtide/flake-utils";

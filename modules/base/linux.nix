@@ -4,6 +4,8 @@ let
   inherit (import ../../lib/colors.nix inputs) hex;
   inherit (lib) mkDefault;
 in helpers.linuxAttrs {
+  environment.systemPackages = [ pkgs.sbctl ];
+
   console = {
     earlySetup = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
@@ -30,7 +32,8 @@ in helpers.linuxAttrs {
   };
 
   boot = {
-    consoleLogLevel = 2;
+    bootspec.enable = lib.mkDefault true;
+    consoleLogLevel = lib.mkDefault 2;
 
     loader = {
       timeout = mkDefault 2;

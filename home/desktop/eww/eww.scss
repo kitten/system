@@ -5,17 +5,20 @@
   font-size: 0.9rem;
   font-feature-settings: "tnum";
   font-family: Inter, FontAwesome6Pro;
+  transition: 200ms ease;
+}
+
+@mixin window {
   color: $color-white;
+  background-color: $color-shell;
+  border-radius: 2rem;
+  padding: 15px;
 }
 
 //Global Styles
 .bar {
-  background-color: $color-shell;
-  border-radius: 1rem;
-  padding: 15px;
+  @include window;
 }
-
-// Styles on classes (see eww.yuck for more information)
 
 .sidestuff slider {
   all: unset;

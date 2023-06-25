@@ -1,9 +1,7 @@
 { lib, pkgs, ... }:
 
 {
-  environment.systemPackages = [
-    pkgs.zsh
-  ];
+  environment.systemPackages = [ pkgs.zsh ];
 
   environment.pathsToLink = [ "/share/zsh" ];
   environment.variables = {
