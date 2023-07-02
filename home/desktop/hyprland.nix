@@ -9,17 +9,6 @@ in {
 
   services.playerctld.enable = true;
 
-  services.xsettingsd = {
-    enable = true;
-    settings = {
-      "Xft/Antialias" = true;
-      "Xft/Hinting" = true;
-      "Xft/HintStyle" = "hintslight";
-      "Xft/RGBA" = "rgb";
-      "Xft/dpi" = 163;
-    };
-  };
-
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland = {
@@ -30,26 +19,31 @@ in {
     recommendedEnvironment = true;
 
     extraConfig = ''
-      $search = ${pkgs.wofi}/bin/wofi
+      $wofi = ${pkgs.wofi}/bin/wofi
+      $swaync = ${pkgs.swaynotificationcenter}/bin/swaync-client
       $pwmanager = ${pkgs.rofi-rbw}/bin/rofi-rbw
       $terminal = ${pkgs.wezterm}/bin/wezterm
-      $volume_set = ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@
-      $mute_set = ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@
-      $light_up = ${pkgs.light}/bin/light -A 10
-      $light_down = ${pkgs.light}/bin/light -U 10
+      $volume = ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@
+      $mute = ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+      $light = ${pkgs.light}/bin/light
       $player = ${pkgs.playerctl}/bin/playerctl
+      $pkill = ${pkgs.procps}/bin/pkill
 
-      bind = SUPER, Return, exec, $terminal
-      bind = SUPER, Space, exec, $search
+      bind = SUPER, Escape, exec, $terminal
+      bind = SUPER, Space, exec, $pkill wofi || $wofi
+      bind = SUPER, Return, exec, $swaync -op -sw
       bind = SUPER, Q, killactive
+
+      bind = SUPER, Tab, cyclenext,
+      bind = SUPER, Tab, bringactivetotop,
 
       bind = SUPER, backslash, exec, $pwmanager
 
-      binde =, XF86AudioRaiseVolume, exec, $volume_set 5%+
-      binde =, XF86AudioLowerVolume, exec, $volume_set 5%-
-      binde =, XF86AudioMute, exec, $mute_set toggle
-      binde =, XF86MonBrightnessDown, exec, $light_down
-      binde =, XF86MonBrightnessUp, exec, $light_up
+      bindel =, XF86AudioRaiseVolume, exec, $volume 5%+
+      bindel =, XF86AudioLowerVolume, exec, $volume 5%-
+      bindel =, XF86AudioMute, exec, $mute
+      bindel =, XF86MonBrightnessDown, exec, $light -U 10
+      bindel =, XF86MonBrightnessUp, exec, $light -A 10
       bind =, XF86AudioPlay, exec, $player play-pause
       bind =, XF86AudioPrev, exec, $player previous
       bind =, XF86AudioNext, exec, $player next
@@ -66,8 +60,11 @@ in {
       layerrule = blur, waybar
       layerrule = ignorezero, waybar
 
-      layerrule = blur, gtk-layer-shell
-      layerrule = ignorezero, gtk-layer-shell
+      layerrule = blur, swaync-control-center
+      layerrule = ignorezero, swaync-control-center
+
+      layerrule = blur, swaync-notification-window
+      layerrule = ignorezero, swaync-notification-window
 
       general {
         gaps_in = 6
@@ -102,6 +99,14 @@ in {
           tap-to-click = false
           scroll_factor = 0.2
         }
+      }
+
+      misc {
+        disable_hyprland_logo = true
+        disable_splash_rendering = true
+        mouse_move_enables_dpms = true
+        key_press_enables_dpms = true
+        vfr = true
       }
     '';
   };

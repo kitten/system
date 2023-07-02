@@ -100,6 +100,9 @@ in {
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.enableAllFirmware = true;
 
+  # enable bluetooth support
+  hardware.bluetooth.enable = true;
+
   # enable media acceleration
   hardware.opengl = {
     enable = true;

@@ -2,25 +2,60 @@
 
 let
   inherit (import ../../lib/colors.nix inputs) colors shell;
+  swaync-client = "${pkgs.swaynotificationcenter}/bin/swaync-client";
+  wait = "${pkgs.coreutils}/bin/sleep 0.1";
 in {
+  services = {
+    network-manager-applet.enable = true;
+    blueman-applet.enable = true;
+    mpris-proxy.enable = true;
+  };
+
   programs.waybar = {
     enable = true;
     systemd.enable = true;
 
     settings = {
       mainBar = {
-        layer = "bottom";
+        layer = "top";
         passthrough = false;
         fixed-center = true;
         spacing = 12;
 
         modules-left = [ "custom/wofi" ];
-        modules-center = [ "clock" ];
-        modules-right = [ "tray" "network" "wireplumber" "battery" ];
+        modules-center = [ "clock" "custom/swaync" ];
+        modules-right = [ "tray" "wireplumber" "battery" ];
 
         "custom/wofi" = {
-          format = "Search";
-          on-click = "${pkgs.wofi}/bin/wofi";
+          format = "";
+          on-click = "${wait} && ${pkgs.wofi}/bin/wofi";
+          tooltip = false;
+          escape = true;
+        };
+
+        "custom/swaync" = {
+          format = "{icon}";
+          tooltip = false;
+          escape = true;
+          return-type = "json";
+          on-click = "${wait} && ${swaync-client} -t -sw";
+          on-click-right = "${wait} && ${swaync-client} -d -sw";
+          exec = "${swaync-client} -swb";
+          format-icons = {
+            notification = " <span foreground='${colors.brightYellow.gui}'></span>";
+            none = "";
+            dnd-notification = " <span foreground='${colors.brightYellow.gui}'></span>";
+            dnd-none = "";
+            inhibited-notification = " <span foreground='${colors.brightYellow.gui}'></span>";
+            inhibited-none = "";
+            dnd-inhibited-notification = " <span foreground='${colors.brightYellow.gui}'></span>";
+            dnd-inhibited-none = "";
+          };
+        };
+
+        tray = {
+          icon-size = 16;
+          spacing = 8;
           tooltip = false;
         };
 
@@ -51,15 +86,6 @@ in {
           format-icons = [ "" "" "" ];
           format-muted = "";
           max-volume = 100;
-          tooltip = false;
-        };
-
-        network = {
-          format-ethernet = "";
-          format-disconnected = "";
-          format-linked = "";
-          format-wifi = "{icon}";
-          format-icons = [ "" "" "" ];
           tooltip = false;
         };
       };
@@ -104,10 +130,6 @@ in {
       #workspaces button {
         padding: 2px 8px 2px 8px;
         background: transparent;
-      }
-
-      #battery {
-        padding-right: 14px;
       }
     '';
   };

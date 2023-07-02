@@ -39,7 +39,7 @@
       }
     '';
     hyprland_shell = pkgs.writeShellScript "hyprland-shell" ''
-      exec systemd-cat -t hyprland ${pkgs.hyprland}/bin/Hyprland
+      exec zsh -c "systemd-cat -t hyprland ${pkgs.hyprland}/bin/Hyprland"
     '';
     hyprland_login = pkgs.writeShellScript "hyprland-login" ''
       exec ${pkgs.hyprland}/bin/Hyprland --config ${hyprland_config};
@@ -63,11 +63,15 @@
     pam.services.greetd.enableGnomeKeyring = true;
   };
 
-  programs.hyprland = {
-    enable = true;
-    xwayland = {
+  programs = {
+    dconf.enable = true;
+
+    hyprland = {
       enable = true;
-      hidpi = true;
+      xwayland = {
+        enable = true;
+        hidpi = true;
+      };
     };
   };
 

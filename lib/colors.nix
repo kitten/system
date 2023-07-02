@@ -8,9 +8,9 @@ let
 
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
 in rec {
-  shell = "rgba(40, 44, 52, 0.6)";
-  lightStroke = "rgba(248, 248, 241, 0.5)";
-  darkStroke = "rgba(22, 23, 29, 0.6)";
+  shell = "rgba(40, 44, 46, 0.6)";
+  lightStroke = "rgba(248, 248, 241, 0.2)";
+  darkStroke = "rgba(22, 23, 29, 0.2)";
 
   hex = {
     gutter = "16171D";

@@ -1,7 +1,7 @@
 { ... } @ inputs:
 
 let
-  inherit (import ../../lib/colors.nix inputs) shell colors;
+  inherit (import ../../lib/colors.nix inputs) shell lightStroke colors;
 in {
   programs.wofi = {
     enable = true;
@@ -48,13 +48,14 @@ in {
 
       #window {
         background: ${shell};
+        border: 1px solid ${lightStroke};
         color: ${colors.white.gui}
-        border-radius: 18px;
-        border: none;
+        border-radius: 1rem;
+        padding: 1rem;
       }
 
       #outer-box {
-        padding: 20px;
+        padding: 1rem;
       }
 
       #input {

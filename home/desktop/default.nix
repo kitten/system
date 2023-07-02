@@ -4,13 +4,11 @@
   imports = [
     ./hyprland.nix
     ./hyprpaper.nix
+    ./notifications.nix
+    ./theme.nix
     ./kanshi.nix
     ./waybar.nix
-    ./mako.nix
     ./wofi.nix
     ./lock.nix
-    ./eww
   ];
-
-  fonts.fontconfig.enable = true;
 }
