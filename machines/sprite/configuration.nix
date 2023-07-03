@@ -71,5 +71,6 @@
     temporal
     dive
     caddy
+    flyctl
   ];
 }

@@ -7,8 +7,6 @@ in {
     hyprland.homeManagerModules.default
   ];
 
-  services.playerctld.enable = true;
-
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland = {

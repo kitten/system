@@ -9,6 +9,7 @@ in {
     network-manager-applet.enable = true;
     blueman-applet.enable = true;
     mpris-proxy.enable = true;
+    playerctld.enable = true;
   };
 
   programs.waybar = {

@@ -32,7 +32,7 @@ in {
     .control-center {
       background: ${shell};
       border: 1px solid ${lightStroke};
-      margin: 10px;
+      margin: 8px;
       padding: 1rem;
       border-radius: 1rem;
       color: ${colors.white.gui};
@@ -45,6 +45,7 @@ in {
       border-radius: 1rem;
       color: ${colors.white.gui};
       box-shadow: none;
+      font-size: .9rem;
     }
 
     .notification > * {
