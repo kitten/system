@@ -9,11 +9,7 @@ in {
 
   wayland.windowManager.hyprland = {
     enable = true;
-    xwayland = {
-      enable = true;
-      hidpi = true;
-    };
-
+    xwayland.enable = true;
     recommendedEnvironment = true;
 
     extraConfig = ''
@@ -75,11 +71,12 @@ in {
       decoration {
         rounding = 4
 
-        blur = true
-        blur_size = 16
-        blur_passes = 3
-        blur_ignore_opacity = false
-        blur_new_optimizations = true
+        blur {
+          enabled = true
+          size = 16
+          passes = 3
+          ignore_opacity = false
+        }
 
         drop_shadow = true
         shadow_range = 30
