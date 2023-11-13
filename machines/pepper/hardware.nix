@@ -7,7 +7,7 @@ let
   bootUUID = "AD1D-0BB6";
 in {
   imports = [
-    nixos-hardware.nixosModules.framework-12th-gen-intel
+    nixos-hardware.nixosModules.framework-13-7040-amd
     lanzaboote.nixosModules.lanzaboote
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -23,7 +23,7 @@ in {
         preLVM = true;
       };
     };
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
     supportedFilesystems = [ "btrfs" ];
 
@@ -93,24 +93,13 @@ in {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   nixpkgs.config.allowUnfree = true;
 
-  # set default power management
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-
-  # enable Intel microcode update and firmware
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  # enable AMD microcode update and firmware
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.enableAllFirmware = true;
 
   # enable bluetooth support
   hardware.bluetooth.enable = true;
 
   # enable media acceleration
-  hardware.opengl = {
-    enable = true;
-    extraPackages = with pkgs; [
-      vaapiIntel
-      vaapiVdpau
-      libvdpau-va-gl
-      intel-media-driver
-    ];
-  };
+  hardware.opengl.enable = true;
 }

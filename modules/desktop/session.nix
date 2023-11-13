@@ -12,9 +12,7 @@
   ];
 
   services = {
-    power-profiles-daemon.enable = false;
     geoclue2.enable = true;
-
     dbus.packages = [ pkgs.gcr ];
     udev.packages = [ pkgs.gnome.gnome-settings-daemon ];
     gnome.gnome-keyring.enable = true;
