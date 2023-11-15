@@ -3,7 +3,6 @@
 {
   programs.firefox = {
     enable = true;
-    enableGnomeExtensions = false;
     profiles.default = {
       settings = {
         "browser.aboutConfig.showWarning" = false;
@@ -24,12 +23,6 @@
         "dom.ipc.processCount" = 4;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
       };
-
-      userChrome = ''
-        .titlebar-min, .titlebar-max, .titlebar-restore, .titlebar-close {
-          display: none !important;
-        }
-      '';
     };
   };
 

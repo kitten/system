@@ -28,21 +28,6 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
-    hyprland = {
-      url = "github:hyprwm/Hyprland/v0.32.3";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprpaper = {
-      url = "github:hyprwm/hyprpaper/v0.4.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     language-servers = {
       url = "git+https://github.com/fxcl/language-servers.nix";
       inputs = {
@@ -60,13 +45,10 @@
     };
   };
 
-  outputs = { nixos-hardware, hyprland, ...} @ inputs: let
+  outputs = { nixos-hardware, ...} @ inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
     overlays = [
       inputs.nvim-plugins.overlays.default
-      inputs.nixpkgs-wayland.overlays.default
-      inputs.hyprland.overlays.default
-      inputs.hyprpaper.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system}) typescript-language-server vscode-langservers-extracted;
       })

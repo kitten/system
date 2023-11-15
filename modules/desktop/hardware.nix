@@ -1,26 +1,15 @@
-{ user, config, lib, ... }:
+{ user, lib, ... }:
 
 {
   users.users."${user}".extraGroups = [ "video" ];
 
-  services = {
-    logind.extraConfig = ''
-      HandlerPowerKey=suspend
-      HandleLidSwitch=suspend
-    '';
-
-    pipewire = {
-      enable = true;
-      wireplumber.enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      jack.enable = true;
-    };
-
-    gvfs.enable = true;
-
-    blueman.enable = lib.mkIf config.hardware.bluetooth.enable true;
+  services.pipewire = {
+    enable = true;
+    wireplumber.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
   };
 
   hardware = {

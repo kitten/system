@@ -1,4 +1,4 @@
-{ lib, pkgs, helpers, ... } @ inputs:
+{ lib, config, pkgs, helpers, ... } @ inputs:
 
 let
   inherit (import ../../lib/colors.nix inputs) hex;
@@ -8,8 +8,8 @@ in helpers.linuxAttrs {
 
   console = {
     earlySetup = true;
+    useXkbConfig = true;
     font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
-    keyMap = "us";
 
     colors = [
       "${hex.black}"
@@ -40,9 +40,19 @@ in helpers.linuxAttrs {
       systemd-boot.configurationLimit = mkDefault 3;
     };
 
-    initrd.systemd.enable = true;
+    initrd = {
+      verbose = false;
+      systemd.enable = true;
+    };
+
+    kernelPackages = pkgs.linuxPackages_latest;
 
     kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
       "nmi_watchdog=0"
       "mitigations=off"
     ];

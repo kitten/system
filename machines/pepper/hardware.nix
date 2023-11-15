@@ -102,4 +102,10 @@ in {
 
   # enable media acceleration
   hardware.opengl.enable = true;
+
+  # set regulatory domain for wireless chip
+  hardware.wirelessRegulatoryDatabase = true;
+  boot.extraModprobeConfig = ''
+    options cfg80211 ieee80211_regdom="US"
+  '';
 }
