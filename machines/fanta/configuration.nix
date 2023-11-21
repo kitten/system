@@ -56,6 +56,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    google-cloud-sdk
     watchman
     coreutils
     openssl

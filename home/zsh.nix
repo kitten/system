@@ -45,12 +45,19 @@
     ];
   };
 
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
 
     settings = {
       add_newline = false;
+      gcloud.disabled = true;
       aws.disabled = true;
       cmd_duration.disabled = true;
       battery.disabled = true;
