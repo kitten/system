@@ -60,6 +60,12 @@
       hostname = "sprite";
     };
 
+    darwinConfigurations."fanta" = mkSystem {
+      inherit overlays;
+      system = "aarch64-darwin";
+      hostname = "fanta";
+    };
+
     nixosConfigurations."pepper" = mkSystem {
       inherit overlays;
       system = "x86_64-linux";
