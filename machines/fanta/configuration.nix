@@ -56,6 +56,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    watchman
     coreutils
     openssl
     imagemagick

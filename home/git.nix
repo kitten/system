@@ -1,6 +1,8 @@
 { pkgs, lib, ... } @ inputs:
 
 {
+  home.packages = [ pkgs.git-crypt ];
+
   programs.git = {
     enable = true;
     userName = "Phil Pluckthun";
