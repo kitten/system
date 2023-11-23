@@ -365,7 +365,7 @@ local function lsp_setup(server, opts)
     pattern = pattern,
     callback = function(opt)
       if not vim.b[opt.buf or vim.api.nvim_get_current_buf()].big then
-        config.manager.try_add(opt.buf)
+        config.manager:try_add(opt.buf)
       end
     end,
     group = lsp_group,
