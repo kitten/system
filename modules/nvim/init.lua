@@ -302,6 +302,7 @@ vim.filetype.add({
 
 -- lspconfig
 local lsp = require('lspconfig')
+local lsp_util = require('lspconfig.util')
 
 local function lsp_on_attach(client, buf)
   if client.config.flags then
@@ -384,12 +385,26 @@ lsp_setup('zk', {
 lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
+  single_file_support = false,
   settings = {
     disableAutomaticTypingAcquisition = true,
     preferences = {
       importModuleSpecifierPreference = 'project-relative',
     },
   },
+  root_dir = function(fname)
+    if lsp_util.root_pattern('.flowconfig')(fname) ~= nil then
+      return nil
+    else
+      return lsp_util.root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git')(fname)
+    end
+  end,
+})
+
+lsp_setup('flow', {
+  cmd = { nix_bins.npx, "--no-install", "flow", "lsp" },
+  flags = { debounce_text_changes = 200 },
+  single_file_support = false,
 })
 
 lsp_setup('eslint', {
