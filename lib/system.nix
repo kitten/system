@@ -1,8 +1,6 @@
 { agenix, nixpkgs, darwin, home-manager, ... } @ inputs:
 
-let
-  inherit (nixpkgs) lib;
-in {
+{
   mkSystem = { system, hostname, user ? "phil", modules ? [], overlays ? [] }: let
     inherit (lib.systems.elaborate { inherit system; }) isDarwin isLinux;
 

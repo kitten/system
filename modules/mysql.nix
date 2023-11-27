@@ -2,8 +2,8 @@
 
 {
   services.mysql = {
-    enable = helpers.isDarwin;
-    package = pkgs.mariadb_1010;
+    enable = false;
+    package = pkgs.mariadb_1011;
     dataDir = "/var/lib/mysql";
     settings.mysqld = {
       bind-address = "127.0.0.1";
