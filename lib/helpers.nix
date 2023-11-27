@@ -7,4 +7,6 @@ in {
   inherit isLinux isDarwin;
   linuxAttrs = lib.attrsets.optionalAttrs isLinux;
   darwinAttrs = lib.attrsets.optionalAttrs isDarwin;
+  mkIfLinux = lib.mkIf isLinux;
+  mkIfDarwin = lib.mkIf isDarwin;
 }
