@@ -386,7 +386,8 @@ lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
   single_file_support = false,
-  settings = {
+  init_options = {
+    hostInfo = 'neovim',
     disableAutomaticTypingAcquisition = true,
     preferences = {
       importModuleSpecifierPreference = 'project-relative',
