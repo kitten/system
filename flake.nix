@@ -27,7 +27,7 @@
     };
 
     language-servers = {
-      url = "git+https://github.com/fxcl/language-servers.nix";
+      url = "github:kitten/language-servers.nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";

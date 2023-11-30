@@ -279,17 +279,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1686611059,
-        "narHash": "sha256-4LHWWXVyMEdCYbFxPEU41VkXbLcTtSEr9ENfm80IWLo=",
-        "ref": "refs/heads/main",
-        "rev": "7e289d96e73c7d2038486143218b17b0292a2077",
-        "revCount": 1,
-        "type": "git",
-        "url": "https://github.com/fxcl/language-servers.nix"
+        "lastModified": 1701345888,
+        "narHash": "sha256-5Q3MU099H/3h31X++/xNf2IQjHBKP3ezOLSepF6eUL8=",
+        "owner": "kitten",
+        "repo": "language-servers.nix",
+        "rev": "15ac7a0bf2c4065724464a98b985db224f1e8610",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/fxcl/language-servers.nix"
+        "owner": "kitten",
+        "repo": "language-servers.nix",
+        "type": "github"
       }
     },
     "lanzaboote": {
