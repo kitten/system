@@ -12,7 +12,7 @@ let
       cssls = '${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server',
       htmlls = '${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server',
       jsonls = '${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server',
-      npx = '${pkgs.nodejs-18_x}/bin/npx',
+      npx = '${pkgs.nodejs_20}/bin/npx',
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       astrols = '${pkgs.nodePackages."@astrojs/language-server"}/bin/astro-ls',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
