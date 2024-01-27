@@ -9,7 +9,7 @@
     ./ollama.nix
     ./obsidian.nix
     ./wezterm
-    ./npm
     ./gpg
+    ./js
   ];
 }

@@ -15,5 +15,5 @@ in
   "./home/gpg/encrypt/E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6.key.age".publicKeys = keys;
   "./home/gpg/encrypt/CA84692E3CC846C8EC7272468E962B63FC599E49.key.age".publicKeys = keys;
 
-  "./home/npm/encrypt/npmrc.age".publicKeys = keys;
+  "./home/js/encrypt/npmrc.age".publicKeys = keys;
 }

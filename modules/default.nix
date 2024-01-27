@@ -3,7 +3,7 @@
 {
   imports = [
     ./base
-    ./nodejs.nix
+    ./js.nix
     ./postgres.nix
     ./mysql.nix
     ./gpg.nix
