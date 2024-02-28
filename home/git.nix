@@ -39,20 +39,68 @@
       commit.gpgSign = true;
       tag.gpgSign = true;
       push.gpgSign = "if-asked";
-      status.showUntrackedFiles = "all";
-      push.default = "simple";
+
       color.ui = "auto";
+      init.defaultBranch = "main";
+
+      branch.sort = "-committerdate";
+      tag.sort = "-taggerdate";
+
+      status = {
+        showUntrackedFiles = "all";
+        submoduleSummary = true;
+      };
+
+      diff = {
+        tool = "vimdiff";
+        submodule = "log";
+        algorithm = "histogram";
+        colorMovedWS = "allow-indentation-change";
+        compactionHeuristic = true;
+        context = 10;
+      };
+
+      push = {
+        default = "simple";
+        autoSetupRemote = true;
+        followtags = true;
+      };
+
+      rebase = {
+        autosquash = true;
+        autostash = true;
+        updateRefs = true;
+        missingCommitsCheck = "error";
+      };
+
+      merge = {
+        ff = "only";
+        tool = "vimdiff";
+        keepbackup = false;
+      };
+
+      fetch = {
+        prune = true;
+        prunetags = true;
+      };
+
+      core.autocrlf = false;
       pull.rebase = true;
-      fetch.prune = true;
-      diff.tool = "vimdiff";
-      diff.sunmodule = "log";
-      diff.compactionHeuristic = true;
-      merge.ff = "only";
-      merge.tool = "vimdiff";
+      rerere.enabled = true;
       difftool.prompt = false;
       mergetool.prompt = true;
+      transfer.fsckobjects = true;
+      fetch.fsckobjects = true;
+      receive.fsckObjects = true;
+      submodule.recurse = true;
+
       "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
       pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cd, by %an)";
+
+      "url \"git@github.com:\"" = {
+        insteadOf = "https://github.com/";
+      };
+
       "remote \"origin\"" = {
         fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
         pruneTags = true;
