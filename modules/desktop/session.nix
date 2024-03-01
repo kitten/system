@@ -7,13 +7,10 @@
     enable = true;
     desktopManager = {
       xterm.enable = false;
-      plasma5 = {
-        enable = true;
-        useQtScaling = true;
-      };
+      plasma6.enable = true;
     };
     displayManager = {
-      defaultSession = "plasmawayland";
+      defaultSession = "plasma";
       autoLogin = {
         inherit user;
         enable = true;
@@ -28,17 +25,14 @@
     };
   };
 
-  environment.plasma5 = {
-    excludePackages = with pkgs.libsForQt5; [
+  environment.plasma6 = {
+    excludePackages = with pkgs.kdePackages; [
       elisa
       gwenview
       oxygen
       oxygen-sounds
       khelpcenter
       konsole
-      plasma-browser-integration
-      plank-player
-      aura-browser
     ];
   };
 
