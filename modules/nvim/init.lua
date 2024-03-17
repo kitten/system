@@ -687,7 +687,9 @@ cmp.setup {
     keyword_length = 3
   },
   experimental = {
-    ghost_text = true,
+    ghost_text = {
+      hl_group = 'GhostText',
+    },
   },
   sources = cmp.config.sources(
     {{ name = 'nvim_lsp' }, { name = 'nvim_lsp_signature_help' }, { name = 'snippy' }},

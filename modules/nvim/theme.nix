@@ -136,6 +136,7 @@ let
     Error.fg = brightRed;
     Todo.fg = purple;
     Underlined.underline = true;
+    GhostText.link = "Comment";
 
     "@comment.todo" = { fg = purple; underline = true; };
     "@comment.note".link = "@comment.todo";
