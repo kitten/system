@@ -475,14 +475,6 @@ lsp_setup('rust_analyzer', {
   },
 })
 
--- null-ls
-require('null-ls').setup({
-  on_attach = lsp_on_attach,
-  sources = {
-    require('null-ls').builtins.code_actions.gitsigns,
-  },
-})
-
 -- treesitter
 vim.opt.runtimepath:append("~/.local/share/nvim/site/parser")
 

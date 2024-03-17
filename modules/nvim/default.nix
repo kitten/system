@@ -42,7 +42,6 @@ in {
             gitsigns-nvim
             nvim-lspconfig
             lspkind-nvim
-            null-ls-nvim
             vim-golden-size
             lir-nvim
             plenary-nvim
