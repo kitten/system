@@ -794,9 +794,9 @@ local function status_git()
   local b = vim.b
   if b.gitsigns_status_dict then
     return table.concat({
-      hi('GitGutterAdd', string.format(' %d', b.gitsigns_status_dict.added or 0)),
-      hi('GitGutterChange', string.format(' %d', b.gitsigns_status_dict.changed or 0)),
-      hi('GitGutterDelete', string.format(' %d', b.gitsigns_status_dict.removed or 0)),
+      hi('GitSignsAdd', string.format(' %d', b.gitsigns_status_dict.added or 0)),
+      hi('GitSignsChange', string.format(' %d', b.gitsigns_status_dict.changed or 0)),
+      hi('GitSignsDelete', string.format(' %d', b.gitsigns_status_dict.removed or 0)),
       hi('DiagnosticSignInformation', b.gitsigns_head ~= nil and string.format('( %s)', b.gitsigns_head) or ''),
     }, ' ')
   else

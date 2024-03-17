@@ -4,7 +4,7 @@ let
   inherit (lib.strings) concatStrings;
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.lists) last init;
-  inherit (builtins) hasAttr isAttrs length head concatStringsSep;
+  inherit (builtins) hasAttr isAttrs length head concatStringsSep isInt isBool;
 
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
 in rec {
@@ -37,44 +37,88 @@ in rec {
   };
 
   colors = {
-    gutter = (mkColor "#${hex.gutter}" "232" "15"); # gutter fg grey
-    cursor = (mkColor "#${hex.cursor}" "236" "8"); # cursor grey
-    element = (mkColor "#${hex.element}" "238" "15"); # special grey
-    split = (mkColor "#${hex.split}" "59" "15");
+    gutter = (mkColor "#${hex.gutter}" 232 15); # gutter fg grey
+    cursor = (mkColor "#${hex.cursor}" 236 8); # cursor grey
+    element = (mkColor "#${hex.element}" 238 15); # special grey
+    split = (mkColor "#${hex.split}" 59 15);
 
-    black = (mkColor "#${hex.black}" "235" "0");
-    grey = (mkColor "#${hex.grey}" "237" "15");
+    black = (mkColor "#${hex.black}" 235 0);
+    grey = (mkColor "#${hex.grey}" 237 15);
 
-    red = (mkColor "#${hex.red}" "204" "1");
-    brightRed = (mkColor "#${hex.brightRed}" "196" "9");
+    red = (mkColor "#${hex.red}" 204 1);
+    brightRed = (mkColor "#${hex.brightRed}" 196 9);
 
-    green = (mkColor "#${hex.green}" "114" "2");
-    brightGreen = (mkColor "#${hex.brightGreen}" "114" "2");
+    green = (mkColor "#${hex.green}" 114 2);
+    brightGreen = (mkColor "#${hex.brightGreen}" 114 2);
 
-    yellow = (mkColor "#${hex.yellow}" "180" "3");
-    brightYellow = (mkColor "#${hex.brightYellow}" "173" "11"); # dark yellow
+    yellow = (mkColor "#${hex.yellow}" 180 3);
+    brightYellow = (mkColor "#${hex.brightYellow}" 173 11); # dark yellow
 
-    blue = (mkColor "#${hex.blue}" "39" "4");
-    brightBlue = (mkColor "#${hex.brightBlue}" "39" "4"); # blue purple
+    blue = (mkColor "#${hex.blue}" 39 4);
+    brightBlue = (mkColor "#${hex.brightBlue}" 39 4); # blue purple
 
-    purple = (mkColor "#${hex.purple}" "170" "5");
-    brightPurple = (mkColor "#${hex.brightPurple}" "170" "5");
+    purple = (mkColor "#${hex.purple}" 170 5);
+    brightPurple = (mkColor "#${hex.brightPurple}" 170 5);
 
-    cyan = (mkColor "#${hex.cyan}" "38" "6");
-    brightCyan = (mkColor "#${hex.brightCyan}" "38" "6");
+    cyan = (mkColor "#${hex.cyan}" 38 6);
+    brightCyan = (mkColor "#${hex.brightCyan}" 38 6);
 
-    white = (mkColor "#${hex.white}" "145" "7");
-    brightWhite = (mkColor "#${hex.brightWhite}" "59" "15"); # comment grey
-    darkWhite = (mkColor "#${hex.darkWhite}" "59" "15");
+    white = (mkColor "#${hex.white}" 145 7);
+    brightWhite = (mkColor "#${hex.brightWhite}" 59 15); # comment grey
+    darkWhite = (mkColor "#${hex.darkWhite}" 59 15);
   };
 
-  transparent = (mkColor "NONE" "NONE" "0");
+  transparent = (mkColor "NONE" "NONE" 0);
 
   mkHighlight = { fg ? transparent, bg ? transparent, style ? "NONE" }: { fg=fg; bg=bg; style=style; };
   mkVimHighlight = group: { fg ? transparent, bg ? transparent, style ? "NONE" }:
-    "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${fg.cterm} ctermbg=${bg.cterm} cterm=${style}";
+    "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${toString fg.cterm} ctermbg=${toString bg.cterm} cterm=${style}";
   mkLuaVariable = name: { gui, ... }: "${name} = \"${gui}\",";
   mkScssVariable = name: { gui, ... }: "\$color-${name}: ${gui};";
+
+  mkNeovimHighlights = let
+    isValue = value:
+      isAttrs value && (
+        (hasAttr "fg" value) ||
+        (hasAttr "bg" value) ||
+        (hasAttr "sp" value) ||
+        (hasAttr "bold" value) ||
+        (hasAttr "underline" value) ||
+        (hasAttr "strikethrough" value) ||
+        (hasAttr "reverse" value) ||
+        (hasAttr "default" value) ||
+        (hasAttr "force" value)
+      );
+    recurse = path: value:
+      if isAttrs value && !(isValue value) then
+        mapAttrsToList
+          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
+          value
+      else {
+        ${concatStrings path} = value;
+      };
+    toFlatAttrs = attrs:
+      lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
+    toValueString = value:
+      if value == "NONE" then
+        "\"NONE\""
+      else if isInt value || isBool value then
+        "${toString value}"
+      else
+        "\"${toString value}\"";
+    toValueAttribute = name: value:
+      if name == "fg" || name == "bg" || name == "sp" then
+        "${name} = ${toValueString value.gui}, cterm${name} = ${toValueString value.cterm}"
+      else
+        "${name} = ${toValueString value}";
+    withDefaults = value: { fg = transparent; bg = transparent; } // value;
+    toValue = name: value:
+      if (hasAttr "force" value) && value.force then
+        "vim.api.nvim_set_hl(0, \"${name}\", { fg = \"NONE\", bg = \"NONE\", ctermfg = \"NONE\", ctermbg = \"NONE\" })"
+      else
+        "vim.api.nvim_set_hl(0, \"${name}\", { ${concatStringsSep ", " (mapAttrsToList toValueAttribute (withDefaults value))} })";
+  in
+    colors: (concatStringsSep "\n" (mapAttrsToList toValue (toFlatAttrs colors)));
 
   mkVimTerminalSyntax = attrs:
     (if hasAttr "terminal" attrs then ''
@@ -103,17 +147,17 @@ in rec {
   mkVimHardlineColors = colors:
     with colors; ''
       {
-        text = {gui = "${gutter.gui}", cterm = "${gutter.cterm}", cterm16 = "${gutter.cterm16}"},
-        normal = {gui = "${green.gui}", cterm = "${green.cterm}", cterm16 = "${green.cterm16}"},
-        insert = {gui = "${blue.gui}", cterm = "${blue.cterm}", cterm16 = "${blue.cterm16}"},
-        replace = {gui = "${yellow.gui}", cterm = "${yellow.cterm}", cterm16 = "${yellow.cterm16}"},
-        inactive_comment = {gui = "${brightWhite.gui}", cterm = "${brightWhite.cterm}", cterm16 = "${brightWhite.cterm16}"},
+        text = {gui = "${gutter.gui}", cterm = "${toString gutter.cterm}", cterm16 = "${toString gutter.cterm16}"},
+        normal = {gui = "${green.gui}", cterm = "${toString green.cterm}", cterm16 = "${toString green.cterm16}"},
+        insert = {gui = "${blue.gui}", cterm = "${toString blue.cterm}", cterm16 = "${toString blue.cterm16}"},
+        replace = {gui = "${yellow.gui}", cterm = "${toString yellow.cterm}", cterm16 = "${toString yellow.cterm16}"},
+        inactive_comment = {gui = "${brightWhite.gui}", cterm = "${toString brightWhite.cterm}", cterm16 = "${toString brightWhite.cterm16}"},
         inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
-        inactive_menu = {gui = "${split.gui}", cterm = "${split.cterm}", cterm16 = "${split.cterm16}"},
-        visual = {gui = "${brightCyan.gui}", cterm = "${brightCyan.cterm}", cterm16 = "${brightCyan.cterm16}"},
-        command = {gui = "${brightPurple.gui}", cterm = "${brightPurple.cterm}", cterm16 = "${brightPurple.cterm16}"},
-        alt_text = {gui = "${darkWhite.gui}", cterm = "${darkWhite.cterm}", cterm16 = "${darkWhite.cterm16}"},
-        warning = {gui = "${brightYellow.gui}", cterm = "${brightYellow.cterm}", cterm16 = "${brightYellow.cterm16}"},
+        inactive_menu = {gui = "${split.gui}", cterm = "${toString split.cterm}", cterm16 = "${toString split.cterm16}"},
+        visual = {gui = "${brightCyan.gui}", cterm = "${toString brightCyan.cterm}", cterm16 = "${toString brightCyan.cterm16}"},
+        command = {gui = "${brightPurple.gui}", cterm = "${toString brightPurple.cterm}", cterm16 = "${toString brightPurple.cterm16}"},
+        alt_text = {gui = "${darkWhite.gui}", cterm = "${toString darkWhite.cterm}", cterm16 = "${toString darkWhite.cterm16}"},
+        warning = {gui = "${brightYellow.gui}", cterm = "${toString brightYellow.cterm}", cterm16 = "${toString brightYellow.cterm16}"},
       }
     '';
 
