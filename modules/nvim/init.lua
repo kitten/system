@@ -11,8 +11,11 @@ vim.loader.enable()
 
 -- terminal options
 vim.api.nvim_exec([[
+  set t_Co=256
   set t_ZH=^\[\[3m
   set t_ZR=^\[\[23m
+  let &t_Cs = "\e\[4:3m"
+  let &t_Ce = "\e\[4:0m"
   let &t_ut=''
 ]], false)
 
@@ -21,7 +24,7 @@ vim.o.hidden = true
 vim.o.encoding = 'utf8'
 
 -- scroll and mouse options
-vim.o.mouse = vim.o.mouse .. 'a'
+vim.o.mouse = 'a'
 vim.o.scrolloff = 2
 
 -- indentation options
@@ -51,6 +54,7 @@ vim.o.foldlevelstart = 3
 -- search options
 vim.o.ignorecase = true
 vim.o.smartcase = true
+vim.o.infercase = true
 vim.o.hlsearch = false
 vim.o.incsearch = true
 vim.o.inccommand = 'nosplit'
@@ -69,16 +73,22 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- no completion or startup messages
-vim.o.shortmess = vim.o.shortmess .. 'cI'
+vim.o.shortmess = vim.o.shortmess .. 'WcCI'
 
 -- line numbers
 vim.wo.number = true
 
+-- char options
+vim.opt.fillchars:append('vert:│,horiz:─,horizdown:┬,horizup:┴,verthoriz:┼,vertleft:┤,vertright:├')
+vim.o.listchars = 'tab: ,extends:…,precedes:…,nbsp:␣'
+vim.o.list = true
+
 -- splitting options
 vim.go.diffopt = 'filler,vertical,foldcolumn:0,closeoff,indent-heuristic,iwhite,algorithm:patience'
-vim.go.fillchars = 'vert:│,diff:╱'
+vim.go.fillchars = 'eob: ,vert:│,diff:╱'
 vim.go.splitbelow = true
 vim.go.splitright = true
+vim.o.splitkeep = 'screen'
 
 -- undo history
 local undodir = vim.fn.expand('$HOME') .. '/.cache/nvim/undo'
@@ -94,8 +104,9 @@ vim.o.undoreload = 10000
 -- display options
 vim.o.wrap = false
 vim.o.showmode = false
+vim.o.ruler = false
 vim.o.termguicolors = true
-vim.o.cmdheight = 1
+vim.o.cmdheight = 0
 vim.o.background = 'dark'
 vim.wo.signcolumn = 'number'
 vim.wo.cursorline = true
@@ -104,7 +115,12 @@ vim.cmd('colorscheme theme')
 -- misc. options
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.pumheight = 10
+vim.o.pumblend  = 10
+vim.o.pumheight = 10
+vim.o.winblend  = 10
 vim.o.backspace = 'indent,eol,start'
+vim.o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
+vim.o.formatoptions = 'qjl1' -- Don't autoformat comments
 
 -- unmap special keys
 local key_opt = { noremap = true, silent = true }
@@ -143,10 +159,10 @@ vim.api.nvim_set_keymap('v', '<', '<gv', key_opt)
 vim.api.nvim_set_keymap('v', '>', '>gv', key_opt)
 
 -- swap visual gj, gk, with jk
-vim.api.nvim_set_keymap('n', 'j', 'gj', key_opt)
-vim.api.nvim_set_keymap('n', 'k', 'gk', key_opt)
-vim.api.nvim_set_keymap('n', 'gj', 'j', key_opt)
-vim.api.nvim_set_keymap('n', 'gk', 'k', key_opt)
+vim.api.nvim_set_keymap('n', 'j', [[v:count == 0 ? 'gj' : 'j']], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('n', 'k', [[v:count == 0 ? 'gk' : 'k']], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('x', 'j', [[v:count == 0 ? 'gj' : 'j']], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('x', 'k', [[v:count == 0 ? 'gk' : 'k']], { noremap = true, silent = true, expr = true })
 
 -- macros per line
 vim.api.nvim_set_keymap('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', key_opt)
@@ -181,6 +197,9 @@ key.register({
   ["<bslash>"] = { "<cmd>normal za<cr>", "Open Fold" },
   -- lir
   ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
+
+  ["<C-e>"] = { function() print(vim.inspect(vim.treesitter.get_captures_at_cursor(0))) end, "Output TS capture" },
+  ["<C-S-e>"] = { function() map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")') end, "Output Hi capture" },
 })
 
 -- golden_size
@@ -269,7 +288,7 @@ key.register({
 vim.fn.sign_define("DiagnosticSignError", { text = "●", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "◐", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSignInformation" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSignInfo" })
 
 -- configure vim diagnostics
 vim.diagnostic.config({
@@ -797,7 +816,7 @@ local function status_git()
       hi('GitSignsAdd', string.format(' %d', b.gitsigns_status_dict.added or 0)),
       hi('GitSignsChange', string.format(' %d', b.gitsigns_status_dict.changed or 0)),
       hi('GitSignsDelete', string.format(' %d', b.gitsigns_status_dict.removed or 0)),
-      hi('DiagnosticSignInformation', b.gitsigns_head ~= nil and string.format('( %s)', b.gitsigns_head) or ''),
+      hi('DiagnosticSignInfo', b.gitsigns_head ~= nil and string.format('( %s)', b.gitsigns_head) or ''),
     }, ' ')
   else
     return ''

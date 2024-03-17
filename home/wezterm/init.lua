@@ -7,6 +7,7 @@ wezterm.on("gui-startup", function(cmd)
 end)
 
 return {
+  term = "wezterm",
   default_prog = { zsh_bin, "-l" },
 
   mux_env_remove = {
@@ -118,8 +119,8 @@ return {
     }
   },
 
-  send_composed_key_when_left_alt_is_pressed = true,
-  send_composed_key_when_right_alt_is_pressed = false,
+  send_composed_key_when_left_alt_is_pressed = false,
+  send_composed_key_when_right_alt_is_pressed = true,
   leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 },
   keys = {
     { key = "a", mods = "LEADER|CTRL", action = wezterm.action({ SendString="\x01" }) },

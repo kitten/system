@@ -4,6 +4,7 @@ let
   inherit (lib.strings) concatStrings;
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.lists) last init;
+  inherit (lib.trivial) boolToString;
   inherit (builtins) hasAttr isAttrs length head concatStringsSep isInt isBool;
 
   mkColor = gui: cterm: cterm16: { gui=gui; cterm=cterm; cterm16=cterm16; };
@@ -79,10 +80,12 @@ in rec {
   mkNeovimHighlights = let
     isValue = value:
       isAttrs value && (
+        (hasAttr "link" value) ||
         (hasAttr "fg" value) ||
         (hasAttr "bg" value) ||
         (hasAttr "sp" value) ||
         (hasAttr "bold" value) ||
+        (hasAttr "italic" value) ||
         (hasAttr "underline" value) ||
         (hasAttr "strikethrough" value) ||
         (hasAttr "reverse" value) ||
@@ -102,12 +105,16 @@ in rec {
     toValueString = value:
       if value == "NONE" then
         "\"NONE\""
-      else if isInt value || isBool value then
+      else if isInt value then
         "${toString value}"
+      else if isBool value then
+        "${boolToString value}"
       else
         "\"${toString value}\"";
     toValueAttribute = name: value:
-      if name == "fg" || name == "bg" || name == "sp" then
+      if name == "sp" then
+        "${name} = ${toValueString value.gui}"
+      else if name == "fg" || name == "bg" then
         "${name} = ${toValueString value.gui}, cterm${name} = ${toValueString value.cterm}"
       else
         "${name} = ${toValueString value}";

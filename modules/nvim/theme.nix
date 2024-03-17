@@ -4,48 +4,11 @@ let
   inherit (import ../../lib/colors.nix inputs) colors mkNeovimHighlights;
 
   highlights = with colors; mkNeovimHighlights {
-    # Syntax Groups (descriptions and ordering from `:h w18`)
-    Comment = { fg = brightWhite; italic = true; };
-    Constant.fg = cyan;
-    String.fg = green;
-    Character.fg = green;
-    Number.fg = brightYellow;
-    Float.fg = brightYellow;
-    Boolean = { fg = red; };
-    Identifier.fg = red;
-    Function.fg = blue;
-    Statement.fg = purple;
-    Conditional.fg = purple;
-    Repeat.fg = purple;
-    Label.fg = purple;
-    Operator.fg = cyan;
-    Keyword.fg = red;
-    Exception.fg = purple;
-    PreProc.fg = yellow;
-    Include.fg = blue;
-    Define.fg = purple;
-    Macro.fg = purple;
-    PreCondit.fg = yellow;
-    Type.fg = yellow;
-    StorageClass.fg = yellow;
-    Structure.fg = yellow;
-    Typedef.fg = yellow;
-    Special.fg = blue;
-    SpecialChar.default = true;
-    Tag.default = true;
-    Delimiter.default = true;
-    Debug.default = true;
-    Ignore.default = true;
-    SpecialComment.fg = brightWhite;
-    Error.fg = brightRed;
-    Todo.fg = purple;
-    Underlined.underline = true;
-
     # Highlighting Groups (descriptions and ordering from `:h hitest.vim`)
     ColorColumn.bg = cursor;
-    Conceal.default = true;
+    Conceal.force = true;
     Cursor = { fg = black; bg = blue; };
-    CursorIM.default = true;
+    CursorIM.force = true;
     CursorColumn.bg = cursor;
     CursorLine.bg = gutter;
     Directory.fg = blue;
@@ -53,14 +16,14 @@ let
     WarningMsg.fg = yellow;
     VertSplit.fg = gutter;
     Folded = { bg = gutter; fg = brightWhite; };
-    FoldColumn.default = true;
-    SignColumn.default = true;
+    FoldColumn.force = true;
+    SignColumn.force = true;
     IncSearch = { fg = blue; reverse = true; };
     LineNr = { fg = black; bg = black; };
     CursorLineNr = { fg = brightWhite; bg = gutter; bold = true; };
     MatchParen = { fg = blue; underline = true; };
-    ModeMsg.default = true;
-    MoreMsg.default = true;
+    ModeMsg.force = true;
+    MoreMsg.force = true;
     NonText.fg = element;
     Normal.fg = darkWhite;
     Question.fg = purple;
@@ -78,20 +41,20 @@ let
 
     Diff = {
       Add.bg = gutter;
-      Change.default = true;
+      Change.force = true;
       Delete.fg = brightWhite;
       Text = { strikethrough = true; };
     };
 
     Pmenu = {
-      base.bg = grey;
+      base = { bg = split; blend = 10; };
       Sel = { fg = black; bg = blue; };
       Sbar.bg = element;
       Thumb.bg = white;
     };
 
     Spell = {
-      Bad = { fg = red; underline = true; };
+      Bad = { fg = red; undercurl = true; };
       Cap.fg = brightYellow;
       Local.fg = brightYellow;
       Rare.fg = brightYellow;
@@ -99,7 +62,7 @@ let
 
     TabLine = {
       base.fg = brightWhite;
-      Fill.default = true;
+      Fill.force = true;
       Sel.fg = white;
     };
 
@@ -109,22 +72,86 @@ let
       Delete.fg = brightRed;
     };
 
-    DiagnosticSign = {
+    Diagnostic = {
       Warn.fg = yellow;
       Error.fg = brightRed;
-      Information.fg = blue;
+      Info.fg = blue;
       Hint.fg = yellow;
+      Ok.fg = green;
+    };
+
+    DiagnosticSign = {
+      Warn.link = "DiagnosticWarn";
+      Error.link = "DiagnosticError";
+      Info.link = "DiagnosticInfo";
+      Hint.link = "DiagnosticHint";
+      Ok.link = "DiagnosticOk";
+    };
+
+    DiagnosticUnderline = {
+      Error = { sp = brightRed; undercurl = true; };
+      Warn = { sp = yellow; undercurl = true; };
+      Info = { sp = blue; underdashed = true; };
+      Hint = { sp = brightWhite; underdotted = true; };
     };
 
     Telescope = {
       Border.fg = split;
       Matching = { fg = blue; bold = true; };
     };
+
+    # Syntax Groups (descriptions and ordering from `:h w18`)
+    Comment = { fg = brightWhite; italic = true; };
+    Constant.fg = cyan;
+    String.fg = green;
+    Character.fg = green;
+    Number.fg = brightYellow;
+    Float.fg = brightYellow;
+    Boolean = { fg = red; };
+    Identifier.fg = red;
+    Function.fg = blue;
+    Statement.fg = purple;
+    Conditional.fg = purple;
+    Repeat.fg = purple;
+    Label.fg = purple;
+    Operator.fg = cyan;
+    Keyword.fg = purple;
+    Tag.fg = red;
+    Exception.fg = purple;
+    PreProc.fg = yellow;
+    Include.fg = blue;
+    Define.fg = purple;
+    Macro.fg = purple;
+    PreCondit.fg = yellow;
+    Type.fg = yellow;
+    StorageClass.fg = yellow;
+    Structure.fg = yellow;
+    Typedef.fg = yellow;
+    Special.fg = blue;
+    SpecialChar.force = true;
+    Delimiter.link = "Operator";
+    Debug.force = true;
+    Ignore.force = true;
+    SpecialComment.fg = brightWhite;
+    Error.fg = brightRed;
+    Todo.fg = purple;
+    Underlined.underline = true;
+
+    "@comment.todo" = { fg = purple; underline = true; };
+    "@comment.note".link = "@comment.todo";
+    "@markup.raw".link = "String";
+    "@markup.list".link = "Operator";
+    "@markup.strong".bold = true;
+    "@markup.strikethrough".strikethrough = true;
+    "@markup.italic".italic = true;
+    "@markup.link.label".link = "SpecialComment";
+    "@markup.link.url" = { fg = blue; underline = true; };
+    "@string.special.url" = { fg = blue; underline = true; };
+    "@punctuation.bracket".link = "SpecialComment";
   };
 in {
-  my-theme = pkgs.vimUtils.buildVimPluginFrom2Nix {
-    pname = "my-theme";
-    version = "2020-10-23";
+  my-theme = pkgs.vimUtils.buildVimPlugin {
+    name = "my-theme";
     src = pkgs.writeTextFile {
       name = "theme.vim";
       destination = "/colors/theme.lua";
