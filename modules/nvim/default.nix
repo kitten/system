@@ -56,13 +56,11 @@ in {
             nvim-cmp-lsp-document-symbol
             nvim-cmp-lsp-signature-help
             nvim-cmp-treesitter
-            nvim-cmp-buffer
             nvim-cmp-path
             nvim-cmp-cmdline
             nvim-cmp-snippy
             nvim-treesitter-refactor
             nvim-treesitter-textobjects
-            nvim-treesitter-context
 
             (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
               p.astro p.typescript p.tsx p.git_rebase p.gitcommit p.gitignore

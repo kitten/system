@@ -68,6 +68,9 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
 
+-- disable matchparen
+vim.g.loaded_matchparen = 1
+
 -- disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -536,20 +539,6 @@ require('lspkind').init {
   preset = 'codicons',
 }
 
--- treesitter context
-require('treesitter-context').setup {
-  enable = true,
-  throttle = true,
-  max_lines = 1,
-  patterns = {
-    default = {
-      'class',
-      'function',
-      'method',
-    },
-  },
-}
-
 -- lir settings
 local lir_actions = require('lir.actions')
 require('lir').setup {
@@ -693,7 +682,7 @@ cmp.setup {
   },
   sources = cmp.config.sources(
     {{ name = 'nvim_lsp' }, { name = 'nvim_lsp_signature_help' }, { name = 'snippy' }},
-    {{ name = 'treesitter' }, { name = 'buffer', keyword_length = 3 }}
+    {{ name = 'treesitter' }}
   ),
   formatting = {
     format = require('lspkind').cmp_format(),
