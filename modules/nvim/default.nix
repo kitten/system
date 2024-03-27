@@ -12,11 +12,10 @@ let
       cssls = '${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server',
       htmlls = '${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server',
       jsonls = '${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server',
-      npx = '${pkgs.nodejs_20}/bin/npx',
+      astrols = '${pkgs.astro-language-server}/bin/astro-language-server',
+      bunx = '${pkgs.bun}/bin/bunx',
       ripgrep = '${pkgs.ripgrep}/bin/rg',
-      astrols = '${pkgs.nodePackages."@astrojs/language-server"}/bin/astro-ls',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
-      zk = '${pkgs.zk}/bin/zk',
     }
 
     hardline_colors = ${mkVimHardlineColors colors}
@@ -44,13 +43,11 @@ in {
             lspkind-nvim
             vim-golden-size
             lir-nvim
-            plenary-nvim
             popup-nvim
-            telescope-nvim
             trouble-nvim
             dressing-nvim
             which-key-nvim
-            nvim-snippy
+
             nvim-cmp
             nvim-cmp-lsp
             nvim-cmp-lsp-document-symbol
@@ -59,8 +56,14 @@ in {
             nvim-cmp-path
             nvim-cmp-cmdline
             nvim-cmp-snippy
+            nvim-snippy
+
             nvim-treesitter-refactor
             nvim-treesitter-textobjects
+
+            plenary-nvim
+            telescope-nvim
+            telescope-zf-native-nvim
 
             (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
               p.astro p.typescript p.tsx p.git_rebase p.gitcommit p.gitignore

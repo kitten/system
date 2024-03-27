@@ -229,7 +229,8 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 })
 
 -- telescope
-require('telescope').setup{
+require('telescope').load_extension('zf-native')
+require('telescope').setup {
   defaults = {
     vimgrep_arguments = {
       nix_bins.ripgrep,
@@ -399,11 +400,6 @@ lsp_setup('astro', {
   flags = { debounce_text_changes = 200 },
 })
 
-lsp_setup('zk', {
-  cmd = { nix_bins.zk, "lsp" },
-  flags = { debounce_text_changes = 200 },
-})
-
 lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
@@ -425,7 +421,7 @@ lsp_setup('tsserver', {
 })
 
 lsp_setup('flow', {
-  cmd = { nix_bins.npx, "--no-install", "flow", "lsp" },
+  cmd = { nix_bins.bunx, "--no-install", "flow", "lsp" },
   flags = { debounce_text_changes = 200 },
   single_file_support = false,
 })

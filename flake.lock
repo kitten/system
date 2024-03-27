@@ -589,8 +589,8 @@
         "nvim-treesitter-textobjects": "nvim-treesitter-textobjects",
         "plenary-nvim": "plenary-nvim",
         "popup-nvim": "popup-nvim",
-        "telescope-file-browser-nvim": "telescope-file-browser-nvim",
         "telescope-nvim": "telescope-nvim",
+        "telescope-zf-native-nvim": "telescope-zf-native-nvim",
         "trouble-nvim": "trouble-nvim",
         "vim-fugitive": "vim-fugitive",
         "vim-golden-size": "vim-golden-size",
@@ -598,11 +598,11 @@
         "which-key-nvim": "which-key-nvim"
       },
       "locked": {
-        "lastModified": 1711310711,
-        "narHash": "sha256-jclTg+ft/YOsmmlrBts8jOoxMzCddD7cJVf8qrWWhyc=",
+        "lastModified": 1711535427,
+        "narHash": "sha256-X/Fud5MvoXfdJX0ayeBZOjpGTBeYT3oX7QbIfcRsXAw=",
         "owner": "kitten",
         "repo": "system-nvim-plugins.nix",
-        "rev": "478354580e287b8720a81a37ebc68afe25551848",
+        "rev": "96bf09091534a2d6f87d9db60e191965b6f35711",
         "type": "github"
       },
       "original": {
@@ -822,22 +822,6 @@
         "type": "github"
       }
     },
-    "telescope-file-browser-nvim": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1707961327,
-        "narHash": "sha256-tB745Df64PknPkP6GBf427naC5lRDvJrgkdLeZ6aADg=",
-        "owner": "nvim-telescope",
-        "repo": "telescope-file-browser.nvim",
-        "rev": "48ffb8de688a22942940f50411d5928631368848",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nvim-telescope",
-        "repo": "telescope-file-browser.nvim",
-        "type": "github"
-      }
-    },
     "telescope-nvim": {
       "flake": false,
       "locked": {
@@ -852,6 +836,22 @@
         "owner": "nvim-telescope",
         "ref": "0.1.5",
         "repo": "telescope.nvim",
+        "type": "github"
+      }
+    },
+    "telescope-zf-native-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1707618278,
+        "narHash": "sha256-bhIUCDLUQipOx4b1mjmfwl4vCz+1jSTue0c12uOWBIU=",
+        "owner": "natecraddock",
+        "repo": "telescope-zf-native.nvim",
+        "rev": "c8ac635fb51065bb3a77f51bcec585a8dddf8652",
+        "type": "github"
+      },
+      "original": {
+        "owner": "natecraddock",
+        "repo": "telescope-zf-native.nvim",
         "type": "github"
       }
     },
