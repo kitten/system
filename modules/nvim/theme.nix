@@ -15,23 +15,23 @@ let
     ErrorMsg.fg = brightRed;
     WarningMsg.fg = yellow;
     VertSplit.fg = gutter;
-    Folded = { bg = gutter; fg = brightWhite; };
+    Folded = { bg = gutter; fg = muted; };
     FoldColumn.force = true;
     SignColumn.force = true;
     IncSearch = { fg = blue; reverse = true; };
     LineNr = { fg = black; bg = black; };
-    CursorLineNr = { fg = brightWhite; bg = gutter; bold = true; };
+    CursorLineNr = { fg = muted; bg = gutter; bold = true; };
     MatchParen = { fg = blue; underline = true; };
     ModeMsg.force = true;
     MoreMsg.force = true;
     NonText.fg = element;
     Normal.fg = white;
-    Question.fg = purple;
+    Question.fg = pink;
     SpecialKey.fg = element;
     Search = { fg = black; bg = yellow; };
 
     StatusLine = { fg = white; bg = cursor; };
-    StatusLineNC.fg = brightWhite;
+    StatusLineNC.fg = muted;
     Title.fg = green;
     Visual.bg = grey;
     VisualNOS.fg = grey;
@@ -42,7 +42,7 @@ let
     Diff = {
       Add.bg = gutter;
       Change.force = true;
-      Delete.fg = brightWhite;
+      Delete.fg = muted;
       Text = { strikethrough = true; };
     };
 
@@ -55,13 +55,13 @@ let
 
     Spell = {
       Bad = { fg = red; undercurl = true; };
-      Cap.fg = brightYellow;
-      Local.fg = brightYellow;
-      Rare.fg = brightYellow;
+      Cap.fg = orange;
+      Local.fg = orange;
+      Rare.fg = orange;
     };
 
     TabLine = {
-      base.fg = brightWhite;
+      base.fg = muted;
       Fill.force = true;
       Sel.fg = white;
     };
@@ -92,7 +92,7 @@ let
       Error = { sp = brightRed; undercurl = true; };
       Warn = { sp = yellow; undercurl = true; };
       Info = { sp = blue; underdashed = true; };
-      Hint = { sp = brightWhite; underdotted = true; };
+      Hint = { sp = muted; underdotted = true; };
     };
 
     Telescope = {
@@ -101,27 +101,27 @@ let
     };
 
     # Syntax Groups (descriptions and ordering from `:h w18`)
-    Comment = { fg = brightWhite; italic = true; };
+    Comment = { fg = muted; italic = true; };
     Constant.fg = cyan;
     String.fg = green;
     Character.fg = green;
-    Number.fg = brightYellow;
-    Float.fg = brightYellow;
+    Number.fg = orange;
+    Float.fg = orange;
     Boolean = { fg = red; };
     Identifier.fg = red;
     Function.fg = blue;
-    Statement.fg = purple;
-    Conditional.fg = purple;
-    Repeat.fg = purple;
-    Label.fg = purple;
+    Statement.fg = pink;
+    Conditional.fg = pink;
+    Repeat.fg = pink;
+    Label.fg = pink;
     Operator.fg = cyan;
-    Keyword.fg = purple;
+    Keyword.fg = pink;
     Tag.fg = red;
-    Exception.fg = purple;
+    Exception.fg = pink;
     PreProc.fg = yellow;
     Include.fg = blue;
-    Define.fg = purple;
-    Macro.fg = purple;
+    Define.fg = pink;
+    Macro.fg = pink;
     PreCondit.fg = yellow;
     Type.fg = yellow;
     StorageClass.fg = yellow;
@@ -132,13 +132,13 @@ let
     Delimiter.link = "Operator";
     Debug.force = true;
     Ignore.force = true;
-    SpecialComment.fg = brightWhite;
+    SpecialComment.fg = muted;
     Error.fg = brightRed;
-    Todo.fg = purple;
+    Todo.fg = pink;
     Underlined.underline = true;
     GhostText.link = "Comment";
 
-    "@comment.todo" = { fg = purple; underline = true; };
+    "@comment.todo" = { fg = pink; underline = true; };
     "@comment.note".link = "@comment.todo";
     "@markup.raw".link = "String";
     "@markup.list".link = "Operator";

@@ -82,7 +82,7 @@ return {
       colors.green,
       colors.yellow,
       colors.blue,
-      colors.purple,
+      colors.pink,
       colors.cyan,
       colors.white,
     },
@@ -90,11 +90,11 @@ return {
       colors.grey,
       colors.brightRed,
       colors.brightGreen,
-      colors.brightYellow,
+      colors.orange,
       colors.brightBlue,
-      colors.brightPurple,
-      colors.brightCyan,
-      colors.brightWhite,
+      colors.purple,
+      colors.aqua,
+      colors.muted,
     },
     tab_bar = {
       background = colors.black,
@@ -106,7 +106,7 @@ return {
       inactive_tab_edge = colors.black,
       inactive_tab = {
         bg_color = colors.black,
-        fg_color = colors.brightWhite,
+        fg_color = colors.muted,
       },
       inactive_tab_hover = {
         bg_color = colors.black,

@@ -17,17 +17,17 @@ in helpers.linuxAttrs {
       "${hex.green}"
       "${hex.yellow}"
       "${hex.blue}"
-      "${hex.purple}"
+      "${hex.pink}"
       "${hex.cyan}"
       "${hex.white}"
       "${hex.grey}"
       "${hex.brightRed}"
       "${hex.brightGreen}"
-      "${hex.brightYellow}"
+      "${hex.orange}"
       "${hex.brightBlue}"
-      "${hex.brightPurple}"
-      "${hex.brightCyan}"
-      "${hex.brightWhite}"
+      "${hex.purple}"
+      "${hex.aqua}"
+      "${hex.muted}"
     ];
   };
 
