@@ -107,8 +107,8 @@ let
     Character.fg = green;
     Number.fg = orange;
     Float.fg = orange;
-    Boolean = { fg = red; };
-    Identifier.fg = red;
+    Boolean = { fg = pink; };
+    Identifier.fg = white;
     Function.fg = blue;
     Statement.fg = purple;
     Conditional.fg = purple;
@@ -116,7 +116,7 @@ let
     Label.fg = purple;
     Operator.fg = aqua;
     Keyword.fg = purple;
-    Tag.fg = red;
+    Tag.fg = pink;
     Exception.fg = purple;
     PreProc.fg = yellow;
     Include.fg = blue;
