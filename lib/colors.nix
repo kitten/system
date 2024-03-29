@@ -14,28 +14,28 @@ in rec {
   darkStroke = "rgba(22, 23, 29, 0.2)";
 
   hex = {
-    gutter = "16171D";
-    cursor = "2C323C";
-    element = "404449";
-    split = "282C34";
+    gutter = "14151F";
+    cursor = "20222C";
+    element = "181928";
+    split = "212336";
 
-    black = "13131A";
-    grey = "3E4452";
-    white = "ECEFF1";
-    muted = "697098";
+    black = "111118";
+    grey = "323744";
+    white = "EDF0F2";
+    muted = "525775";
 
-    red = "ED95A8";
-    brightRed = "EF5350";
-    green = "C3E88D";
-    brightGreen = "C3E88D";
-    yellow = "FFCB6B";
-    orange = "F78C6C";
-    blue = "82B1FF";
-    brightBlue = "939EDE";
-    pink = "C792EA";
-    purple = "FF45AE";
-    cyan = "89DDFF";
-    aqua = "20D6E3";
+    red = "F8175A";
+    brightRed = "E23030";
+    green = "1B9544";
+    brightGreen = "82E88C";
+    yellow = "B7B722";
+    orange = "F6733B";
+    blue = "437DEE";
+    brightBlue = "91A0EE";
+    pink = "F64484";
+    purple = "FC39C6";
+    cyan = "09BE9D";
+    aqua = "109DA6";
   };
 
   colors = {
