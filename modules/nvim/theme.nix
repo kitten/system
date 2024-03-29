@@ -132,24 +132,25 @@ let
     Ignore.force = true;
     SpecialComment.fg = muted;
     Error.fg = brightRed;
-    Todo.fg = purple;
+    Todo.fg = brightBlue;
     GhostText.fg = grey;
     Underlined.underline = true;
 
-    Boolean.link = "Constant";
+    Boolean.link = "Conditional";
 
     # Treesitter classes
+    "@comment.todo" = { fg = brightBlue; underline = true; };
+    "@comment.error" = { fg = brightRed; underline = true; };
+    "@comment.note" = { fg = purple; underline = true; };
     "@constructor".link = "Structure";
-    "@comment.todo" = { fg = purple; underline = true; };
-    "@comment.note".link = "@comment.todo";
     "@markup.raw".link = "@string";
     "@markup.list".link = "@operator";
     "@markup.strong".bold = true;
     "@markup.strikethrough".strikethrough = true;
     "@markup.italic".italic = true;
-    "@markup.link.label".link = "SpecialComment";
+    "@markup.link.label".fg = cyan;
     "@markup.link.url" = { fg = brightBlue; underline = true; };
-    "@markup.heading" = { fg = cyan; bold = true; };
+    "@markup.heading" = { fg = blue; bold = true; };
     "@string.special.url" = { fg = brightBlue; underline = true; };
     "@punctuation.bracket".link = "@operator";
     "@punctuation.delimiter".link = "Delimiter";
@@ -160,10 +161,15 @@ let
     "@keyword.repeat".link = "@conditional";
     "@keyword.operator".link = "@operator";
     "@keyword.import".link = "@include";
-    "@type.builtin".link = "@constant";
+    "@property".fg = pink;
+    "@variable.member".link = "@property";
+    "@variable.builtin".link = "Special";
+    "@type.builtin".link = "Special";
 
     # LSP classes
-    "@lsp.type.typeParameter".link = "@lsp.type.type";
+    "@lsp.type.typeParameter".link = "@variable";
+    "@lsp.type.parameter".link = "@variable";
+    "@lsp.type.property".link = "@variable.member";
   };
 in {
   my-theme = pkgs.vimUtils.buildVimPlugin {
