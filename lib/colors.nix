@@ -32,7 +32,7 @@ in rec {
     orange = "F6733B";
     blue = "91A0EE";
     brightBlue = "437DEE";
-    pink = "F64484";
+    pink = "EA7F99";
     purple = "FC39C6";
     cyan = "09BE9D";
     aqua = "109DA6";
@@ -59,7 +59,7 @@ in rec {
     blue = (mkColor "#${hex.blue}" 147 4);
     brightBlue = (mkColor "#${hex.brightBlue}" 69 12);
 
-    pink = (mkColor "#${hex.pink}" 204 5);
+    pink = (mkColor "#${hex.pink}" 211 5);
     purple = (mkColor "#${hex.purple}" 199 13);
 
     aqua = (mkColor "#${hex.aqua}" 37 6);

@@ -107,8 +107,8 @@ let
     Character.fg = green;
     Number.fg = orange;
     Float.fg = orange;
-    Boolean = { fg = pink; };
-    Identifier.fg = white;
+    Boolean = { fg = red; };
+    Identifier.fg = pink;
     Function.fg = blue;
     Statement.fg = purple;
     Conditional.fg = purple;
