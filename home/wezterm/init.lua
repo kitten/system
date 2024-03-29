@@ -23,9 +23,11 @@ return {
   freetype_render_target = "HorizontalLcd",
   font_size = font_size,
   line_height = 1.1,
+  max_fps = 120,
 
   enable_wayland = true,
   enable_scroll_bar = false,
+  enable_kitty_keyboard = true,
   check_for_updates = false,
   window_close_confirmation = "NeverPrompt",
   native_macos_fullscreen_mode = true,
@@ -34,6 +36,7 @@ return {
   window_decorations = "RESIZE",
   window_background_opacity = 0.999,
   hide_mouse_cursor_when_typing = false,
+  underline_thickness = "160%",
 
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,
