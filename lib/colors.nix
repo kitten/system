@@ -39,34 +39,34 @@ in rec {
   };
 
   colors = {
-    gutter = (mkColor "#${hex.gutter}" 232 15);
-    cursor = (mkColor "#${hex.cursor}" 236 8);
-    element = (mkColor "#${hex.element}" 238 15);
-    split = (mkColor "#${hex.split}" 59 15);
+    gutter = (mkColor "#${hex.gutter}" 233 15);
+    cursor = (mkColor "#${hex.cursor}" 235 8);
+    element = (mkColor "#${hex.element}" 234 15);
+    split = (mkColor "#${hex.split}" 235 15);
 
-    black = (mkColor "#${hex.black}" 235 0);
+    black = (mkColor "#${hex.black}" 233 0);
     grey = (mkColor "#${hex.grey}" 237 15);
 
-    red = (mkColor "#${hex.red}" 204 1);
-    brightRed = (mkColor "#${hex.brightRed}" 196 9);
+    red = (mkColor "#${hex.red}" 197 1);
+    brightRed = (mkColor "#${hex.brightRed}" 160 9);
 
-    green = (mkColor "#${hex.green}" 114 2);
-    brightGreen = (mkColor "#${hex.brightGreen}" 114 2);
+    green = (mkColor "#${hex.green}" 35 2);
+    brightGreen = (mkColor "#${hex.brightGreen}" 78 2);
 
-    yellow = (mkColor "#${hex.yellow}" 180 3);
-    orange = (mkColor "#${hex.orange}" 173 11);
+    yellow = (mkColor "#${hex.yellow}" 142 3);
+    orange = (mkColor "#${hex.orange}" 209 11);
 
-    blue = (mkColor "#${hex.blue}" 39 4);
-    brightBlue = (mkColor "#${hex.brightBlue}" 39 4);
+    blue = (mkColor "#${hex.blue}" 69 4);
+    brightBlue = (mkColor "#${hex.brightBlue}" 147 4);
 
-    pink = (mkColor "#${hex.pink}" 170 5);
-    purple = (mkColor "#${hex.purple}" 170 5);
+    pink = (mkColor "#${hex.pink}" 204 5);
+    purple = (mkColor "#${hex.purple}" 199 5);
 
-    cyan = (mkColor "#${hex.cyan}" 38 6);
-    aqua = (mkColor "#${hex.aqua}" 38 6);
+    cyan = (mkColor "#${hex.cyan}" 36 6);
+    aqua = (mkColor "#${hex.aqua}" 37 6);
 
-    white = (mkColor "#${hex.white}" 145 7);
-    muted = (mkColor "#${hex.muted}" 59 15);
+    white = (mkColor "#${hex.white}" 255 7);
+    muted = (mkColor "#${hex.muted}" 60 15);
   };
 
   transparent = (mkColor "NONE" "NONE" 0);
