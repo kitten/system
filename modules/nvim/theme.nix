@@ -25,7 +25,7 @@ let
     ModeMsg.force = true;
     MoreMsg.force = true;
     NonText.fg = element;
-    Normal.fg = darkWhite;
+    Normal.fg = white;
     Question.fg = purple;
     SpecialKey.fg = element;
     Search = { fg = black; bg = yellow; };
