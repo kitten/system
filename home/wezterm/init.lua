@@ -82,8 +82,8 @@ return {
       colors.green,
       colors.yellow,
       colors.blue,
-      colors.pink,
-      colors.cyan,
+      colors.purple,
+      colors.aqua,
       colors.white,
     },
     brights = {
@@ -92,8 +92,8 @@ return {
       colors.brightGreen,
       colors.orange,
       colors.brightBlue,
-      colors.purple,
-      colors.aqua,
+      colors.pink,
+      colors.cyan,
       colors.muted,
     },
     tab_bar = {

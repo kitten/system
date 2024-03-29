@@ -62,8 +62,8 @@ in rec {
     pink = (mkColor "#${hex.pink}" 204 5);
     purple = (mkColor "#${hex.purple}" 199 13);
 
-    cyan = (mkColor "#${hex.cyan}" 36 6);
-    aqua = (mkColor "#${hex.aqua}" 37 14);
+    aqua = (mkColor "#${hex.aqua}" 37 6);
+    cyan = (mkColor "#${hex.cyan}" 36 14);
 
     white = (mkColor "#${hex.white}" 255 7);
     muted = (mkColor "#${hex.muted}" 60 15);

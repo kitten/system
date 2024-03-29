@@ -26,7 +26,7 @@ let
     MoreMsg.force = true;
     NonText.fg = element;
     Normal.fg = white;
-    Question.fg = pink;
+    Question.fg = purple;
     SpecialKey.fg = element;
     Search = { fg = black; bg = yellow; };
 
@@ -102,7 +102,7 @@ let
 
     # Syntax Groups (descriptions and ordering from `:h w18`)
     Comment = { fg = muted; italic = true; };
-    Constant.fg = cyan;
+    Constant.fg = aqua;
     String.fg = green;
     Character.fg = green;
     Number.fg = orange;
@@ -110,18 +110,18 @@ let
     Boolean = { fg = red; };
     Identifier.fg = red;
     Function.fg = blue;
-    Statement.fg = pink;
-    Conditional.fg = pink;
-    Repeat.fg = pink;
-    Label.fg = pink;
-    Operator.fg = cyan;
-    Keyword.fg = pink;
+    Statement.fg = purple;
+    Conditional.fg = purple;
+    Repeat.fg = purple;
+    Label.fg = purple;
+    Operator.fg = aqua;
+    Keyword.fg = purple;
     Tag.fg = red;
-    Exception.fg = pink;
+    Exception.fg = purple;
     PreProc.fg = yellow;
     Include.fg = blue;
-    Define.fg = pink;
-    Macro.fg = pink;
+    Define.fg = purple;
+    Macro.fg = purple;
     PreCondit.fg = yellow;
     Type.fg = yellow;
     StorageClass.fg = yellow;
@@ -134,11 +134,11 @@ let
     Ignore.force = true;
     SpecialComment.fg = muted;
     Error.fg = brightRed;
-    Todo.fg = pink;
+    Todo.fg = purple;
     Underlined.underline = true;
     GhostText.link = "Comment";
 
-    "@comment.todo" = { fg = pink; underline = true; };
+    "@comment.todo" = { fg = purple; underline = true; };
     "@comment.note".link = "@comment.todo";
     "@markup.raw".link = "String";
     "@markup.list".link = "Operator";
