@@ -24,8 +24,8 @@ in rec {
     white = "EDF0F2";
     muted = "525775";
 
-    red = "E23030";
-    brightRed = "F8175A";
+    red = "F8175A";
+    brightRed = "E23030";
     green = "82E88C";
     brightGreen = "1B9544";
     yellow = "B7B722";
@@ -47,8 +47,8 @@ in rec {
     black = (mkColor "#${hex.black}" 233 0);
     grey = (mkColor "#${hex.grey}" 237 15);
 
-    red = (mkColor "#${hex.red}" 160 1);
-    brightRed = (mkColor "#${hex.brightRed}" 197 9);
+    red = (mkColor "#${hex.red}" 197 1);
+    brightRed = (mkColor "#${hex.brightRed}" 160 9);
 
     green = (mkColor "#${hex.green}" 78 2);
     brightGreen = (mkColor "#${hex.brightGreen}" 35 10);
