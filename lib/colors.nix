@@ -31,9 +31,9 @@ in rec {
     yellow = "A9A923";
     orange = "F6733B";
     blue = "91A0EE";
-    brightBlue = "437DEE";
+    brightBlue = "6671D9";
     pink = "F2B0C0";
-    purple = "FD40C8";
+    purple = "F349C4";
     cyan = "0AE0BA";
     aqua = "15C0CB";
   };
