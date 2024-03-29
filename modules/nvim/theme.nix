@@ -154,8 +154,8 @@ let
     "@punctuation.bracket".link = "@operator";
     "@punctuation.delimiter".link = "Delimiter";
     "@punctuation.special".link = "SpecialChar";
-    "@keyword.exception".link = "@exception";
-    "@keyword.return".link = "@exception";
+    "@keyword.exception".link = "@conditional";
+    "@keyword.return".link = "@conditional";
     "@keyword.conditional".link = "@conditional";
     "@keyword.repeat".link = "@conditional";
     "@keyword.operator".link = "@operator";

@@ -24,17 +24,17 @@ in rec {
     white = "EDF0F2";
     muted = "585D79";
 
-    red = "F84F81";
-    brightRed = "FA2E3C";
-    green = "77D481";
-    brightGreen = "1DAF4F";
-    yellow = "CFCF3D";
-    orange = "F6733B";
-    blue = "A7B3F0";
-    brightBlue = "717DEE";
+    red = "F84F6B";
+    brightRed = "E82929";
+    green = "7DD486";
+    brightGreen = "05AE48";
+    yellow = "D7C046";
+    orange = "F85E1B";
+    blue = "98BDFB";
+    brightBlue = "6A78F6";
     pink = "F2B0C0";
-    purple = "FB2BA8";
-    cyan = "0AE0BA";
+    purple = "F651A6";
+    cyan = "06A78B";
     aqua = "15C0CB";
   };
 
@@ -53,17 +53,17 @@ in rec {
     green = (mkColor "#${hex.green}" 114 2);
     brightGreen = (mkColor "#${hex.brightGreen}" 35 10);
 
-    yellow = (mkColor "#${hex.yellow}" 185 3);
-    orange = (mkColor "#${hex.orange}" 209 11);
+    yellow = (mkColor "#${hex.yellow}" 221 3);
+    orange = (mkColor "#${hex.orange}" 202 11);
 
-    blue = (mkColor "#${hex.blue}" 147 4);
+    blue = (mkColor "#${hex.blue}" 111 4);
     brightBlue = (mkColor "#${hex.brightBlue}" 105 12);
 
     pink = (mkColor "#${hex.pink}" 217 5);
-    purple = (mkColor "#${hex.purple}" 199 13);
+    purple = (mkColor "#${hex.purple}" 205 13);
 
     aqua = (mkColor "#${hex.aqua}" 37 6);
-    cyan = (mkColor "#${hex.cyan}" 43 14);
+    cyan = (mkColor "#${hex.cyan}" 36 14);
 
     white = (mkColor "#${hex.white}" 255 7);
     muted = (mkColor "#${hex.muted}" 60 15);
