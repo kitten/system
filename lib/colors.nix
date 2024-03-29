@@ -22,7 +22,7 @@ in rec {
     black = "111118";
     grey = "323744";
     white = "EDF0F2";
-    muted = "525775";
+    muted = "697098";
 
     red = "F8175A";
     brightRed = "E23030";
