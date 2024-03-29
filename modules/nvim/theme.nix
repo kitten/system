@@ -54,7 +54,7 @@ let
     };
 
     Spell = {
-      Bad = { fg = red; undercurl = true; };
+      Bad = { sp = brightRed; undercurl = true; };
       Cap.fg = orange;
       Local.fg = orange;
       Rare.fg = orange;
@@ -102,32 +102,32 @@ let
 
     # Syntax Groups (descriptions and ordering from `:h w18`)
     Comment = { fg = muted; italic = true; };
-    Constant.fg = aqua;
+    Constant.fg = pink;
     String.fg = green;
     Character.fg = green;
     Number.fg = orange;
     Float.fg = orange;
-    Boolean = { fg = red; };
-    Identifier.fg = pink;
-    Function.fg = blue;
+    Identifier.fg = white;
+    Function.fg = red;
     Statement.fg = purple;
-    Conditional.fg = purple;
+    Conditional.fg = red;
     Repeat.fg = purple;
     Label.fg = purple;
     Operator.fg = aqua;
     Keyword.fg = purple;
+    Boolean.link = "Constant";
     Tag.fg = pink;
-    Exception.fg = purple;
+    Exception.fg = red;
     PreProc.fg = yellow;
     Include.fg = blue;
     Define.fg = purple;
     Macro.fg = purple;
     PreCondit.fg = yellow;
-    Type.fg = yellow;
+    Type.fg = blue;
     StorageClass.fg = yellow;
     Structure.fg = yellow;
     Typedef.fg = yellow;
-    Special.fg = blue;
+    Special.fg = orange;
     SpecialChar.force = true;
     Delimiter.link = "Operator";
     Debug.force = true;
@@ -135,8 +135,8 @@ let
     SpecialComment.fg = muted;
     Error.fg = brightRed;
     Todo.fg = purple;
+    GhostText.fg = grey;
     Underlined.underline = true;
-    GhostText.link = "Comment";
 
     "@comment.todo" = { fg = purple; underline = true; };
     "@comment.note".link = "@comment.todo";
@@ -149,6 +149,12 @@ let
     "@markup.link.url" = { fg = blue; underline = true; };
     "@string.special.url" = { fg = blue; underline = true; };
     "@punctuation.bracket".link = "Operator";
+    "@keyword.exception".link = "Exception";
+    "@keyword.conditional".link = "Conditional";
+    "@keyword.repeat".link = "Conditional";
+    "@keyword.operator".link = "Operator";
+    "@type.builtin".link = "Constant";
+    "@constructor".link = "Function";
   };
 in {
   my-theme = pkgs.vimUtils.buildVimPlugin {

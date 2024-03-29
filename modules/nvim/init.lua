@@ -366,6 +366,7 @@ end
 
 local function lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  capabilities.semanticTokensProvider = nil
   capabilities.textDocument.codeLens = { dynamicRegistration = false }
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true
