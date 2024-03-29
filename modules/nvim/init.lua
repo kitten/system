@@ -118,9 +118,7 @@ vim.cmd('colorscheme theme')
 -- misc. options
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.pumheight = 10
-vim.o.pumblend  = 10
-vim.o.pumheight = 10
-vim.o.winblend  = 10
+vim.o.winblend  = 5
 vim.o.backspace = 'indent,eol,start'
 vim.o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 vim.o.formatoptions = 'qjl1' -- Don't autoformat comments
@@ -366,7 +364,6 @@ end
 
 local function lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  capabilities.semanticTokensProvider = nil
   capabilities.textDocument.codeLens = { dynamicRegistration = false }
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true

@@ -18,17 +18,16 @@ let
     Folded = { bg = gutter; fg = muted; };
     FoldColumn.force = true;
     SignColumn.force = true;
-    IncSearch = { fg = blue; reverse = true; };
+    Search = { fg = blue; reverse = true; };
     LineNr = { fg = black; bg = black; };
     CursorLineNr = { fg = muted; bg = gutter; bold = true; };
     MatchParen = { fg = blue; underline = true; };
     ModeMsg.force = true;
     MoreMsg.force = true;
-    NonText.fg = element;
+    NonText.fg = grey;
     Normal.fg = white;
     Question.fg = purple;
-    SpecialKey.fg = element;
-    Search = { fg = black; bg = yellow; };
+    SpecialKey.fg = grey;
 
     StatusLine = { fg = white; bg = cursor; };
     StatusLineNC.fg = muted;
@@ -36,7 +35,7 @@ let
     Visual.bg = grey;
     VisualNOS.fg = grey;
     WildMenu = { fg = black; bg = blue; };
-    NormalFloat.bg = split;
+    NormalFloat.bg = element;
     TreesitterContext.bg = gutter;
 
     Diff = {
@@ -47,10 +46,10 @@ let
     };
 
     Pmenu = {
-      base = { bg = split; blend = 10; };
+      base = { bg = gutter; blend = 5; };
       Sel = { fg = black; bg = blue; };
-      Sbar.bg = element;
-      Thumb.bg = white;
+      Sbar.force = true;
+      Thumb.bg = cursor;
     };
 
     Spell = {
@@ -127,7 +126,7 @@ let
     Structure.fg = yellow;
     Typedef.fg = yellow;
     Special.fg = orange;
-    SpecialChar.fg = orange;
+    SpecialChar.fg = brightGreen;
     Delimiter.fg = cyan;
     Debug.force = true;
     Ignore.force = true;
@@ -150,10 +149,11 @@ let
     "@markup.italic".italic = true;
     "@markup.link.label".link = "SpecialComment";
     "@markup.link.url" = { fg = brightBlue; underline = true; };
+    "@markup.heading" = { fg = cyan; bold = true; };
     "@string.special.url" = { fg = brightBlue; underline = true; };
     "@punctuation.bracket".link = "@operator";
     "@punctuation.delimiter".link = "Delimiter";
-    "@punctuation.special".link = "@string";
+    "@punctuation.special".link = "SpecialChar";
     "@keyword.exception".link = "@exception";
     "@keyword.return".link = "@exception";
     "@keyword.conditional".link = "@conditional";

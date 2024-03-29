@@ -16,7 +16,7 @@ in rec {
   hex = {
     gutter = "14151F";
     cursor = "20222C";
-    element = "181928";
+    element = "101018";
     split = "27293F";
 
     black = "111118";
@@ -41,7 +41,7 @@ in rec {
   colors = {
     gutter = (mkColor "#${hex.gutter}" 233 15);
     cursor = (mkColor "#${hex.cursor}" 235 8);
-    element = (mkColor "#${hex.element}" 234 15);
+    element = (mkColor "#${hex.element}" 233 15);
     split = (mkColor "#${hex.split}" 235 15);
 
     black = (mkColor "#${hex.black}" 233 0);
