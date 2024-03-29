@@ -116,7 +116,7 @@ let
     Operator.fg = pink;
     Keyword.fg = purple;
     Tag.fg = pink;
-    Exception.fg = red;
+    Exception.fg = brightRed;
     PreProc.fg = yellow;
     Include.fg = brightBlue;
     Define.fg = purple;
@@ -127,7 +127,7 @@ let
     Structure.fg = yellow;
     Typedef.fg = yellow;
     Special.fg = orange;
-    SpecialChar.force = true;
+    SpecialChar.fg = orange;
     Delimiter.fg = cyan;
     Debug.force = true;
     Ignore.force = true;
@@ -140,26 +140,30 @@ let
     Boolean.link = "Constant";
 
     # Treesitter classes
+    "@constructor".link = "Structure";
     "@comment.todo" = { fg = purple; underline = true; };
     "@comment.note".link = "@comment.todo";
-    "@markup.raw".link = "String";
-    "@markup.list".link = "Operator";
+    "@markup.raw".link = "@string";
+    "@markup.list".link = "@operator";
     "@markup.strong".bold = true;
     "@markup.strikethrough".strikethrough = true;
     "@markup.italic".italic = true;
     "@markup.link.label".link = "SpecialComment";
     "@markup.link.url" = { fg = brightBlue; underline = true; };
     "@string.special.url" = { fg = brightBlue; underline = true; };
-    "@punctuation.bracket".link = "Operator";
+    "@punctuation.bracket".link = "@operator";
     "@punctuation.delimiter".link = "Delimiter";
-    "@punctuation.special".link = "String";
-    "@keyword.exception".link = "Exception";
-    "@keyword.conditional".link = "Conditional";
-    "@keyword.repeat".link = "Conditional";
-    "@keyword.operator".link = "Operator";
-    "@keyword.import".link = "Include";
-    "@type.builtin".link = "Constant";
-    "@constructor".link = "Function";
+    "@punctuation.special".link = "@string";
+    "@keyword.exception".link = "@exception";
+    "@keyword.return".link = "@exception";
+    "@keyword.conditional".link = "@conditional";
+    "@keyword.repeat".link = "@conditional";
+    "@keyword.operator".link = "@operator";
+    "@keyword.import".link = "@include";
+    "@type.builtin".link = "@constant";
+
+    # LSP classes
+    "@lsp.type.typeParameter".link = "@lsp.type.type";
   };
 in {
   my-theme = pkgs.vimUtils.buildVimPlugin {
