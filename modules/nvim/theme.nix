@@ -68,7 +68,7 @@ let
 
     GitSigns = {
       Add.fg = green;
-      Change.fg = brightBlue;
+      Change.fg = blue;
       Delete.fg = brightRed;
     };
 
@@ -108,14 +108,13 @@ let
     Number.fg = orange;
     Float.fg = orange;
     Identifier.fg = white;
-    Function.fg = red;
+    Function.fg = blue;
     Statement.fg = purple;
     Conditional.fg = red;
     Repeat.fg = purple;
     Label.fg = purple;
     Operator.fg = pink;
     Keyword.fg = purple;
-    Boolean.link = "Constant";
     Tag.fg = pink;
     Exception.fg = red;
     PreProc.fg = yellow;
@@ -138,6 +137,9 @@ let
     GhostText.fg = grey;
     Underlined.underline = true;
 
+    Boolean.link = "Constant";
+
+    # Treesitter classes
     "@comment.todo" = { fg = purple; underline = true; };
     "@comment.note".link = "@comment.todo";
     "@markup.raw".link = "String";
@@ -146,8 +148,8 @@ let
     "@markup.strikethrough".strikethrough = true;
     "@markup.italic".italic = true;
     "@markup.link.label".link = "SpecialComment";
-    "@markup.link.url" = { fg = blue; underline = true; };
-    "@string.special.url" = { fg = blue; underline = true; };
+    "@markup.link.url" = { fg = brightBlue; underline = true; };
+    "@string.special.url" = { fg = brightBlue; underline = true; };
     "@punctuation.bracket".link = "Operator";
     "@punctuation.delimiter".link = "Delimiter";
     "@punctuation.special".link = "String";
