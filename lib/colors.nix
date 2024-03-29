@@ -51,19 +51,19 @@ in rec {
     brightRed = (mkColor "#${hex.brightRed}" 160 9);
 
     green = (mkColor "#${hex.green}" 35 2);
-    brightGreen = (mkColor "#${hex.brightGreen}" 78 2);
+    brightGreen = (mkColor "#${hex.brightGreen}" 78 10);
 
     yellow = (mkColor "#${hex.yellow}" 142 3);
     orange = (mkColor "#${hex.orange}" 209 11);
 
     blue = (mkColor "#${hex.blue}" 69 4);
-    brightBlue = (mkColor "#${hex.brightBlue}" 147 4);
+    brightBlue = (mkColor "#${hex.brightBlue}" 147 12);
 
     pink = (mkColor "#${hex.pink}" 204 5);
-    purple = (mkColor "#${hex.purple}" 199 5);
+    purple = (mkColor "#${hex.purple}" 199 13);
 
     cyan = (mkColor "#${hex.cyan}" 36 6);
-    aqua = (mkColor "#${hex.aqua}" 37 6);
+    aqua = (mkColor "#${hex.aqua}" 37 14);
 
     white = (mkColor "#${hex.white}" 255 7);
     muted = (mkColor "#${hex.muted}" 60 15);
