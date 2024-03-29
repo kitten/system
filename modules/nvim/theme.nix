@@ -148,7 +148,7 @@ let
     "@markup.link.label".link = "SpecialComment";
     "@markup.link.url" = { fg = blue; underline = true; };
     "@string.special.url" = { fg = blue; underline = true; };
-    "@punctuation.bracket".link = "SpecialComment";
+    "@punctuation.bracket".link = "Operator";
   };
 in {
   my-theme = pkgs.vimUtils.buildVimPlugin {
