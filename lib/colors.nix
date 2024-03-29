@@ -17,7 +17,7 @@ in rec {
     gutter = "14151F";
     cursor = "20222C";
     element = "181928";
-    split = "212336";
+    split = "27293F";
 
     black = "111118";
     grey = "323744";
