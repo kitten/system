@@ -202,7 +202,12 @@ key.register({
   ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
 
   ["<C-e>"] = { function() print(vim.inspect(vim.treesitter.get_captures_at_cursor(0))) end, "Output TS capture" },
-  ["<C-S-e>"] = { function() map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")') end, "Output Hi capture" },
+  ["<C-S-e>"] = {
+    function() vim.cmd [[
+      echo synIDattr(synID(line('.'), col('.'), 1), 'name') . ' -> ' . synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
+    ]] end,
+    "Output Hi capture"
+  },
 })
 
 -- golden_size
