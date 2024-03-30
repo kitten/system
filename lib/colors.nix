@@ -34,7 +34,7 @@ in rec {
     brightBlue = "6A78F6";
     pink = "F2B0C0";
     magenta = "F651A6";
-    cyan = "06A78B";
+    cyan = "02B394";
     aqua = "15C0CB";
   };
 
