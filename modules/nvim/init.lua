@@ -118,9 +118,7 @@ vim.cmd('colorscheme theme')
 -- misc. options
 vim.o.completeopt = 'menuone,noinsert,noselect'
 vim.o.pumheight = 10
-vim.o.pumblend  = 10
-vim.o.pumheight = 10
-vim.o.winblend  = 10
+vim.o.winblend  = 5
 vim.o.backspace = 'indent,eol,start'
 vim.o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 vim.o.formatoptions = 'qjl1' -- Don't autoformat comments
@@ -202,7 +200,12 @@ key.register({
   ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
 
   ["<C-e>"] = { function() print(vim.inspect(vim.treesitter.get_captures_at_cursor(0))) end, "Output TS capture" },
-  ["<C-S-e>"] = { function() map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")') end, "Output Hi capture" },
+  ["<C-S-e>"] = {
+    function() vim.cmd [[
+      echo synIDattr(synID(line('.'), col('.'), 1), 'name') . ' -> ' . synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
+    ]] end,
+    "Output Hi capture"
+  },
 })
 
 -- golden_size
@@ -361,7 +364,6 @@ end
 
 local function lsp_capabilities()
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  capabilities.textDocument.codeLens = { dynamicRegistration = false }
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   return capabilities

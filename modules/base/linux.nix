@@ -18,16 +18,16 @@ in helpers.linuxAttrs {
       "${hex.yellow}"
       "${hex.blue}"
       "${hex.purple}"
-      "${hex.cyan}"
+      "${hex.aqua}"
       "${hex.white}"
       "${hex.grey}"
       "${hex.brightRed}"
       "${hex.brightGreen}"
-      "${hex.brightYellow}"
+      "${hex.orange}"
       "${hex.brightBlue}"
-      "${hex.brightPurple}"
-      "${hex.brightCyan}"
-      "${hex.brightWhite}"
+      "${hex.pink}"
+      "${hex.cyan}"
+      "${hex.muted}"
     ];
   };
 

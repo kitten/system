@@ -23,9 +23,11 @@ return {
   freetype_render_target = "HorizontalLcd",
   font_size = font_size,
   line_height = 1.1,
+  max_fps = 120,
 
   enable_wayland = true,
   enable_scroll_bar = false,
+  enable_kitty_keyboard = true,
   check_for_updates = false,
   window_close_confirmation = "NeverPrompt",
   native_macos_fullscreen_mode = true,
@@ -34,6 +36,7 @@ return {
   window_decorations = "RESIZE",
   window_background_opacity = 0.999,
   hide_mouse_cursor_when_typing = false,
+  underline_thickness = "160%",
 
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = true,
@@ -83,18 +86,18 @@ return {
       colors.yellow,
       colors.blue,
       colors.purple,
-      colors.cyan,
+      colors.aqua,
       colors.white,
     },
     brights = {
       colors.grey,
       colors.brightRed,
       colors.brightGreen,
-      colors.brightYellow,
+      colors.orange,
       colors.brightBlue,
-      colors.brightPurple,
-      colors.brightCyan,
-      colors.brightWhite,
+      colors.pink,
+      colors.cyan,
+      colors.muted,
     },
     tab_bar = {
       background = colors.black,
@@ -106,7 +109,7 @@ return {
       inactive_tab_edge = colors.black,
       inactive_tab = {
         bg_color = colors.black,
-        fg_color = colors.brightWhite,
+        fg_color = colors.muted,
       },
       inactive_tab_hover = {
         bg_color = colors.black,

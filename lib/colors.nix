@@ -14,59 +14,59 @@ in rec {
   darkStroke = "rgba(22, 23, 29, 0.2)";
 
   hex = {
-    gutter = "16171D";
-    cursor = "2C323C";
-    element = "404449";
-    split = "282C34";
-    black = "13131A";
-    grey = "3E4452";
-    red = "ED95A8";
-    brightRed = "EF5350";
-    green = "C3E88D";
-    brightGreen = "C3E88D";
-    yellow = "FFCB6B";
-    brightYellow = "F78C6C";
-    blue = "82B1FF";
-    brightBlue = "939EDE";
-    purple = "C792EA";
-    brightPurple = "FF45AE";
-    cyan = "89DDFF";
-    brightCyan = "20D6E3";
-    white = "ECEFF1";
-    brightWhite = "697098";
-    darkWhite = "F8F8F2";
+    gutter = "14151F";
+    cursor = "20222C";
+    element = "101018";
+    split = "27293F";
+
+    black = "111118";
+    grey = "323744";
+    white = "EDF0F2";
+    muted = "585D79";
+
+    red = "F84F6B";
+    brightRed = "E82929";
+    green = "7DD486";
+    brightGreen = "05AE48";
+    yellow = "D7C046";
+    orange = "F85E1B";
+    blue = "98BDFB";
+    brightBlue = "6A78F6";
+    pink = "F2B0C0";
+    purple = "F651A6";
+    cyan = "06A78B";
+    aqua = "15C0CB";
   };
 
   colors = {
-    gutter = (mkColor "#${hex.gutter}" 232 15); # gutter fg grey
-    cursor = (mkColor "#${hex.cursor}" 236 8); # cursor grey
-    element = (mkColor "#${hex.element}" 238 15); # special grey
-    split = (mkColor "#${hex.split}" 59 15);
+    gutter = (mkColor "#${hex.gutter}" 233 15);
+    cursor = (mkColor "#${hex.cursor}" 235 8);
+    element = (mkColor "#${hex.element}" 233 15);
+    split = (mkColor "#${hex.split}" 235 15);
 
-    black = (mkColor "#${hex.black}" 235 0);
+    black = (mkColor "#${hex.black}" 233 0);
     grey = (mkColor "#${hex.grey}" 237 15);
 
     red = (mkColor "#${hex.red}" 204 1);
-    brightRed = (mkColor "#${hex.brightRed}" 196 9);
+    brightRed = (mkColor "#${hex.brightRed}" 160 9);
 
     green = (mkColor "#${hex.green}" 114 2);
-    brightGreen = (mkColor "#${hex.brightGreen}" 114 2);
+    brightGreen = (mkColor "#${hex.brightGreen}" 35 10);
 
-    yellow = (mkColor "#${hex.yellow}" 180 3);
-    brightYellow = (mkColor "#${hex.brightYellow}" 173 11); # dark yellow
+    yellow = (mkColor "#${hex.yellow}" 221 3);
+    orange = (mkColor "#${hex.orange}" 202 11);
 
-    blue = (mkColor "#${hex.blue}" 39 4);
-    brightBlue = (mkColor "#${hex.brightBlue}" 39 4); # blue purple
+    blue = (mkColor "#${hex.blue}" 111 4);
+    brightBlue = (mkColor "#${hex.brightBlue}" 105 12);
 
-    purple = (mkColor "#${hex.purple}" 170 5);
-    brightPurple = (mkColor "#${hex.brightPurple}" 170 5);
+    pink = (mkColor "#${hex.pink}" 217 5);
+    purple = (mkColor "#${hex.purple}" 205 13);
 
-    cyan = (mkColor "#${hex.cyan}" 38 6);
-    brightCyan = (mkColor "#${hex.brightCyan}" 38 6);
+    aqua = (mkColor "#${hex.aqua}" 37 6);
+    cyan = (mkColor "#${hex.cyan}" 36 14);
 
-    white = (mkColor "#${hex.white}" 145 7);
-    brightWhite = (mkColor "#${hex.brightWhite}" 59 15); # comment grey
-    darkWhite = (mkColor "#${hex.darkWhite}" 59 15);
+    white = (mkColor "#${hex.white}" 255 7);
+    muted = (mkColor "#${hex.muted}" 60 15);
   };
 
   transparent = (mkColor "NONE" "NONE" 0);
@@ -127,30 +127,6 @@ in rec {
   in
     colors: (concatStringsSep "\n" (mapAttrsToList toValue (toFlatAttrs colors)));
 
-  mkVimTerminalSyntax = attrs:
-    (if hasAttr "terminal" attrs then ''
-      if has("nvim")
-        let g:terminal_color_0 = "${attrs.terminal.black.fg.gui}"
-        let g:terminal_color_1 = "${attrs.terminal.red.fg.gui}"
-        let g:terminal_color_2 = "${attrs.terminal.green.fg.gui}"
-        let g:terminal_color_3 = "${attrs.terminal.yellow.fg.gui}"
-        let g:terminal_color_4 = "${attrs.terminal.blue.fg.gui}"
-        let g:terminal_color_5 = "${attrs.terminal.purple.fg.gui}"
-        let g:terminal_color_6 = "${attrs.terminal.cyan.fg.gui}"
-        let g:terminal_color_7 = "${attrs.terminal.white.fg.gui}"
-        let g:terminal_color_8 = "${attrs.terminal.grey.fg.gui}"
-        let g:terminal_color_9 = "${attrs.terminal.brightRed.fg.gui}"
-        let g:terminal_color_10 = "${attrs.terminal.brightGreen.fg.gui}"
-        let g:terminal_color_11 = "${attrs.terminal.brightYellow.fg.gui}"
-        let g:terminal_color_12 = "${attrs.terminal.brightBlue.fg.gui}"
-        let g:terminal_color_13 = "${attrs.terminal.brightPurple.fg.gui}"
-        let g:terminal_color_14 = "${attrs.terminal.brightCyan.fg.gui}"
-        let g:terminal_color_15 = "${attrs.terminal.brightWhite.fg.gui}"
-        let g:terminal_color_background = "${attrs.terminal.background.fg.gui}"
-        let g:terminal_color_foreground = "${attrs.terminal.foreground.fg.gui}"
-      endif
-    '' else "");
-
   mkVimHardlineColors = colors:
     with colors; ''
       {
@@ -158,13 +134,13 @@ in rec {
         normal = {gui = "${green.gui}", cterm = "${toString green.cterm}", cterm16 = "${toString green.cterm16}"},
         insert = {gui = "${blue.gui}", cterm = "${toString blue.cterm}", cterm16 = "${toString blue.cterm16}"},
         replace = {gui = "${yellow.gui}", cterm = "${toString yellow.cterm}", cterm16 = "${toString yellow.cterm16}"},
-        inactive_comment = {gui = "${brightWhite.gui}", cterm = "${toString brightWhite.cterm}", cterm16 = "${toString brightWhite.cterm16}"},
+        inactive_comment = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
         inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
         inactive_menu = {gui = "${split.gui}", cterm = "${toString split.cterm}", cterm16 = "${toString split.cterm16}"},
-        visual = {gui = "${brightCyan.gui}", cterm = "${toString brightCyan.cterm}", cterm16 = "${toString brightCyan.cterm16}"},
-        command = {gui = "${brightPurple.gui}", cterm = "${toString brightPurple.cterm}", cterm16 = "${toString brightPurple.cterm16}"},
-        alt_text = {gui = "${darkWhite.gui}", cterm = "${toString darkWhite.cterm}", cterm16 = "${toString darkWhite.cterm16}"},
-        warning = {gui = "${brightYellow.gui}", cterm = "${toString brightYellow.cterm}", cterm16 = "${toString brightYellow.cterm16}"},
+        visual = {gui = "${aqua.gui}", cterm = "${toString aqua.cterm}", cterm16 = "${toString aqua.cterm16}"},
+        command = {gui = "${purple.gui}", cterm = "${toString purple.cterm}", cterm16 = "${toString purple.cterm16}"},
+        alt_text = {gui = "${white.gui}", cterm = "${toString white.cterm}", cterm16 = "${toString white.cterm16}"},
+        warning = {gui = "${orange.gui}", cterm = "${toString orange.cterm}", cterm16 = "${toString orange.cterm16}"},
       }
     '';
 
@@ -221,5 +197,5 @@ in rec {
     let g:colors_name="${name}"
 
     ${concatStringsSep "\n" (mapAttrsToList mkVimHighlight (toFlatAttrs attrs))}
-    '' + (mkVimTerminalSyntax attrs) + "\nset background=dark";
+    '' + "\nset background=dark";
 }

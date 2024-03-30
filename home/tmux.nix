@@ -5,7 +5,7 @@ let
   inherit (import ../lib/colors.nix inputs) colors;
 
   defaultActiveColor = colors.yellow.gui;
-  defaultInactiveColor = colors.brightWhite.gui;
+  defaultInactiveColor = colors.muted.gui;
   defaultFeatureColor = colors.blue.gui;
   defaultBorderColor = colors.green.gui;
   defaultSplitColor = colors.split.gui;
