@@ -33,7 +33,7 @@ in rec {
     blue = "98BDFB";
     brightBlue = "6A78F6";
     pink = "F2B0C0";
-    purple = "F651A6";
+    magenta = "F651A6";
     cyan = "06A78B";
     aqua = "15C0CB";
   };
@@ -60,7 +60,7 @@ in rec {
     brightBlue = (mkColor "#${hex.brightBlue}" 105 12);
 
     pink = (mkColor "#${hex.pink}" 217 5);
-    purple = (mkColor "#${hex.purple}" 205 13);
+    magenta = (mkColor "#${hex.magenta}" 205 13);
 
     aqua = (mkColor "#${hex.aqua}" 37 6);
     cyan = (mkColor "#${hex.cyan}" 36 14);
@@ -138,7 +138,7 @@ in rec {
         inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
         inactive_menu = {gui = "${gutter.gui}", cterm = "${toString gutter.cterm}", cterm16 = "${toString gutter.cterm16}"},
         visual = {gui = "${aqua.gui}", cterm = "${toString aqua.cterm}", cterm16 = "${toString aqua.cterm16}"},
-        command = {gui = "${purple.gui}", cterm = "${toString purple.cterm}", cterm16 = "${toString purple.cterm16}"},
+        command = {gui = "${magenta.gui}", cterm = "${toString magenta.cterm}", cterm16 = "${toString magenta.cterm16}"},
         alt_text = {gui = "${white.gui}", cterm = "${toString white.cterm}", cterm16 = "${toString white.cterm16}"},
         warning = {gui = "${orange.gui}", cterm = "${toString orange.cterm}", cterm16 = "${toString orange.cterm16}"},
       }

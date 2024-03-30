@@ -26,7 +26,7 @@ let
     MoreMsg.force = true;
     NonText.fg = grey;
     Normal.fg = white;
-    Question.fg = purple;
+    Question.fg = magenta;
     SpecialKey.fg = grey;
 
     StatusLine = { fg = white; bg = cursor; };
@@ -108,18 +108,18 @@ let
     Float.fg = orange;
     Identifier.fg = white;
     Function.fg = blue;
-    Statement.fg = purple;
+    Statement.fg = magenta;
     Conditional.fg = red;
-    Repeat.fg = purple;
-    Label.fg = purple;
+    Repeat.fg = magenta;
+    Label.fg = magenta;
     Operator.fg = pink;
-    Keyword.fg = purple;
+    Keyword.fg = magenta;
     Tag.fg = pink;
     Exception.fg = brightRed;
     PreProc.fg = yellow;
     Include.fg = brightBlue;
-    Define.fg = purple;
-    Macro.fg = purple;
+    Define.fg = magenta;
+    Macro.fg = magenta;
     PreCondit.fg = yellow;
     Type.fg = aqua;
     StorageClass.fg = yellow;
@@ -141,7 +141,7 @@ let
     # Treesitter classes
     "@comment.todo" = { fg = brightBlue; underline = true; };
     "@comment.error" = { fg = brightRed; underline = true; };
-    "@comment.note" = { fg = purple; underline = true; };
+    "@comment.note" = { fg = magenta; underline = true; };
     "@constructor".link = "Structure";
     "@markup.raw".link = "@string";
     "@markup.list".link = "@operator";

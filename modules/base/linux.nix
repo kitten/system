@@ -17,7 +17,7 @@ in helpers.linuxAttrs {
       "${hex.green}"
       "${hex.yellow}"
       "${hex.blue}"
-      "${hex.purple}"
+      "${hex.magenta}"
       "${hex.aqua}"
       "${hex.white}"
       "${hex.grey}"
