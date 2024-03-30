@@ -14,7 +14,7 @@ let
     Directory.fg = blue;
     ErrorMsg.fg = brightRed;
     WarningMsg.fg = yellow;
-    VertSplit.fg = gutter;
+    VertSplit.fg = split;
     Folded = { bg = gutter; fg = muted; };
     FoldColumn.force = true;
     SignColumn.force = true;

@@ -130,13 +130,13 @@ in rec {
   mkVimHardlineColors = colors:
     with colors; ''
       {
-        text = {gui = "${gutter.gui}", cterm = "${toString gutter.cterm}", cterm16 = "${toString gutter.cterm16}"},
+        text = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
         normal = {gui = "${green.gui}", cterm = "${toString green.cterm}", cterm16 = "${toString green.cterm16}"},
         insert = {gui = "${blue.gui}", cterm = "${toString blue.cterm}", cterm16 = "${toString blue.cterm16}"},
         replace = {gui = "${yellow.gui}", cterm = "${toString yellow.cterm}", cterm16 = "${toString yellow.cterm16}"},
         inactive_comment = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
         inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
-        inactive_menu = {gui = "${split.gui}", cterm = "${toString split.cterm}", cterm16 = "${toString split.cterm16}"},
+        inactive_menu = {gui = "${grey.gui}", cterm = "${toString grey.cterm}", cterm16 = "${toString grey.cterm16}"},
         visual = {gui = "${aqua.gui}", cterm = "${toString aqua.cterm}", cterm16 = "${toString aqua.cterm16}"},
         command = {gui = "${purple.gui}", cterm = "${toString purple.cterm}", cterm16 = "${toString purple.cterm16}"},
         alt_text = {gui = "${white.gui}", cterm = "${toString white.cterm}", cterm16 = "${toString white.cterm16}"},
