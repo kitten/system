@@ -32,7 +32,7 @@ let
     StatusLine = { fg = white; bg = cursor; };
     StatusLineNC.fg = muted;
     Title.fg = green;
-    Visual.bg = grey;
+    Visual.bg = cursor;
     VisualNOS.fg = grey;
     WildMenu = { fg = black; bg = blue; };
     NormalFloat.bg = element;

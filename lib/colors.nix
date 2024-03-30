@@ -14,12 +14,12 @@ in rec {
   darkStroke = "rgba(22, 23, 29, 0.2)";
 
   hex = {
-    gutter = "14151F";
-    cursor = "20222C";
-    element = "101018";
-    split = "27293F";
+    gutter = "161622";
+    cursor = "242738";
+    element = "0F0E17";
+    split = "2A2D46";
 
-    black = "111118";
+    black = "0F1018";
     grey = "323744";
     white = "EDF0F2";
     muted = "585D79";
@@ -42,7 +42,7 @@ in rec {
     gutter = (mkColor "#${hex.gutter}" 233 15);
     cursor = (mkColor "#${hex.cursor}" 235 8);
     element = (mkColor "#${hex.element}" 233 15);
-    split = (mkColor "#${hex.split}" 235 15);
+    split = (mkColor "#${hex.split}" 236 15);
 
     black = (mkColor "#${hex.black}" 233 0);
     grey = (mkColor "#${hex.grey}" 237 15);
@@ -130,13 +130,13 @@ in rec {
   mkVimHardlineColors = colors:
     with colors; ''
       {
-        text = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
+        text = {gui = "${element.gui}", cterm = "${toString element.cterm}", cterm16 = "${toString element.cterm16}"},
         normal = {gui = "${green.gui}", cterm = "${toString green.cterm}", cterm16 = "${toString green.cterm16}"},
         insert = {gui = "${blue.gui}", cterm = "${toString blue.cterm}", cterm16 = "${toString blue.cterm16}"},
         replace = {gui = "${yellow.gui}", cterm = "${toString yellow.cterm}", cterm16 = "${toString yellow.cterm16}"},
         inactive_comment = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
         inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
-        inactive_menu = {gui = "${grey.gui}", cterm = "${toString grey.cterm}", cterm16 = "${toString grey.cterm16}"},
+        inactive_menu = {gui = "${gutter.gui}", cterm = "${toString gutter.cterm}", cterm16 = "${toString gutter.cterm16}"},
         visual = {gui = "${aqua.gui}", cterm = "${toString aqua.cterm}", cterm16 = "${toString aqua.cterm16}"},
         command = {gui = "${purple.gui}", cterm = "${toString purple.cterm}", cterm16 = "${toString purple.cterm16}"},
         alt_text = {gui = "${white.gui}", cterm = "${toString white.cterm}", cterm16 = "${toString white.cterm16}"},
