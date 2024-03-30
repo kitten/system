@@ -127,30 +127,6 @@ in rec {
   in
     colors: (concatStringsSep "\n" (mapAttrsToList toValue (toFlatAttrs colors)));
 
-  mkVimTerminalSyntax = attrs:
-    (if hasAttr "terminal" attrs then ''
-      if has("nvim")
-        let g:terminal_color_0 = "${attrs.terminal.black.fg.gui}"
-        let g:terminal_color_1 = "${attrs.terminal.red.fg.gui}"
-        let g:terminal_color_2 = "${attrs.terminal.green.fg.gui}"
-        let g:terminal_color_3 = "${attrs.terminal.yellow.fg.gui}"
-        let g:terminal_color_4 = "${attrs.terminal.blue.fg.gui}"
-        let g:terminal_color_5 = "${attrs.terminal.pink.fg.gui}"
-        let g:terminal_color_6 = "${attrs.terminal.cyan.fg.gui}"
-        let g:terminal_color_7 = "${attrs.terminal.white.fg.gui}"
-        let g:terminal_color_8 = "${attrs.terminal.grey.fg.gui}"
-        let g:terminal_color_9 = "${attrs.terminal.brightRed.fg.gui}"
-        let g:terminal_color_10 = "${attrs.terminal.brightGreen.fg.gui}"
-        let g:terminal_color_11 = "${attrs.terminal.orange.fg.gui}"
-        let g:terminal_color_12 = "${attrs.terminal.brightBlue.fg.gui}"
-        let g:terminal_color_13 = "${attrs.terminal.purple.fg.gui}"
-        let g:terminal_color_14 = "${attrs.terminal.aqua.fg.gui}"
-        let g:terminal_color_15 = "${attrs.terminal.muted.fg.gui}"
-        let g:terminal_color_background = "${attrs.terminal.background.fg.gui}"
-        let g:terminal_color_foreground = "${attrs.terminal.foreground.fg.gui}"
-      endif
-    '' else "");
-
   mkVimHardlineColors = colors:
     with colors; ''
       {
@@ -221,5 +197,5 @@ in rec {
     let g:colors_name="${name}"
 
     ${concatStringsSep "\n" (mapAttrsToList mkVimHighlight (toFlatAttrs attrs))}
-    '' + (mkVimTerminalSyntax attrs) + "\nset background=dark";
+    '' + "\nset background=dark";
 }
