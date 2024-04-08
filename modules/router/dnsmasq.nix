@@ -44,6 +44,7 @@
         "5c:61:99:7a:16:40,10.0.0.103" # brother printer
         "24:e8:53:95:e4:02,10.0.0.96" # tv
         "34:7e:5c:31:4f:fa,10.0.0.56" # sonos
+        "e8:9c:25:6c:40:6f,10.0.0.150" # pepper-pc
       ];
 
       # listen only on intern0 by excluding extern0
