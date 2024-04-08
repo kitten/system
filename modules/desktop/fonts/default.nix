@@ -63,7 +63,6 @@ in lib.mkMerge [
         monospace = [ "Dank Mono" "Roboto Mono" "Noto Color Emoji" ];
         emoji = [ "Noto Color Emoji" ];
       };
-
     };
   })
 ]

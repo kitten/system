@@ -8,6 +8,5 @@
     ./mysql.nix
     ./gpg.nix
     ./nvim
-    ./fonts
   ];
 }
