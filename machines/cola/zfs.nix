@@ -4,6 +4,7 @@
   boot = {
     supportedFilesystems = [ "zfs" ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    zfs.extraPools = [ "colapool" ];
   };
 
   services.zfs = {
