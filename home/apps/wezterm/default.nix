@@ -1,7 +1,7 @@
 { pkgs, helpers, ... } @ inputs:
 
 let
-  inherit (import ../../lib/colors.nix inputs) colors mkLuaSyntax;
+  inherit (import ../../../lib/colors.nix inputs) colors mkLuaSyntax;
 
   pkg = pkgs.wezterm;
 
