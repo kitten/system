@@ -21,8 +21,8 @@
         }
 
         handle_path /vault/* {
-          reverse_proxy /notifications/hub/negotiate 0.0.0.0:8000
-          reverse_proxy /notifications/hub 0.0.0.0:8001
+          reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000
+          reverse_proxy /notifications/hub 127.0.0.1:8001
           reverse_proxy localhost:8000 {
             header_up X-Real-IP {remote_host}
           }
