@@ -7,7 +7,7 @@ helpers.linuxAttrs {
     ./vaultwarden.nix
     ./hd-idle.nix
     ./caddy.nix
-    ./plex.nix
+    ./jellyfin.nix
     ./home-assistant.nix
   ];
 }

@@ -1,23 +1,23 @@
-{ pkgs, user, ... }:
+{ lib, pkgs, user, ... }:
 
 let
   group = "share";
 in {
+  hardware.opengl.enable = lib.mkDefault true;
+
   age.secrets."rclone.conf" = {
     symlink = true;
     path = "/run/secrets/rclone.conf";
     file = ./encrypt/rclone.conf.age;
-    owner = "plex";
+    owner = "jellyfin";
     group = "${group}";
   };
 
   users.users."${user}".extraGroups = [ "${group}" ];
 
-  users.groups = {
-    share.gid = 1001;
-  };
+  users.groups.share.gid = 1001;
 
-  services.plex = {
+  services.jellyfin = {
     enable = true;
     openFirewall = false;
     group = "${group}";
@@ -29,7 +29,7 @@ in {
     stopIfChanged = false;
     serviceConfig = {
       Type = "simple";
-      User = "plex";
+      User = "jellyfin";
       Group = "${group}";
       ExecStart = ''
         ${pkgs.rclone}/bin/rclone \

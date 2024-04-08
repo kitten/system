@@ -12,10 +12,6 @@
           redir * https://cola.fable-pancake.ts.net:8123
         }
 
-        handle_path /plex {
-          redir * https://cola.fable-pancake.ts.net:32400
-        }
-
         handle_path /vault {
           redir * /vault/
         }
@@ -26,6 +22,14 @@
           reverse_proxy localhost:8000 {
             header_up X-Real-IP {remote_host}
           }
+        }
+
+        handle_path /media {
+          redir * /media/
+        }
+
+        reverse_proxy /media/* localhost:8096 {
+          header_up X-Real-IP {remote_host}
         }
 
         handle_path /files {

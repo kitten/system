@@ -3,6 +3,7 @@
 {
   imports = [
     nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
+    nixos-hardware.nixosModules.common-gpu-intel
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-pc
     (modulesPath + "/installer/scan/not-detected.nix")
