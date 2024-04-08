@@ -1,9 +1,7 @@
 { pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/services/mysql.nix
-  ];
+  imports = [ ];
 
   system.stateVersion = 4;
   # Disable path verification of $NIX_PATH
