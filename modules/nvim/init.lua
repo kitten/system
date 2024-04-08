@@ -397,11 +397,6 @@ local function lsp_setup(server, opts)
   })
 end
 
-lsp_setup('astro', {
-  cmd = { nix_bins.astrols, "--stdio" },
-  flags = { debounce_text_changes = 200 },
-})
-
 lsp_setup('tsserver', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },

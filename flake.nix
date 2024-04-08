@@ -59,7 +59,6 @@
       inputs.nvim-plugins.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system})
-          astro-language-server
           typescript-language-server
           vscode-langservers-extracted;
       })

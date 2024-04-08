@@ -12,7 +12,6 @@ let
       cssls = '${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server',
       htmlls = '${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server',
       jsonls = '${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server',
-      astrols = '${pkgs.astro-language-server}/bin/astro-language-server',
       bunx = '${pkgs.bun}/bin/bunx',
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
