@@ -1,11 +1,13 @@
-{ ... }:
+{ config, ... }:
 
 {
+  services.tailscale.permitCertUid = config.services.caddy.user;
+
   services.caddy = {
-    enable = true;
+    enable = config.services.tailscale.enable;
     email = "phil@kitten.sh";
     extraConfig = ''
-      cola.fable-pancake.ts.net {
+      (network_paths) {
         handle_path /home {
           redir * https://cola.fable-pancake.ts.net:8123
         }
@@ -43,6 +45,15 @@
             header @file +Content-Disposition attachment
           }
         }
+      }
+
+      cola.fable-pancake.ts.net {
+        tls /var/lib/caddy/certificates/cola.fable-pancake.ts.net.crt /var/lib/caddy/certificates/cola.fable-pancake.ts.net.key
+        import network_paths
+      }
+
+      :80 {
+        import network_paths
       }
     '';
   };

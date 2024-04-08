@@ -1,9 +1,12 @@
 { ... }:
 
 {
+  networking.firewall.checkReversePath = "loose";
+
   networking.nftables = {
     enable = true;
     checkRuleset = false;
+    flushRuleset = true;
 
     tables.filter = {
       family = "inet";
