@@ -58,6 +58,7 @@
       bogus-nxdomain = "64.94.110.11";
 
       address = [
+        "/cola.fable-pancake.ts.net/10.0.0.1"
         "/time.apple.com/10.0.0.1"
         "/time1.apple.com/10.0.0.1"
         "/time2.apple.com/10.0.0.1"

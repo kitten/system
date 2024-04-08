@@ -1,6 +1,9 @@
-{ ... }:
+{ config, lib, ... }:
 
-{
+let
+  trustedInterfaces =
+    lib.strings.concatMapStringsSep ", " lib.strings.escapeNixIdentifier config.networking.firewall.trustedInterfaces;
+in {
   networking.firewall.checkReversePath = "loose";
 
   networking.nftables = {
@@ -13,21 +16,21 @@
       content = ''
         chain prerouting {
           type nat hook prerouting priority 0; policy accept;
-          iifname intern0 udp dport 53 redirect to 53
-          iifname intern0 udp dport 123 redirect to 123
+          iifname { ${trustedInterfaces} } udp dport 53 redirect to 53
+          iifname { ${trustedInterfaces} } udp dport 123 redirect to 123
         }
 
         chain postrouting {
           type nat hook postrouting priority 0; policy accept;
-          oifname extern0 masquerade
+          oifname != { ${trustedInterfaces} } masquerade
         }
 
         chain input {
           type filter hook input priority 0;
           ct state { established, related } accept
           ct state invalid drop
-          iifname { lo, intern0, tailscale0 } accept
-          iifname { intern0, tailscale0 } pkttype { broadcast, multicast } accept
+          iifname { ${trustedInterfaces} } accept
+          iifname { ${trustedInterfaces} } pkttype { broadcast, multicast } accept
           tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
           tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
           tcp flags & (fin|syn|rst|psh|ack|urg) == 0x0 counter drop
@@ -48,8 +51,8 @@
           ip6 nexthdr ipv6-icmp accept
           udp dport dhcpv6-client accept
           iifname intern0 oifname != intern0 ether saddr == ec:e5:12:1d:23:40 drop # drop tado internet traffic
-          iifname { lo, intern0, tailscale0 } accept
-          oifname { intern0, tailscale0 } ct state { established, related } accept
+          iifname { ${trustedInterfaces} } accept
+          oifname { ${trustedInterfaces} } ct state { established, related } accept
           ct state invalid drop
         }
 
@@ -68,7 +71,7 @@
       content = ''
         chain input {
           type filter hook input priority 0; policy accept;
-          iifname extern0 limit rate 1/second burst 2 packets accept
+          iifname != { ${trustedInterfaces} } limit rate 1/second burst 2 packets accept
         }
 
         chain output {
@@ -80,13 +83,13 @@
     tables.tagging = {
       family = "netdev";
       content = ''
-        chain wan {
-          type filter hook ingress device extern0 priority -149; policy accept;
+        chain lan {
+          type filter hook ingress device intern0 priority -150; policy accept;
           jump tags
         }
 
-        chain lan {
-          type filter hook ingress device intern0 priority -149; policy accept;
+        chain wan {
+          type filter hook ingress device extern0 priority -149; policy accept;
           jump tags
         }
 

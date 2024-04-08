@@ -4,6 +4,7 @@
   networking = {
     domain = "fable-pancake.ts.net";
     firewall.trustedInterfaces = [ "tailscale0" ];
+    hosts."10.0.0.1" = [ "cola.fable-pancake.ts.net" "cola" ];
   };
 
   age.secrets."tailscale" = {
