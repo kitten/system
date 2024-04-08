@@ -81,5 +81,11 @@
       system = "x86_64-linux";
       hostname = "pepper";
     };
+
+    nixosConfigurations."cola" = mkSystem {
+      inherit overlays;
+      system = "x86_64-linux";
+      hostname = "cola";
+    };
   };
 }
