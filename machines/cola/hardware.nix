@@ -8,6 +8,8 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  networking.hostId = "af93534a";
+
   boot = {
     initrd = {
       availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "uas" "sd_mod" ];

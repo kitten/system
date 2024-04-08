@@ -1,8 +1,6 @@
 { config, ... } @ inputs:
 
-let
-  inherit (import ../../lib/secrets.nix inputs) readSecretFileContents;
-in {
+{
   age.secrets."npmrc" = {
     symlink = true;
     path = "${config.home.homeDirectory}/.npmrc";

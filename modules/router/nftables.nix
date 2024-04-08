@@ -23,8 +23,8 @@
           type filter hook input priority 0;
           ct state { established, related } accept
           ct state invalid drop
-          iifname { lo, intern0 } accept
-          iifname { intern0 } pkttype { broadcast, multicast } accept
+          iifname { lo, intern0, tailscale0 } accept
+          iifname { intern0, tailscale0 } pkttype { broadcast, multicast } accept
           tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
           tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
           tcp flags & (fin|syn|rst|psh|ack|urg) == 0x0 counter drop
@@ -45,8 +45,8 @@
           ip6 nexthdr ipv6-icmp accept
           udp dport dhcpv6-client accept
           iifname intern0 oifname != intern0 ether saddr == ec:e5:12:1d:23:40 drop # drop tado internet traffic
-          iifname { lo, intern0 } accept
-          oifname { intern0 } ct state { established, related } accept
+          iifname { lo, intern0, tailscale0 } accept
+          oifname { intern0, tailscale0 } ct state { established, related } accept
           ct state invalid drop
         }
 

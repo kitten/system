@@ -5,7 +5,9 @@
     ./hardware.nix
     ./kernel.nix
     ./network.nix
+    ./zfs.nix
     ../../modules/router
+    ../../modules/server
   ];
 
   users.users."${user}" = {

@@ -44,7 +44,7 @@ in helpers.linuxAttrs {
       systemd.enable = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
     kernelParams = [
       "quiet"

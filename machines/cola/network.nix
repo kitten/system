@@ -1,6 +1,8 @@
 { ... }:
 
 {
+  services.irqbalance.enable = true;
+
   networking = {
     useNetworkd = true;
     nameservers = [ "127.0.0.1" ];
