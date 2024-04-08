@@ -60,8 +60,6 @@
     { device = "/dev/disk/by-label/NIXSWAP"; }
   ];
 
-  networking.useDHCP = lib.mkDefault true;
-
   # set host and allow unfree
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   nixpkgs.config.allowUnfree = true;

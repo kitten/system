@@ -3,6 +3,9 @@
 {
   imports = [
     ./hardware.nix
+    ./kernel.nix
+    ./network.nix
+    ../../modules/router
   ];
 
   users.users."${user}" = {
