@@ -44,7 +44,7 @@ in helpers.linuxAttrs {
       systemd.enable = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
     kernelParams = [
       "quiet"
@@ -61,7 +61,6 @@ in helpers.linuxAttrs {
       "vm.vfs_cache_pressure" = 10;
       "vm.dirty_ratio" = 2;
       "vm.dirty_background_ratio" = 5;
-      "vm.max_map_count" = 262144;
     };
   };
 
