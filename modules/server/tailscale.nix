@@ -20,4 +20,6 @@
     extraDaemonFlags = [ "--no-logs-no-support" ];
     authKeyFile = "/run/secrets/tailscale";
   };
+
+  systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
 }
