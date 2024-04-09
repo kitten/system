@@ -7,7 +7,6 @@ wezterm.on("gui-startup", function(cmd)
 end)
 
 return {
-  term = "wezterm",
   default_prog = { zsh_bin, "-l" },
 
   mux_env_remove = {

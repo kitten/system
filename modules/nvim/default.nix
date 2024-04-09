@@ -29,6 +29,7 @@ in {
     (neovim.override {
       viAlias = true;
       vimAlias = true;
+      extraMakeWrapperArgs = "--set TERM wezterm";
       configure = {
         customRC = initContents;
         packages.myVimPackage = with pkgs.nvim-plugins; {
