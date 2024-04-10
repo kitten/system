@@ -1,4 +1,4 @@
-{ helpers, ... }:
+{ lib, user, helpers, ... }:
 
 helpers.linuxAttrs {
   imports = [

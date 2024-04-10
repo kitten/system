@@ -1,11 +1,6 @@
 { config, lib, pkgs, nixos-hardware, lanzaboote, modulesPath, ... }:
 
-let
-  luksUUID = "8f9546b5-56bb-42d3-a230-e81aef2faba5";
-  rootUUID = "1e92c1b5-06de-4d3e-a381-782a9f34556d";
-  swapUUID = "477573ca-2f72-402e-986e-1ac8de6082c7";
-  bootUUID = "AD1D-0BB6";
-in {
+{
   imports = [
     nixos-hardware.nixosModules.framework-13-7040-amd
     lanzaboote.nixosModules.lanzaboote
@@ -19,7 +14,7 @@ in {
       availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
       kernelModules = [ "dm-snapshot" ];
       luks.devices."enc" = {
-        device = "/dev/disk/by-uuid/${luksUUID}";
+        device = "/dev/disk/by-label/NIXCRYPT";
         preLVM = true;
       };
     };
@@ -38,40 +33,40 @@ in {
       configurationLimit = 3;
     };
 
-    resumeDevice = "/dev/disk/by-uuid/${swapUUID}";
+    resumeDevice = "/dev/disk/by-label/NIXSWAP";
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/${rootUUID}";
+    device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
     options = [ "subvol=root" ];
   };
 
   fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/${rootUUID}";
+    device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
     options = [ "subvol=home" ];
   };
 
   fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/${rootUUID}";
+    device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
     options = [ "subvol=nix" ];
   };
 
   fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/${rootUUID}";
+    device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
     options = [ "subvol=log" ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/${bootUUID}";
+    device = "/dev/disk/by-label/NIXBOOT";
     fsType = "vfat";
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-uuid/${swapUUID}"; }
+    { device = "/dev/disk/by-label/NIXSWAP"; }
   ];
 
   # prefer suspend-then-hibernate
