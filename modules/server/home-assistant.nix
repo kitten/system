@@ -10,7 +10,6 @@
   };
 
   virtualisation.oci-containers = {
-    backend = "podman";
     containers.hass = rec {
       autoStart = true;
       volumes = [

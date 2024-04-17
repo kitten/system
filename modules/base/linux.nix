@@ -2,7 +2,7 @@
 
 let
   inherit (import ../../lib/colors.nix inputs) hex;
-  inherit (lib) mkDefault;
+  inherit (lib) mkDefault mkForce;
 in helpers.linuxAttrs {
   environment.systemPackages = [ pkgs.sbctl ];
 
@@ -89,4 +89,6 @@ in helpers.linuxAttrs {
   };
 
   services.dbus.enable = true;
+
+  virtualisation.oci-containers.backend = mkForce "podman";
 }

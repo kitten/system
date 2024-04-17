@@ -20,8 +20,6 @@
       upstream_recursive_servers = [
         { address_data = "1.1.1.1"; tls_auth_name = "cloudflare-dns.com"; }
         { address_data = "1.0.0.1"; tls_auth_name = "cloudflare-dns.com"; }
-        { address_data = "8.8.8.8"; tls_auth_name = "dns.google"; }
-        { address_data = "8.8.4.4"; tls_auth_name = "dns.google"; }
       ];
     };
   };

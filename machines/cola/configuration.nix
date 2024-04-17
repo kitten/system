@@ -8,6 +8,7 @@
     ./zfs.nix
     ../../modules/router
     ../../modules/server
+    ../../modules/games
   ];
 
   users.users."${user}" = {

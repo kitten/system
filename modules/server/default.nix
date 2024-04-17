@@ -9,5 +9,6 @@ helpers.linuxAttrs {
     ./caddy.nix
     ./jellyfin.nix
     ./home-assistant.nix
+    ./podman.nix
   ];
 }
