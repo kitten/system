@@ -4,6 +4,8 @@ let
   ];
 in
 {
+  "./modules/base/encrypt/nix-access-tokens.conf.age".publicKeys = keys;
+
   "./modules/desktop/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
   "./modules/desktop/fonts/encrypt/DankMono-Bold.otf.age".publicKeys = keys;
   "./modules/desktop/fonts/encrypt/DankMono-Italic.otf.age".publicKeys = keys;

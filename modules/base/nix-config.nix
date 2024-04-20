@@ -1,6 +1,8 @@
-{ pkgs, nixpkgs, helpers, ... }:
+{ pkgs, nixpkgs, helpers, config, ... }:
 
 {
+  age.secrets."nix-access-tokens.conf".file = ./encrypt/nix-access-tokens.conf.age;
+
   nixpkgs.config.allowUnfree = true;
 
   nix = {
@@ -36,5 +38,9 @@
     } // helpers.darwinAttrs {
       interval = { Weekday = 0; Hour = 0; Minute = 0; };
     };
+
+    extraOptions = ''
+      !include ${config.age.secrets."nix-access-tokens.conf".path}
+    '';
   };
 }
