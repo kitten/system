@@ -3,25 +3,18 @@
 {
   boot.plymouth.enable = true;
 
-  services.xserver = {
-    enable = true;
-    desktopManager = {
-      xterm.enable = false;
-      plasma6.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
+  services.displayManager = {
+    defaultSession = "plasma";
+    autoLogin = {
+      inherit user;
+      enable = true;
     };
-    displayManager = {
-      defaultSession = "plasma";
-      autoLogin = {
-        inherit user;
-        enable = true;
-      };
-      sddm = {
-        enable = true;
-        enableHidpi = true;
-        wayland.enable = true;
-      };
-      lightdm.enable = lib.mkForce false;
-      gdm.enable = lib.mkForce false;
+    sddm = {
+      enable = true;
+      enableHidpi = true;
+      wayland.enable = true;
     };
   };
 
