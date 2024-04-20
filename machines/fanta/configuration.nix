@@ -72,5 +72,8 @@
     dive
     caddy
     flyctl
+
+    jq
+    yq
   ];
 }
