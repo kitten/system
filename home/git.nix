@@ -1,7 +1,10 @@
-{ pkgs, lib, ... } @ inputs:
+{ pkgs, lib, config, ... } @ inputs:
 
 {
-  home.packages = [ pkgs.git-crypt ];
+  home.packages = [
+    pkgs.git-crypt
+    pkgs.git-get
+  ];
 
   programs.git = {
     enable = true;
@@ -82,6 +85,12 @@
       fetch = {
         prune = true;
         prunetags = true;
+      };
+
+      gitget = {
+        root = "${config.home.homeDirectory}/git";
+        host = "github.com";
+        skip-host = true;
       };
 
       core.autocrlf = false;

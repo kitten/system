@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.zsh = {
@@ -49,6 +49,13 @@
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    enableNushellIntegration = lib.mkDefault false;
+    enableFishIntegration = lib.mkDefault false;
   };
 
   programs.starship = {
