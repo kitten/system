@@ -362,17 +362,25 @@ local function lsp_on_attach(client, buf)
   end
 end
 
-local function lsp_capabilities()
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local function lsp_capabilities(capabilities)
+  local capabilities = vim.tbl_deep_extend(
+    "force",
+    {},
+    vim.lsp.protocol.make_client_capabilities(),
+    require('cmp_nvim_lsp').default_capabilities() or {},
+    capabilities or {}
+  )
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
+  capabilities.workspace.workspaceFolders = true
   return capabilities
 end
 
 local function lsp_setup(server, opts)
   local config = lsp[server]
   opts.autostart = false
-  opts.capabilities = lsp_capabilities()
+  opts.capabilities = lsp_capabilities(opts.capabilities)
   opts.on_attach = lsp_on_attach
   config.setup(opts)
 
@@ -433,7 +441,7 @@ lsp_setup('eslint', {
       { rule = "quotes", severity = "off" },
       { rule = "max-len", severity = "off" },
       { rule = "no-tabs", severity = "off" },
-    }
+    },
   },
 })
 
