@@ -38,6 +38,9 @@ let
     NormalFloat.bg = element;
     TreesitterContext.bg = gutter;
 
+    WinSeparator.fg = split;
+    FloatBorder.link = "WinSeparator";
+
     Diff = {
       Add.bg = gutter;
       Change.force = true;
@@ -95,7 +98,8 @@ let
     };
 
     Telescope = {
-      Border.fg = split;
+      Normal = { fg = white; bg = black; };
+      Border = { fg = split; bg = black; };
       Matching = { fg = blue; bold = true; };
     };
 
@@ -105,7 +109,7 @@ let
     String.fg = green;
     Character.fg = green;
     Number.fg = orange;
-    Float.fg = orange;
+    Float.link = "Number";
     Identifier.fg = white;
     Function.fg = blue;
     Statement.fg = magenta;
@@ -138,6 +142,40 @@ let
 
     Boolean.link = "Conditional";
 
+    # Built-in Treesitter classes
+    "@constant".link = "Constant";
+    "@constant.builtin".link = "Special";
+    "@constant.macro".link = "Define";
+    "@keyword.directive".link = "Define";
+    "@string".link = "String";
+    "@string.escape".link = "SpecialChar";
+    "@string.special".link = "SpecialChar";
+    "@number".link = "Number";
+    "@number.float".link = "Float";
+    "@function".link = "Function";
+    "@function.builtin".link = "Special";
+    "@function.macro".link = "Macro";
+    "@function.method".link = "Function";
+    "@function.parameter".link = "Function";
+    "@variable.parameter".link = "Identifier";
+    "@variable.parameter.builtin".link = "Special";
+    "@attribute".link = "Macro";
+    "@attribute.builtin".link = "Special";
+    "@keyword.type".link = "Structure";
+    "@label".link = "Label";
+    "@operator".link = "Operator";
+    "@keyword".link = "Keyword";
+    "@variable".link = "Identifier";
+    "@conditional".link = "Conditional";
+    "@include".link = "Include";
+    "@boolean".link = "Boolean";
+    "@type".link = "Type";
+    "@type.definition".link = "Typedef";
+    "@module".link = "Identifier";
+    "@keyword.debug".link = "Debug";
+    "@tag".link = "Tag";
+    "@tag.builtin".link = "Special";
+
     # Treesitter classes
     "@comment.todo" = { fg = brightBlue; underline = true; };
     "@comment.error" = { fg = brightRed; underline = true; };
@@ -147,6 +185,7 @@ let
     "@markup.list".link = "@operator";
     "@markup.strong".bold = true;
     "@markup.strikethrough".strikethrough = true;
+    "@markup.underline".link = "Underlined";
     "@markup.italic".italic = true;
     "@markup.link.label".fg = cyan;
     "@markup.link.url" = { fg = brightBlue; underline = true; };
@@ -165,6 +204,21 @@ let
     "@variable.member".link = "@property";
     "@variable.builtin".link = "Special";
     "@type.builtin".link = "Special";
+
+    # Built-in LSP classes
+    "@lsp.type.class".link = "Structure";
+    "@lsp.type.comment".link = "Comment";
+    "@lsp.type.decorator".link = "Function";
+    "@lsp.type.enum".link = "Structure";
+    "@lsp.type.enumMember".link = "Constant";
+    "@lsp.type.function".link = "Function";
+    "@lsp.type.interface".link = "Structure";
+    "@lsp.type.macro".link = "Macro";
+    "@lsp.type.method".link = "Function";
+    "@lsp.type.namespace".link = "Structure";
+    "@lsp.type.struct".link = "Structure";
+    "@lsp.type.type".link = "Type";
+    "@lsp.type.variable".link = "Identifier";
 
     # LSP classes
     "@lsp.type.typeParameter".link = "@variable";
