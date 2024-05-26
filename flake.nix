@@ -44,6 +44,14 @@
       };
     };
 
+    verdaccio = {
+      url = "github:kitten/verdaccio.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
     nvim-plugins = {
       url = "github:kitten/system-nvim-plugins.nix";
       inputs = {
@@ -58,6 +66,8 @@
     overlays = [
       inputs.nvim-plugins.overlays.default
       (self: super: {
+        inherit (inputs.verdaccio.packages.${self.system})
+          verdaccio;
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
