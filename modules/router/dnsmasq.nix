@@ -21,7 +21,7 @@
       # never read nameservers from /etc/resolv.conf
       no-resolv = true;
 
-      cache-size = 1500;
+      cache-size = 5000;
       no-negcache = true;
 
       expand-hosts = true;
