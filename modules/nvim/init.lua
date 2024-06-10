@@ -243,11 +243,11 @@ require('telescope').setup {
     selection_caret = '→ ',
     mappings = {
       i = {
-        ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble,
+        ['<c-t>'] = require('trouble.sources.telescope').open,
         ['<c-c>'] = require('telescope.actions').close,
       },
       n = {
-        ['<c-t>'] = require('trouble.providers.telescope').open_with_trouble,
+        ['<c-t>'] = require('trouble.sources.telescope').open,
         ['<esc>'] = require('telescope.actions').close,
       },
     },
