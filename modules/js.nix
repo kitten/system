@@ -8,8 +8,8 @@
 
   environment.systemPackages = (with pkgs; [
     bun
-    corepack_20
-    nodejs_20
+    corepack_22
+    nodejs_22
   ]);
 
   environment.interactiveShellInit = ''
