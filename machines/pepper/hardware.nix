@@ -96,7 +96,7 @@
   hardware.bluetooth.enable = true;
 
   # enable media acceleration
-  hardware.opengl.enable = true;
+  hardware.graphics.enable = true;
 
   # set regulatory domain for wireless chip
   hardware.wirelessRegulatoryDatabase = true;

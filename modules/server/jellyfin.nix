@@ -3,7 +3,7 @@
 let
   group = "share";
 in {
-  hardware.opengl.enable = lib.mkDefault true;
+  hardware.graphics.enable = lib.mkDefault true;
 
   age.secrets."rclone.conf" = {
     symlink = true;
