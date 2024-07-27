@@ -52,7 +52,6 @@
       }
 
       cola.fable-pancake.ts.net {
-        tls /var/lib/caddy/certificates/cola.fable-pancake.ts.net.crt /var/lib/caddy/certificates/cola.fable-pancake.ts.net.key
         import network_paths
       }
 
