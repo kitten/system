@@ -4,6 +4,7 @@
   environment.variables = {
     PNPM_HOME = "$HOME/.local/share/pnpm";
     BUN_RUNTIME_TRANSPILER_CACHE_PATH = "$HOME/.cache/bun/install/cache/@t@";
+    COREPACK_ENABLE_AUTO_PIN = "0";
   };
 
   environment.systemPackages = (with pkgs; [
