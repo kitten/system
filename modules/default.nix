@@ -3,7 +3,7 @@
 {
   imports = [
     ./base
-    ./js.nix
+    ./development
     ./gpg.nix
     ./nvim
   ];
