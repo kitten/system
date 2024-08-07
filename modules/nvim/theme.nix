@@ -72,6 +72,8 @@ let
       Add.fg = green;
       Change.fg = blue;
       Delete.fg = brightRed;
+      Changedelete.link = "GitSignsChange";
+      Topdelete.link = "GitSignsDelete";
     };
 
     Diagnostic = {

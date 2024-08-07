@@ -210,7 +210,10 @@ key.register({
 
 -- golden_size
 local function ignore_trouble_window()
-  if vim.api.nvim_buf_get_option(0, 'filetype') == 'Trouble' then
+  local ft = vim.api.nvim_buf_get_option(0, 'filetype')
+  if ft == 'Trouble' then
+    return 1
+  elseif ft == 'gitsigns-blame' then
     return 1
   end
 end
@@ -737,11 +740,11 @@ require('gitsigns').setup {
   word_diff  = false,
   current_line_blame = false,
   signs = {
-    add = { hl = 'GitSignsAdd', text = '│' },
-    change = { hl = 'GitSignsChange', text = '│' },
-    delete = { hl = 'GitSignsDelete', text = '' },
-    topdelete = { hl = 'GitSignsDelete', text = '' },
-    changedelete = { hl = 'GitSignsChange', text = '' },
+    add = { text = '│' },
+    change = { text = '│' },
+    delete = { text = '' },
+    topdelete = { text = '' },
+    changedelete = { text = '' },
   },
   preview_config = {
     border = 'none',
@@ -758,6 +761,7 @@ require('gitsigns').setup {
       ["[c"] = { actions.next_hunk, "Previous Git Hunk" },
       g = {
         b = { function() actions.blame_line({ full = true }) end, "Blame Line" },
+        B = { actions.blame, "Blame Buffer" },
         h = { function() actions.preview_hunk(true) end, "Show Git Hunk" },
         s = { actions.stage_hunk, "Stage Git Hunk" },
         S = { actions.undo_stage_hunk, "Unstage Git Hunk" },
