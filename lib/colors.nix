@@ -24,7 +24,7 @@ in rec {
     split = "2A2D46";
 
     # (ANSI: 0 Black) background colour
-    black = "0F1018";
+    black = "070D14";
     # (ANSI: 7 White) foreground colour, identifiers, variables
     white = "EDF0F2";
     # (ANSI: 1 Bright Black) ghost text / suggestion text
@@ -53,7 +53,7 @@ in rec {
     # (ANSI: 13 Bright Purple) operators, tags, properties
     pink = "F2B0C0";
     # (ANSI: 6 Cyan) types
-    aqua = "15C0CB";
+    aqua = "14B6C8";
     # (ANSI: 14 Bright Cyan) delimiters & labels
     cyan = "02B394";
   };
