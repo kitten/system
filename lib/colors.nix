@@ -19,7 +19,7 @@ in rec {
     # for selection / cursors
     cursor = "242738";
     # for overlays / large popups / hint / codelens UIs
-    element = "0F0E17";
+    element = "050B12";
     # for borders and thin lines, e.g. to separate panes
     split = "2A2D46";
 
