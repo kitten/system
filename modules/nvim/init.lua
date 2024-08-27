@@ -35,15 +35,13 @@ vim.o.breakindent = true
 -- default tab options
 vim.o.expandtab = true
 vim.o.tabstop = 2
+vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 
 -- tweak redraw timings
 vim.o.lazyredraw = true
 vim.o.updatetime = 500
 vim.o.timeoutlen = 500
-
--- show matching brackets
-vim.o.showmatch = true
 
 -- fold options
 vim.o.foldenable = true
@@ -69,6 +67,7 @@ vim.o.writebackup = false
 vim.o.swapfile = false
 
 -- disable matchparen
+vim.o.showmatch = false
 vim.g.loaded_matchparen = 1
 
 -- disable netrw
@@ -76,22 +75,38 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- no completion or startup messages
-vim.o.shortmess = vim.o.shortmess .. 'WcCI'
+vim.o.shortmess = vim.o.shortmess .. 'WcCIAa'
 
 -- line numbers
 vim.wo.number = true
 
 -- char options
-vim.opt.fillchars:append('vert:│,horiz:─,horizdown:┬,horizup:┴,verthoriz:┼,vertleft:┤,vertright:├')
-vim.o.listchars = 'tab: ,extends:…,precedes:…,nbsp:␣'
+vim.opt.fillchars = {
+  vert = '│',
+  diff = '╱',
+  horiz = '─',
+  horizup = '┴',
+  horizdown = '┬',
+  vertleft = '┤',
+  vertright = '├',
+  verthoriz = '┼',
+  eob = ' ',
+}
+vim.opt.listchars = {
+  nbsp = "␣",
+  extends = "»",
+  precedes = "«",
+  tab = " ",
+}
 vim.o.list = true
 
 -- splitting options
 vim.go.diffopt = 'filler,vertical,foldcolumn:0,closeoff,indent-heuristic,iwhite,algorithm:patience'
-vim.go.fillchars = 'eob: ,vert:│,diff:╱'
 vim.go.splitbelow = true
 vim.go.splitright = true
 vim.o.splitkeep = 'screen'
+vim.o.switchbuf = 'uselast'
+vim.o.previewheight = 5
 
 -- undo history
 local undodir = vim.fn.expand('$HOME') .. '/.cache/nvim/undo'
@@ -122,6 +137,25 @@ vim.o.winblend  = 5
 vim.o.backspace = 'indent,eol,start'
 vim.o.virtualedit = 'block' -- Allow going past the end of line in visual block mode
 vim.o.formatoptions = 'qjl1' -- Don't autoformat comments
+vim.o.synmaxcol = 300 -- Don't highlight long lines
+vim.o.path = '**' -- Use a recursive path (for :find)
+vim.o.gdefault = true -- Use //g for replacements by default
+
+-- wildmenu
+vim.opt.wildignore:append(
+  '*.png,*.jpg,*.jpeg,*.gif,*.wav,*.aiff,*.dll,*.pdb,*.mdb,*.so,*.swp,*.zip,*.gz,*.bz2,*.meta,*.svg,*.cache,*/.git/*'
+)
+vim.o.wildmenu = true
+vim.o.wildmode = 'longest,list,full'
+
+-- built-in ftplugins should not change my keybindings
+vim.g.no_plugin_maps = true
+vim.cmd.filetype({ args = { 'plugin', 'on' } })
+vim.cmd.filetype({ args = { 'plugin', 'indent', 'on' } })
+
+--- ripgrep
+vim.o.grepprg = nix_bins.ripgrep .. ' --vimgrep --no-heading --smart-case'
+vim.o.grepformat = "%f:%l:%c:%m,%f:%l:%m"
 
 -- unmap special keys
 local key_opt = { noremap = true, silent = true }
@@ -229,6 +263,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   pattern = "markdown",
   callback = function()
     vim.opt_local.wrap = true
+    vim.o.whichwrap = 'h,l'
     vim.opt_local.linebreak = true
     vim.opt_local.formatoptions = vim.opt_local.formatoptions + 'tcn12'
   end,
@@ -303,14 +338,17 @@ vim.fn.sign_define("DiagnosticSignInfo", { text = "○", texthl = "DiagnosticSig
 -- configure vim diagnostics
 vim.diagnostic.config({
   underline = true,
-  virtual_text = true,
   signs = true,
   update_in_insert = false,
   severity_sort = true,
+  virtual_text = {
+    severity = { min = vim.diagnostic.severity.W },
+    source = 'if_many',
+  },
   float = {
     show_header = true,
-    source = "if_many",
-    border = "rounded",
+    source = 'if_many',
+    border = 'rounded',
     focusable = false,
     severity_sort = true,
   },
@@ -327,6 +365,9 @@ vim.filetype.add({
   extension = {
     astro = 'astro',
     envrc = 'bash',
+  },
+  pattern = {
+    ['.*/%.vscode/.*%.json'] = 'json5',
   },
 })
 
