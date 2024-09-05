@@ -131,7 +131,7 @@ vim.wo.cursorline = true
 vim.cmd('colorscheme theme')
 
 -- misc. options
-vim.o.completeopt = 'menuone,noinsert,noselect'
+vim.o.completeopt = 'menuone,noinsert,noselect,popup'
 vim.o.pumheight = 10
 vim.o.winblend  = 5
 vim.o.backspace = 'indent,eol,start'
@@ -450,7 +450,7 @@ local function lsp_setup(server, opts)
   })
 end
 
-lsp_setup('tsserver', {
+lsp_setup('ts_ls', {
   cmd = { nix_bins.tsserver, "--stdio" },
   flags = { debounce_text_changes = 200 },
   single_file_support = false,
@@ -650,9 +650,8 @@ vim.api.nvim_exec([[
   set foldtext=FoldText()
 ]], false)
 
--- completion
+-- autocompletion
 local cmp = require('cmp')
-local snippy = require('snippy')
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -695,8 +694,6 @@ cmp.setup {
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif snippy.can_expand_or_advance() then
-        snippy.expand_or_advance()
       elseif has_words_before() then
         cmp.complete()
       else
@@ -706,8 +703,6 @@ cmp.setup {
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif snippy.can_jump(-1) then
-        snippy.previous()
       else
         fallback()
       end
@@ -715,21 +710,25 @@ cmp.setup {
   }),
   snippet = {
     expand = function(args)
-      snippy.expand_snippet(args.body)
+      vim.snippet.expand(args.body)
     end,
   },
   completion = {
     keyword_length = 3
+  },
+  view = {
+    entries = "native",
   },
   experimental = {
     ghost_text = {
       hl_group = 'GhostText',
     },
   },
-  sources = cmp.config.sources(
-    {{ name = 'nvim_lsp' }, { name = 'nvim_lsp_signature_help' }, { name = 'snippy' }},
-    {{ name = 'treesitter' }}
-  ),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'nvim_lsp' },
+    { name = 'treesitter' },
+  }),
   formatting = {
     format = require('lspkind').cmp_format(),
   },
@@ -737,40 +736,6 @@ cmp.setup {
 
 cmp.setup.filetype('gitcommit', {
   enabled = false,
-})
-
-cmp.setup.cmdline('/', {
-  enabled = function()
-    return not vim.b[vim.api.nvim_get_current_buf()].big
-  end,
-  mapping = cmp.mapping.preset.cmdline({
-    ['<CR>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-      end
-      fallback()
-    end, {"i", "c"})
-  }),
-  sources = cmp.config.sources(
-    {{ name = 'nvim_lsp_document_symbol' }},
-    {{ name = 'cmdline_history' }},
-    {{ name = 'treesitter' }, { name = 'buffer', keyword_length = 3 }}
-  ),
-})
-
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline({
-    ['<CR>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-      end
-      fallback()
-    end, {"i", "c"})
-  }),
-  sources = cmp.config.sources(
-    {{ name = 'path' }},
-    {{ name = 'cmdline' }, { name = 'cmdline_history' }}
-  ),
 })
 
 -- gitsigns

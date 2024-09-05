@@ -19,6 +19,55 @@ let
 
     hardline_colors = ${mkVimHardlineColors colors}
   '' + (builtins.readFile ./init.lua) + "\nEOF";
+
+  nvim-treesitter = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
+    p.astro p.typescript p.tsx p.git_rebase p.gitcommit p.gitignore
+    p.gitattributes p.graphql p.regex p.json p.json5 p.javascript
+    p.markdown p.markdown_inline p.terraform p.svelte p.prisma
+    p.yaml p.vue p.vim p.lua p.make p.jsdoc p.comment p.css
+    p.sql p.rust p.html p.bash p.c p.nix p.zig p.yuck p.go
+  ])).overrideAttrs (_: {
+    src = pkgs.nvim-plugins.nvim-treesitter;
+  });
+
+  neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
+    withPython3 = true;
+    viAlias = true;
+    vimAlias = true;
+    extraMakeWrapperArgs = "--set TERM wezterm";
+    customRC = initContents;
+    plugins = with pkgs.nvim-plugins; [
+      my-theme
+      vim-repeat
+      vim-fugitive
+      hardline-nvim
+      gitsigns-nvim
+      nvim-lspconfig
+      lspkind-nvim
+      vim-golden-size
+      lir-nvim
+      popup-nvim
+      trouble-nvim
+      dressing-nvim
+      which-key-nvim
+
+      nvim-cmp
+      nvim-cmp-lsp
+      nvim-cmp-lsp-signature-help
+      nvim-cmp-treesitter
+
+      plenary-nvim
+      telescope-nvim
+      telescope-zf-native-nvim
+
+      nvim-treesitter
+      nvim-treesitter-refactor
+      nvim-treesitter-textobjects
+    ];
+  };
+
+  neovimPkg = pkgs.neovim-unwrapped;
+  neovim = pkgs.wrapNeovimUnstable neovimPkg neovimConfig;
 in {
   environment.variables = { EDITOR = "vim"; };
 
@@ -26,55 +75,6 @@ in {
     ripgrep
     fd
     bat
-    (neovim.override {
-      viAlias = true;
-      vimAlias = true;
-      extraMakeWrapperArgs = "--set TERM wezterm";
-      configure = {
-        customRC = initContents;
-        packages.myVimPackage = with pkgs.nvim-plugins; {
-          start = [
-            my-theme
-            vim-repeat
-            vim-fugitive
-            hardline-nvim
-            gitsigns-nvim
-            nvim-lspconfig
-            lspkind-nvim
-            vim-golden-size
-            lir-nvim
-            popup-nvim
-            trouble-nvim
-            dressing-nvim
-            which-key-nvim
-
-            nvim-cmp
-            nvim-cmp-lsp
-            nvim-cmp-lsp-document-symbol
-            nvim-cmp-lsp-signature-help
-            nvim-cmp-treesitter
-            nvim-cmp-path
-            nvim-cmp-cmdline
-            nvim-cmp-snippy
-            nvim-snippy
-
-            nvim-treesitter-refactor
-            nvim-treesitter-textobjects
-
-            plenary-nvim
-            telescope-nvim
-            telescope-zf-native-nvim
-
-            (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
-              p.astro p.typescript p.tsx p.git_rebase p.gitcommit p.gitignore
-              p.gitattributes p.graphql p.regex p.json p.json5 p.javascript
-              p.markdown p.markdown_inline p.terraform p.svelte p.prisma
-              p.yaml p.vue p.vim p.lua p.make p.jsdoc p.comment p.css
-              p.sql p.rust p.html p.bash p.c p.nix p.zig p.yuck p.go
-            ]))
-          ];
-        };
-      };
-    })
+    neovim
   ];
 }
