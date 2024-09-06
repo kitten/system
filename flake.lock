@@ -497,6 +497,7 @@
         "nvim-treesitter": "nvim-treesitter",
         "nvim-treesitter-refactor": "nvim-treesitter-refactor",
         "nvim-treesitter-textobjects": "nvim-treesitter-textobjects",
+        "oil-nvim": "oil-nvim",
         "plenary-nvim": "plenary-nvim",
         "popup-nvim": "popup-nvim",
         "telescope-nvim": "telescope-nvim",
@@ -508,11 +509,11 @@
         "which-key-nvim": "which-key-nvim"
       },
       "locked": {
-        "lastModified": 1725580431,
-        "narHash": "sha256-G6jALJexW85L8lAl/tvsp9lFl60kjf+on7ri7F+0qYo=",
+        "lastModified": 1725580703,
+        "narHash": "sha256-nSgTVm3H7mjJvcldheROoP2Eg9KwHiUOo8zFKEyiXAQ=",
         "owner": "kitten",
         "repo": "system-nvim-plugins.nix",
-        "rev": "e5efec8235b20cf92dc06301bf2fe34ef1eee3b5",
+        "rev": "cdce266713971844cf5e25a1219f3e566a26e026",
         "type": "github"
       },
       "original": {
@@ -566,6 +567,22 @@
       "original": {
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter-textobjects",
+        "type": "github"
+      }
+    },
+    "oil-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725065409,
+        "narHash": "sha256-vBQA+IhqakMmAVQrAZbvJkN9wLGqJ3m0EjoUi4uI9MA=",
+        "owner": "stevearc",
+        "repo": "oil.nvim",
+        "rev": "1fe476daf0b3c108cb8ee1fc1226cc282fa2c9c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stevearc",
+        "repo": "oil.nvim",
         "type": "github"
       }
     },

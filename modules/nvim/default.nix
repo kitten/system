@@ -45,11 +45,11 @@ let
       nvim-lspconfig
       lspkind-nvim
       vim-golden-size
-      lir-nvim
       popup-nvim
       trouble-nvim
       dressing-nvim
       which-key-nvim
+      oil-nvim
 
       nvim-cmp
       nvim-cmp-lsp

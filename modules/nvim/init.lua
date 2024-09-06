@@ -230,16 +230,10 @@ key.register({
   -- fold controls
   ["<bar>"] = { "<cmd>normal zc<cr>", "Close Fold" },
   ["<bslash>"] = { "<cmd>normal za<cr>", "Open Fold" },
-  -- lir
-  ["-"] = { "<cmd>e %:p:h<cr>", "Open File Explorer" },
-
+  -- file explorer
+  ["-"] = { require('oil').open, "Open File Explorer" },
+  -- highlights
   ["<C-e>"] = { function() print(vim.inspect(vim.treesitter.get_captures_at_cursor(0))) end, "Output TS capture" },
-  ["<C-S-e>"] = {
-    function() vim.cmd [[
-      echo synIDattr(synID(line('.'), col('.'), 1), 'name') . ' -> ' . synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
-    ]] end,
-    "Output Hi capture"
-  },
 })
 
 -- golden_size
@@ -585,30 +579,54 @@ require('lspkind').init {
   preset = 'codicons',
 }
 
--- lir settings
-local lir_actions = require('lir.actions')
-require('lir').setup {
-  show_hidden_files = false,
-  ignore = { ".DS_Store" },
-  devicons_enable = false,
-  hide_cursor = true,
-  mappings = {
-    ['l'] = lir_actions.edit,
-    ['<cr>'] = lir_actions.edit,
-    ['h'] = lir_actions.up,
-    ['-'] = lir_actions.up,
-    ['<esc>'] = lir_actions.quit,
-    ['<c-c>'] = lir_actions.quit,
-    ['@'] = lir_actions.cd,
-    ['.'] = lir_actions.toggle_show_hidden,
+require("oil").setup({
+  default_file_explorer = true,
+  delete_to_trash = false,
+  skip_confirm_for_simple_edits = true,
+  prompt_save_on_select_new_entry = true,
+  cleanup_delay_ms = 2000,
+  lsp_file_methods = {
+    timeout_ms = 1000,
+    autosave_changes = false,
   },
-  on_init = function()
-    -- hide statusline for lir
-    vim.api.nvim_exec([[
-      let &l:statusline='%{getline(line("w$")+1)}'
-    ]], false)
-  end,
-}
+  constrain_cursor = 'editable',
+  watch_for_changes = false,
+  use_default_keymaps = true,
+  view_options = {
+    show_hidden = false,
+    is_hidden_file = function(name, bufnr)
+      return vim.startswith(name, '.')
+    end,
+    is_always_hidden = function(name, bufnr)
+      return name == '.DS_Store'
+    end,
+    natural_order = true,
+    case_insensitive = true,
+    sort = {
+      { 'type', 'asc' },
+      { 'name', 'asc' },
+    },
+  },
+  float = {
+    preview_split = 'auto',
+    border = 'none',
+    win_options = {
+      winblend = 5,
+    },
+  },
+  preview = {
+    border = 'none',
+    win_options = { winblend = 5 },
+    update_on_cursor_moved = true,
+  },
+  progress = {
+    border = 'none',
+    minimized_border = 'none',
+    win_options = { winblend = 5 },
+  },
+  ssh = { border = 'none', },
+  keymaps_help = { border = 'none' },
+})
 
 -- hide sticky commands
 vim.api.nvim_create_autocmd({ 'CursorHold' }, {
