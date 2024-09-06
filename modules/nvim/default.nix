@@ -39,7 +39,6 @@ let
     plugins = with pkgs.nvim-plugins; [
       my-theme
       vim-repeat
-      vim-fugitive
       hardline-nvim
       gitsigns-nvim
       nvim-lspconfig
