@@ -4,8 +4,11 @@ let
   inherit (import ../../lib/colors.nix inputs) colors mkVimHardlineColors;
   inherit (import ./theme.nix inputs) my-theme;
 
+  importContents = /*lua*/ ''
+  '';
+
   initContents = "
-    \nlua <<EOF\n" + ''
+    \nlua <<EOF\n" + /* lua */ ''
     nix_bins = {
       tsserver = '${pkgs.typescript-language-server}/bin/typescript-language-server',
       eslintls = '${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
@@ -47,7 +50,6 @@ let
       popup-nvim
       trouble-nvim
       dressing-nvim
-      which-key-nvim
       oil-nvim
 
       nvim-cmp

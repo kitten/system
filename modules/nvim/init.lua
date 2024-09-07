@@ -159,82 +159,60 @@ vim.o.grepformat = "%f:%l:%c:%m,%f:%l:%m"
 
 -- unmap special keys
 local key_opt = { noremap = true, silent = true }
-vim.api.nvim_set_keymap('', '<Space>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('', '<F1>', '<nop>', key_opt)
-vim.api.nvim_set_keymap('i', '<F1>', '<nop>', key_opt)
+
+vim.keymap.set('', '<Space>', '<nop>', { noremap = true, silent = true })
+vim.keymap.set('', '<F1>', '<nop>', { noremap = true, silent = true })
 
 -- period command in visual mode
-vim.api.nvim_set_keymap('x', '.', ':norm.<CR>', key_opt)
+vim.keymap.set('x', '.', '<cmd>norm .<cr>', { noremap = true, silent = true })
 
 -- match ctrl-c to escape
-vim.api.nvim_set_keymap('', '<c-c>', '<ESC>', key_opt)
-vim.api.nvim_set_keymap('!', '<c-c>', '<ESC>', key_opt)
+vim.keymap.set('', '<c-c>', '<esc>', { noremap = true, silent = true })
+vim.keymap.set('!', '<c-c>', '<esc>', { noremap = true, silent = true })
 
 -- window controls
-vim.api.nvim_set_keymap('', '<c-w>,', ':vsp<CR>', key_opt)
-vim.api.nvim_set_keymap('', '<c-w>.', ':sp<CR>', key_opt)
+vim.keymap.set('', '<c-w>,', ':vsp<cr>', { noremap = true, silent = true })
+vim.keymap.set('', '<c-w>.', ':sp<cr>', { noremap = true, silent = true })
 
 -- remap semicolon to colon
-vim.api.nvim_set_keymap('n', ';', ':', { noremap = true })
+vim.keymap.set('n', ';', ':', { noremap = true, silent = true })
 
 -- destructive x-commands
-vim.api.nvim_set_keymap('', 'X', '"_d', key_opt)
-vim.api.nvim_set_keymap('n', 'XX', '"_dd', key_opt)
-vim.api.nvim_set_keymap('v', 'x', '"_d', key_opt)
-vim.api.nvim_set_keymap('n', 'x', 'v"_d', key_opt)
+vim.keymap.set('', 'X', '"_d', { noremap = true, silent = true })
+vim.keymap.set('n', 'XX', '"_dd', { noremap = true, silent = true })
+vim.keymap.set('v', 'x', '"_d', { noremap = true, silent = true })
+vim.keymap.set('n', 'x', 'v"_d', { noremap = true, silent = true })
 
 -- clipboard controls
-vim.api.nvim_set_keymap('x', 'Y', '"+y', key_opt)
-vim.api.nvim_set_keymap('x', '<M-c>', '"+y', key_opt)
-vim.api.nvim_set_keymap('x', '<M-v>', '"+p', key_opt)
-vim.api.nvim_set_keymap('n', '<M-v>', '"+P', key_opt)
+vim.keymap.set('x', 'Y', '"+y', { noremap = true, silent = true })
+vim.keymap.set('x', '<m-c>', '"+y', { noremap = true, silent = true })
+vim.keymap.set('x', '<m-v>', '"+p', { noremap = true, silent = true })
+vim.keymap.set('n', '<m-v>', '"+P', { noremap = true, silent = true })
 
 -- indentation in visual mode
-vim.api.nvim_set_keymap('v', '<', '<gv', key_opt)
-vim.api.nvim_set_keymap('v', '>', '>gv', key_opt)
+vim.keymap.set('v', '<', '<gv', { noremap = true, silent = true })
+vim.keymap.set('v', '>', '>gv', { noremap = true, silent = true })
 
 -- swap visual gj, gk, with jk
-vim.api.nvim_set_keymap('n', 'j', [[v:count == 0 ? 'gj' : 'j']], { noremap = true, silent = true, expr = true })
-vim.api.nvim_set_keymap('n', 'k', [[v:count == 0 ? 'gk' : 'k']], { noremap = true, silent = true, expr = true })
-vim.api.nvim_set_keymap('x', 'j', [[v:count == 0 ? 'gj' : 'j']], { noremap = true, silent = true, expr = true })
-vim.api.nvim_set_keymap('x', 'k', [[v:count == 0 ? 'gk' : 'k']], { noremap = true, silent = true, expr = true })
+vim.keymap.set({'n', 'x'}, 'j', [[v:count == 0 ? 'gj' : 'j']], { noremap = true, silent = true, expr = true })
+vim.keymap.set({'n', 'x'}, 'k', [[v:count == 0 ? 'gk' : 'k']], { noremap = true, silent = true, expr = true})
 
 -- macros per line
-vim.api.nvim_set_keymap('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', key_opt)
+vim.keymap.set('v', '@', ':<C-u>execute ":\'<,\'>normal @".nr2char(getchar())<CR>', { noremap = true, silent = true })
+
+-- fold controls
+vim.keymap.set('n', '<bar>', '<cmd>norm zc<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', '<bslash>', '<cmd>norm za<cr>', { noremap = true, silent = true })
 
 -- set space as leader
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- which-key
-local key = require('which-key')
-
-key.setup {
-  icons = {
-    breadcrumb = " ",
-    separator = "→",
-    group = "+",
-  },
-  popup_mappings = {
-    scroll_down = '<c-f>',
-    scroll_up = '<c-d>',
-  },
-}
-
-key.register({
-  -- buffer shortcuts
-  ["<leader>h"] = { "<cmd>bp<cr>", "Previous Buffer" },
-  ["<leader>l"] = { "<cmd>bn<cr>", "Next Buffer" },
-  ["<leader>j"] = { "<cmd>enew<cr>", "New Buffer" },
-  ["<leader>j"] = { "<cmd>bp <bar> bd #<cr>", "Close Buffer" },
-  -- fold controls
-  ["<bar>"] = { "<cmd>normal zc<cr>", "Close Fold" },
-  ["<bslash>"] = { "<cmd>normal za<cr>", "Open Fold" },
-  -- file explorer
-  ["-"] = { require('oil').open, "Open File Explorer" },
-  -- highlights
-  ["<C-e>"] = { function() print(vim.inspect(vim.treesitter.get_captures_at_cursor(0))) end, "Output TS capture" },
-})
+-- buffer controls
+vim.keymap.set('n', '<leader>h', '<cmd>bp<cr>', { desc = 'Previous Buffer' })
+vim.keymap.set('n', '<leader>l', '<cmd>bn<cr>', { desc = 'Next Buffer' })
+vim.keymap.set('n', '<leader>j', '<cmd>enew<cr>', { desc = 'New Buffer' })
+vim.keymap.set('n', '<leader>k', '<cmd>bp <bar> bd #<cr>', { desc = 'Close Buffer' })
 
 -- golden_size
 local function ignore_trouble_window()
@@ -286,42 +264,39 @@ require('telescope').setup {
   },
 }
 
--- global leader keybindings
-local telescope_builtins = require('telescope.builtin')
-local telescope_themes = require('telescope.themes')
+vim.keymap.set('n', '<leader>b', function()
+  require('telescope.builtin').buffers()
+end, { desc = 'Workspace Search' })
 
-local function project_files()
+vim.keymap.set('n', '<leader>f', function()
+  require('telescope.builtin').live_grep()
+end, { desc = 'Workspace Search' })
+
+vim.keymap.set('n', '<leader>n', function()
+  require('telescope.builtin').lsp_document_symbols(
+    require('telescope.themes').get_ivy({
+      ignore_symbols = { 'variable', 'constant', 'property' },
+    })
+  )
+end, { desc = 'Document Symbols' })
+
+vim.keymap.set('n', '<leader>N', function()
+  require('telescope.builtin').lsp_dynamic_workspace_symbols(
+    require('telescope.themes').get_ivy({
+      ignore_symbols = { 'variable', 'constant', 'property' },
+    })
+  )
+end, { desc = 'Workspace Symbols' })
+
+vim.keymap.set('n', '<leader>o', function()
+  local telescope_builtins = require('telescope.builtin')
   vim.fn.system('git rev-parse --is-inside-work-tree')
   if vim.v.shell_error == 0 then
     telescope_builtins.git_files()
   else
     telescope_builtins.find_files()
   end
-end
-
-local function document_symbols()
-  telescope_builtins.lsp_document_symbols(telescope_themes.get_ivy({
-    ignore_symbols = { 'variable', 'constant', 'property' },
-  }))
-end
-
-local function workspace_symbols(opts)
-  telescope_builtins.lsp_dynamic_workspace_symbols(telescope_themes.get_ivy({
-    ignore_symbols = { 'variable', 'constant', 'property' },
-  }))
-end
-
-key.register({
-  ["<leader>q"] = { "<cmd>Trouble qflist toggle<cr>", "Quickfix List" },
-  ["<leader>p"] = { "<cmd>Trouble loclist toggle<cr>", "Location List" },
-  ["<leader>d"] = { "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", "Document Diagnostics" },
-  ["<leader>D"] = { "<cmd>Trouble diagnostics toggle<cr>", "Workspace Diagnostics" },
-  ["<leader>o"] = { project_files, "Search Files in Workspace" },
-  ["<leader>f"] = { telescope_builtins.live_grep, "Search in Files" },
-  ["<leader>n"] = { document_symbols, "Document Symbols" },
-  ["<leader>N"] = { workspace_symbols, "Workspace Symbols" },
-  ["<leader>b"] = { telescope_builtins.buffers, "Search for Buffer" },
-})
+end, { desc = 'Workspace Files' })
 
 -- define signs
 vim.fn.sign_define("DiagnosticSignError", { text = "●", texthl = "DiagnosticSignError" })
@@ -347,6 +322,10 @@ vim.diagnostic.config({
     severity_sort = true,
   },
 })
+
+vim.keymap.set('n', 'gk', vim.diagnostic.open_float, { desc = 'Show Diagnostic' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous Diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next Diagnostic' })
 
 -- customise hover window size
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -382,22 +361,17 @@ local function lsp_on_attach(client, buf)
     return vim.api.nvim_buf_get_var(buf, 'lsp:keys_attached')
   end) ~= true then
     vim.api.nvim_buf_set_var(buf, 'lsp:keys_attached', true)
-    key.register({
-      g = {
-        d = { vim.lsp.buf.definition, "Go to Definition" },
-        D = { vim.lsp.buf.declaration, "Go to Declaration" },
-        y = { vim.lsp.buf.type_definition, "Go to Type Definition" },
-        i = { vim.lsp.buf.implementation, "Go to Implementation" },
-        r = { "<cmd>Trouble lsp toggle<cr>", "Show References" },
-        N = { vim.lsp.buf.rename, "Rename" },
-        f = { vim.lsp.buf.code_action, "Code Action" },
-        k = { vim.diagnostic.open_float, "Show Diagnostic" },
-      },
-      K = { vim.lsp.buf.hover, "Hover" },
-      ["C-k"] = { vim.lsp.buf.signature_help, "Signature Help" },
-      ["[d"] = { vim.diagnostic.goto_prev, "Previous Diagnostic "},
-      ["]d"] = { vim.diagnostic.goto_prev, "Next Diagnostic "},
-    }, { buffer = buf })
+
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition', buffer = buf })
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration', buffer = buf })
+    vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition', buffer = buf })
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { desc = 'Go to implementation', buffer = buf })
+    vim.keymap.set('n', 'gn', vim.lsp.buf.rename, { desc = 'Rename', buffer = buf })
+    vim.keymap.set('n', 'gf', vim.lsp.buf.code_action, { desc = 'Code Actions', buffer = buf })
+    vim.keymap.set('n', 'gr', '<cmd>Trouble lsp open<cr>', { desc = 'Show references', buffer = buf })
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = buf })
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = buf })
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = buf })
   end
 end
 
@@ -573,12 +547,17 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+vim.keymap.set('n', '<c-e', function()
+  print(vim.inspect(vim.treesitter.get_captures_at_cursor(0)))
+end, { desc = 'Output Treesitter Token' })
+
 -- lspkind
 require('lspkind').init {
   mode = 'symbol_text',
   preset = 'codicons',
 }
 
+-- file browser
 require("oil").setup({
   default_file_explorer = true,
   delete_to_trash = false,
@@ -627,6 +606,8 @@ require("oil").setup({
   ssh = { border = 'none', },
   keymaps_help = { border = 'none' },
 })
+
+vim.keymap.set('n', '-', require('oil').open, { noremap = true, silent = true })
 
 -- hide sticky commands
 vim.api.nvim_create_autocmd({ 'CursorHold' }, {
@@ -780,33 +761,33 @@ require('gitsigns').setup {
   on_attach = function(buf)
     local actions = require('gitsigns.actions')
 
-    key.register({
-      ["]c"] = { actions.next_hunk, "Next Git Hunk" },
-      ["[c"] = { actions.next_hunk, "Previous Git Hunk" },
-      g = {
-        b = { function() actions.blame_line({ full = true }) end, "Blame Line" },
-        B = { actions.blame, "Blame Buffer" },
-        h = { function() actions.preview_hunk(true) end, "Show Git Hunk" },
-        s = { actions.stage_hunk, "Stage Git Hunk" },
-        S = { actions.undo_stage_hunk, "Unstage Git Hunk" },
-        t = { actions.diffthis, "Diff against HEAD" },
-        T = { function() actions.diffthis('~') end, "Diff against HEAD~1" },
-      },
-    }, { buffer = buf })
-
-    key.register({
-      ["ih"] = {
-        "<cmd><c-u>lua require('gitsigns.actions').select_hunk()<cr>",
-        "Select Git Hunk"
-      },
-    }, { buffer = buf, mode = "o" })
-
-    key.register({
-      ["ih"] = {
-        "<cmd><c-u>lua require('gitsigns.actions').select_hunk()<cr>",
-        "Select Git Hunk"
-      }
-    }, { buffer = buf, mode = "x" })
+    vim.keymap.set('n', ']c', function()
+      require('gitsigns.actions').next_hunk()
+    end, { desc = 'Next Git Hunk', buffer = buf })
+    vim.keymap.set('n', '[c', function()
+      require('gitsigns.actions').next_hunk()
+    end, { desc = 'Previous Git Hunk', buffer = buf })
+    vim.keymap.set('n', 'gb', function()
+      require('gitsigns.actions').blame_line({ full = true })
+    end, { desc = 'Blame Line', buffer = buf })
+    vim.keymap.set('n', 'gB', function()
+      require('gitsigns.actions').blame()
+    end, { desc = 'Blame Buffer', buffer = buf })
+    vim.keymap.set('n', 'gh', function()
+      require('gitsigns.actions').preview_hunk(true)
+    end, { desc = 'Show Git Hunk', buffer = buf })
+    vim.keymap.set('n', 'gs', function()
+      require('gitsigns.actions').stage_hunk()
+    end, { desc = 'Stage Git Hunk', buffer = buf })
+    vim.keymap.set('n', 'gS', function()
+      require('gitsigns.actions').stage_hunk()
+    end, { desc = 'Unstage Git Hunk', buffer = buf })
+    vim.keymap.set('n', 'gt', function()
+      require('gitsigns.actions').diffthis()
+    end, { desc = 'Diff against HEAD', buffer = buf })
+    vim.keymap.set('n', 'gT', function()
+      require('gitsigns.actions').diffthis('~')
+    end, { desc = 'Diff against HEAD~1', buffer = buf })
   end,
 }
 
@@ -935,6 +916,11 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     vim.opt_local.linebreak = true
   end,
 })
+
+vim.keymap.set('n', '<leader>q', '<cmd>Trouble qflist open<cr>', { desc = 'Quickfix list' })
+vim.keymap.set('n', '<leader>p', '<cmd>Trouble loclist open<cr>', { desc = 'Location list' })
+vim.keymap.set('n', '<leader>d', '<cmd>Trouble diagnostics open filter.buf=0<cr>', { desc = 'Document Diagnostics' })
+vim.keymap.set('n', '<leader>D', '<cmd>Trouble diagnostics open<cr>', { desc = 'Workspace Diagnostics' })
 
 -- dressing
 require('dressing').setup {

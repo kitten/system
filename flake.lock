@@ -312,6 +312,22 @@
         "type": "github"
       }
     },
+    "mini-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725702691,
+        "narHash": "sha256-x4hefKKUaV+9dkYPy7SSmFl9lXgoQg3N938EhgiYdv0=",
+        "owner": "echasnovski",
+        "repo": "mini.nvim",
+        "rev": "8413efde2546be4dec9ea424bc6af346a14dffbe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "echasnovski",
+        "repo": "mini.nvim",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1723310128,
@@ -484,6 +500,7 @@
         "hardline-nvim": "hardline-nvim",
         "lir-nvim": "lir-nvim",
         "lspkind-nvim": "lspkind-nvim",
+        "mini-nvim": "mini-nvim",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -509,11 +526,11 @@
         "which-key-nvim": "which-key-nvim"
       },
       "locked": {
-        "lastModified": 1725580703,
-        "narHash": "sha256-nSgTVm3H7mjJvcldheROoP2Eg9KwHiUOo8zFKEyiXAQ=",
+        "lastModified": 1725715693,
+        "narHash": "sha256-pKAt+vv2oORIwxblMhGIZJzmKp2eMx5BAUz49KN7YP0=",
         "owner": "kitten",
         "repo": "system-nvim-plugins.nix",
-        "rev": "cdce266713971844cf5e25a1219f3e566a26e026",
+        "rev": "a1bd2931f7d0d6812d98d67a1319a32e2327ca04",
         "type": "github"
       },
       "original": {
