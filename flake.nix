@@ -51,6 +51,14 @@
       };
     };
 
+    wezterm = {
+      url = "github:wez/wezterm/main?dir=nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
     nvim-plugins = {
       url = "github:kitten/system-nvim-plugins.nix";
       inputs = {
@@ -70,6 +78,7 @@
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
+        wezterm = (inputs.wezterm.packages.${self.system}).default;
       })
     ];
   in {

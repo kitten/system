@@ -25,8 +25,7 @@ return {
   line_height = 1.1,
   max_fps = 120,
 
-  front_end = "WebGpu",
-  enable_wayland = false,
+  enable_wayland = true,
   enable_scroll_bar = false,
   enable_kitty_keyboard = true,
   check_for_updates = false,
