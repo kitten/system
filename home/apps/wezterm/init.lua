@@ -7,6 +7,7 @@ wezterm.on("gui-startup", function(cmd)
 end)
 
 return {
+  term = "wezterm",
   default_prog = { zsh_bin, "-l" },
 
   mux_env_remove = {
@@ -24,7 +25,8 @@ return {
   line_height = 1.1,
   max_fps = 120,
 
-  enable_wayland = true,
+  front_end = "WebGpu",
+  enable_wayland = false,
   enable_scroll_bar = false,
   enable_kitty_keyboard = true,
   check_for_updates = false,
