@@ -7,6 +7,13 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    apple-silicon = {
+      url = "github:tpwrules/nixos-apple-silicon";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs = {
@@ -43,14 +50,6 @@
       };
     };
 
-    verdaccio = {
-      url = "github:kitten/verdaccio.nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
     wezterm = {
       url = "github:wez/wezterm/main?dir=nix";
       inputs = {
@@ -68,13 +67,11 @@
     };
   };
 
-  outputs = { nixos-hardware, ...} @ inputs: let
+  outputs = { nixos-hardware, apple-silicon, ...} @ inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
     overlays = [
       inputs.nvim-plugins.overlays.default
       (self: super: {
-        inherit (inputs.verdaccio.packages.${self.system})
-          verdaccio;
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
@@ -104,6 +101,14 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "cola";
+    };
+
+    nixosConfigurations."ramune" = mkSystem {
+      overlays = overlays ++ [
+        apple-silicon.overlays.apple-silicon-overlay
+      ];
+      system = "aarch64-linux";
+      hostname = "ramune";
     };
   };
 }
