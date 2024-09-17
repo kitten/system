@@ -27,6 +27,15 @@
       };
     };
 
+    links."11-intern0" = {
+      matchConfig.PermanentMACAddress = "9c:bf:0d:00:23:5d";
+      linkConfig = {
+        Description = "Internal Network Interface";
+        Name = "intern0";
+        MTUBytes = "1500";
+      };
+    };
+
     networks."10-extern0" = {
       name = "extern0";
       networkConfig = {
@@ -39,6 +48,17 @@
         UseDNS = false;
         UseDomains = false;
         UseNTP = false;
+      };
+    };
+
+    networks."11-intern0" = {
+      name = "intern0";
+      networkConfig = {
+        Address = "10.0.0.1/24";
+        DHCPServer = false;
+        IPv4Forwarding = true;
+        IPv6Forwarding = true;
+        ConfigureWithoutCarrier = true;
       };
     };
   };
