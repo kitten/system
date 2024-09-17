@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware.nix
+    ./network.nix
   ];
 
   users.users."${user}" = {
