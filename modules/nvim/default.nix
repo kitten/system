@@ -72,8 +72,16 @@ let
   neovim = pkgs.wrapNeovimUnstable neovimPkg neovimConfig;
 in {
   options.modules.nvim = {
-    enable = mkEnableOption "Neovim";
-    useCustomConfig = mkEnableOption "Custom Configuration";
+    enable = mkOption {
+      default = true;
+      description = "Neovim";
+      type = types.bool;
+    };
+    useCustomConfig = mkOption {
+      default = cfg.enable;
+      description = "Custom Configuration";
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.enable {

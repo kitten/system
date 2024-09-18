@@ -13,7 +13,11 @@ in {
       type = types.bool;
     };
 
-    tweakKernel = mkEnableOption "Whether to tweak kernel configuration";
+    tweakKernel = mkOption {
+      default = cfg.enable;
+      description = "Whether to tweak kernel configuration";
+      type = types.bool;
+    };
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) {

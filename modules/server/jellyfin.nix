@@ -15,7 +15,11 @@ in {
       type = types.bool;
     };
 
-    sync = mkEnableOption "Whether to sync files from remotes";
+    sync = mkOption {
+      default = cfg.enable;
+      description = "Whether to sync files from remotes";
+      type = types.bool;
+    };
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) {

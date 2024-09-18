@@ -5,7 +5,11 @@ let
   cfg = config.modules.gpg;
 in {
   options.modules.gpg = {
-    enable = mkEnableOption "GnuPG";
+    enable = mkOption {
+      default = true;
+      description = "GnuPG";
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.enable {

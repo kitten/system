@@ -66,11 +66,11 @@ let
         }
       }
     '') cfg.caddy.exposeFolders;
-  in string.concatStringsSep "\n\n" configs;
+  in strings.concatStringsSep "\n\n" configs;
 in {
   options.modules.server.caddy = {
     enable = mkOption {
-      default = cfg.enable;
+      default = false;
       example = true;
       description = "Whether to enable Caddy.";
       type = types.bool;
@@ -84,7 +84,7 @@ in {
     };
   };
 
-  config = mkIf cfg.caddy.enable {
+  config = mkIf (cfg.enable && cfg.caddy.enable) {
     services.tailscale = mkIf tailscaleEnabled {
       permitCertUid = config.services.caddy.user;
     };
