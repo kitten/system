@@ -1,11 +1,11 @@
-{ pkgs, ... } @ inputs:
+{ lib, config, pkgs, ... } @ inputs:
 
+with lib;
 let
   inherit (import ../../lib/colors.nix inputs) colors mkVimHardlineColors;
   inherit (import ./theme.nix inputs) my-theme;
 
-  importContents = /*lua*/ ''
-  '';
+  cfg = config.modules.nvim;
 
   initContents = "
     \nlua <<EOF\n" + /* lua */ ''
@@ -71,12 +71,21 @@ let
   neovimPkg = pkgs.neovim-unwrapped;
   neovim = pkgs.wrapNeovimUnstable neovimPkg neovimConfig;
 in {
-  environment.variables = { EDITOR = "vim"; };
+  options.modules.nvim = {
+    enable = mkEnableOption "Neovim";
+    useCustomConfig = mkEnableOption "Custom Configuration";
+  };
 
-  environment.systemPackages = with pkgs; [
-    ripgrep
-    fd
-    bat
-    neovim
-  ];
+  config = mkIf cfg.enable {
+    environment.variables = { EDITOR = "vim"; };
+
+    environment.systemPackages = with pkgs; if cfg.useCustomConfig then [
+      ripgrep
+      fd
+      bat
+      neovim
+    ] else [
+      neovimPkg
+    ];
+  };
 }

@@ -1,10 +1,11 @@
-{ ... }:
-
 {
   imports = [
     ./base
+    ./desktop
     ./development
-    ./gpg.nix
+    ./fonts
     ./nvim
+    ./router
+    ./server
   ];
 }

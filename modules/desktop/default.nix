@@ -1,31 +1,51 @@
-{ lib, user, helpers, ... }:
+{ lib, config, user, helpers, ... }:
 
-helpers.linuxAttrs {
+with lib;
+let
+  cfg = config.modules.desktop;
+in {
+  options.modules.desktop = {
+    enable = mkOption {
+      default = false;
+      example = true;
+      description = "Whether to enable Desktop options.";
+      type = types.bool;
+    };
+  };
+
+  config.modules.server = {
+    enable = if helpers.isLinux then (mkDefault false) else (mkForce false);
+  };
+} // helpers.linuxAttrs {
   imports = [
     ./services.nix
     ./session.nix
     ./xdg.nix
-    ./fonts
+    ./fonts.nix
   ];
 
-  users.users."${user}".extraGroups = [ "video" ];
+  config = mkIf cfg.enable {
+    users.users."${user}".extraGroups = [ "video" ];
 
-  services = {
-    fwupd.enable = true;
-    pipewire = {
-      enable = true;
-      wireplumber.enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      jack.enable = true;
+    services = {
+      fwupd.enable = true;
+      pipewire = {
+        enable = true;
+        wireplumber.enable = true;
+        pulse.enable = true;
+        jack.enable = true;
+        alsa = {
+          enable = true;
+          support32Bit = true;
+        };
+      };
     };
-  };
 
-  hardware = {
-    pulseaudio.enable = lib.mkForce false;
-    steam-hardware.enable = true;
-  };
+    hardware = {
+      pulseaudio.enable = lib.mkForce false;
+      steam-hardware.enable = true;
+    };
 
-  security.rtkit.enable = true;
+    security.rtkit.enable = true;
+  };
 }
