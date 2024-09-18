@@ -16,7 +16,7 @@ let
 
   blockForwardRules =
     string.concatMapStringsSep "\n"
-      (builtins.map (mac: "  iifname ${intern0} oifname != ${intern0} ether saddr = ${mac} drop"));
+      (builtins.map (mac: "  iifname ${intern0} oifname != ${intern0} ether saddr = ${mac} drop") cfg.nftables.blockForward);
 in {
   options.modules.router = {
     nftables = {

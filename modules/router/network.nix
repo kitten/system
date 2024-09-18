@@ -71,7 +71,8 @@ in {
         networkConfig = {
           DHCP = "ipv4";
           DNS = if cfg.dnsmasq.enable then "127.0.0.1" else "1.1.1.1";
-          IPForward = true;
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
         };
         dhcpV4Config = {
           UseDNS = false;
@@ -85,7 +86,8 @@ in {
         networkConfig = {
           Address = cfg.address;
           DHCPServer = false;
-          IPForward = true;
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
           ConfigureWithoutCarrier = true;
         };
       };
