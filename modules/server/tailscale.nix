@@ -13,11 +13,6 @@ in {
       description = "Whether to enable Tailscale.";
       type = types.bool;
     };
-
-    authKeySecret = {
-      description = "Age Secret of auth keyfile for Tailscale.";
-      type = types.path;
-    };
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) {
@@ -32,7 +27,7 @@ in {
     age.secrets."tailscale" = {
       symlink = true;
       path = "/run/secrets/tailscale";
-      file = cfg.authKeySecret;
+      file = ./encrypt/tailscale.age;
     };
 
     services.tailscale = {
