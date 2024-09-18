@@ -4,6 +4,7 @@ with lib;
 let
   cfgRoot = config.modules.server;
   cfg = config.modules.server.tailscale;
+  address = config.modules.router.address;
 in {
   options.modules.server.tailscale = {
     enable = mkOption {
@@ -20,10 +21,12 @@ in {
   };
 
   config = mkIf cfg.enable && cfgRoot.enable {
+    modules.router.dnsmasq.localDomains = [ "${hostname}.fable-pancake.ts.net" ];
+
     networking = {
       domain = "fable-pancake.ts.net";
       firewall.trustedInterfaces = [ "tailscale0" ];
-      hosts."10.0.0.1" = [ "${hostname}.fable-pancake.ts.net" hostname ];
+      hosts."${address}" = [ "${hostname}.fable-pancake.ts.net" hostname ];
     };
 
     age.secrets."tailscale" = {

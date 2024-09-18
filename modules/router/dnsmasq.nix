@@ -2,7 +2,11 @@
 
 with lib;
 let
+  inherit (import ../../lib/ipv4.nix inputs) ipv4;
+
   cfg = config.modules.router;
+  intern = cfg.interfaces.internal;
+  extern = cfg.interfaces.external;
 
   leaseType = types.submodule {
     options = {
@@ -22,6 +26,14 @@ let
     else [ "1.1.1.1" "1.0.0.1" ];
 
   dhcpHost = builtins.map (lease: "${lease.macAddress},${lease.ipAddress}") cfg.dnsmasq.leases;
+
+  dhcpIPv4Range = let
+    subnetMask = ipv4.prettyIp (ipv4.cidrToSubnetMask intern.cidr);
+    firstIP = ipv4.prettyIp (ipv4.incrementIp (ipv4.cidrToFirstUsableIp intern.cidr) 1);
+    lastIP = ipv4.prettyIp (ipv4.cidrToLastUsableIp intern.cidr);
+  in "${firstIP}, ${lastIP}, ${subnetMask}, 12h";
+
+  localDomains = builtins.map (host: "/${host}/${cfg.address}") cfg.dnsmasq.localDomains;
 in {
   options.modules.router = {
     dnsmasq = {
@@ -31,15 +43,37 @@ in {
         type = types.bool;
       };
 
-      leases = lib.mkOption {
+      leases = mkOption {
         default = [];
-        type = lib.types.listOf leaseType;
+        type = types.listOf leaseType;
         description = "List of reserved IP address leases";
+      };
+
+      localDomains = lib.mkOption {
+        default = [];
+        type = types.listOf types.str;
       };
     };
   };
 
   config = mkIf cfg.dnsmasq.enable {
+    modules.router.dnsmasq.localDomains = [
+      "time.apple.com"
+      "time1.apple.com"
+      "time2.apple.com"
+      "time3.apple.com"
+      "time4.apple.com"
+      "time5.apple.com"
+      "time6.apple.com"
+      "time7.apple.com"
+      "time.euro.apple.com"
+      "time.windows.com"
+      "0.android.pool.ntp.org"
+      "1.android.pool.ntp.org"
+      "2.android.pool.ntp.org"
+      "3.android.pool.ntp.org"
+    ];
+
     networking.nameservers = [ "127.0.0.1" ];
 
     services.resolved.extraConfig = mkDefault ''
@@ -69,24 +103,22 @@ in {
         addn-hosts = "/etc/hosts";
 
         dhcp-range = [
-          "10.0.0.2, 10.0.0.255, 255.255.255.0, 12h"
-          "tag:${cfg.interfaces.internal}, ::1, constructor:${cfg.interfaces.internal}, ra-names, slaac, 12h"
+          dhcpIPv4Range
+          "tag:${intern.name}, ::1, constructor:${intern.name}, ra-names, slaac, 12h"
         ];
 
         dhcp-option = [
           "option6:information-refresh-time, 6h"
-          "option:router,10.0.0.1"
-          "ra-param=${cfg.interfaces.internal},high,0,0"
-        ];
-
-        dhcp-option = mkIf cfg.timeserver.enable [
-          "option:ntp-server,10.0.0.1"
-        ];
+          "option:router,${cfg.address}"
+          "ra-param=${intern.name},high,0,0"
+        ] ++ (
+          if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
+        );
 
         dhcp-host = dhcpHost;
 
         # listen only on intern0 by excluding extern0
-        except-interface = cfg.interfaces.external;
+        except-interface = extern.name;
 
         # set the DHCP server to authoritative and rapic commit mode
         dhcp-authoritative = true;
@@ -95,23 +127,7 @@ in {
         # Detect attempts by Verisign to send queries to unregistered hosts
         bogus-nxdomain = "64.94.110.11";
 
-        address = [
-          "/cola.fable-pancake.ts.net/10.0.0.1"
-          "/time.apple.com/10.0.0.1"
-          "/time1.apple.com/10.0.0.1"
-          "/time2.apple.com/10.0.0.1"
-          "/time3.apple.com/10.0.0.1"
-          "/time4.apple.com/10.0.0.1"
-          "/time5.apple.com/10.0.0.1"
-          "/time6.apple.com/10.0.0.1"
-          "/time7.apple.com/10.0.0.1"
-          "/time.euro.apple.com/10.0.0.1"
-          "/time.windows.com/10.0.0.1"
-          "/0.android.pool.ntp.org/10.0.0.1"
-          "/1.android.pool.ntp.org/10.0.0.1"
-          "/2.android.pool.ntp.org/10.0.0.1"
-          "/3.android.pool.ntp.org/10.0.0.1"
-        ];
+        address = localDomains;
       };
     };
   };

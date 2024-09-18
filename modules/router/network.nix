@@ -1,7 +1,9 @@
-{ lib, config, ... }:
+{ lib, config, ... } @ inputs:
 
 with lib;
 let
+  inherit (import ../../lib/ipv4.nix inputs) ipv4;
+
   cfg = config.modules.router;
 
   interfaceType = types.submodule {
@@ -14,15 +16,23 @@ let
         type = types.str;
         example = "00:00:00:00:00:00";
       };
+      cidr = mkOption {
+        type = types.str;
+        default = "0.0.0.0/0";
+        example = "10.0.0.1/24";
+      };
     };
   };
 
-  extern0 = cfg.interfaces.external.name;
-  extern0MAC = cfg.interfaces.external.macAddress;
-  intern0 = cfg.interfaces.internal.name;
-  intern0MAC = cfg.interfaces.internal.macAddress;
+  extern = cfg.interfaces.external;
+  intern = cfg.interfaces.internal;
 in {
   options.modules.router = {
+    address = {
+      type = types.str;
+      default = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
+      example = "127.0.0.1";
+    };
     interfaces = {
       external = interfaceType;
       internal = interfaceType;
@@ -32,31 +42,31 @@ in {
   config = mkIf cfg.enable {
     services.irqbalance.enable = true;
 
-    networking.firewall.trustedInterfaces = [ "lo" intern0 ];
+    networking.firewall.trustedInterfaces = [ "lo" intern.name ];
 
     systemd.network = {
       enable = true;
 
-      links."10-${extern0}" = {
-        matchConfig.PermanentMACAddress = extern0MAC;
+      links."10-${extern.name}" = {
+        matchConfig.PermanentMACAddress = extern.macAddress;
         linkConfig = {
           Description = "External Network Interface";
-          Name = extern0;
+          Name = extern.name;
           # MACAddress = "64:20:9f:16:70:a6";
           MTUBytes = "1500";
         };
       };
 
-      links."11-${intern0}" = {
-        matchConfig.PermanentMACAddress = intern0MAC;
+      links."11-${intern.name}" = {
+        matchConfig.PermanentMACAddress = intern.macAddress;
         linkConfig = {
           Description = "Internal Network Interface";
-          Name = intern0;
+          Name = intern.name;
           MTUBytes = "1500";
         };
       };
 
-      networks."10-${extern0}" = {
+      networks."10-${extern.name}" = {
         name = extern0;
         networkConfig = {
           DHCP = "ipv4";
@@ -70,10 +80,10 @@ in {
         };
       };
 
-      networks."11-${intern0}" = {
-        name = intern0;
+      networks."11-${intern.name}" = {
+        name = intern.name;
         networkConfig = {
-          Address = "10.0.0.1/24";
+          Address = cfg.address;
           DHCPServer = false;
           IPForward = true;
           ConfigureWithoutCarrier = true;
