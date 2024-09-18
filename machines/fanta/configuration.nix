@@ -3,6 +3,12 @@
 {
   imports = [ ];
 
+  modules = {
+    fonts.enable = true;
+    development.enable = true;
+    nvim.enable = true;
+  };
+
   system.stateVersion = 4;
   # Disable path verification of $NIX_PATH
   system.checks.verifyNixPath = false;

@@ -13,7 +13,7 @@ in {
     };
   };
 
-  config.modules.server = {
+  config.modules.desktop = {
     enable = if helpers.isLinux then (mkDefault false) else (mkForce false);
   };
 } // helpers.linuxAttrs {
