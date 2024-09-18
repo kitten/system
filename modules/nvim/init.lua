@@ -492,6 +492,11 @@ lsp_setup('rust_analyzer', {
   },
 })
 
+lsp_setup('nixd', {
+  cmd = { nix_bins.nixd },
+  flags = { debounce_text_changes = 200 },
+})
+
 -- treesitter
 vim.opt.runtimepath:append("~/.local/share/nvim/site/parser")
 
