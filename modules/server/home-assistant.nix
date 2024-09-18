@@ -25,6 +25,12 @@ in {
       description = "Home Assistant Revision";
       type = types.str;
     };
+
+    extraOptions = mkOption {
+      default = [];
+      description = "Extra podman options";
+      type = types.listOf types.str;
+    };
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) {
@@ -37,6 +43,10 @@ in {
         group = "hass";
       };
     };
+
+    system.activationScripts.makeHomeAssistantFolder = lib.stringAfter [ "var" ] ''
+      mkdir -p /var/lib/home-assistant
+    '';
 
     virtualisation.oci-containers = {
       containers.hass = rec {
@@ -70,9 +80,8 @@ in {
           "--userns=keep-id"
           "--hostuser=hass"
           "--runtime=runc"
-          "--device=/dev/ttyUSB0"
           "--network=host"
-        ];
+        ] ++ cfg.extraOptions;
       };
     };
   };
