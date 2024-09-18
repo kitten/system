@@ -1,8 +1,8 @@
-{ lib, config, pkgs, helpers, ... } @ inputs:
+{ lib, pkgs, helpers, ... } @ inputs:
 
+with lib;
 let
   inherit (import ../../lib/colors.nix inputs) hex;
-  inherit (lib) mkDefault mkForce;
 in helpers.linuxAttrs {
   environment.systemPackages = [ pkgs.sbctl ];
 
@@ -31,8 +31,8 @@ in helpers.linuxAttrs {
   };
 
   boot = {
-    bootspec.enable = lib.mkDefault true;
-    consoleLogLevel = lib.mkDefault 2;
+    bootspec.enable = mkDefault true;
+    consoleLogLevel = mkDefault 2;
 
     loader = {
       timeout = mkDefault 2;
@@ -44,7 +44,7 @@ in helpers.linuxAttrs {
       systemd.enable = true;
     };
 
-    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+    kernelPackages = mkDefault pkgs.linuxPackages_latest;
 
     kernelParams = [
       "quiet"
@@ -63,6 +63,8 @@ in helpers.linuxAttrs {
       "vm.dirty_background_ratio" = 5;
     };
   };
+
+  time.timeZone = "Europe/London";
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";
@@ -90,5 +92,5 @@ in helpers.linuxAttrs {
 
   services.dbus.enable = true;
 
-  virtualisation.oci-containers.backend = mkForce "podman";
+  virtualisation.oci-containers.backend = mkDefault "podman";
 }

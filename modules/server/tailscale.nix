@@ -1,25 +1,48 @@
-{ user, ... }:
+{ lib, config, hostname, ... }:
 
-{
-  networking = {
-    domain = "fable-pancake.ts.net";
-    firewall.trustedInterfaces = [ "tailscale0" ];
-    hosts."10.0.0.1" = [ "cola.fable-pancake.ts.net" "cola" ];
+with lib;
+let
+  cfgRoot = config.modules.server;
+  cfg = config.modules.server.tailscale;
+  address = config.modules.router.address;
+in {
+  options.modules.server.tailscale = {
+    enable = mkOption {
+      default = false;
+      example = true;
+      description = "Whether to enable Tailscale.";
+      type = types.bool;
+    };
+
+    authKeySecret = {
+      description = "Age Secret of auth keyfile for Tailscale.";
+      type = types.path;
+    };
   };
 
-  age.secrets."tailscale" = {
-    symlink = true;
-    path = "/run/secrets/tailscale";
-    file = ./encrypt/tailscale.age;
-  };
+  config = mkIf (cfg.enable && cfgRoot.enable) {
+    modules.router.dnsmasq.localDomains = [ "${hostname}.fable-pancake.ts.net" ];
 
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-    extraUpFlags = [ "--advertise-exit-node" "--ssh" ];
-    extraDaemonFlags = [ "--no-logs-no-support" ];
-    authKeyFile = "/run/secrets/tailscale";
-  };
+    networking = {
+      domain = "fable-pancake.ts.net";
+      firewall.trustedInterfaces = [ "tailscale0" ];
+      hosts."${address}" = [ "${hostname}.fable-pancake.ts.net" hostname ];
+    };
 
-  systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
+    age.secrets."tailscale" = {
+      symlink = true;
+      path = "/run/secrets/tailscale";
+      file = cfg.authKeySecret;
+    };
+
+    services.tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+      extraUpFlags = [ "--advertise-exit-node" "--ssh" ];
+      extraDaemonFlags = [ "--no-logs-no-support" ];
+      authKeyFile = "/run/secrets/tailscale";
+    };
+
+    systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
+  };
 }

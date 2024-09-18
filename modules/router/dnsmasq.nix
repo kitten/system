@@ -1,79 +1,134 @@
-{ config, lib, ... }:
+{ lib, config, ... } @ inputs:
 
-{
-  services.resolved.extraConfig = lib.mkDefault ''
-    [Resolve]
-    DNSStubListener=no
-  '';
+with lib;
+let
+  inherit (import ../../lib/ipv4.nix inputs) ipv4;
 
-  services.dnsmasq = {
-    enable = true;
-    alwaysKeepRunning = true;
-    settings = {
-      server = if config.services.stubby.enable then [ "127.0.0.1#53000" ] else [ "1.1.1.1" "1.0.0.1" ];
+  cfg = config.modules.router;
+  intern = cfg.interfaces.internal;
+  extern = cfg.interfaces.external;
 
-      # never forward plain names (without a dot or domain part)
-      domain-needed = true;
-      # never forward addresses in the non-routed address spaces.
-      bogus-priv = true;
-      # filter useless windows-originated DNS requests
-      filterwin2k = true;
-      # never read nameservers from /etc/resolv.conf
-      no-resolv = true;
+  leaseType = types.submodule {
+    options = {
+      macAddress = mkOption {
+        type = types.str;
+        example = "00:00:00:00:00:00";
+      };
+      ipAddress = mkOption {
+        type = types.str;
+        example = "10.0.0.10";
+      };
+    };
+  };
 
-      cache-size = 5000;
-      no-negcache = true;
+  dnsServer = if cfg.dnsOverTLS.enable
+    then [ "127.0.0.1#${toString cfg.dnsOverTLS.port}" ]
+    else [ "1.1.1.1" "1.0.0.1" ];
 
-      expand-hosts = true;
-      addn-hosts = "/etc/hosts";
+  dhcpHost = builtins.map (lease: "${lease.macAddress},${lease.ipAddress}") cfg.dnsmasq.leases;
 
-      dhcp-range = [
-        "10.0.0.2, 10.0.0.255, 255.255.255.0, 12h"
-        "tag:intern0, ::1, constructor:intern0, ra-names, slaac, 12h"
-      ];
-      dhcp-option = [
-        "option6:information-refresh-time, 6h"
-        "option:router,10.0.0.1"
-        "option:ntp-server,10.0.0.1"
-        "ra-param=intern0,high,0,0"
-      ];
+  dhcpIPv4Range = let
+    subnetMask = ipv4.prettyIp (ipv4.cidrToSubnetMask intern.cidr);
+    firstIP = ipv4.prettyIp (ipv4.incrementIp (ipv4.cidrToFirstUsableIp intern.cidr) 1);
+    lastIP = ipv4.prettyIp (ipv4.cidrToLastUsableIp intern.cidr);
+  in "${firstIP}, ${lastIP}, ${subnetMask}, 12h";
 
-      dhcp-host = [
-        "98:ed:7e:c6:57:b2,10.0.0.102" # eero router
-        "c4:f1:74:51:4c:f2,10.0.0.124" # eero router
-        "5c:61:99:7a:16:40,10.0.0.103" # brother printer
-        "24:e8:53:95:e4:02,10.0.0.96" # tv
-        "34:7e:5c:31:4f:fa,10.0.0.56" # sonos
-        "e8:9c:25:6c:40:6f,10.0.0.150" # pepper-pc
-      ];
+  localDomains = builtins.map (host: "/${host}/${cfg.address}") cfg.dnsmasq.localDomains;
+in {
+  options.modules.router = {
+    dnsmasq = {
+      enable = mkOption {
+        default = cfg.enable;
+        description = "Whether to enable DNSMasq";
+        type = types.bool;
+      };
 
-      # listen only on intern0 by excluding extern0
-      except-interface = "extern0";
+      leases = mkOption {
+        default = [];
+        type = types.listOf leaseType;
+        description = "List of reserved IP address leases";
+      };
 
-      # set the DHCP server to authoritative and rapic commit mode
-      dhcp-authoritative = true;
-      dhcp-rapid-commit = true;
+      localDomains = mkOption {
+        default = [];
+        type = types.listOf types.str;
+      };
+    };
+  };
 
-      # Detect attempts by Verisign to send queries to unregistered hosts
-      bogus-nxdomain = "64.94.110.11";
+  config = mkIf cfg.dnsmasq.enable {
+    modules.router.dnsmasq.localDomains = [
+      "time.apple.com"
+      "time1.apple.com"
+      "time2.apple.com"
+      "time3.apple.com"
+      "time4.apple.com"
+      "time5.apple.com"
+      "time6.apple.com"
+      "time7.apple.com"
+      "time.euro.apple.com"
+      "time.windows.com"
+      "0.android.pool.ntp.org"
+      "1.android.pool.ntp.org"
+      "2.android.pool.ntp.org"
+      "3.android.pool.ntp.org"
+    ];
 
-      address = [
-        "/cola.fable-pancake.ts.net/10.0.0.1"
-        "/time.apple.com/10.0.0.1"
-        "/time1.apple.com/10.0.0.1"
-        "/time2.apple.com/10.0.0.1"
-        "/time3.apple.com/10.0.0.1"
-        "/time4.apple.com/10.0.0.1"
-        "/time5.apple.com/10.0.0.1"
-        "/time6.apple.com/10.0.0.1"
-        "/time7.apple.com/10.0.0.1"
-        "/time.euro.apple.com/10.0.0.1"
-        "/time.windows.com/10.0.0.1"
-        "/0.android.pool.ntp.org/10.0.0.1"
-        "/1.android.pool.ntp.org/10.0.0.1"
-        "/2.android.pool.ntp.org/10.0.0.1"
-        "/3.android.pool.ntp.org/10.0.0.1"
-      ];
+    networking.nameservers = [ "127.0.0.1" ];
+
+    services.resolved.extraConfig = mkDefault ''
+      [Resolve]
+      DNSStubListener=no
+    '';
+
+    services.dnsmasq = {
+      enable = true;
+      alwaysKeepRunning = true;
+      settings = {
+        server = dnsServer;
+
+        # never forward plain names (without a dot or domain part)
+        domain-needed = true;
+        # never forward addresses in the non-routed address spaces.
+        bogus-priv = true;
+        # filter useless windows-originated DNS requests
+        filterwin2k = true;
+        # never read nameservers from /etc/resolv.conf
+        no-resolv = true;
+
+        cache-size = 5000;
+        no-negcache = true;
+
+        expand-hosts = true;
+        addn-hosts = "/etc/hosts";
+
+        dhcp-host = dhcpHost;
+
+        # listen only on intern0 by excluding extern0
+        except-interface = extern.name;
+
+        # set the DHCP server to authoritative and rapic commit mode
+        dhcp-authoritative = true;
+        dhcp-rapid-commit = true;
+
+        # Detect attempts by Verisign to send queries to unregistered hosts
+        bogus-nxdomain = "64.94.110.11";
+
+        address = localDomains;
+      } // (optionalAttrs (intern != null) {
+        dhcp-range = [
+          dhcpIPv4Range
+          "tag:${intern.name}, ::1, constructor:${intern.name}, ra-names, slaac, 12h"
+        ];
+
+        dhcp-option = [
+          "option6:information-refresh-time, 6h"
+          "option:router,${cfg.address}"
+          "ra-param=${intern.name},high,0,0"
+        ] ++ (
+          if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
+        );
+      });
     };
   };
 }

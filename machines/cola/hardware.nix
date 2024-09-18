@@ -1,4 +1,4 @@
-{ config, lib, pkgs, nixos-hardware, modulesPath, ... }:
+{ config, lib, nixos-hardware, modulesPath, ... }:
 
 {
   imports = [

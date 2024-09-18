@@ -1,63 +1,111 @@
-{ config, ... }:
+{ lib, config, hostname, ... }:
 
-{
-  services.tailscale.permitCertUid = config.services.caddy.user;
+with lib;
+let
+  cfg = config.modules.server;
 
-  services.caddy = {
-    enable = config.services.tailscale.enable;
-    email = "phil@kitten.sh";
-    extraConfig = ''
-      (network_paths) {
-        handle_path /home {
-          redir * https://cola.fable-pancake.ts.net:8123
-        }
+  domain = config.networking.domain;
+  tailscaleEnabled = cfg.tailscale.enable;
+  vaultwardenEnabled = cfg.vaultwarden.enable;
+  jellyfinEnabled = cfg.jellyfin.enable;
+  hassEnabled = cfg.home-assistant.enable;
 
-        handle_path /vault {
-          redir * /vault/
-        }
+  vaultwardenHandlerConfig = if vaultwardenEnabled then ''
+    handle_path /vault {
+      redir * /vault/
+    }
 
-        handle_path /vault/* {
-          reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000
-          reverse_proxy /notifications/hub 127.0.0.1:8001
-          reverse_proxy localhost:8000 {
-            header_up X-Real-IP {remote_host}
-          }
-        }
+    handle_path /vault/* {
+      reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000
+      reverse_proxy /notifications/hub 127.0.0.1:8001
+      reverse_proxy localhost:8000 {
+        header_up X-Real-IP {remote_host}
+      }
+    }
+  '' else "";
 
-        handle_path /media {
-          redir * /media/
-        }
+  jellyfinHandlerConfig = if jellyfinEnabled then ''
+    handle_path /media {
+      redir * /media/
+    }
 
-        reverse_proxy /media/* localhost:8096 {
-          header_up X-Real-IP {remote_host}
-        }
+    reverse_proxy /media/* localhost:8096 {
+      header_up X-Real-IP {remote_host}
+    }
+  '' else "";
 
-        handle_path /files {
-          redir * /files/
-        }
+  hassHandlerConfig = if hassEnabled && tailscaleEnabled then ''
+    handle_path /home {
+      redir * https://${hostname}.${domain}:8123
+    }
+  '' else "";
 
-        handle_path /files/* {
-          file_server {
-            browse
-            root /share/files
-            hide .*
-          }
+  tailscaleConfig = if tailscaleEnabled then ''
+    ${hostname}.${domain} {
+      import network_paths
+    }
+  '' else "";
 
-          @file path *.*
-
-          handle_path /* {
-            header @file +Content-Disposition attachment
-          }
-        }
+  exposeConfig = let
+    configs = attrsets.mapAttrs (name: root: ''
+      handle_path /${name} {
+        redir * /${name}/
       }
 
-      cola.fable-pancake.ts.net {
-        import network_paths
-      }
+      handle_path /${name}/* {
+        file_server {
+          browse
+          root ${root}
+          hide .*
+        }
 
-      :80 {
-        import network_paths
+        @file path *.*
+
+        handle_path /* {
+          header @file +Content-Disposition attachment
+        }
       }
-    '';
+    '') cfg.caddy.exposeFolders;
+  in string.concatStringsSep "\n\n" configs;
+in {
+  options.modules.server.caddy = {
+    enable = mkOption {
+      default = cfg.enable;
+      example = true;
+      description = "Whether to enable Caddy.";
+      type = types.bool;
+    };
+
+    exposeFolders = mkOption {
+      default = {};
+      description = "Folders to expose via Cadddy.";
+      example = { files = "/share/files"; };
+      type = types.nullOr types.attrsOf types.str;
+    };
+  };
+
+  config = mkIf cfg.caddy.enable {
+    services.tailscale = mkIf tailscaleEnabled {
+      permitCertUid = config.services.caddy.user;
+    };
+
+    services.caddy = {
+      enable = true;
+      email = "phil@kitten.sh";
+      extraConfig = ''
+        (network_paths) {
+          ${vaultwardenHandlerConfig}
+          ${jellyfinHandlerConfig}
+          ${hassHandlerConfig}
+          ${exposeConfig}
+        }
+
+        ${tailscaleConfig}
+
+        :80 {
+          import network_paths
+        }
+      '';
+    };
   };
 }

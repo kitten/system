@@ -2,7 +2,7 @@
 
 {
   mkSystem = { system, hostname, user ? "phil", modules ? [], overlays ? [] }: let
-    inherit (lib.systems.elaborate { inherit system; }) isDarwin isLinux;
+    inherit (lib.systems.elaborate { inherit system; }) isDarwin;
 
     homeDir = if isDarwin then "/Users/${user}" else "/home/${user}";
     rootDir = if isDarwin then "/var/root" else "/root";
@@ -21,7 +21,7 @@
       ../machines/common.nix
       ../machines/${hostname}/configuration.nix
       ../modules/default.nix
-      ({ config, ... }: {
+      ({ ... }: {
         inherit age;
 
         nixpkgs = {

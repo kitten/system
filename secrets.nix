@@ -6,11 +6,11 @@ in
 {
   "./modules/base/encrypt/nix-access-tokens.conf.age".publicKeys = keys;
 
-  "./modules/desktop/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
-  "./modules/desktop/fonts/encrypt/DankMono-Bold.otf.age".publicKeys = keys;
-  "./modules/desktop/fonts/encrypt/DankMono-Italic.otf.age".publicKeys = keys;
-  "./modules/desktop/fonts/encrypt/codicon.otf.age".publicKeys = keys;
-  "./modules/desktop/fonts/encrypt/faicon.ttf.age".publicKeys = keys;
+  "./modules/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
+  "./modules/fonts/encrypt/DankMono-Bold.otf.age".publicKeys = keys;
+  "./modules/fonts/encrypt/DankMono-Italic.otf.age".publicKeys = keys;
+  "./modules/fonts/encrypt/codicon.otf.age".publicKeys = keys;
+  "./modules/fonts/encrypt/faicon.ttf.age".publicKeys = keys;
 
   "./modules/server/encrypt/tailscale.age".publicKeys = keys;
   "./modules/server/encrypt/rclone.conf.age".publicKeys = keys;
