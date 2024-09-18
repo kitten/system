@@ -59,7 +59,15 @@ in {
       "net.ipv6.conf.all.autoconf" = false;
       "net.ipv6.conf.all.accept_ra" = false;
 
-      "net.ipv4.ping_group_range" = "0 65536";
+      "kernel.kptr_restrict" = 2;
+      "kernel.dmesg_restrict" = 0;
+      "kernel.sysrq" = 4;
+      "kernel.unprivileged_bpf_disabled" = true;
+      "kernel.perf_event_paranoid" = 3;
+      "kernel.yama.ptrace_scope" = 2;
+      "kernel.kexec_load_disabled" = true;
+      "net.core.bpf_jit_harden" = 2;
+      "dev.tty.ldisc_autoload" = false;
     };
   };
 }

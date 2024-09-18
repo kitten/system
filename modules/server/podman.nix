@@ -12,6 +12,8 @@ in {
       description = "Whether to enable Podman.";
       type = types.bool;
     };
+
+    tweakKernel = mkEnableOption "Whether to tweak kernel configuration";
   };
 
   config = mkIf cfg.enable && cfgRoot.enable {
@@ -25,6 +27,11 @@ in {
           dns_enabled = true;
         };
       };
+    };
+
+    boot.kernel.sysctl = mkIf cfg.tweakKernel {
+      "kernel.unprivileged_userns_clone" = true;
+      "net.ipv4.ping_group_range" = "0 65536";
     };
   };
 }
