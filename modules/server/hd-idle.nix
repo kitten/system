@@ -3,9 +3,9 @@
 with lib;
 let
   cfgRoot = config.modules.server;
-  cfg = config.modules.server.sshd;
+  cfg = config.modules.server.hd-idle;
 in {
-  options.modules.server.hdIdle = {
+  options.modules.server.hd-idle = {
     enable = mkOption {
       default = false;
       example = true;

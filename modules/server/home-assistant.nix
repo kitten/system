@@ -28,6 +28,8 @@ in {
   };
 
   config = mkIf cfg.enable && cfgRoot.enable {
+    modules.server.podman.enable = mkDefault true;
+
     users = {
       groups.hass.gid = config.ids.gids.hass;
       users.hass = {

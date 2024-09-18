@@ -2,23 +2,13 @@
 
 with lib;
 let
-  cfgRoot = config.modules.server;
-  cfg = config.modules.server.caddy;
-
-  exposeType = types.submodule {
-    options = {
-      path = mkOption {
-        type = types.str;
-        example = "/share/files";
-      };
-    };
-  };
+  cfg = config.modules.server;
 
   domain = config.networking.domain;
-  tailscaleEnabled = cfgRoot.tailscale.enable;
-  vaultwardenEnabled = cfgRoot.vaultwarden.enable;
-  jellyfinEnabled = cfgRoot.jellyfin.enable;
-  hassEnabled = cfgRoot.home-assistant.enable;
+  tailscaleEnabled = cfg.tailscale.enable;
+  vaultwardenEnabled = cfg.vaultwarden.enable;
+  jellyfinEnabled = cfg.jellyfin.enable;
+  hassEnabled = cfg.home-assistant.enable;
 
   vaultwardenHandlerConfig = if vaultwardenEnabled then ''
     handle_path /vault {
@@ -57,7 +47,7 @@ let
   '' else "";
 
   exposeConfig = let
-    configs = attrsets.mapAttrs (name: expose: ''
+    configs = attrsets.mapAttrs (name: root: ''
       handle_path /${name} {
         redir * /${name}/
       }
@@ -65,7 +55,7 @@ let
       handle_path /${name}/* {
         file_server {
           browse
-          root ${expose.path}
+          root ${root}
           hide .*
         }
 
@@ -75,12 +65,12 @@ let
           header @file +Content-Disposition attachment
         }
       }
-    '') cfg.exposeFolders;
+    '') cfg.caddy.exposeFolders;
   in string.concatMapStringsSep "\n\n" configs;
 in {
   options.modules.server.caddy = {
     enable = mkOption {
-      default = false;
+      default = cfg.enable;
       example = true;
       description = "Whether to enable Caddy.";
       type = types.bool;
@@ -89,11 +79,12 @@ in {
     exposeFolders = mkOption {
       default = {};
       description = "Folders to expose via Cadddy.";
-      type = types.nullOr types.attrsOf exposeType;
+      example = { files = "/share/files"; };
+      type = types.nullOr types.attrsOf types.str;
     };
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf cfg.caddy.enable {
     services.tailscale = mkIf tailscaleEnabled {
       permitCertUid = config.services.caddy.user;
     };
