@@ -4,10 +4,13 @@ with lib;
 let
   cfg = config.modules.router;
 
+  listenInterfaces =
+    strings.concatMapStringsSep "\n"
+      (builtins.map (ifname: "interface listen ${ifname}") config.networking.firewall.trustedInterfaces);
+
   ntpExtraConfig = ''
-    interface listen lo
-    interface listen ${cfg.interfaces.internal}
-    interface ignore ${cfg.interfaces.external}
+    ${listenInterfaces}
+    interface ignore ${cfg.interfaces.external.name}
   '';
 in {
   options.modules.router = {

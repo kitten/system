@@ -1,26 +1,12 @@
-{ lib, config, helpers, ... }:
+{ lib, helpers, ... }:
 
-with lib;
-let
-  cfg = config.modules.router;
-in {
+with lib; {
   options.modules.router = {
     enable = mkOption {
       default = false;
       example = true;
       description = "Whether to enable Router options.";
       type = types.bool;
-    };
-
-    interfaces = {
-      external = mkOption {
-        default = "extern0";
-        type = types.str;
-      };
-      internal = mkOption {
-        default = "intern0";
-        type = types.str;
-      };
     };
   };
 
@@ -29,6 +15,7 @@ in {
   };
 } // helpers.linuxAttrs {
   imports = [
+    ./network.nix
     ./timeserver.nix
     ./dnsOverTLS.nix
     ./dnsmasq.nix
@@ -37,10 +24,4 @@ in {
     ./mdns.nix
     ./kernel.nix
   ];
-
-  config = mkIf cfg.enable {
-    networking.firewall.trustedInterfaces = [
-      cfg.interfaces.internal
-    ];
-  };
 }

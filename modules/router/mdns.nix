@@ -15,8 +15,8 @@ in {
   config = mkIf cfg.mdns.enable {
     services.avahi = {
       enable = true;
-      allowInterfaces = [ cfg.interfaces.internal ];
-      denyInterfaces = [ cfg.interfaces.external ];
+      allowInterfaces = [ cfg.interfaces.internal.name ];
+      denyInterfaces = [ cfg.interfaces.external.name ];
     };
   };
 }

@@ -19,8 +19,8 @@ in {
       enable = true;
       upnp = true;
       natpmp = true;
-      internalIPs = [ cfg.interfaces.internal ];
-      externalInterface = cfg.interfaces.external;
+      internalIPs = [ cfg.interfaces.internal.name ];
+      externalInterface = cfg.interfaces.external.name;
       appendConfig = ''
         secure_mode=yes
         notify_interval=60

@@ -4,6 +4,9 @@ with lib;
 let
   cfg = config.modules.router;
 
+  intern0 = cfg.interfaces.internal.name;
+  extern0 = cfg.interfaces.external.name;
+
   trustedInterfaces =
     strings.concatMapStringsSep ", " strings.escapeNixIdentifier config.networking.firewall.trustedInterfaces;
 
@@ -13,7 +16,7 @@ let
 
   blockForwardRules =
     string.concatMapStringsSep "\n"
-      (builtins.map (mac: "  iifname ${cfg.interfaces.internal} oifname != ${cfg.interfaces.internal} ether saddr = ${mac} drop"));
+      (builtins.map (mac: "  iifname ${intern0} oifname != ${intern0} ether saddr = ${mac} drop"));
 in {
   options.modules.router = {
     nftables = {
@@ -121,12 +124,12 @@ in {
         family = "netdev";
         content = ''
           chain lan {
-            type filter hook ingress device ${cfg.interfaces.internal} priority -150; policy accept;
+            type filter hook ingress device ${intern0} priority -150; policy accept;
             jump tags
           }
 
           chain wan {
-            type filter hook ingress device ${cfg.interfaces.external} priority -149; policy accept;
+            type filter hook ingress device ${extern0} priority -149; policy accept;
             jump tags
           }
 
