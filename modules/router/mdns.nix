@@ -3,6 +3,8 @@
 with lib;
 let
   cfg = config.modules.router;
+  intern = cfg.interfaces.internal;
+  extern = cfg.interfaces.external;
 in {
   options.modules.router = {
     mdns.enable = mkOption {
@@ -12,11 +14,11 @@ in {
     };
   };
 
-  config = mkIf cfg.mdns.enable {
+  config = mkIf cfg.mdns.enable && intern != null {
     services.avahi = {
       enable = true;
-      allowInterfaces = [ cfg.interfaces.internal.name ];
-      denyInterfaces = [ cfg.interfaces.external.name ];
+      allowInterfaces = if intern != null then [ intern.name ] else [];
+      denyInterfaces = [ extern.name ];
     };
   };
 }

@@ -34,8 +34,13 @@ in {
       example = "127.0.0.1";
     };
     interfaces = {
-      external = interfaceType;
-      internal = interfaceType;
+      external = {
+        type = interfaceType;
+      };
+      internal = {
+        type = types.orNull interfaceType;
+        default = null;
+      };
     };
   };
 
@@ -57,7 +62,7 @@ in {
         };
       };
 
-      links."11-${intern.name}" = {
+      links."11-${intern.name}" = mkIf intern != null {
         matchConfig.PermanentMACAddress = intern.macAddress;
         linkConfig = {
           Description = "Internal Network Interface";
@@ -81,7 +86,7 @@ in {
         };
       };
 
-      networks."11-${intern.name}" = {
+      networks."11-${intern.name}" = mkIf intern != null {
         name = intern.name;
         networkConfig = {
           Address = cfg.address;

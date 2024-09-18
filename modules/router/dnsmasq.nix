@@ -49,7 +49,7 @@ in {
         description = "List of reserved IP address leases";
       };
 
-      localDomains = lib.mkOption {
+      localDomains = mkOption {
         default = [];
         type = types.listOf types.str;
       };
@@ -102,18 +102,20 @@ in {
         expand-hosts = true;
         addn-hosts = "/etc/hosts";
 
-        dhcp-range = [
+        dhcp-range = mkIf intern != null [
           dhcpIPv4Range
           "tag:${intern.name}, ::1, constructor:${intern.name}, ra-names, slaac, 12h"
         ];
 
-        dhcp-option = [
-          "option6:information-refresh-time, 6h"
-          "option:router,${cfg.address}"
-          "ra-param=${intern.name},high,0,0"
-        ] ++ (
-          if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
-        );
+        dhcp-option = if intern != null then
+          [
+            "option6:information-refresh-time, 6h"
+            "option:router,${cfg.address}"
+            "ra-param=${intern.name},high,0,0"
+          ] ++ (
+            if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
+          )
+        else [];
 
         dhcp-host = dhcpHost;
 

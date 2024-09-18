@@ -16,12 +16,12 @@ in {
     };
   };
 
-  config = mkIf cfg.upnp.enable {
+  config = mkIf cfg.upnp.enable && intern != null {
     services.miniupnpd = {
       enable = true;
       upnp = true;
       natpmp = true;
-      internalIPs = [ intern.name ];
+      internalIPs = if intern != null then [ intern.name ] else [];
       externalInterface = extern.name;
       appendConfig = ''
         secure_mode=yes

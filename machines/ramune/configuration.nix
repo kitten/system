@@ -19,11 +19,11 @@
           name = "extern0";
           macAddress = "5c:1b:f4:7f:dc:cd";
         };
-        internal = {
+        /*internal = {
           name = "intern0";
           macAddress = "9c:bf:0d:00:23:5d";
           cidr = "10.0.1.1/24";
-        };
+        };*/
       };
     };
   };
