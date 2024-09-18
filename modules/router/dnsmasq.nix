@@ -22,7 +22,7 @@ let
   };
 
   dnsServer = if cfg.dnsOverTLS.enable
-    then [ "127.0.0.1#${cfg.dnsOverTLS.port}" ]
+    then [ "127.0.0.1#${toString cfg.dnsOverTLS.port}" ]
     else [ "1.1.1.1" "1.0.0.1" ];
 
   dhcpHost = builtins.map (lease: "${lease.macAddress},${lease.ipAddress}") cfg.dnsmasq.leases;
@@ -102,21 +102,6 @@ in {
         expand-hosts = true;
         addn-hosts = "/etc/hosts";
 
-        dhcp-range = mkIf intern != null [
-          dhcpIPv4Range
-          "tag:${intern.name}, ::1, constructor:${intern.name}, ra-names, slaac, 12h"
-        ];
-
-        dhcp-option = if intern != null then
-          [
-            "option6:information-refresh-time, 6h"
-            "option:router,${cfg.address}"
-            "ra-param=${intern.name},high,0,0"
-          ] ++ (
-            if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
-          )
-        else [];
-
         dhcp-host = dhcpHost;
 
         # listen only on intern0 by excluding extern0
@@ -130,7 +115,20 @@ in {
         bogus-nxdomain = "64.94.110.11";
 
         address = localDomains;
-      };
+      } // (optionalAttrs (intern != null) {
+        dhcp-range = [
+          dhcpIPv4Range
+          "tag:${intern.name}, ::1, constructor:${intern.name}, ra-names, slaac, 12h"
+        ];
+
+        dhcp-option = [
+          "option6:information-refresh-time, 6h"
+          "option:router,${cfg.address}"
+          "ra-param=${intern.name},high,0,0"
+        ] ++ (
+          if cfg.timeserver.enable then [ "option:ntp-server,${cfg.address}" ] else []
+        );
+      });
     };
   };
 }

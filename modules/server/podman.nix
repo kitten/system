@@ -16,7 +16,7 @@ in {
     tweakKernel = mkEnableOption "Whether to tweak kernel configuration";
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     networking.firewall.trustedInterfaces = [ "podman0" ];
     virtualisation = {
       oci-containers.backend = "podman";

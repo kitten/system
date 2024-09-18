@@ -66,7 +66,7 @@ let
         }
       }
     '') cfg.caddy.exposeFolders;
-  in string.concatMapStringsSep "\n\n" configs;
+  in string.concatStringsSep "\n\n" configs;
 in {
   options.modules.server.caddy = {
     enable = mkOption {

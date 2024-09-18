@@ -5,7 +5,7 @@ let
   cfg = config.modules.router;
 
   listenInterfaces =
-    strings.concatMapStringsSep "\n"
+    strings.concatStringsSep "\n"
       (builtins.map (ifname: "interface listen ${ifname}") config.networking.firewall.trustedInterfaces);
 
   ntpExtraConfig = ''

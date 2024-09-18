@@ -27,7 +27,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     modules.server.podman.enable = mkDefault true;
 
     users = {

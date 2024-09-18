@@ -14,7 +14,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     systemd.services.hd-idle = {
       description = "External HD spin down daemon";
       wantedBy = [ "multi-user.target" ];

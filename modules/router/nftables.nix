@@ -11,12 +11,12 @@ let
     strings.concatMapStringsSep ", " strings.escapeNixIdentifier config.networking.firewall.trustedInterfaces;
 
   capturePortsRules =
-    string.concatMapStringsSep "\n"
-      (builtins.map (port: "  iifname { ${trustedInterfaces} } udp dport ${port} redirect to ${port}") cfg.nftables.capturePorts);
+    strings.concatStringsSep "\n"
+      (builtins.map (port: "  iifname { ${trustedInterfaces} } udp dport ${toString port} redirect to ${toString port}") cfg.nftables.capturePorts);
 
   blockForwardRules =
     if intern != null then
-      string.concatMapStringsSep "\n"
+      strings.concatStringsSep "\n"
         (builtins.map (mac: "  iifname ${intern0} oifname != ${intern0} ether saddr = ${mac} drop") cfg.nftables.blockForward)
     else "";
 in {
@@ -28,13 +28,13 @@ in {
         type = types.bool;
       };
 
-      capturePorts = {
+      capturePorts = mkOption {
         default = [ 53 123 ];
         description = "Ports to capture and redirect to router";
         type = types.listOf types.int;
       };
 
-      blockForward = {
+      blockForward = mkOption {
         default = [];
         description = "MAC Addresses of devices to block internet access for";
         type = types.listOf types.str;

@@ -20,7 +20,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     modules.router.dnsmasq.localDomains = [ "${hostname}.fable-pancake.ts.net" ];
 
     networking = {

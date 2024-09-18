@@ -16,7 +16,7 @@ in {
     };
   };
 
-  config = mkIf cfg.upnp.enable && intern != null {
+  config = mkIf (cfg.upnp.enable && intern != null) {
     services.miniupnpd = {
       enable = true;
       upnp = true;

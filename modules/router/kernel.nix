@@ -17,8 +17,8 @@ in {
       enable = true;
       network.enable = true;
     };
-  } // mkIf cfg.tweakKernel {
-    boot.kernel.sysctl = {
+
+    boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "net.core.somaxconn" = 4096;
       "net.core.netdev_max_backlog" = 2000;
 

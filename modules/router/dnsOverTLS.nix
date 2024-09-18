@@ -32,8 +32,8 @@ in {
         round_robin_upstreams = 1;
         tls_connection_retries = 5;
         listen_addresses = [
-          "127.0.0.1@${cfg.dnsOverTLS.port}"
-          "0::1@${cfg.dnsOverTLS.port}"
+          "127.0.0.1@${toString cfg.dnsOverTLS.port}"
+          "0::1@${toString cfg.dnsOverTLS.port}"
         ];
         appdata_dir = "/var/cache/stubby";
         trust_anchors_backoff_time = 2500;

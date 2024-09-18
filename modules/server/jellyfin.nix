@@ -18,7 +18,7 @@ in {
     sync = mkEnableOption "Whether to sync files from remotes";
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     hardware.graphics.enable = mkDefault true;
 
     users.users."${user}".extraGroups = [ "${group}" ];
@@ -30,8 +30,8 @@ in {
       openFirewall = false;
       group = "${group}";
     };
-  } // mkIf cfg.sync {
-    age.secrets."rclone.conf" = {
+
+    age.secrets."rclone.conf" = mkIf cfg.sync {
       symlink = true;
       path = "/run/secrets/rclone.conf";
       file = ./encrypt/rclone.conf.age;
@@ -39,7 +39,7 @@ in {
       group = "${group}";
     };
 
-    systemd.services."rclone-sync@" = {
+    systemd.services."rclone-sync@" = mkIf cfg.sync {
       wants = [ "network-online.target" ];
       description = "Sync files between different remotes via rclone";
       stopIfChanged = false;
@@ -59,7 +59,7 @@ in {
       };
     };
 
-    systemd.timers."rclone-sync@" = {
+    systemd.timers."rclone-sync@" = mkIf cfg.sync {
       description = "Sync files between different remotes via rclone periodically";
       timerConfig = {
         OnBootSec = "15min";
@@ -68,7 +68,7 @@ in {
       };
     };
 
-    systemd.targets.rclone-sync = {
+    systemd.targets.rclone-sync = mkIf cfg.sync {
       wantedBy = [ "multi-user.target" ];
       wants = [ "rclone-sync@movies.timer" "rclone-sync@series.timer" ];
     };

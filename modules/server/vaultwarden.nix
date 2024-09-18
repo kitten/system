@@ -14,7 +14,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable && cfgRoot.enable {
+  config = mkIf (cfg.enable && cfgRoot.enable) {
     services.vaultwarden = {
       enable = true;
       dbBackend = "sqlite";

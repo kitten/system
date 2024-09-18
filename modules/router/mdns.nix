@@ -14,7 +14,7 @@ in {
     };
   };
 
-  config = mkIf cfg.mdns.enable && intern != null {
+  config = mkIf (cfg.mdns.enable && intern != null) {
     services.avahi = {
       enable = true;
       allowInterfaces = if intern != null then [ intern.name ] else [];
