@@ -30,7 +30,9 @@ in {
   options.modules.router = {
     address = {
       type = types.str;
-      default = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
+      default = if intern != null
+        then ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)
+        else "127.0.0.1";
       example = "127.0.0.1";
     };
     interfaces = {
