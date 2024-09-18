@@ -1,4 +1,4 @@
-{ config, lib, pkgs, apple-silicon, modulesPath, ... }:
+{ lib, apple-silicon, modulesPath, ... }:
 
 {
   imports = [
