@@ -13,10 +13,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    boot.initrd.systemd = {
-      enable = true;
-      network.enable = true;
-    };
+    boot.initrd.systemd.enable = mkDefault true;
 
     boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "net.core.somaxconn" = 4096;

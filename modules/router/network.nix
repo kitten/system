@@ -26,6 +26,27 @@ let
 
   extern = cfg.interfaces.external;
   intern = cfg.interfaces.internal;
+
+  links = {
+    "10-${extern.name}" = {
+      matchConfig.PermanentMACAddress = extern.macAddress;
+      linkConfig = {
+        Description = "External Network Interface";
+        Name = extern.name;
+        # MACAddress = "64:20:9f:16:70:a6";
+        MTUBytes = "1500";
+      };
+    };
+  } // (optionalAttrs (intern != null) {
+    "11-${intern.name}" = {
+      matchConfig.PermanentMACAddress = intern.macAddress;
+      linkConfig = {
+        Description = "Internal Network Interface";
+        Name = intern.name;
+        MTUBytes = "1500";
+      };
+    };
+  });
 in {
   options.modules.router = {
     address = mkOption {
@@ -55,29 +76,14 @@ in {
       trustedInterfaces = [ "lo" intern.name ];
     };
 
-    systemd.network = {
+    boot.initrd.systemd.network = {
       enable = true;
+      inherit links;
+    };
 
-      links = {
-        "10-${extern.name}" = {
-          matchConfig.PermanentMACAddress = extern.macAddress;
-          linkConfig = {
-            Description = "External Network Interface";
-            Name = extern.name;
-            # MACAddress = "64:20:9f:16:70:a6";
-            MTUBytes = "1500";
-          };
-        };
-      } // (optionalAttrs (intern != null) {
-        "11-${intern.name}" = {
-          matchConfig.PermanentMACAddress = intern.macAddress;
-          linkConfig = {
-            Description = "Internal Network Interface";
-            Name = intern.name;
-            MTUBytes = "1500";
-          };
-        };
-      });
+    systemd.network = {
+      inherit links;
+      enable = true;
 
       networks = {
         "10-${extern.name}" = {
@@ -98,7 +104,7 @@ in {
         "11-${intern.name}" = {
           name = intern.name;
           networkConfig = {
-            Address = cfg.address;
+            Address = intern.cidr;
             DHCPServer = false;
             IPv4Forwarding = true;
             IPv6Forwarding = true;

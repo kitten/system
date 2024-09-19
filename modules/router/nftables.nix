@@ -17,7 +17,7 @@ let
   blockForwardRules =
     if intern != null then
       strings.concatStringsSep "\n"
-        (builtins.map (mac: "  iifname ${intern0} oifname != ${intern0} ether saddr = ${mac} drop") cfg.nftables.blockForward)
+        (builtins.map (mac: "  iifname ${intern.name} oifname != ${intern.name} ether saddr == ${mac} drop") cfg.nftables.blockForward)
     else "";
 in {
   options.modules.router = {
@@ -124,23 +124,11 @@ in {
 
       tables.tagging = {
         family = "netdev";
-        content = let
-          internChain = if intern != null then ''
-            chain lan {
-              type filter hook ingress device ${intern.name} priority -150; policy accept;
-              jump tags
-            }
-          '' else "";
-
-          externChain = ''
-            chain wan {
-              type filter hook ingress device ${extern.name} priority -149; policy accept;
-              jump tags
-            }
-          '';
-        in ''
-          ${internChain}
-          ${externChain}
+        content = ''
+          chain lan {
+            type filter hook ingress priority -150; policy accept;
+            jump tags
+          }
 
           chain tags {
             ip dscp set cs0
