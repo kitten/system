@@ -43,7 +43,7 @@
   fileSystems."/swap" = {
     device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
-    options = [ "subvol=@swap" ];
+    options = [ "subvol=@swap" "noatime" ];
   };
 
   fileSystems."/boot" = {
