@@ -8,8 +8,8 @@ let
   cfg = config.modules.server.home-assistant;
 
   containerImage = if stdenv.isAarch64
-    then "ghcr.io/home-assistant/home-assistant:${cfg.revision}"
-    else "ghcr.io/home-assistant/aarch64-home-assistant:${cfg.revision}";
+    then "ghcr.io/home-assistant/aarch64-homeassistant:${cfg.revision}"
+    else "ghcr.io/home-assistant/home-assistant:${cfg.revision}";
 in {
   options.modules.server.home-assistant = {
     enable = mkOption {
