@@ -40,6 +40,12 @@
     server = {
       enable = true;
       tailscale.enable = true;
+      caddy.enable = true;
+      vaultwarden.enable = true;
+      home-assistant = {
+        enable = true;
+        extraOptions = [ "--device=/dev/ttyUSB0" ];
+      };
     };
   };
 

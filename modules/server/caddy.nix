@@ -47,7 +47,7 @@ let
   '' else "";
 
   exposeConfig = let
-    configs = attrsets.mapAttrs (name: root: ''
+    configs = attrsets.mapAttrsToList (name: root: ''
       handle_path /${name} {
         redir * /${name}/
       }
@@ -80,7 +80,7 @@ in {
       default = {};
       description = "Folders to expose via Cadddy.";
       example = { files = "/share/files"; };
-      type = types.nullOr types.attrsOf types.str;
+      type = types.attrsOf types.str;
     };
   };
 
