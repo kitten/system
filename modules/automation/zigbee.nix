@@ -29,6 +29,12 @@ in {
       type = types.bool;
     };
 
+    permitJoin = mkOption {
+      default = false;
+      description = "Permit new devices to join indefinitely (Not Recommended)";
+      type = types.bool;
+    };
+
     serialPort = mkOption {
       default = "/dev/ttyUSB0";
       example = "/dev/ttyUSB0";
@@ -51,8 +57,10 @@ in {
     services.zigbee2mqtt = {
       enable = true;
       settings = {
+        permit_join = cfg.zigbee.permitJoin;
         serial.port = cfg.zigbee.serialPort;
         frontend = cfg.zigbee.frontend;
+        ota.disable_automatic_update_check = true;
         mqtt = mkIf cfg.mqtt.enable {
           server = "mqtts://localhost:${toString cfg.mqtt.port}";
           reject_unauthorized = false;
@@ -60,7 +68,16 @@ in {
           key = cfg.mqtt.keyfile;
           cert = cfg.mqtt.certfile;
         };
+        advanced = {
+          log_level = "warning";
+          log_output = ["console"];
+        };
       };
+    };
+
+    systemd.services.zigbee2mqtt = mkIf cfg.mqtt.enable {
+      wants = [config.systemd.services.mosquitto.name];
+      after = [config.systemd.services.mosquitto.name];
     };
   };
 }

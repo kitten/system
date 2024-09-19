@@ -68,8 +68,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.irqbalance.enable = true;
-
     networking.useNetworkd = true;
 
     networking.firewall = mkIf (intern != null) {
