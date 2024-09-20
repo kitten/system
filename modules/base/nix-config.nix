@@ -1,12 +1,13 @@
-{ pkgs, nixpkgs, helpers, config, ... }:
+{ lib, pkgs, nixpkgs, helpers, config, ... }:
 
-{
+with lib; {
   age.secrets."nix-access-tokens.conf".file = ./encrypt/nix-access-tokens.conf.age;
 
   nixpkgs.config.allowUnfree = true;
 
   nix = {
     package = pkgs.nix;
+    channel.enable = mkForce false;
 
     # provide for nix-shell and run
     nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
