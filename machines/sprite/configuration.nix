@@ -3,15 +3,11 @@
 {
   imports = [ ];
 
-  system.stateVersion = 4;
-  # Disable path verification of $NIX_PATH
-  system.checks.verifyNixPath = false;
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  # Auto-configure build users
-  nix.configureBuildUsers = true;
-  # Disable documentation until https://github.com/LnL7/nix-darwin/issues/217 is fixed.
-  documentation.enable = false;
+  modules = {
+    fonts.enable = true;
+    development.enable = true;
+    nvim.enable = true;
+  };
 
   # Use built-in TouchID PAM
   security.pam.enableSudoTouchIdAuth = true;

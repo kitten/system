@@ -9,16 +9,6 @@
     nvim.enable = true;
   };
 
-  system.stateVersion = 4;
-  # Disable path verification of $NIX_PATH
-  system.checks.verifyNixPath = false;
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  # Auto-configure build users
-  nix.configureBuildUsers = true;
-  # Disable documentation until https://github.com/LnL7/nix-darwin/issues/217 is fixed.
-  documentation.enable = false;
-
   # Use built-in TouchID PAM
   security.pam.enableSudoTouchIdAuth = true;
 
