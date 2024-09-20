@@ -9,16 +9,12 @@
 
     apple-silicon = {
       url = "github:tpwrules/nixos-apple-silicon";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     agenix = {
@@ -67,9 +63,10 @@
     };
   };
 
-  outputs = { apple-silicon, ...} @ inputs: let
+  outputs = inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
-    eachSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
+    eachSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
+    eachDarwinSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "x86_64-darwin"];
     overlays = [
       inputs.nvim-plugins.overlays.default
       (self: super: {
@@ -105,15 +102,15 @@
     };
 
     nixosConfigurations."ramune" = mkSystem {
-      overlays = overlays ++ [
-        apple-silicon.overlays.apple-silicon-overlay
-      ];
+      inherit overlays;
       system = "aarch64-linux";
       hostname = "ramune";
     };
 
     packages = eachSystem (system: {
       inherit (inputs.agenix.packages.${system}) agenix;
+    }) // eachDarwinSystem (system: {
+      inherit (inputs.darwin.packages.${system}) darwin-rebuild;
     });
   };
 }

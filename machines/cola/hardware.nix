@@ -1,7 +1,7 @@
-{ config, lib, nixos-hardware, modulesPath, ... }:
+{ config, lib, inputs, modulesPath, ... }:
 
 {
-  imports = [
+  imports = with inputs; [
     nixos-hardware.nixosModules.common-cpu-intel
     nixos-hardware.nixosModules.common-pc-ssd
     nixos-hardware.nixosModules.common-pc
@@ -62,11 +62,7 @@
     { device = "/dev/disk/by-label/NIXSWAP"; }
   ];
 
-  # set host and allow unfree
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  nixpkgs.config.allowUnfree = true;
-
-  # enable Intel microcode update and firmware
+  # enable Intel microcode update and firmware
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.enableAllFirmware = true;
 

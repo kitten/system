@@ -1,7 +1,7 @@
-{ config, lib, pkgs, nixos-hardware, lanzaboote, modulesPath, ... }:
+{ config, lib, inputs, modulesPath, ... }:
 
 {
-  imports = [
+  imports = with inputs; [
     nixos-hardware.nixosModules.framework-13-7040-amd
     lanzaboote.nixosModules.lanzaboote
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -84,11 +84,7 @@
     HibernateDelaySec=2h
   '';
 
-  # set host and allow unfree
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  nixpkgs.config.allowUnfree = true;
-
-  # enable AMD microcode update and firmware
+  # enable AMD microcode update and firmware
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.enableAllFirmware = true;
 

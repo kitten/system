@@ -1,7 +1,7 @@
-{ lib, apple-silicon, modulesPath, ... }:
+{ inputs, modulesPath, ... }:
 
 {
-  imports = [
+  imports = with inputs; [
     apple-silicon.nixosModules.apple-silicon-support
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -56,11 +56,7 @@
     { device = "/swap/swapfile"; }
   ];
 
-  nixpkgs = {
-    hostPlatform = lib.mkDefault "aarch64-linux";
-    config.allowUnfree = true;
-    overlays = [ apple-silicon.overlays.apple-silicon-overlay ];
-  };
+  nixpkgs.overlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
 
   hardware.asahi.useExperimentalGPUDriver = true;
 }

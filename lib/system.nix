@@ -27,6 +27,7 @@
         nixpkgs = {
           inherit overlays;
           config.allowUnfree = true;
+          hostPlatform = system;
         };
 
         networking.hostName = hostname;
@@ -48,8 +49,8 @@
       ];
     };
 
-    specialArgs = inputs // {
-      inherit hostname user;
+    specialArgs = {
+      inherit hostname user inputs;
       helpers = (import ./helpers.nix {
         inherit lib system;
       });
