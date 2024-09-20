@@ -1,7 +1,22 @@
-{ helpers, ... }:
+{ lib, config, helpers, ... }:
 
-{
-  config = helpers.mkIfLinux {
+with lib;
+let
+  cfg = config.modules.apps;
+in {
+  options.modules.apps.firefox = {
+    enable = mkOption {
+      default = false;
+      description = "Whether to enable Firefox.";
+      type = types.bool;
+    };
+  };
+
+  config.modules.apps.firefox = {
+    enable = if helpers.isLinux then (mkDefault false) else (mkForce false);
+  };
+} // helpers.linuxAttrs {
+  config = mkIf (cfg.enable && cfg.firefox.enable) {
     programs.firefox = {
       enable = true;
       profiles.default = {

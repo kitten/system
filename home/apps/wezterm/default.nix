@@ -1,11 +1,14 @@
-{ pkgs, helpers, lib, ... } @ inputs:
+{ lib, config, pkgs, helpers, ... } @ inputs:
 
+with lib;
 let
   inherit (pkgs) stdenv;
   inherit (import ../../../lib/colors.nix inputs) colors mkLuaSyntax;
 
+  cfg = config.modules.apps;
+
   wezterm = pkgs.wezterm.overrideAttrs (_: {
-    preFixup = lib.optionalString stdenv.isLinux ''
+    preFixup = optionalString stdenv.isLinux ''
       patchelf \
         --add-needed "${pkgs.libGL}/lib/libEGL.so.1" \
         --add-needed "${pkgs.vulkan-loader}/lib/libvulkan.so.1" \
@@ -31,7 +34,17 @@ let
     source "${wezterm}/etc/profile.d/wezterm.sh"
   '';
 in {
-  home.packages = [ wezterm ];
-  xdg.configFile."wezterm/wezterm.lua".text = configStr;
-  programs.zsh.initExtra = shellIntegrationStr;
+  options.modules.apps.wezterm = {
+    enable = mkOption {
+      default = false;
+      description = "Whether to enable Wezterm.";
+      type = types.bool;
+    };
+  };
+
+  config = mkIf (cfg.enable && cfg.wezterm.enable) {
+    home.packages = [ wezterm ];
+    xdg.configFile."wezterm/wezterm.lua".text = configStr;
+    programs.zsh.initExtra = shellIntegrationStr;
+  };
 }
