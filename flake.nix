@@ -67,8 +67,9 @@
     };
   };
 
-  outputs = { nixos-hardware, apple-silicon, ...} @ inputs: let
+  outputs = { apple-silicon, ...} @ inputs: let
     inherit (import ./lib/system.nix inputs) mkSystem;
+    eachSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
     overlays = [
       inputs.nvim-plugins.overlays.default
       (self: super: {
@@ -110,5 +111,9 @@
       system = "aarch64-linux";
       hostname = "ramune";
     };
+
+    packages = eachSystem (system: {
+      inherit (inputs.agenix.packages.${system}) agenix;
+    });
   };
 }
