@@ -69,9 +69,9 @@
   };
 
   outputs = inputs: let
+    inherit (inputs.nixpkgs) lib;
     inherit (import ./lib/system.nix inputs) mkSystem;
-    eachSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
-    eachDarwinSystem = inputs.nixpkgs.lib.genAttrs ["aarch64-darwin" "x86_64-darwin"];
+    eachSystem = lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
     overlays = [
       inputs.lix-module.overlays.lixFromNixpkgs
       inputs.nvim-plugins.overlays.default
@@ -115,7 +115,6 @@
 
     packages = eachSystem (system: {
       inherit (inputs.agenix.packages.${system}) agenix;
-    }) // eachDarwinSystem (system: {
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
     });
   };
