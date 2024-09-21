@@ -9,5 +9,6 @@
     ./nvim
     ./router
     ./server
+    ./automation
   ];
 }
