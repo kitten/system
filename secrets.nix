@@ -21,4 +21,7 @@ in
   "./home/base/encrypt/CA84692E3CC846C8EC7272468E962B63FC599E49.key.age".publicKeys = keys;
 
   "./home/development/encrypt/npmrc.age".publicKeys = keys;
+
+  "./modules/automation/certs/mqtt.key.age".publicKeys = keys;
+  "./modules/automation/certs/mqtt.crt.age".publicKeys = keys;
 }

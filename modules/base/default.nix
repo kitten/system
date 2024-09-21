@@ -3,6 +3,7 @@
 {
   imports = [
     ./nix-config.nix
+    ./certs.nix
     ./shell.nix
     ./linux.nix
     ./gpg.nix

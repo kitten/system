@@ -43,14 +43,14 @@ let
 
   caCertificate = {
     name = "ca";
-    output = "modules/base/encrypt/";
+    output = "modules/base/certs/";
     settings.initca = true;
   };
 
   certificates = [
     {
       name = "mqtt";
-      output = "modules/automation/encrypt/";
+      output = "modules/automation/certs/";
       settings = {
         profile = "auth-only";
         config = caConf;

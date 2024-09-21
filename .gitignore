@@ -5,3 +5,7 @@
 
 **/encrypt/*
 !**/encrypt/*.age
+
+**/certs/*
+!**/certs/*.age
+!**/certs/ca.crt
