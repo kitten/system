@@ -8,8 +8,30 @@ in {
     enable = mkOption {
       default = cfg.enable;
       example = true;
-      description = "Whether to enable the mqtt mosquitto broker.";
+      description = "Whether to enable the MQTT Mosquitto broker.";
       type = types.bool;
+    };
+
+    port = mkOption {
+      default = 1883;
+      example = 1883;
+      description = "The port to start Moquitto on.";
+      type = types.port;
+    };
+
+    cafile = mkOption {
+      default = ../base/certs/ca.crt;
+      type = types.path;
+    };
+
+    certfile = mkOption {
+      default = config.age.secrets."mqtt.crt".path;
+      type = types.path;
+    };
+
+    keyfile = mkOption {
+      default = config.age.secrets."mqtt.key".path;
+      type = types.path;
     };
   };
 
@@ -17,13 +39,14 @@ in {
     age.secrets = let
       owner = config.users.users.mosquitto.name;
       group = config.users.users.mosquitto.group;
+      mode = "0440";
     in {
       "mqtt.crt" = {
-        inherit owner group;
+        inherit owner group mode;
         file = ./certs/mqtt.crt.age;
       };
       "mqtt.key" = {
-        inherit owner group;
+        inherit owner group mode;
         file = ./certs/mqtt.key.age;
       };
     };
@@ -32,12 +55,14 @@ in {
       enable = true;
       listeners = [
         {
-          port = 1883;
+          port = cfg.mqtt.port;
+          omitPasswordAuth = true;
           settings = {
-            cafile = ../base/certs/ca.crt;
-            certfile = config.age.secrets."mqtt.crt".path;
-            keyfile = config.age.secrets."mqtt.key".path;
+            cafile = cfg.mqtt.cafile;
+            certfile = cfg.mqtt.certfile;
+            keyfile = cfg.mqtt.keyfile;
             require_certificate = true;
+            allow_anonymous = true;
           };
         }
       ];

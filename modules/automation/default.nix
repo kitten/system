@@ -16,5 +16,6 @@ with lib; {
 } // helpers.linuxAttrs {
   imports = [
     ./mqtt.nix
+    ./zigbee.nix
   ];
 }
