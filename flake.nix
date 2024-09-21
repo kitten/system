@@ -117,5 +117,10 @@
       inherit (inputs.agenix.packages.${system}) agenix;
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
     });
+
+    apps = eachSystem (system: import ./lib/apps {
+      inherit lib;
+      pkgs = inputs.nixpkgs.legacyPackages.${system};
+    });
   };
 }
