@@ -8,13 +8,13 @@ let
 in {
   options.modules.router = {
     mdns.enable = mkOption {
-      default = cfg.enable;
+      default = false;
       description = "Whether to enable mDNS Discovery Service";
       type = types.bool;
     };
   };
 
-  config = mkIf (cfg.mdns.enable && intern != null) {
+  config = mkIf (cfg.mdns.enable && cfg.enable && intern != null) {
     services.avahi = {
       enable = true;
       allowInterfaces = if intern != null then [ intern.name ] else [];

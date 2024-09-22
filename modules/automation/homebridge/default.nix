@@ -96,7 +96,7 @@ let
         type = types.port;
       };
       advertiser = mkOption {
-        default = "ciao";
+        default = if config.services.resolved.enable then "resolved" else "ciao";
         type = types.str;
       };
       bind = mkOption {
@@ -236,5 +236,17 @@ in {
         isSystemUser = true;
       };
     };
+
+    security.polkit.extraConfig = optionalString (cfg.homebridge.bridge.advertiser == "resolved") ''
+      // kitten/system: Allow homebridge to register systemd-resolved services
+      // This was enabled via modules.automation.homebridge
+      polkit.addRule(function(action, subject) {
+        if ((action.id == "org.freedesktop.resolve1.register-service" ||
+          action.id == "org.freedesktop.resolve1.unregister-service") &&
+          subject.user == "${config.users.users.homebridge.name}") {
+          return polkit.Result.YES;
+        }
+      });
+    '';
   };
 }
