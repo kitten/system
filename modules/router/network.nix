@@ -56,6 +56,10 @@ in {
         else "127.0.0.1";
       example = "127.0.0.1";
     };
+    mdns = mkOption {
+      type = types.bool;
+      default = !config.services.avahi.enable;
+    };
     interfaces = {
       external = mkOption {
         type = interfaceType;
@@ -107,9 +111,15 @@ in {
             IPv4Forwarding = true;
             IPv6Forwarding = true;
             ConfigureWithoutCarrier = true;
+            MulticastDNS = cfg.mdns;
           };
         };
       });
     };
+
+    services.resolved.extraConfig = optionalString cfg.mdns ''
+      DNSStubListener=no
+      MulticastDNS=yes
+    '';
   };
 }

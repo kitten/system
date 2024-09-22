@@ -21,7 +21,6 @@ with lib; {
     ./dnsmasq.nix
     ./nftables.nix
     ./upnp.nix
-    ./mdns.nix
     ./kernel.nix
   ];
 }
