@@ -51,10 +51,6 @@
       tailscale.enable = true;
       caddy.enable = true;
       vaultwarden.enable = true;
-      home-assistant = {
-        enable = false;
-        extraOptions = [ "--device=/dev/ttyUSB0" ];
-      };
     };
   };
 
