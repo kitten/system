@@ -59,7 +59,7 @@ in {
       settings = {
         permit_join = cfg.zigbee.permitJoin;
         serial.port = cfg.zigbee.serialPort;
-        frontend = cfg.zigbee.frontend;
+        frontend = if cfg.zigbee.frontend.enable then cfg.zigbee.frontend else false;
         ota.disable_automatic_update_check = true;
         mqtt = mkIf cfg.mqtt.enable {
           server = "mqtts://localhost:${toString cfg.mqtt.port}";
