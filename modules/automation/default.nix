@@ -17,5 +17,6 @@ with lib; {
   imports = [
     ./mqtt.nix
     ./zigbee.nix
+    ./homebridge
   ];
 }

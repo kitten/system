@@ -1,0 +1,14 @@
+{
+  "name": "homebridge-distribution",
+  "private": true,
+  "version": "0.0.0",
+  "bin": {
+    "homebridge": "node_modules/homebridge/bin/homebridge",
+    "homebridge-config-ui": "node_modules/homebridge-config-ui-x/dist/bin/standalone.js"
+  },
+  "dependencies": {
+    "homebridge": "^1.8.4",
+    "homebridge-config-ui-x": "^4.58.0",
+    "homebridge-z2m": "^1.11.0-beta.6"
+  }
+}

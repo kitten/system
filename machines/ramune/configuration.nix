@@ -44,6 +44,7 @@
         enable = true;
         serialPort = "/dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_fcea8ceb8612ec11ab4e23c7bd930c07-if00-port0";
       };
+      homebridge.enable = true;
     };
     server = {
       enable = true;

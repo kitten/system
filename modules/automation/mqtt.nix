@@ -55,6 +55,7 @@ in {
       enable = true;
       listeners = [
         {
+          acl = [ "pattern readwrite #" ];
           port = cfg.mqtt.port;
           omitPasswordAuth = true;
           settings = {
