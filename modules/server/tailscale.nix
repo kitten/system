@@ -16,8 +16,6 @@ in {
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) {
-    modules.router.dnsmasq.localDomains = [ "${hostname}.fable-pancake.ts.net" ];
-
     networking = {
       domain = "fable-pancake.ts.net";
       firewall.trustedInterfaces = [ "tailscale0" ];
@@ -32,8 +30,8 @@ in {
 
     services.tailscale = {
       enable = true;
-      useRoutingFeatures = "both";
-      extraUpFlags = [ "--advertise-exit-node" "--ssh" ];
+      useRoutingFeatures = "server";
+      extraUpFlags = [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ];
       extraDaemonFlags = [ "--no-logs-no-support" ];
       authKeyFile = "/run/secrets/tailscale";
     };

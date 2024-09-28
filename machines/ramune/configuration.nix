@@ -25,7 +25,7 @@
           cidr = "10.0.0.1/24";
         };
       };
-      dnsmasq.leases = [
+      leases = [
         { macAddress = "98:ed:7e:c6:57:b2"; ipAddress = "10.0.0.102"; } # eero router
         { macAddress = "c4:f1:74:51:4c:f2"; ipAddress = "10.0.0.124"; } # eero router
         { macAddress = "5c:61:99:7a:16:40"; ipAddress = "10.0.0.103"; } # brother printer

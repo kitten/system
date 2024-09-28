@@ -17,8 +17,6 @@ with lib; {
   imports = [
     ./network.nix
     ./timeserver.nix
-    ./dnsOverTLS.nix
-    ./dnsmasq.nix
     ./nftables.nix
     ./upnp.nix
     ./kernel.nix
