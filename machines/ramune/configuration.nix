@@ -18,6 +18,7 @@
         external = {
           name = "extern0";
           macAddress = "5c:1b:f4:7f:dc:cd";
+          adoptMacAddress = "64:20:9f:16:70:a6";
         };
         internal = {
           name = "intern0";

@@ -79,9 +79,9 @@ in {
             ip protocol icmp \
               icmp type { destination-unreachable, echo-reply, echo-request, source-quench, time-exceeded } \
               accept
-            ip6 nexthdr icmpv6 accept
-            udp dport 546 ct state { new, untracked } accept
-            udp dport dhcpv6-client accept
+            meta l4proto ipv6-icmp accept
+            ip6 ecn not-ect accept
+            udp dport dhcpv6-client ct state { new, untracked } accept
             udp dport { http, https } ct state new accept
             tcp dport { http, https } ct state new accept
             udp dport 41641 ct state new accept
@@ -90,8 +90,6 @@ in {
 
           chain forward {
             type filter hook forward priority 0; policy drop;
-            ip6 nexthdr ipv6-icmp accept
-            udp dport dhcpv6-client accept
             ${blockForwardRules}
             iifname { ${concatIfnames trustedInterfaces} } accept
             oifname { ${concatIfnames trustedInterfaces} } ct state { established, related } accept
@@ -100,8 +98,6 @@ in {
 
           chain output {
             type filter hook output priority 0; policy accept;
-            ip6 nexthdr ipv6-icmp accept
-            udp dport dhcpv6-client accept
             iifname lo accept
             ct state invalid drop
           }

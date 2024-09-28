@@ -52,9 +52,7 @@ in {
       "net.ipv4.tcp_syncookies" = true;
 
       "net.ipv6.conf.all.forwarding" = true;
-      "net.ipv6.conf.all.use_tempaddr" = false;
-      "net.ipv6.conf.all.autoconf" = false;
-      "net.ipv6.conf.all.accept_ra" = false;
+      "net.ipv6.conf.all.accept_ra" = 2;
 
       "kernel.kptr_restrict" = 2;
       "kernel.dmesg_restrict" = 0;

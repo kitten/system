@@ -29,6 +29,10 @@ let
         type = types.str;
         example = "00:00:00:00:00:00";
       };
+      adoptMacAddress = mkOption {
+        type = types.nullOr types.str;
+        example = "00:00:00:00:00:00";
+      };
       cidr = mkOption {
         type = types.str;
         default = "0.0.0.0/0";
@@ -54,6 +58,10 @@ in {
       type = types.bool;
       default = !config.services.avahi.enable;
     };
+    ipv6 = mkOption {
+      type = types.bool;
+      default = false;
+    };
     interfaces = {
       external = mkOption {
         type = interfaceType;
@@ -77,7 +85,7 @@ in {
         linkConfig = {
           Description = "External Network Interface";
           Name = extern.name;
-          # MACAddress = "64:20:9f:16:70:a6";
+          MACAddress = extern.adoptMacAddress;
           MTUBytes = "1500";
         };
       };
@@ -99,8 +107,7 @@ in {
       };
       nameservers = [
         "1.1.1.1#cloudflare-dns.com"
-        "2606:4700:4700::1111#cloudflare-dns.com"
-      ];
+      ] ++ (if cfg.ipv6 then [ "2606:4700:4700::1111#cloudflare-dns.com" ] else []);
     };
 
     boot.initrd.systemd.network = {
@@ -111,11 +118,13 @@ in {
     systemd.network = {
       enable = true;
       inherit links;
-      networks = {
+      networks = let
+        gatewayAddress = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
+      in {
         "10-${extern.name}" = {
           name = extern.name;
           networkConfig = {
-            DHCP = "ipv4";
+            DHCP = if cfg.ipv6 then "yes" else "ipv4";
             IPv4Forwarding = true;
             IPv6Forwarding = true;
           };
@@ -123,6 +132,19 @@ in {
             UseDNS = false;
             UseDomains = false;
             UseNTP = !cfg.timeserver.enable;
+          };
+          dhcpV6Config = mkIf cfg.ipv6 {
+            WithoutRA = "solicit";
+            UseDNS = false;
+            UseDomains = false;
+            UseAddress = false;
+            DUIDType = "link-layer";
+            DUIDRawData = mkIf (extern.adoptMacAddress != null) "00:01:${extern.adoptMacAddress}";
+          };
+          ipv6AcceptRAConfig = mkIf cfg.ipv6 {
+            UseDNS = false;
+            UseDomains = false;
+            DHCPv6Client = "always";
           };
         };
       } // (optionalAttrs (intern != null) {
@@ -134,13 +156,14 @@ in {
             DHCPServer = true;
             IPv4Forwarding = true;
             IPv6Forwarding = true;
+            IPMasquerade = "both";
             ConfigureWithoutCarrier = true;
             MulticastDNS = cfg.mdns;
+            DHCPPrefixDelegation = cfg.ipv6;
+            IPv6SendRA = cfg.ipv6;
           };
 
-          dhcpServerConfig = let
-            gatewayAddress = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
-          in {
+          dhcpServerConfig = {
             EmitDNS = true;
             EmitNTP = true;
             DNS = gatewayAddress;
@@ -153,6 +176,10 @@ in {
             Address = lease.ipAddress;
             MACAddress = lease.macAddress;
           }) cfg.leases;
+
+          dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
+            Announce = true;
+          };
         };
       });
     };
@@ -161,11 +188,13 @@ in {
       enable = true;
       fallbackDns = [
         "1.0.0.1"
-        "2606:4700:4700::1001"
-      ];
+      ] ++ (if cfg.ipv6 then [ "2606:4700:4700::1001" ] else []);
       dnsovertls = "opportunistic";
       extraConfig = strings.concatStringsSep "\n" [
-        "[Resolve]"
+        ''
+          [Resolve]
+          ReadEtcHosts=no
+        ''
         (optionalString cfg.mdns ''
           MulticastDNS=yes
         '')
