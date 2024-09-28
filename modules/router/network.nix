@@ -157,8 +157,8 @@ in {
             Address = intern.cidr;
             DHCPServer = true;
             IPv4Forwarding = true;
-            IPv6Forwarding = true;
-            IPMasquerade = "both";
+            IPv6Forwarding = cfg.ipv6;
+            IPMasquerade = if cfg.ipv6 then "ipv4" else "both";
             ConfigureWithoutCarrier = true;
             MulticastDNS = cfg.mdns;
             DHCPPrefixDelegation = cfg.ipv6;
