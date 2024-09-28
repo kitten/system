@@ -5,14 +5,14 @@ let
   cfg = config.modules.router;
 
   intern = cfg.interfaces.internal;
-  extern = cfg.interfaces.external;
+  trustedInterfaces = config.networking.firewall.trustedInterfaces;
+  internalInterfaces = lists.remove "lo" trustedInterfaces;
 
-  trustedInterfaces =
-    strings.concatMapStringsSep ", " strings.escapeNixIdentifier config.networking.firewall.trustedInterfaces;
+  concatIfnames = strings.concatMapStringsSep ", " strings.escapeNixIdentifier;
 
   capturePortsRules =
     strings.concatStringsSep "\n"
-      (builtins.map (port: "  iifname { ${trustedInterfaces} } udp dport ${toString port} redirect to ${toString port}") cfg.nftables.capturePorts);
+      (builtins.map (port: "  iifname { ${concatIfnames internalInterfaces} } udp dport ${toString port} redirect to ${toString port}") cfg.nftables.capturePorts);
 
   blockForwardRules =
     if intern != null then
@@ -64,15 +64,15 @@ in {
 
           chain postrouting {
             type nat hook postrouting priority 0; policy accept;
-            oifname != { ${trustedInterfaces} } masquerade
+            oifname != { ${concatIfnames trustedInterfaces} } masquerade
           }
 
           chain input {
             type filter hook input priority 0;
             ct state { established, related } accept
             ct state invalid drop
-            iifname { ${trustedInterfaces} } accept
-            iifname { ${trustedInterfaces} } pkttype { broadcast, multicast } accept
+            iifname { ${concatIfnames trustedInterfaces} } accept
+            iifname { ${concatIfnames trustedInterfaces} } pkttype { broadcast, multicast } accept
             tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
             tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
             tcp flags & (fin|syn|rst|psh|ack|urg) == 0x0 counter drop
@@ -93,8 +93,8 @@ in {
             ip6 nexthdr ipv6-icmp accept
             udp dport dhcpv6-client accept
             ${blockForwardRules}
-            iifname { ${trustedInterfaces} } accept
-            oifname { ${trustedInterfaces} } ct state { established, related } accept
+            iifname { ${concatIfnames trustedInterfaces} } accept
+            oifname { ${concatIfnames trustedInterfaces} } ct state { established, related } accept
             ct state invalid drop
           }
 
@@ -113,7 +113,7 @@ in {
         content = ''
           chain input {
             type filter hook input priority 0; policy accept;
-            iifname != { ${trustedInterfaces} } limit rate 1/second burst 2 packets accept
+            iifname != { ${concatIfnames trustedInterfaces} } limit rate 1/second burst 2 packets accept
           }
 
           chain output {

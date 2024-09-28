@@ -4,14 +4,12 @@ with lib;
 let
   cfg = config.modules.router;
 
-  listenInterfaces =
-    strings.concatStringsSep "\n"
-      (builtins.map (ifname: "interface listen ${ifname}") config.networking.firewall.trustedInterfaces);
+  intern = cfg.interfaces.internal;
 
-  ntpExtraConfig = ''
-    ${listenInterfaces}
-    interface ignore ${cfg.interfaces.external.name}
-  '';
+  bindDevices =
+    strings.concatStringsSep "\n"
+      (builtins.map (ifname: "binddevice ${ifname}")
+        (lists.remove "lo" config.networking.firewall.trustedInterfaces));
 in {
   options.modules.router = {
     timeserver.enable = mkOption {
@@ -24,9 +22,16 @@ in {
   config = mkIf cfg.timeserver.enable {
     networking.timeServers = [ "time.cloudflare.com" ];
 
-    services.ntp = {
+    services.chrony = {
       enable = true;
-      extraConfig = ntpExtraConfig;
+      enableNTS = true;
+      extraConfig = ''
+        allow ${intern.cidr}
+        ${bindDevices}
+      '';
     };
+
+    services.ntp.enable = false;
+    services.openntpd.enable = false;
   };
 }
