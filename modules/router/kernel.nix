@@ -19,6 +19,9 @@ in {
       "net.core.somaxconn" = 4096;
       "net.core.netdev_max_backlog" = 2000;
 
+      "net.ipv4.ip_nonlocal_bind" = true;
+      "net.ipv4.ip_dynaddr" = true;
+
       "net.core.rmem_default" = 1048576;
       "net.core.rmem_max" = 26214400;
       "net.core.wmem_default" = 1048576;
@@ -47,8 +50,9 @@ in {
       "net.ipv4.tcp_keepalive_intvl" = 10;
       "net.ipv4.tcp_keepalive_probes" = 6;
 
-      "net.core.default_qdisc" = "cake";
+      "net.core.default_qdisc" = "fq_codel";
       "net.ipv4.tcp_congestion_control" = "bbr";
+      "net.ipv4.tcp_window_scaling" = true;
       "net.ipv4.tcp_syncookies" = true;
 
       "net.ipv6.conf.all.forwarding" = true;

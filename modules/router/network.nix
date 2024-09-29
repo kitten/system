@@ -128,6 +128,9 @@ in {
             IPv4Forwarding = true;
             IPv6Forwarding = true;
           };
+          cakeConfig = {
+            Parent = "root";
+          };
           dhcpV4Config = {
             UseDNS = false;
             UseDomains = false;
@@ -150,7 +153,6 @@ in {
       } // (optionalAttrs (intern != null) {
         "11-${intern.name}" = {
           name = intern.name;
-
           networkConfig = {
             Address = intern.cidr;
             DHCPServer = true;
@@ -162,7 +164,9 @@ in {
             DHCPPrefixDelegation = cfg.ipv6;
             IPv6SendRA = cfg.ipv6;
           };
-
+          fairQueueingControlledDelayConfig = {
+            Parent = "root";
+          };
           dhcpServerConfig = {
             EmitDNS = true;
             EmitNTP = true;
@@ -171,12 +175,10 @@ in {
             DefaultLeaseTimeSec = 43200;
             MaxLeaseTimeSec = 86400;
           };
-
           dhcpServerStaticLeases = builtins.map (lease: {
             Address = lease.ipAddress;
             MACAddress = lease.macAddress;
           }) cfg.leases;
-
           dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
             Announce = true;
           };
