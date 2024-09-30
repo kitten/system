@@ -82,8 +82,6 @@ in {
             meta l4proto ipv6-icmp accept
             ip6 ecn not-ect accept
             udp dport dhcpv6-client ct state { new, untracked } accept
-            udp dport { http, https } ct state new accept
-            tcp dport { http, https } ct state new accept
             udp dport 41641 ct state new accept
             reject with icmpx type port-unreachable
           }
