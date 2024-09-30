@@ -14,6 +14,7 @@
   modules = {
     router = {
       enable = true;
+      ipv6 = true;
       interfaces = {
         external = {
           name = "extern0";

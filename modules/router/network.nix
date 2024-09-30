@@ -127,6 +127,7 @@ in {
             DHCP = if cfg.ipv6 then "yes" else "ipv4";
             IPv4Forwarding = true;
             IPv6Forwarding = true;
+            IPv6AcceptRA = mkIf cfg.ipv6 true;
           };
           cakeConfig = {
             Parent = "root";
@@ -148,6 +149,7 @@ in {
             UseDNS = false;
             UseDomains = false;
             DHCPv6Client = "always";
+            Token = mkIf (extern.adoptMacAddress != null) "static:::${extern.adoptMacAddress}";
           };
         };
       } // (optionalAttrs (intern != null) {
@@ -185,6 +187,8 @@ in {
         };
       });
     };
+
+    services.irqbalance.enable = true;
 
     services.resolved = {
       enable = true;
