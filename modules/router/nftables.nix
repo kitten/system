@@ -12,7 +12,9 @@ let
 
   capturePortsRules =
     strings.concatStringsSep "\n"
-      (builtins.map (port: "  iifname { ${concatIfnames internalInterfaces} } udp dport ${toString port} redirect to ${toString port}") cfg.nftables.capturePorts);
+      (builtins.map (port: ''
+        iifname { ${concatIfnames internalInterfaces} } meta l4proto { tcp, udp } th dport ${toString port} redirect to ${toString port}
+      '') cfg.nftables.capturePorts);
 
   blockForwardRules =
     if intern != null then
@@ -64,7 +66,7 @@ in {
 
           chain postrouting {
             type nat hook postrouting priority 0; policy accept;
-            oifname != { ${concatIfnames trustedInterfaces} } masquerade
+            oifname != { ${concatIfnames trustedInterfaces} } meta protocol ip masquerade
           }
 
           chain input {
@@ -128,21 +130,12 @@ in {
             ip dscp set cs0
             ip6 dscp set cs0
 
-            ip protocol udp udp sport ntp ip dscp set cs5
-            ip6 nexthdr udp udp sport ntp ip6 dscp set cs5
+            udp sport 53 ip dscp set cs5
+            tcp sport 853 ip dscp set cs5
+            udp sport 123 ip dscp set cs5
+            tcp dport {80, 443} ip dscp set cs3
 
-            ip saddr {1.1.1.1, 1.0.0.1} ip dscp set cs5
-            ip daddr {1.1.1.1, 1.0.0.1} ip dscp set cs5
-
-            tcp dport {http, https} ip dscp set cs3
-            tcp sport {http, https} ip dscp set cs3
-            ip6 nexthdr tcp tcp dport {http, https} ip6 dscp set cs3
-            ip6 nexthdr tcp tcp sport {http, https} ip6 dscp set cs3
-
-            udp dport 41641 ip dscp set cs4 # tailscale
-            udp sport 41641 ip dscp set cs4 # tailscale
-
-            # mark some VOIP traffic as flash override (low delay)
+            udp dport 41641 ip dscp set cs4
             udp dport {3478-3479, 19302-19309} ip dscp set cs4
             udp sport {3478-3479, 19302-19309} ip dscp set cs4
             ip6 nexthdr udp udp dport {3478-3479, 19302-19309} ip6 dscp set cs4

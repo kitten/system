@@ -145,6 +145,10 @@ in {
             DUIDType = "link-layer";
             DUIDRawData = mkIf (extern.adoptMacAddress != null) "00:01:${extern.adoptMacAddress}";
           };
+          dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
+            UplinkInterface = ":self";
+            Announce = false;
+          };
           ipv6AcceptRAConfig = mkIf cfg.ipv6 {
             UseDNS = false;
             UseDomains = false;
@@ -160,15 +164,20 @@ in {
             DHCPServer = true;
             IPv4Forwarding = true;
             IPv6Forwarding = cfg.ipv6;
-            IPMasquerade = if cfg.ipv6 then "ipv4" else "both";
+            IPMasquerade = "ipv4";
             ConfigureWithoutCarrier = true;
             MulticastDNS = cfg.mdns;
             DHCPPrefixDelegation = cfg.ipv6;
             IPv6SendRA = cfg.ipv6;
+            IPv6AcceptRA = mkIf cfg.ipv6 false;
           };
           fairQueueingControlledDelayConfig = {
             Parent = "root";
           };
+          dhcpServerStaticLeases = builtins.map (lease: {
+            Address = lease.ipAddress;
+            MACAddress = lease.macAddress;
+          }) cfg.leases;
           dhcpServerConfig = {
             EmitDNS = true;
             EmitNTP = true;
@@ -177,11 +186,9 @@ in {
             DefaultLeaseTimeSec = 43200;
             MaxLeaseTimeSec = 86400;
           };
-          dhcpServerStaticLeases = builtins.map (lease: {
-            Address = lease.ipAddress;
-            MACAddress = lease.macAddress;
-          }) cfg.leases;
           dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
+            UplinkInterface = extern.name;
+            Token = "static:::1";
             Announce = true;
           };
         };
