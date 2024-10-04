@@ -105,6 +105,10 @@ in {
         :80 {
           import network_paths
         }
+
+        :443 {
+          import network_paths
+        }
       '';
     };
   };

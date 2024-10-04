@@ -102,6 +102,7 @@ in {
   in mkIf cfg.enable {
     networking = {
       useNetworkd = true;
+      hosts."127.0.0.2" = mkForce [];
       firewall = mkIf (intern != null) {
         trustedInterfaces = [ "lo" intern.name ];
       };
@@ -199,15 +200,14 @@ in {
 
     services.resolved = {
       enable = true;
+      llmnr = "false";
+      domains = [ "~." ];
       fallbackDns = [
         "1.0.0.1"
       ] ++ (if cfg.ipv6 then [ "2606:4700:4700::1001" ] else []);
       dnsovertls = "opportunistic";
       extraConfig = strings.concatStringsSep "\n" [
-        ''
-          [Resolve]
-          ReadEtcHosts=no
-        ''
+        "[Resolve]"
         (optionalString cfg.mdns ''
           MulticastDNS=yes
         '')
