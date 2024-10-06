@@ -102,6 +102,7 @@ in {
   in mkIf cfg.enable {
     networking = {
       useNetworkd = true;
+      networkmanager.enable = mkForce false;
       firewall = mkIf (intern != null) {
         trustedInterfaces = [ "lo" intern.name ];
       };

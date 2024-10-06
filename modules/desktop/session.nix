@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, pkgs, ... }:
 
 with lib;
 let
@@ -20,10 +20,6 @@ in {
       desktopManager.plasma6.enable = true;
       displayManager = {
         defaultSession = "plasma";
-        autoLogin = {
-          inherit user;
-          enable = true;
-        };
         sddm = {
           enable = true;
           enableHidpi = true;

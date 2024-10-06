@@ -27,6 +27,11 @@ in {
   config = mkIf cfg.enable {
     users.users."${user}".extraGroups = [ "video" ];
 
+    networking.networkmanager = {
+      enable = mkDefault true;
+      wifi.powersave = true;
+    };
+
     services = {
       fwupd.enable = true;
       pipewire = {
