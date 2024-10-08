@@ -831,7 +831,8 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nvim-plugins": "nvim-plugins",
-        "wezterm": "wezterm"
+        "wezterm": "wezterm",
+        "yeetmouse": "yeetmouse"
       }
     },
     "rust-overlay": {
@@ -1079,6 +1080,29 @@
         "owner": "folke",
         "ref": "v1.6.0",
         "repo": "which-key.nvim",
+        "type": "github"
+      }
+    },
+    "yeetmouse": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "nix",
+        "lastModified": 1728468997,
+        "narHash": "sha256-SoBdlk/amOe/nob9QPime4rDMAsHkZprhblERp/Yi8E=",
+        "owner": "kitten",
+        "repo": "yeetmouse",
+        "rev": "b38d777f8b64df750c2d01115c0ea51f6fad4fb7",
+        "type": "github"
+      },
+      "original": {
+        "dir": "nix",
+        "owner": "kitten",
+        "ref": "feat/port-maccel-input-handler",
+        "repo": "yeetmouse",
         "type": "github"
       }
     },

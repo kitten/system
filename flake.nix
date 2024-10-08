@@ -66,6 +66,11 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    yeetmouse = {
+      url = "github:kitten/yeetmouse/feat/port-maccel-input-handler?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -99,6 +104,9 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "pepper";
+      modules = [
+        inputs.yeetmouse.nixosModules.default
+      ];
     };
 
     nixosConfigurations."cola" = mkSystem {

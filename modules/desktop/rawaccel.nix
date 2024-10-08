@@ -1,9 +1,8 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, ... }:
 
 with lib;
 let
   cfg = config.modules.desktop;
-  yeetmouse = import ../../lib/pkgs/yeetmouse.nix pkgs;
 in {
   options.modules.desktop.rawaccel = {
     enable = mkOption {
@@ -15,30 +14,21 @@ in {
   };
 
   config = mkIf cfg.rawaccel.enable {
-    boot.extraModulePackages = [ yeetmouse ];
-    environment.systemPackages = [ yeetmouse ];
-    services.udev = {
-      packages = [ yeetmouse ];
-      extraRules = let
-        echo = "${pkgs.coreutils}/bin/echo";
-        yeetmouseConfig = pkgs.writeShellScriptBin "yeetmouseConfig" ''
-          ${echo} "2.89" > /sys/module/leetmouse/parameters/Acceleration
-          ${echo} "4" > /sys/module/leetmouse/parameters/AccelerationMode
-          ${echo} "0.4" > /sys/module/leetmouse/parameters/Exponent
-          ${echo} "17.2" > /sys/module/leetmouse/parameters/InputCap
-          ${echo} "6.54" > /sys/module/leetmouse/parameters/Midpoint
-          ${echo} "7.53" > /sys/module/leetmouse/parameters/Offset
-          ${echo} "0" > /sys/module/leetmouse/parameters/OutputCap
-          ${echo} "0.17" > /sys/module/leetmouse/parameters/PreScale
-          ${echo} "0.0514872" > /sys/module/leetmouse/parameters/RotationAngle
-          ${echo} "3" > /sys/module/leetmouse/parameters/ScrollsPerTick
-          ${echo} "0.56" > /sys/module/leetmouse/parameters/Sensitivity
-          ${echo} "1" > /sys/module/leetmouse/parameters/UseSmoothing
-          ${echo} "1" > /sys/module/leetmouse/parameters/update
-        '';
-      in ''
-        SUBSYSTEMS=="usb|input|hid", ATTRS{bInterfaceClass}=="03", ATTRS{bInterfaceSubClass}=="01", ATTRS{bInterfaceProtocol}=="02", ATTRS{bInterfaceNumber}=="00", RUN+="${yeetmouseConfig}/bin/yeetmouseConfig"
-      '';
+    hardware.yeetmouse = {
+      enable = true;
+      parameters = {
+        Sensitivity = 0.56;
+        Acceleration = 3.97;
+        AccelerationMode = "jump";
+        Exponent = 1.0;
+        InputCap = 35.0;
+        Midpoint = 4.4;
+        Offset = 5.38;
+        PreScale = 0.17;
+        RotationAngle = 0.0506145;
+        ScrollsPerTick = 3;
+        UseSmoothing = true;
+      };
     };
   };
 }
