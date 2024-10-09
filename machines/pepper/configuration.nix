@@ -14,6 +14,15 @@
   modules = {
     desktop.enable = true;
     fonts.enable = true;
+    server = {
+      enable = true;
+      sshd.enable = true;
+      tailscale.enable = true;
+    };
+    apps = {
+      enable = true;
+      games.enable = true;
+    };
   };
 
   system.stateVersion = "24.11";

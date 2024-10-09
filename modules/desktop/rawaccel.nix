@@ -22,10 +22,10 @@ in {
         AccelerationMode = "jump";
         Exponent = 1.0;
         InputCap = 35.0;
-        Midpoint = 4.4;
-        Offset = 5.38;
+        Midpoint = 4.1;
+        Offset = 5.9;
         PreScale = 0.17;
-        RotationAngle = 0.0506145;
+        RotationAngle = 0.05;
         ScrollsPerTick = 3;
         UseSmoothing = true;
       };
