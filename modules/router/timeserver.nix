@@ -4,8 +4,6 @@ with lib;
 let
   cfg = config.modules.router;
 
-  intern = cfg.interfaces.internal;
-
   bindDevices =
     strings.concatStringsSep "\n"
       (builtins.map (ifname: "binddevice ${ifname}")
@@ -20,13 +18,16 @@ in {
   };
 
   config = mkIf cfg.timeserver.enable {
-    networking.timeServers = [ "time.cloudflare.com" ];
+    networking.timeServers = [
+      "time.cloudflare.com"
+      "time.google.com"
+    ];
 
     services.chrony = {
       enable = true;
       enableNTS = true;
       extraConfig = ''
-        allow ${intern.cidr}
+        allow all
         ${bindDevices}
       '';
     };

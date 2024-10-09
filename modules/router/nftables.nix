@@ -31,7 +31,7 @@ in {
       };
 
       capturePorts = mkOption {
-        default = [ 53 123 ];
+        default = [ 53 ];
         description = "Ports to capture and redirect to router";
         type = types.listOf types.int;
       };
