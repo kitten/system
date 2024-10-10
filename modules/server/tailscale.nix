@@ -32,7 +32,7 @@ in {
     services.tailscale = {
       enable = true;
       useRoutingFeatures = "server";
-      extraUpFlags = [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ];
+      extraUpFlags = [ "--advertise-exit-node" "--ssh" "--accept-dns=true" ];
       extraDaemonFlags = [ "--no-logs-no-support" ];
       authKeyFile = "/run/secrets/tailscale";
     };
