@@ -30,12 +30,16 @@ in {
 
     environment.plasma6 = {
       excludePackages = with pkgs.kdePackages; [
+        ffmpegthumbs
+        plasma-browser-integration
+        kate
+        konsole
+        krdp
         elisa
         gwenview
         oxygen
         oxygen-sounds
         khelpcenter
-        konsole
       ];
     };
 
