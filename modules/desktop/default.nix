@@ -28,9 +28,20 @@ in {
   config = mkIf cfg.enable {
     users.users."${user}".extraGroups = [ "video" ];
 
-    networking.networkmanager = {
-      enable = mkDefault true;
-      wifi.powersave = true;
+    networking = {
+      firewall = {
+        enable = mkDefault true;
+        checkReversePath = "loose";
+      };
+      nftables = {
+        enable = mkForce true;
+        checkRuleset = false;
+        flushRuleset = true;
+      };
+      networkmanager = {
+        enable = mkDefault true;
+        wifi.powersave = true;
+      };
     };
 
     hardware = {
