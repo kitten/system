@@ -61,6 +61,7 @@ in helpers.linuxAttrs {
       "vm.vfs_cache_pressure" = 10;
       "vm.dirty_ratio" = 2;
       "vm.dirty_background_ratio" = 5;
+      "net.ipv4.tcp_fin_timeout" = 5;
     };
   };
 
