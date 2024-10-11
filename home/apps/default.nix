@@ -13,6 +13,7 @@ with lib; {
     ./firefox.nix
     ./obsidian.nix
     ./ollama.nix
+    ./minecraft.nix
     ./wezterm
   ];
 }
