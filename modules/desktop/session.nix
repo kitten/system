@@ -28,19 +28,24 @@ in {
       };
     };
 
-    environment.plasma6 = {
-      excludePackages = with pkgs.kdePackages; [
-        ffmpegthumbs
-        plasma-browser-integration
-        kate
-        konsole
-        krdp
-        elisa
-        gwenview
-        oxygen
-        oxygen-sounds
-        khelpcenter
+    environment = {
+      systemPackages = with pkgs.kdePackages; [
+        sddm-kcm
       ];
+      plasma6 = {
+        excludePackages = with pkgs.kdePackages; [
+          ffmpegthumbs
+          plasma-browser-integration
+          kate
+          konsole
+          krdp
+          elisa
+          gwenview
+          oxygen
+          oxygen-sounds
+          khelpcenter
+        ];
+      };
     };
 
     security = {
@@ -49,7 +54,7 @@ in {
 
     xdg.portal = {
       enable = true;
-      xdgOpenUsePortal = false;
+      xdgOpenUsePortal = true;
     };
   };
 }

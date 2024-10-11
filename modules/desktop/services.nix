@@ -17,6 +17,7 @@ in {
     users.users."${user}".extraGroups = [ "video" ];
 
     services = {
+      hardware.bolt.enable = true;
       printing.enable = true;
       flatpak.enable = true;
       colord.enable = true;
