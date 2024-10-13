@@ -7,9 +7,10 @@
     apps = {
       enable = true;
       wezterm.enable = true;
+      discord.enable = true;
       firefox.enable = true;
       obsidian.enable = true;
-      ollama.enable = true;
+      minecraft.enable = true;
     };
   };
 }

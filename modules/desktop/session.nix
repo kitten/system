@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, pkgs, ... }:
 
 with lib;
 let
@@ -20,10 +20,6 @@ in {
       desktopManager.plasma6.enable = true;
       displayManager = {
         defaultSession = "plasma";
-        autoLogin = {
-          inherit user;
-          enable = true;
-        };
         sddm = {
           enable = true;
           enableHidpi = true;
@@ -32,15 +28,24 @@ in {
       };
     };
 
-    environment.plasma6 = {
-      excludePackages = with pkgs.kdePackages; [
-        elisa
-        gwenview
-        oxygen
-        oxygen-sounds
-        khelpcenter
-        konsole
+    environment = {
+      systemPackages = with pkgs.kdePackages; [
+        sddm-kcm
       ];
+      plasma6 = {
+        excludePackages = with pkgs.kdePackages; [
+          ffmpegthumbs
+          plasma-browser-integration
+          kate
+          konsole
+          krdp
+          elisa
+          gwenview
+          oxygen
+          oxygen-sounds
+          khelpcenter
+        ];
+      };
     };
 
     security = {
@@ -49,7 +54,7 @@ in {
 
     xdg.portal = {
       enable = true;
-      xdgOpenUsePortal = false;
+      xdgOpenUsePortal = true;
     };
   };
 }

@@ -44,7 +44,7 @@ in {
       "net.ipv4.tcp_mtu_probing" = true;
 
       "net.ipv4.tcp_rfc1337" = true;
-      "net.ipv4.tcp_fin_timeout" = 10;
+      "net.ipv4.tcp_fin_timeout" = 5;
 
       "net.ipv4.tcp_keepalive_time" = 60;
       "net.ipv4.tcp_keepalive_intvl" = 10;

@@ -6,6 +6,11 @@ wezterm.on("gui-startup", function(cmd)
   window:gui_window():maximize()
 end)
 
+local window_decorations = "RESIZE"
+if is_linux then
+  window_decorations = "TITLE | RESIZE"
+end
+
 return {
   term = "wezterm",
   default_prog = { zsh_bin, "-l" },
@@ -33,7 +38,7 @@ return {
   native_macos_fullscreen_mode = true,
   warn_about_missing_glyphs = false,
   bold_brightens_ansi_colors = false,
-  window_decorations = "RESIZE",
+  window_decorations = window_decorations,
   window_background_opacity = 0.999,
   hide_mouse_cursor_when_typing = false,
   underline_thickness = "160%",

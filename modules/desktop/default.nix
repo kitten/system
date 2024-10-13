@@ -22,22 +22,25 @@ in {
     ./session.nix
     ./xdg.nix
     ./fonts.nix
+    ./rawaccel.nix
   ];
 
   config = mkIf cfg.enable {
     users.users."${user}".extraGroups = [ "video" ];
 
-    services = {
-      fwupd.enable = true;
-      pipewire = {
-        enable = true;
-        wireplumber.enable = true;
-        pulse.enable = true;
-        jack.enable = true;
-        alsa = {
-          enable = true;
-          support32Bit = true;
-        };
+    networking = {
+      firewall = {
+        enable = mkDefault true;
+        checkReversePath = "loose";
+      };
+      nftables = {
+        enable = mkForce true;
+        checkRuleset = false;
+        flushRuleset = true;
+      };
+      networkmanager = {
+        enable = mkDefault true;
+        wifi.powersave = true;
       };
     };
 

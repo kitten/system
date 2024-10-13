@@ -1,8 +1,12 @@
-{ config, lib, inputs, modulesPath, ... }:
+{ lib, inputs, modulesPath, ... }:
 
 {
   imports = with inputs; [
-    nixos-hardware.nixosModules.framework-13-7040-amd
+    nixos-hardware.nixosModules.common-cpu-amd
+    nixos-hardware.nixosModules.common-cpu-amd-pstate
+    nixos-hardware.nixosModules.common-gpu-amd
+    nixos-hardware.nixosModules.common-pc-ssd
+    nixos-hardware.nixosModules.common-pc
     lanzaboote.nixosModules.lanzaboote
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -12,11 +16,6 @@
 
     initrd = {
       availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-      kernelModules = [ "dm-snapshot" ];
-      luks.devices."enc" = {
-        device = "/dev/disk/by-label/NIXCRYPT";
-        preLVM = true;
-      };
     };
     kernelModules = [ "kvm-amd" ];
     extraModulePackages = [ ];
@@ -32,71 +31,51 @@
       pkiBundle = "/etc/secureboot";
       configurationLimit = 3;
     };
-
-    resumeDevice = "/dev/disk/by-label/NIXSWAP";
   };
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
-    options = [ "subvol=root" ];
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-label/NIXROOT";
-    fsType = "btrfs";
-    options = [ "subvol=home" ];
+    options = [ "subvol=@root" "noatime" ];
   };
 
   fileSystems."/nix" = {
     device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
-    options = [ "subvol=nix" ];
+    options = [ "subvol=@nix" "noatime" "compress=zstd" ];
+  };
+
+  fileSystems."/home" = {
+    device = "/dev/disk/by-label/NIXROOT";
+    fsType = "btrfs";
+    options = [ "subvol=@home" "noatime" ];
   };
 
   fileSystems."/var/log" = {
     device = "/dev/disk/by-label/NIXROOT";
     fsType = "btrfs";
-    options = [ "subvol=log" ];
+    options = [ "subvol=@log" "noatime" ];
+  };
+
+  fileSystems."/swap" = {
+    device = "/dev/disk/by-label/NIXROOT";
+    fsType = "btrfs";
+    options = [ "subvol=@swap" "noatime" ];
   };
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-label/NIXBOOT";
     fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" ];
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-label/NIXSWAP"; }
+    { device = "/swap/swapfile"; }
   ];
 
-  # prefer suspend-then-hibernate
-  services.logind = {
-    lidSwitch = "suspend-then-hibernate";
-    extraConfig = ''
-      HandlePowerKey=suspend-then-hibernate
-      LidSwitchIgnoreInhibited=no
-      IdleAction=suspend-then-hibernate
-      IdleActionSec=1m
-    '';
+  hardware = {
+    enableAllFirmware = true;
+    graphics.enable = true;
+    wirelessRegulatoryDatabase = true;
   };
-
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=2h
-  '';
-
-  # enable AMD microcode update and firmware
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.enableAllFirmware = true;
-
-  # enable bluetooth support
-  hardware.bluetooth.enable = true;
-
-  # enable media acceleration
-  hardware.graphics.enable = true;
-
-  # set regulatory domain for wireless chip
-  hardware.wirelessRegulatoryDatabase = true;
-  boot.extraModprobeConfig = ''
-    options cfg80211 ieee80211_regdom="US"
-  '';
 }

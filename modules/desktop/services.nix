@@ -17,9 +17,21 @@ in {
     users.users."${user}".extraGroups = [ "video" ];
 
     services = {
+      hardware.bolt.enable = true;
       printing.enable = true;
       flatpak.enable = true;
       colord.enable = true;
+      fwupd.enable = true;
+      pipewire = {
+        enable = true;
+        wireplumber.enable = true;
+        pulse.enable = true;
+        jack.enable = true;
+        alsa = {
+          enable = true;
+          support32Bit = true;
+        };
+      };
     };
   };
 }

@@ -3,6 +3,7 @@
 {
   imports = [
     ./base
+    ./apps
     ./desktop
     ./development
     ./fonts
@@ -10,5 +11,6 @@
     ./router
     ./server
     ./automation
+    ./apps
   ];
 }

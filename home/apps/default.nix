@@ -10,9 +10,11 @@ with lib; {
   };
 
   imports = [
+    ./discord.nix
     ./firefox.nix
     ./obsidian.nix
     ./ollama.nix
+    ./minecraft.nix
     ./wezterm
   ];
 }

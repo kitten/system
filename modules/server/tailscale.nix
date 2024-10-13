@@ -3,8 +3,8 @@
 with lib;
 let
   cfgRoot = config.modules.server;
+  cfgRouter = config.modules.router;
   cfg = config.modules.server.tailscale;
-  address = config.modules.router.address;
 in {
   options.modules.server.tailscale = {
     enable = mkOption {
@@ -20,7 +20,7 @@ in {
       domain = "fable-pancake.ts.net";
       search = [ "fable-pancake.ts.net" ];
       firewall.trustedInterfaces = [ "tailscale0" ];
-      hosts."${address}" = [ "${hostname}.fable-pancake.ts.net" hostname ];
+      hosts."${cfgRouter.address}" = mkIf cfgRouter.enable [ "${hostname}.fable-pancake.ts.net" hostname ];
     };
 
     age.secrets."tailscale" = {
@@ -31,8 +31,10 @@ in {
 
     services.tailscale = {
       enable = true;
-      useRoutingFeatures = "server";
-      extraUpFlags = [ "--advertise-exit-node" "--ssh" "--accept-dns=true" ];
+      useRoutingFeatures = if cfgRouter.enable then "server" else "none";
+      extraUpFlags = if cfgRouter.enable
+        then [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ]
+        else [ "--ssh" "--accept-dns=true" ];
       extraDaemonFlags = [ "--no-logs-no-support" ];
       authKeyFile = "/run/secrets/tailscale";
     };

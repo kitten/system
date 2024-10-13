@@ -20,7 +20,7 @@ in {
 
     services.openssh = {
       enable = true;
-      openFirewall = false;
+      openFirewall = mkDefault (!config.modules.router.enable);
     };
   };
 }
