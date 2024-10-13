@@ -51,20 +51,17 @@
       };
     };
 
-    wezterm = {
-      url = "github:wez/wezterm/main?dir=nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
     nvim-plugins = {
       url = "github:kitten/system-nvim-plugins.nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
       };
+    };
+
+    yeetmouse = {
+      url = "github:kitten/yeetmouse/next?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -79,7 +76,6 @@
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
-        wezterm = (inputs.wezterm.packages.${self.system}).default;
       })
     ];
   in {
@@ -99,6 +95,9 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "pepper";
+      modules = [
+        inputs.yeetmouse.nixosModules.default
+      ];
     };
 
     nixosConfigurations."cola" = mkSystem {
@@ -116,7 +115,7 @@
     packages = eachSystem (system: {
       inherit (inputs.agenix.packages.${system}) agenix;
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
-    });
+    } // (import ./lib/pkgs inputs.nixpkgs.legacyPackages.${system}));
 
     apps = eachSystem (system: import ./lib/apps {
       inherit lib;

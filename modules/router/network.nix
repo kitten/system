@@ -103,6 +103,7 @@ in {
     networking = {
       useNetworkd = true;
       hosts."127.0.0.2" = mkForce [];
+      networkmanager.enable = mkForce false;
       firewall = mkIf (intern != null) {
         trustedInterfaces = [ "lo" intern.name ];
       };

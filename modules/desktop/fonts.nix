@@ -14,6 +14,7 @@ in {
   };
 
   config = mkIf cfg.fonts.enable {
+
     fonts = {
       fontDir.enable = true;
 
