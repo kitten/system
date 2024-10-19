@@ -1,4 +1,4 @@
-{ agenix, nixpkgs, darwin, home-manager, ... } @ inputs:
+{ nixpkgs, darwin, home-manager, ... } @ inputs:
 
 {
   mkSystem = { system, hostname, user ? "phil", modules ? [], overlays ? [] }: let
@@ -43,7 +43,7 @@
       xdg.enable = true;
 
       imports = [
-        agenix.homeManagerModules.default
+        inputs.agenix.homeManagerModules.default
         ../home/default.nix
         ../machines/${hostname}/home.nix
       ];
@@ -60,7 +60,7 @@
     darwin.lib.darwinSystem {
       inherit system specialArgs lib;
       modules = systemModules ++ [
-        agenix.darwinModules.default
+        inputs.agenix.darwinModules.default
         home-manager.darwinModules.home-manager {
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;
@@ -77,7 +77,8 @@
     nixpkgs.lib.nixosSystem {
       inherit system specialArgs lib;
       modules = systemModules ++ [
-        agenix.nixosModules.default
+        inputs.yeetmouse.nixosModules.default
+        inputs.agenix.nixosModules.default
         home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = specialArgs;
           home-manager.useGlobalPkgs = true;

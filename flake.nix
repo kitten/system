@@ -95,9 +95,6 @@
       inherit overlays;
       system = "x86_64-linux";
       hostname = "pepper";
-      modules = [
-        inputs.yeetmouse.nixosModules.default
-      ];
     };
 
     nixosConfigurations."cola" = mkSystem {
