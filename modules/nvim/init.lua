@@ -497,6 +497,11 @@ lsp_setup('nixd', {
   flags = { debounce_text_changes = 200 },
 })
 
+lsp_setup('terraformls', {
+  cmd = { nix_bins.terraformls },
+  flags = { debounce_text_changes = 200 },
+})
+
 -- treesitter
 vim.opt.runtimepath:append("~/.local/share/nvim/site/parser")
 

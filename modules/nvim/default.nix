@@ -10,6 +10,7 @@ let
   initContents = "
     \nlua <<EOF\n" + /* lua */ ''
     nix_bins = {
+      terraformls = '${pkgs.terraform-ls}/bin/terraform-ls',
       tsserver = '${pkgs.typescript-language-server}/bin/typescript-language-server',
       eslintls = '${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server',
       cssls = '${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server',

@@ -12,5 +12,6 @@ with lib; {
 
   imports = [
     ./js.nix
+    ./terraform.nix
   ];
 }
