@@ -22,10 +22,9 @@ return {
     "GPG_TTY",
   },
 
+  front_end = "WebGpu",
   font = wezterm.font_with_fallback({ "Dank Mono", "codicon", "Font Awesome 6 Pro" }),
   allow_square_glyphs_to_overflow_width = "Always",
-  freetype_load_target = "Light",
-  freetype_render_target = "HorizontalLcd",
   font_size = font_size,
   line_height = 1.1,
   max_fps = 120,
