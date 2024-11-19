@@ -13,8 +13,6 @@ with lib; mkMerge [
       nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
 
       settings = {
-        # save space
-        auto-optimise-store = true;
         # Enable flakes and new 'nix' command
         experimental-features = "nix-command flakes";
         # disable global registry
@@ -32,6 +30,8 @@ with lib; mkMerge [
         ];
         trusted-users = [ "root" "@wheel" ];
       };
+
+      optimise.automatic = true;
 
       # auto collect old stores
       gc = {

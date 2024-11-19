@@ -492,11 +492,6 @@ lsp_setup('rust_analyzer', {
   },
 })
 
-lsp_setup('nixd', {
-  cmd = { nix_bins.nixd },
-  flags = { debounce_text_changes = 200 },
-})
-
 lsp_setup('terraformls', {
   cmd = { nix_bins.terraformls },
   flags = { debounce_text_changes = 200 },
