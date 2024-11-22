@@ -63,6 +63,12 @@
       url = "github:kitten/yeetmouse/next?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ghostty = {
+      url = "git+ssh://git@github.com/ghostty-org/ghostty";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs.nixpkgs-unstable.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -76,6 +82,7 @@
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
+        ghostty = inputs.ghostty.packages.${self.system}.default;
       })
     ];
   in {

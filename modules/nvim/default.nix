@@ -38,7 +38,6 @@ let
     withPython3 = true;
     viAlias = true;
     vimAlias = true;
-    extraMakeWrapperArgs = "--set TERM wezterm";
     customRC = initContents;
     plugins = with pkgs.nvim-plugins; [
       my-theme

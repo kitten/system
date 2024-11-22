@@ -27,7 +27,7 @@ in rec {
     black = "070D14";
     # (ANSI: 7 White) foreground colour, identifiers, variables
     white = "EDF0F2";
-    # (ANSI: 1 Bright Black) ghost text / suggestion text
+    # (ANSI: 8 Bright Black) ghost text / suggestion text
     grey = "323744";
     # (ANSI: 15 Bright White) comment text
     muted = "585D79";

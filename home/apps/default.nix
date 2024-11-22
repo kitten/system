@@ -15,6 +15,7 @@ with lib; {
     ./obsidian.nix
     ./ollama.nix
     ./minecraft.nix
+    ./ghostty.nix
     ./wezterm
   ];
 }
