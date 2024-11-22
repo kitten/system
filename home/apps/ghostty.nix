@@ -83,6 +83,8 @@ in {
         macos-option-as-alt = left
         macos-titlebar-style = tabs
 
+        adw-toolbar-style = flat
+
         shell-integration-features = no-cursor
         shell-integration = zsh
 
