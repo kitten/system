@@ -63,6 +63,7 @@ in helpers.linuxAttrs {
       "vm.dirty_background_ratio" = 5;
       "net.ipv4.tcp_fin_timeout" = mkDefault 5;
       "net.ipv4.tcp_mtu_probing" = mkDefault true;
+      "kernel.sched_cfs_bandwidth_slice_us" = mkDefault 3000;
     };
   };
 

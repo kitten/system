@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, inputs, pkgs, user, ... }:
 
 with lib;
 let
@@ -18,21 +18,31 @@ in {
 
     hardware.steam-hardware.enable = true;
     services.system76-scheduler.enable = true;
-    environment.systemPackages = [
-      (pkgs.lutris.override (prev: {
-      steam.override (prev: {
-        extraEnv = {
-          STEAM_EXTRA_COMPAT_TOOLS_PATHS = makeSearchPathOutput "steamcompattool" "" [ pkgs.proton-ge-bin ];
-        };
-      }))
+
+    environment.systemPackages = let
+      umu = (inputs.umu.packages.${pkgs.system}.umu.override {
+        version = "${inputs.umu.shortRev}";
+      });
+    in [
+      umu
+      (pkgs.lutris.override {
+        extraPkgs = (pkgs: with pkgs; [
+          wineWowPackages.stagingFull
+          gamemode
+          umu
+        ]);
+      })
     ];
 
     programs = {
       gamemode.enable = true;
+      gamescope = {
+        enable = true;
+        args = [ "--adaptive-sync" "--hdr-enabled" "--rt" "--immediate-flips" "-f" "-S" "stretch" "-W" "2560" "-H" "1440" "-r" "360" ];
+      };
       steam = {
         enable = true;
         remotePlay.openFirewall = true;
-        extraCompatPackages = [ pkgs.proton-ge-bin ];
       };
     };
 
