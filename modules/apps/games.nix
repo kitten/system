@@ -18,13 +18,21 @@ in {
 
     hardware.steam-hardware.enable = true;
     services.system76-scheduler.enable = true;
-    environment.systemPackages = [ pkgs.lutris ];
+    environment.systemPackages = [
+      (pkgs.lutris.override (prev: {
+      steam.override (prev: {
+        extraEnv = {
+          STEAM_EXTRA_COMPAT_TOOLS_PATHS = makeSearchPathOutput "steamcompattool" "" [ pkgs.proton-ge-bin ];
+        };
+      }))
+    ];
 
     programs = {
       gamemode.enable = true;
       steam = {
         enable = true;
         remotePlay.openFirewall = true;
+        extraCompatPackages = [ pkgs.proton-ge-bin ];
       };
     };
 

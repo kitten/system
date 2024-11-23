@@ -31,6 +31,7 @@ in {
     environment = {
       systemPackages = with pkgs.kdePackages; [
         sddm-kcm
+        qtmultimedia
       ];
       plasma6 = {
         excludePackages = with pkgs.kdePackages; [
