@@ -63,7 +63,6 @@ in {
         cursor-opacity = 0.8
         adjust-cursor-thickness = 1
 
-        adjust-cell-height = ${toString cfg.ghostty.cell_adjust}
         adjust-cell-width = ${toString cfg.ghostty.cell_adjust}
         window-padding-x = 2
         window-padding-y = 3
