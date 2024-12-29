@@ -64,13 +64,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    umu = {
-      url = "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging\/nix&submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     ghostty = {
-      url = "git+ssh://git@github.com/ghostty-org/ghostty";
+      url = "github:ghostty-org/ghostty/v1.0.0";
       inputs.nixpkgs-stable.follows = "nixpkgs";
       inputs.nixpkgs-unstable.follows = "nixpkgs";
     };
@@ -88,6 +83,8 @@
           typescript-language-server
           vscode-langservers-extracted;
         ghostty = inputs.ghostty.packages.${self.system}.default;
+        # https://github.com/NixOS/nixpkgs/issues/368501
+        folly = super.folly.overrideAttrs { doCheck = false; };
       })
     ];
   in {

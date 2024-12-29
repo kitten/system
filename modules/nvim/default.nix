@@ -39,7 +39,7 @@ let
     viAlias = true;
     vimAlias = true;
     customRC = initContents;
-    plugins = with pkgs.nvim-plugins; [
+    plugins = with pkgs.nvim-plugins; map (d: d.overrideAttrs { doCheck = false; }) [
       my-theme
       vim-repeat
       hardline-nvim

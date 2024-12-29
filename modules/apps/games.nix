@@ -84,11 +84,7 @@ in {
     };
   };
 
-  config = let
-    umu = (inputs.umu.packages.${pkgs.system}.umu.override {
-      version = "${inputs.umu.shortRev}";
-    });
-  in mkIf (cfg.enable && cfg.games.enable) {
+  config = mkIf (cfg.enable && cfg.games.enable) {
     boot.kernel.sysctl = {
       "kernel.unprivileged_userns_clone" = true;
     };
@@ -109,7 +105,6 @@ in {
     services.system76-scheduler.enable = true;
 
     environment.systemPackages = [
-      umu
       (pkgs.lutris.override {
         extraPkgs = (pkgs: with pkgs; [ gamemode ]);
       })
