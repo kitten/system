@@ -39,8 +39,11 @@
       inherit age;
 
       manual.manpages.enable = false;
-      home.stateVersion = "23.05";
       xdg.enable = true;
+      home = {
+        stateVersion = "25.05";
+        enableNixpkgsReleaseCheck = false;
+      };
 
       imports = [
         inputs.agenix.homeManagerModules.default
