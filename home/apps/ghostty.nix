@@ -131,8 +131,8 @@ in {
         keybind = ctrl+a>l=resize_split:right,40
         keybind = ctrl+a>g=equalize_splits
 
-        keybind = unconsumed:super+c=copy_to_clipboard
-        keybind = unconsumed:super+v=paste_from_clipboard
+        keybind = super+c=copy_to_clipboard
+        keybind = super+v=paste_from_clipboard
       '';
     }
   ]);
