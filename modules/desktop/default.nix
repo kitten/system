@@ -45,7 +45,6 @@ in {
     };
 
     hardware = {
-      pulseaudio.enable = lib.mkForce false;
       steam-hardware.enable = true;
     };
 
