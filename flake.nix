@@ -63,12 +63,6 @@
       url = "github:kitten/yeetmouse/next?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    ghostty = {
-      url = "github:ghostty-org/ghostty/v1.0.1";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-      inputs.nixpkgs-unstable.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs: let
@@ -82,7 +76,6 @@
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
-        ghostty = inputs.ghostty.packages.${self.system}.default;
         # https://github.com/NixOS/nixpkgs/issues/368501
         folly = super.folly.overrideAttrs { doCheck = false; };
       })
