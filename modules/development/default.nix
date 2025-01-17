@@ -11,7 +11,6 @@ with lib; {
   };
 
   imports = [
-    ./js.nix
     ./cocoapods.nix
   ];
 }
