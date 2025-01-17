@@ -12,6 +12,7 @@ with lib; {
 
   imports = [
     ./js.nix
+    ./react-native.nix
     ./terraform.nix
   ];
 }

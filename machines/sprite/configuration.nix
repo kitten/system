@@ -5,7 +5,6 @@
 
   modules = {
     fonts.enable = true;
-    development.enable = true;
     nvim.enable = true;
   };
 

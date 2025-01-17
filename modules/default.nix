@@ -5,7 +5,6 @@
     ./base
     ./apps
     ./desktop
-    ./development
     ./fonts
     ./nvim
     ./router
