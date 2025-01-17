@@ -47,6 +47,7 @@
 
       imports = [
         inputs.agenix.homeManagerModules.default
+        inputs.android-sdk.hmModules.android
         ../home/default.nix
         ../machines/${hostname}/home.nix
       ];

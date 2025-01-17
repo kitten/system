@@ -27,6 +27,31 @@
         "type": "github"
       }
     },
+    "android-sdk": {
+      "inputs": {
+        "devshell": "devshell",
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1737058742,
+        "narHash": "sha256-akgqrW8z7Nt6SrP56umZRcG4RYUW+nH2WbU4MNF3mPQ=",
+        "owner": "tadfisher",
+        "repo": "android-nixpkgs",
+        "rev": "42733564fa7787454437727d09389c8a3663e225",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tadfisher",
+        "ref": "stable",
+        "repo": "android-nixpkgs",
+        "type": "github"
+      }
+    },
     "apple-silicon": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -97,6 +122,27 @@
       "original": {
         "owner": "lnl7",
         "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "android-sdk",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1735644329,
+        "narHash": "sha256-tO3HrHriyLvipc4xr+Ewtdlo7wM1OjXNjlWRgmM7peY=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "f7795ede5b02664b57035b3b757876703e2c3eac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
         "type": "github"
       }
     },
@@ -764,6 +810,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "android-sdk": "android-sdk",
         "apple-silicon": "apple-silicon",
         "darwin": "darwin",
         "flake-utils": "flake-utils",

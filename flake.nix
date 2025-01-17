@@ -63,6 +63,14 @@
       url = "github:kitten/yeetmouse/next?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    android-sdk = {
+      url = "github:tadfisher/android-nixpkgs/stable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs: let
@@ -72,6 +80,7 @@
     overlays = [
       inputs.lix-module.overlays.lixFromNixpkgs
       inputs.nvim-plugins.overlays.default
+      inputs.android-sdk.overlays.default
       (self: super: {
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server

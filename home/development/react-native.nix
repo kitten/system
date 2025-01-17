@@ -1,8 +1,19 @@
-{ lib, helpers, config, pkgs, ... }:
+{ lib, system, helpers, config, pkgs, ... }:
 
 with lib;
 let
   cfg = config.modules.development;
+
+  android-arch = if helpers.system == "aarch64-darwin" then "arm64-v8a" else "x86-64";
+
+  create-avd = pkgs.writeShellScriptBin "create-avd" ''
+    avdmanager create avd \
+      --name android-34 \
+      --package 'system-images;android-34;google_apis_playstore;${android-arch}' \
+      --tag google_apis_playstore \
+      --device pixel_8 \
+      --force
+  '';
 in {
   options.modules.development.react-native = {
     enable = mkOption {
@@ -11,13 +22,73 @@ in {
       description = "Whether to enable React Native configuration.";
       type = types.bool;
     };
+
+    android-sdk = mkOption {
+      default = cfg.react-native.enable;
+      type = types.bool;
+    };
+
+    android-studio = mkOption {
+      default = cfg.react-native.enable && cfg.react-native.android-sdk;
+      type = types.bool;
+    };
+
+    cocoapods = mkOption {
+      default = cfg.react-native.enable;
+      type = types.bool;
+    };
+
+    xcode = mkOption {
+      default = cfg.react-native.enable;
+      type = types.bool;
+    };
   };
 
-  config.modules.apps.firefox = {
-    enable = if helpers.isDarwin then (mkDefault true) else (mkForce false);
-  };
-} // helpers.darwinAttrs {
-  config = mkIf (cfg.enable && cfg.react-native.enable) {
-    home.packages = with pkgs; [ cocoapods ];
-  };
+  config = mkIf cfg.react-native.enable (mkMerge [
+    {
+      modules.development.react-native = {
+        cocoapods = if helpers.isDarwin then (mkDefault true) else (mkForce false);
+      };
+    }
+
+    (helpers.mkIfDarwin {
+      home.packages = with pkgs; mkIf cfg.react-native.cocoapods [
+        cocoapods
+      ];
+    })
+
+    (mkIf cfg.react-native.android-sdk {
+      home.packages = [
+        pkgs.gradle_8
+        create-avd
+      ] ++ optionals (helpers.isLinux && cfg.react-native.android-studio) [
+        pkgs.android-studio
+      ];
+
+      home.sessionVariables = rec {
+        JAVA_HOME = pkgs.jdk.home;
+        ANDROID_USER_HOME = "${config.xdg.stateHome}/android";
+        ANDROID_AVD_HOME = "${ANDROID_USER_HOME}/avd";
+      };
+
+      android-sdk = {
+        enable = true;
+        packages = sdk: with sdk; [
+          build-tools-34-0-0
+          build-tools-35-0-0
+          cmdline-tools-latest
+          emulator
+          platform-tools
+          platforms-android-34
+          platforms-android-35
+          sources-android-34
+          sources-android-35
+          ndk-26-1-10909125
+          cmake-3-22-1
+          sdk."system-images-android-34-google-apis-${android-arch}"
+          sdk."system-images-android-34-google-apis-playstore-${android-arch}"
+        ];
+      };
+    })
+  ]);
 }
