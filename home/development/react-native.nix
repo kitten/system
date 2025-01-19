@@ -42,6 +42,11 @@ in {
       default = cfg.react-native.enable;
       type = types.bool;
     };
+
+    maestro = mkOption {
+      default = cfg.react-native.enable;
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.react-native.enable (mkMerge [
@@ -49,6 +54,10 @@ in {
       modules.development.react-native = {
         cocoapods = if helpers.isDarwin then (mkDefault true) else (mkForce false);
       };
+
+      home.packages = with pkgs; mkIf cfg.react-native.maestro [
+        maestro
+      ];
     }
 
     (helpers.mkIfDarwin {
