@@ -3,6 +3,29 @@
 with lib;
 let
   cfg = config.modules.apps;
+
+  gamescope = pkgs.gamescope.overrideAttrs (old: {
+    version = "3.16.1-f873ec7";
+    patches = [];
+    src = pkgs.fetchFromGitHub {
+      owner = "ValveSoftware";
+      repo = "gamescope";
+      rev = "f873ec7868fe84d2850e91148bcbd6d6b19a7443";
+      fetchSubmodules = true;
+      hash = "sha256-ItP9VE4IMgnIPDeDQag+gVZMuoRO0uI6gF2tC4WVObE=";
+    };
+    buildInputs = old.buildInputs ++ [ pkgs.luajit ];
+    # See: https://github.com/ValveSoftware/gamescope/pull/1494
+    NIX_CFLAGS_COMPILE = [ "-fno-fast-math" "-fno-omit-frame-pointer" ];
+    patchPhase = ''
+      substituteInPlace ./src/reshade_effect_manager.cpp \
+        --replace-fail "\"/usr\"" "\"$out\""
+      substituteInPlace ./src/Utils/Process.cpp \
+        --replace-fail "\"gamescopereaper\"" "\"$out/bin/gamescopereaper\""
+      patchShebangs ./default_scripts_install.sh
+      patchShebangs ./subprojects/libdisplay-info/tool/gen-search-table.py
+    '';
+  });
 in {
   options.modules.apps.games = {
     enable = mkOption {
@@ -46,6 +69,7 @@ in {
       gamemode.enable = true;
       gamescope = {
         enable = true;
+        package = gamescope;
         env = {
           PROTON_ENABLE_AMD_AGS = "1";
           ENABLE_HDR_WSI = "1";
