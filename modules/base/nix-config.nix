@@ -19,6 +19,8 @@ with lib; mkMerge [
         flake-registry = "";
         # Workaround for https://github.com/NixOS/nix/issues/9574
         nix-path = config.nix.nixPath;
+        # Use xdg spec for .nix-defexpr
+        use-xdg-base-directories = true;
         # binary caches
         substituters = [
           "https://cache.nixos.org"

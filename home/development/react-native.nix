@@ -69,6 +69,9 @@ in {
       home.packages = with pkgs; []
         ++ optionals cfg.react-native.cocoapods [ cocoapods ]
         ++ optionals cfg.react-native.fastlane [ fastlane ];
+      home.sessionVariables = {
+        CP_HOME_DIR = mkIf cfg.react-native.cocoapods "$XDG_DATA_HOME/cocoapods";
+      };
     })
 
     (mkIf cfg.react-native.android-sdk {
@@ -83,6 +86,7 @@ in {
         JAVA_HOME = pkgs.jdk.home;
         ANDROID_USER_HOME = "${config.xdg.stateHome}/android";
         ANDROID_AVD_HOME = "${ANDROID_USER_HOME}/avd";
+        GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
       };
 
       android-sdk = {

@@ -13,17 +13,23 @@ in {
   };
 
   config = mkIf cfg.enable {
-    programs.zsh = {
+    programs.zsh = rec {
       enable = true;
       enableCompletion = true;
       enableVteIntegration = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
+      dotDir = ".config/zsh";
       shellAliases = {
         ls = "ls --color=auto";
         ll = "ls -l";
         wx = "wezmux";
         http = "xh";
+      };
+      history = {
+        append = true;
+        expireDuplicatesFirst = true;
+        path = "${config.xdg.stateHome}/zsh/zsh_history";
       };
       sessionVariables = {
         KEYTIMEOUT = "1";
@@ -35,6 +41,7 @@ in {
         PURE_GIT_UP_ARROW = " ";
         PURE_GIT_DOWN_ARROW = " ";
         PURE_GIT_STASH_SYMBOL = " ";
+        ZDOTDIR = "${config.xdg.configHome}/zsh";
       };
       plugins = [
         {

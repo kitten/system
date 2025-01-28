@@ -3,7 +3,10 @@
 with lib;
 let
   cfg = config.modules.development;
-  home = config.home.homeDirectory;
+  NPMRC_PATH = "${config.xdg.configHome}/npm/npmrc";
+  BUNFIG_PATH = "${config.xdg.configHome}/.bunfig.toml";
+  BUN_HOME = "${config.xdg.dataHome}/bun";
+  PNPM_HOME = "${config.xdg.dataHome}/pnpm";
 in {
   options.modules.development.js = {
     enable = mkOption {
@@ -20,37 +23,43 @@ in {
   };
 
   config = mkIf cfg.js.enable {
-    age.secrets."npmrc" = {
+    age.secrets."${NPMRC_PATH}" = {
       symlink = true;
-      path = "${home}/.npmrc";
+      path = "${NPMRC_PATH}";
       file = ./encrypt/npmrc.age;
     };
 
     home.sessionPath = [
       "./node_modules/.bin"
-      "$HOME/.local/share/pnpm"
-    ];
+      PNPM_HOME
+    ] ++ optionals cfg.js.bun [ BUN_HOME ];
 
     home.sessionVariables = {
-      PNPM_HOME = "$HOME/.local/share/pnpm";
-      BUN_RUNTIME_TRANSPILER_CACHE_PATH = mkIf cfg.js.bun "$HOME/.cache/bun/install/cache/@t@";
-      COREPACK_ENABLE_AUTO_PIN = "0";
+      inherit PNPM_HOME;
+      BUN_RUNTIME_TRANSPILER_CACHE_PATH = mkIf cfg.js.bun "${config.xdg.cacheHome}/bun/install/cache/@t@";
+      NODE_REPL_HISTORY = "${config.xdg.stateHome}/node_repl_history";
+      NPM_CONFIG_USERCONFIG = "${NPMRC_PATH}";
+      NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
+      NPM_CONFIG_TMP = "${config.xdg.runtimeDir}/npm";
+      VOLTA_HOME = "${config.xdg.dataHome}/volta";
+
+      COREPACK_ENABLE_AUTO_PIN = "0"; # disable corepack creating packageManager entries
     };
 
     home.file.".yarnrc".text = ''
       disable-self-update-check true
     '';
 
-    home.file.".bunfig.toml".text = mkIf cfg.js.bun ''
+    home.file."${BUNFIG_PATH}".text = mkIf cfg.js.bun ''
       telemetry = false
 
       [install]
       auto = "disable"
-      globalDir = "~/.local/share/bun/global"
-      globalBinDir = "~/.local/share/bun"
+      globalDir = "${BUN_HOME}/global"
+      globalBinDir = "${BUN_HOME}"
 
       [install.cache]
-      dir = "~/.cache/bun/install/cache"
+      dir = "${config.xdg.cacheHome}/bun"
     '';
 
     home.packages = with pkgs; [
