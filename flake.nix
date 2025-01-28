@@ -85,8 +85,6 @@
         inherit (inputs.language-servers.packages.${self.system})
           typescript-language-server
           vscode-langservers-extracted;
-        # https://github.com/NixOS/nixpkgs/issues/368501
-        folly = super.folly.overrideAttrs { doCheck = false; };
       })
     ];
   in {

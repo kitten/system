@@ -47,6 +47,11 @@ in {
       default = cfg.react-native.enable;
       type = types.bool;
     };
+
+    fastlane = mkOption {
+      default = cfg.react-native.enable;
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.react-native.enable (mkMerge [
@@ -55,15 +60,15 @@ in {
         cocoapods = if helpers.isDarwin then (mkDefault true) else (mkForce false);
       };
 
-      home.packages = with pkgs; mkIf cfg.react-native.maestro [
+      home.packages = with pkgs; [ ruby ] ++ optionals cfg.react-native.maestro [
         maestro
       ];
     }
 
     (helpers.mkIfDarwin {
-      home.packages = with pkgs; mkIf cfg.react-native.cocoapods [
-        cocoapods
-      ];
+      home.packages = with pkgs; []
+        ++ optionals cfg.react-native.cocoapods [ cocoapods ]
+        ++ optionals cfg.react-native.fastlane [ fastlane ];
     })
 
     (mkIf cfg.react-native.android-sdk {

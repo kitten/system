@@ -29,6 +29,8 @@ with lib; mkMerge [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         ];
         trusted-users = [ "root" "@wheel" ];
+        # on Apple Silicon, Rosetta 2 allows for this
+        extra-platforms = mkIf (helpers.system == "aarch64-darwin") [ helpers.system "x86_64-darwin" ];
       };
 
       optimise.automatic = true;
