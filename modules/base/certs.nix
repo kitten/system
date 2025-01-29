@@ -2,7 +2,7 @@
 
 with lib;
 let
-  cfg = config.modules.gpg;
+  cfg = config.modules.certs;
 in {
   options.modules.certs = {
     enable = mkOption {

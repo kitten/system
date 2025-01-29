@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, helpers, config, ... }:
 
 with lib;
 let
@@ -14,11 +14,32 @@ in {
   };
 
   config = mkIf cfg.enable {
-    modules.git.signingKey = mkDefault "303B6A9A312AA035";
-
-    home.sessionVariables = {
-      GNUPGHOME = home;
+    programs.gpg = {
+      enable = true;
+      homedir = home;
+      mutableKeys = true;
     };
+
+    services.gpg-agent = {
+      enable = true;
+      # See: https://github.com/nix-community/home-manager/pull/5901
+      enableSshSupport = !helpers.isDarwin;
+      verbose = true;
+      sshKeys = [
+        "E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6"
+        "75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7"
+      ];
+    };
+
+    # See: https://github.com/nix-community/home-manager/pull/5901
+    programs.zsh.initExtra = let
+      gpgPkg = config.programs.gpg.package;
+    in optionalString helpers.isDarwin ''
+      ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye > /dev/null 2>&1
+      export SSH_AUTH_SOCK=$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
+    '';
+
+    modules.git.signingKey = mkDefault "303B6A9A312AA035";
 
     age.secrets."pubring.kbx" = {
       symlink = true;
@@ -43,10 +64,5 @@ in {
       path = "${home}/private-keys-v1.d/CA84692E3CC846C8EC7272468E962B63FC599E49.key";
       file = ./encrypt/CA84692E3CC846C8EC7272468E962B63FC599E49.key.age;
     };
-
-    xdg.dataFile."gnupg/sshcontrol".text = ''
-      E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6
-      75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7
-    '';
   };
 }

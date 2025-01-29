@@ -13,8 +13,8 @@ in {
       };
     };
     xdg.runtimeDir = mkOption {
-      type = types.nullOr types.string;
-      default = if helpers.isDarwin then "$(mktemp -d --suffix=$UID)" else null;
+      type = types.nullOr types.str;
+      default = if helpers.isDarwin then "$(mktemp -d)" else null;
       apply = (val: if val != null then (toString val) else null);
     };
   };

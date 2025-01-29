@@ -18,7 +18,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote";
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -81,11 +81,7 @@
       inputs.lix-module.overlays.lixFromNixpkgs
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
-      (self: super: {
-        inherit (inputs.language-servers.packages.${self.system})
-          typescript-language-server
-          vscode-langservers-extracted;
-      })
+      inputs.language-servers.overlays.default
     ];
   in {
     darwinConfigurations."sprite" = mkSystem {
