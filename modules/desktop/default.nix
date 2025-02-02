@@ -20,7 +20,6 @@ in {
   imports = [
     ./services.nix
     ./session.nix
-    ./xdg.nix
     ./fonts.nix
     ./rawaccel.nix
   ];

@@ -42,20 +42,16 @@ in {
       };
     };
 
-    home.sessionVariables = {
-      MOZ_ENABLE_WAYLAND = 1;
-      MOZ_WEBRENDER = 1;
-    };
-
     systemd.user.sessionVariables = {
       MOZ_ENABLE_WAYLAND = 1;
       MOZ_WEBRENDER = 1;
+      NIXOS_OZONE_WL = mkDefault 1;
       BROWSER = "firefox";
     };
 
     xdg = {
       mimeApps = {
-        enable = true;
+        enable = mkDefault true;
         defaultApplications = let
           browser = [ "firefox.desktop" ];
         in {

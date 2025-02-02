@@ -14,5 +14,6 @@ in {
 
   config = mkIf (cfg.enable && cfg.discord.enable) {
     home.packages = with pkgs; [ vesktop ];
+    systemd.user.sessionVariables.NIXOS_OZONE_WL = mkDefault 1;
   };
 }

@@ -14,5 +14,6 @@ in {
 
   config = mkIf (cfg.enable && cfg.obsidian.enable) {
     home.packages = [pkgs.obsidian];
+    systemd.user.sessionVariables.NIXOS_OZONE_WL = mkDefault 1;
   };
 }
