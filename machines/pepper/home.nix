@@ -2,7 +2,7 @@
 
 {
   modules = {
-    development.enable = true;
+    development.enable = false;
     desktop.enable = true;
     apps = {
       enable = true;
