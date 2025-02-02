@@ -29,7 +29,7 @@ in {
       ];
     };
 
-    home.sessionVariables = {
+    home.sessionVariables = mkIf helpers.isDarwin {
       XDG_RUNTIME_DIR = optionalString (config.xdg.runtimeDir != null) config.xdg.runtimeDir;
     };
   };
