@@ -1,4 +1,4 @@
-{ inputs, modulesPath, ... }:
+{ pkgs, inputs, modulesPath, ... }:
 
 {
   imports = with inputs; [
@@ -58,5 +58,11 @@
 
   nixpkgs.overlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
 
-  hardware.asahi.useExperimentalGPUDriver = true;
+  hardware.asahi = {
+    useExperimentalGPUDriver = true;
+    setupAsahiSound = false; # Needs lsp-plugins input update (php82->php)
+  };
+  # Added since setupAsahiSound is disabled for safety
+  systemd.packages = [ pkgs.speakersafetyd ];
+  services.udev.packages = [ pkgs.speakersafetyd ];
 }
