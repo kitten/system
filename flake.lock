@@ -1029,11 +1029,11 @@
       },
       "locked": {
         "dir": "nix",
-        "lastModified": 1732027012,
-        "narHash": "sha256-5KrZl0ekBilRtXcGI1lJeJovAGFtvAL7zDMafjinPbs=",
+        "lastModified": 1738497157,
+        "narHash": "sha256-mozvHu9RoKrK69KZIIxidJn6A511QKutt/9zvvKbtEU=",
         "owner": "kitten",
         "repo": "yeetmouse",
-        "rev": "98c05ba63a2b5dd29de12e61701366872e93decc",
+        "rev": "0877c6e8a6c478f42c9ad0edeecab6240c793a39",
         "type": "github"
       },
       "original": {
