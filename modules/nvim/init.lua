@@ -576,6 +576,9 @@ require("oil").setup({
   constrain_cursor = 'editable',
   watch_for_changes = false,
   use_default_keymaps = true,
+  keymaps = {
+    ["<C-c>"] = false,
+  },
   view_options = {
     show_hidden = false,
     is_hidden_file = function(name, bufnr)
