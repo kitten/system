@@ -352,11 +352,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1738491590,
-        "narHash": "sha256-4kfFt2XpLQt91rFBzJAn5RwQart1kHwsLp2oljlUETY=",
+        "lastModified": 1738495084,
+        "narHash": "sha256-2cAsozIzxOudNRLWTCMvvPAMOhUQX6cGPgt4loH0CxY=",
         "owner": "kitten",
         "repo": "language-servers.nix",
-        "rev": "98546154224afdc6637ebdb21932cd5a2452337a",
+        "rev": "32313855138651e17a33294c325d4f593ba95ae6",
         "type": "github"
       },
       "original": {

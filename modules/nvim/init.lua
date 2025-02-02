@@ -349,7 +349,7 @@ local lsp = require('lspconfig')
 local lsp_util = require('lspconfig.util')
 
 local function lsp_on_attach(client, buf)
-  if client.config.flags then
+  if client.config.flags and not client.config.flags.allow_incremental_sync ~= nil then
     client.config.flags.allow_incremental_sync = true
   end
 
@@ -375,13 +375,13 @@ local function lsp_on_attach(client, buf)
   end
 end
 
-local function lsp_capabilities(capabilities)
+local function lsp_capabilities(extends)
   local capabilities = vim.tbl_deep_extend(
     "force",
     {},
     vim.lsp.protocol.make_client_capabilities(),
     require('cmp_nvim_lsp').default_capabilities() or {},
-    capabilities or {}
+    extends or {}
   )
   capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown" }
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -449,11 +449,11 @@ lsp_setup('eslint', {
   flags = { debounce_text_changes = 200 },
   settings = {
     rulesCustomizations = {
-      { rule = "prettier/prettier", severity = "off" },
-      { rule = "sort-keys", severity = "off" },
-      { rule = "quotes", severity = "off" },
-      { rule = "max-len", severity = "off" },
-      { rule = "no-tabs", severity = "off" },
+      { rule = 'prettier/prettier', severity = 'off' },
+      { rule = 'sort-keys', severity = 'off' },
+      { rule = 'quotes', severity = 'off' },
+      { rule = 'max-len', severity = 'off' },
+      { rule = 'no-tabs', severity = 'off' },
     },
   },
 })
