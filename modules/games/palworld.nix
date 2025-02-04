@@ -55,12 +55,102 @@ let
 
   baseSettings = {
     ServerName = "London Boroughs";
+    ServerPassword = "onlyflans";
     AllowConnectPlatform = "Xbox";
     CoopPlayerMaxNum = cfg.maxPlayers;
     bIsUseBackupSaveData = true;
     RCONEnabled = false;
     RESTAPIEnabled = false;
   };
+
+  engineSettings = ''
+    [Core.System]
+    Paths=../../../Engine/Content
+    Paths=%GAMEDIR%Content
+    Paths=../../../Engine/Plugins/2D/Paper2D/Content
+    Paths=../../../Engine/Plugins/Animation/ControlRigSpline/Content
+    Paths=../../../Engine/Plugins/Animation/ControlRig/Content
+    Paths=../../../Engine/Plugins/Animation/IKRig/Content
+    Paths=../../../Engine/Plugins/Animation/MotionWarping/Content
+    Paths=../../../Engine/Plugins/Bridge/Content
+    Paths=../../../Engine/Plugins/Compositing/Composure/Content
+    Paths=../../../Engine/Plugins/Compositing/OpenColorIO/Content
+    Paths=../../../Engine/Plugins/Developer/AnimationSharing/Content
+    Paths=../../../Engine/Plugins/Developer/Concert/ConcertSync/ConcertSyncClient/Content
+    Paths=../../../Engine/Plugins/Editor/BlueprintHeaderView/Content
+    Paths=../../../Engine/Plugins/Editor/GeometryMode/Content
+    Paths=../../../Engine/Plugins/Editor/ModelingToolsEditorMode/Content
+    Paths=../../../Engine/Plugins/Editor/ObjectMixer/LightMixer/Content
+    Paths=../../../Engine/Plugins/Editor/ObjectMixer/ObjectMixer/Content
+    Paths=../../../Engine/Plugins/Editor/SpeedTreeImporter/Content
+    Paths=../../../Engine/Plugins/Enterprise/DatasmithContent/Content
+    Paths=../../../Engine/Plugins/Enterprise/GLTFExporter/Content
+    Paths=../../../Engine/Plugins/Experimental/ChaosCaching/Content
+    Paths=../../../Engine/Plugins/Experimental/ChaosClothEditor/Content
+    Paths=../../../Engine/Plugins/Experimental/ChaosNiagara/Content
+    Paths=../../../Engine/Plugins/Experimental/ChaosSolverPlugin/Content
+    Paths=../../../Engine/Plugins/Experimental/CommonUI/Content
+    Paths=../../../Engine/Plugins/Experimental/Dataflow/Content
+    Paths=../../../Engine/Plugins/Experimental/FullBodyIK/Content
+    Paths=../../../Engine/Plugins/Experimental/GeometryCollectionPlugin/Content
+    Paths=../../../Engine/Plugins/Experimental/GeometryFlow/Content
+    Paths=../../../Engine/Plugins/Experimental/ImpostorBaker/Content
+    Paths=../../../Engine/Plugins/Experimental/Landmass/Content
+    Paths=../../../Engine/Plugins/Experimental/MeshLODToolset/Content
+    Paths=../../../Engine/Plugins/Experimental/PythonScriptPlugin/Content
+    Paths=../../../Engine/Plugins/Experimental/StaticMeshEditorModeling/Content
+    Paths=../../../Engine/Plugins/Experimental/UVEditor/Content
+    Paths=../../../Engine/Plugins/Experimental/Volumetrics/Content
+    Paths=../../../Engine/Plugins/Experimental/Water/Content
+    Paths=../../../Engine/Plugins/FX/Niagara/Content
+    Paths=../../../Engine/Plugins/JsonBlueprintUtilities/Content
+    Paths=../../../Engine/Plugins/Media/MediaCompositing/Content
+    Paths=../../../Engine/Plugins/Media/MediaPlate/Content
+    Paths=../../../Engine/Plugins/MovieScene/SequencerScripting/Content
+    Paths=../../../Engine/Plugins/PivotTool/Content
+    Paths=../../../Engine/Plugins/PlacementTools/Content
+    Paths=../../../Engine/Plugins/Runtime/AudioSynesthesia/Content
+    Paths=../../../Engine/Plugins/Runtime/AudioWidgets/Content
+    Paths=../../../Engine/Plugins/Runtime/GeometryProcessing/Content
+    Paths=../../../Engine/Plugins/Runtime/Metasound/Content
+    Paths=../../../Engine/Plugins/Runtime/ResonanceAudio/Content
+    Paths=../../../Engine/Plugins/Runtime/SunPosition/Content
+    Paths=../../../Engine/Plugins/Runtime/Synthesis/Content
+    Paths=../../../Engine/Plugins/Runtime/WaveTable/Content
+    Paths=../../../Engine/Plugins/Runtime/WebBrowserWidget/Content
+    Paths=../../../Engine/Plugins/SkyCreatorPlugin/Content
+    Paths=../../../Engine/Plugins/VirtualProduction/CameraCalibrationCore/Content
+    Paths=../../../Engine/Plugins/VirtualProduction/LiveLinkCamera/Content
+    Paths=../../../Engine/Plugins/VirtualProduction/Takes/Content
+    Paths=../../../Engine/Plugins/Web/HttpBlueprint/Content
+    Paths=../../../Pal/Plugins/DLSS/Content
+    Paths=../../../Pal/Plugins/EffectsChecker/Content
+    Paths=../../../Pal/Plugins/HoudiniEngine/Content
+    Paths=../../../Pal/Plugins/PPSkyCreatorPlugin/Content
+    Paths=../../../Pal/Plugins/PocketpairUser/Content
+    Paths=../../../Pal/Plugins/SpreadSheetToCsv/Content
+    Paths=../../../Pal/Plugins/Wwise/Content
+
+    [/script/onlinesubsystemutils.ipnetdriver]
+    LanServerMaxTickRate=60
+    NetServerMaxTickRate=60
+
+    [/script/engine.player]
+    ConfiguredInternetSpeed=104857600
+    ConfiguredLanSpeed=104857600
+
+    [/script/socketsubsystemepic.epicnetdriver]
+    MaxClientRate=104857600
+    MaxInternetClientRate=104857600
+
+    [/script/engine.engine]
+    bSmoothFrameRate=true
+    SmoothedFrameRateRange=(LowerBound=(Type=Inclusive,Value=30.000000),UpperBound=(Type=Exclusive,Value=60.000000))
+    bUseFixedFrameRate=false
+    FixedFrameRate=60
+    MinDesiredFrameRate=30
+    NetClientTicksPerSecond=60
+  '';
 in
 {
   options.modules.games.palworld = {
@@ -73,6 +163,12 @@ in
     package = mkOption {
       type = types.package;
       default = palworld-server;
+    };
+
+    public = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to enable Community Server mode";
     };
 
     autostart = mkOption {
@@ -107,11 +203,7 @@ in
 
     settings = mkOption {
       type = types.attrs;
-      default = {
-        PublicPort = 8211;
-        PublicIP = cfg.ip;
-        AllowConnectPlatform = "Xbox";
-      };
+      default = { };
     };
   };
 
@@ -134,6 +226,7 @@ in
       in {
         "Pal/Binaries/Linux/steamclient.so" = "${steamworks-sdk-redist}/lib/steamclient.so";
         "Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" = generateSettings "PalWorldSettings.ini" settings;
+        "Pal/Saved/Config/LinuxServer/Engine.ini" = builtins.toFile "Engine.ini" engineSettings;
       };
 
       script = let
@@ -145,7 +238,9 @@ in
           "-UseMultithreadForDS"
           "-players=${toString cfg.maxPlayers}"
           "-NumberOfWorkerThreadsServer=${toString cfg.threads}"
-        ] ++ optionals (cfg.ip != null) [ "-publicip=${cfg.ip}" ];
+        ]
+          ++ optionals (cfg.ip != null) [ "-publicip=${cfg.ip}" ]
+          ++ optionals cfg.public [ "-publiclobby" ];
         executable = "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping";
         command = "${wrappedBox64}/bin/box64 ${executable}";
       in "${command} ${concatStringsSep " " args}";

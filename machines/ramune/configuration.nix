@@ -53,7 +53,11 @@
     };
     games = {
       enable = true;
-      palworld.enable = true;
+      palworld = {
+        enable = true;
+        public = true;
+        ip = "134.209.136.30";
+      };
     };
   };
 
