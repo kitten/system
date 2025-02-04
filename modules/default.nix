@@ -6,6 +6,7 @@
     ./apps
     ./desktop
     ./fonts
+    ./games
     ./nvim
     ./router
     ./server
