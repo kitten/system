@@ -51,6 +51,10 @@
       caddy.enable = true;
       vaultwarden.enable = true;
     };
+    games = {
+      enable = true;
+      palworld.enable = true;
+    };
   };
 
   system.stateVersion = "24.11";
