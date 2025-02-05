@@ -54,9 +54,8 @@ let
   };
 
   baseSettings = {
-    ServerName = "London Boroughs";
-    ServerPassword = "onlyflans";
-    AllowConnectPlatform = "Xbox";
+    ServerName = "Unnamed Server";
+    AllowConnectPlatform = "Steam";
     CoopPlayerMaxNum = cfg.maxPlayers;
     bIsUseBackupSaveData = true;
     RCONEnabled = false;
