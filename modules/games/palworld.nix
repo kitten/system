@@ -34,10 +34,6 @@ let
       OptionSettings=(${concatStringsSep "," optionSettings})
     '';
 
-  wrappedBox64 = mkWrappedBox64 {
-    libs = [ pkgs.pkgsCross.gnu64.libgcc ];
-  };
-
   palworld-server = mkSteamPackage {
     name = "palworld-server";
     version = "17082920";
@@ -240,9 +236,8 @@ in
         ]
           ++ optionals (cfg.ip != null) [ "-publicip=${cfg.ip}" ]
           ++ optionals cfg.public [ "-publiclobby" ];
-        executable = "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping";
-        command = "${wrappedBox64}/bin/box64 ${executable}";
-      in "${command} ${concatStringsSep " " args}";
+        bin = getBin (mkWrappedBox64 "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping");
+      in "${bin} ${concatStringsSep " " args}";
     in {
       wantedBy = mkIf cfg.autostart [ "multi-user.target" ];
       after = [ "network.target" ];

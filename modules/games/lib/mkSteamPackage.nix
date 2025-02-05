@@ -1,4 +1,4 @@
-{ lib, pkgs, ... } @ inputs:
+{ lib, helpers, pkgs, ... } @ inputs:
 
 with lib;
 let
@@ -20,9 +20,28 @@ in pkgs.stdenv.mkDerivation (rec {
     src = fetchSteam {
       inherit name appId depotId manifestId hash;
     };
+
     dontBuild = true;
     dontConfigure = true;
-    dontFixup = true;
+    dontFixup = helpers.system == "aarch64-linux";
+
+    appendRunpaths = with pkgs; makeLibraryPath [
+      steamworks-sdk-redist
+      glibc
+      libxcrypt
+      libGL
+      libdrm
+      mesa  # for libgbm
+      udev
+      libudev0-shim
+      libva
+      vulkan-loader
+    ];
+
+    nativeBuildInputs = optionals (helpers.system == "aarch64-linux") [
+      pkgs.autoPatchelfHook
+    ];
+
     installPhase = ''
       runHook preInstall
 

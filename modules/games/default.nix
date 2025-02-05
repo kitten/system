@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, helpers, config, ... }:
 
 with lib; let
   cfg = config.modules.games;
@@ -31,7 +31,7 @@ in {
       description = "Group to use when running game servers";
     };
   };
-
+} // helpers.linuxAttrs {
   config = mkIf cfg.enable {
     users.users."${cfg.user}" = {
       home = "${cfg.datadir}";
