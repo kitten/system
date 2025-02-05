@@ -59,7 +59,6 @@
         ip = "51.38.68.193";
         settings = {
           ServerName = "London Boroughs";
-          ServerPassword = "onlyflans";
           AllowConnectPlatform = "Xbox";
           PalEggDefaultHatchingTime = 1;
         };

@@ -96,6 +96,13 @@ in
   };
 
   config = mkIf isEnabled {
+    age.secrets."palworld-passwd.raw" = {
+      file = ./encrypt/palworld-passwd.age;
+      group = "${baseCfg.group}";
+      owner = "${baseCfg.user}";
+      mode = "770";
+    };
+
     modules.router.nftables.capturePorts = [ cfg.port ];
     networking.firewall.allowedUDPPorts = [ cfg.port ];
 
@@ -110,11 +117,13 @@ in
       };
 
       files = let
-        settings = baseSettings // cfg.settings;
+        settings = baseSettings // cfg.settings // {
+          ServerPassword = "@SERVER_PASSWORD@";
+        };
       in {
         "Pal/Binaries/Linux/steamclient.so" = "${pkgs.steamworks-sdk-redist}/lib/steamclient.so";
         "Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" = generateSettings "PalWorldSettings.ini" settings;
-        "Pal/Saved/Config/LinuxServer/Engine.ini" = builtins.readFile ./Engine.ini;
+        "Pal/Saved/Config/LinuxServer/Engine.ini" = ./Engine.ini;
       };
 
       script = let
@@ -137,7 +146,10 @@ in
       path = with pkgs; [ xdg-user-dirs util-linux ];
 
       inherit script;
-      preStart = ''
+      preStart = let
+        passwordFile = config.age.secrets."palworld-passwd.raw".path;
+      in ''
+        export SERVER_PASSWORD=$(cat "${passwordFile}")
         ${scripts.mkDirs name dirs}
         ${scripts.mkFiles name files}
       '';

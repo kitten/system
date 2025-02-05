@@ -24,4 +24,6 @@ in
 
   "./modules/automation/certs/mqtt.key.age".publicKeys = keys;
   "./modules/automation/certs/mqtt.crt.age".publicKeys = keys;
+
+  "./modules/games/palworld/encrypt/palworld-passwd.age".publicKeys = keys;
 }
