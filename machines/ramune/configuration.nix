@@ -56,7 +56,13 @@
       palworld = {
         enable = true;
         public = true;
-        ip = "134.209.136.30";
+        ip = "51.38.68.193";
+        settings = {
+          ServerName = "London Boroughs";
+          ServerPassword = "onlyflans";
+          AllowConnectPlatform = "Xbox";
+          PalEggDefaultHatchingTime = 1;
+        };
       };
     };
   };
