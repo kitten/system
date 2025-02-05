@@ -73,7 +73,7 @@
     };
   };
 
-  outputs = inputs: let
+  outputs = inputs @ { self, ... }: let
     inherit (inputs.nixpkgs) lib;
     inherit (import ./lib/system.nix inputs) mkSystem;
     eachSystem = lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
@@ -82,6 +82,7 @@
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
       inputs.language-servers.overlays.default
+      self.overlays.default
     ];
   in {
     darwinConfigurations."sprite" = mkSystem {
@@ -114,10 +115,23 @@
       hostname = "ramune";
     };
 
-    packages = eachSystem (system: {
+    overlays = {
+      default = import ./lib/pkgs;
+    };
+
+    packages = eachSystem (system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [ self.overlays.default ];
+      };
+    in {
       inherit (inputs.agenix.packages.${system}) agenix;
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
-    } // (import ./lib/pkgs inputs.nixpkgs.legacyPackages.${system}));
+    } // {
+      inherit (pkgs)
+        steamworks-sdk-redist
+        systemd-transparent-udp-forwarderd;
+    });
 
     apps = eachSystem (system: import ./lib/apps {
       inherit lib;

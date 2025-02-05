@@ -7,10 +7,7 @@ let
   cfg = config.modules.games.palworld;
 
   name = "palworld-server";
-  serverScripts = (import ./lib/serverScripts.nix) args;
-  mkWrappedBox64 = (import ./lib/mkWrappedBox64.nix) args;
-  mkSteamPackage = (import ./lib/mkSteamPackage.nix) args;
-  inherit ((import ./lib/steamworks.nix) args) steamworks-sdk-redist;
+  scripts = (import ./lib/scripts.nix) args;
 
   generateSettings = name: value: let
     optionSettings =
@@ -33,21 +30,6 @@ let
       [/Script/Pal.PalGameWorldSettings]
       OptionSettings=(${concatStringsSep "," optionSettings})
     '';
-
-  palworld-server = mkSteamPackage {
-    name = "palworld-server";
-    version = "17082920";
-    appId = "2394010";
-    depotId = "2394012";
-    manifestId = "2423583208459052375";
-    hash = "sha256-gAFEDf/rKPQ5zTH8EJ93e4KKHUGi8uiYlPS7G2lWGWk=";
-    meta = {
-      description = "Palworld Dedicated Server";
-      homepage = "https://steamdb.info/app/2394010/";
-      changelog = "https://store.steampowered.com/news/app/1623730?updates=true";
-      sourceProvenance = with sourceTypes; [ sourceTypes.binaryNativeCode ];
-    };
-  };
 
   baseSettings = {
     ServerName = "Unnamed Server";
@@ -157,7 +139,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = palworld-server;
+      default = pkgs.palworld-server;
     };
 
     public = mkOption {
@@ -219,7 +201,7 @@ in
       files = let
         settings = baseSettings // cfg.settings;
       in {
-        "Pal/Binaries/Linux/steamclient.so" = "${steamworks-sdk-redist}/lib/steamclient.so";
+        "Pal/Binaries/Linux/steamclient.so" = "${pkgs.steamworks-sdk-redist}/lib/steamclient.so";
         "Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" = generateSettings "PalWorldSettings.ini" settings;
         "Pal/Saved/Config/LinuxServer/Engine.ini" = builtins.toFile "Engine.ini" engineSettings;
       };
@@ -236,7 +218,7 @@ in
         ]
           ++ optionals (cfg.ip != null) [ "-publicip=${cfg.ip}" ]
           ++ optionals cfg.public [ "-publiclobby" ];
-        bin = getBin (mkWrappedBox64 "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping");
+        bin = getExe (pkgs.mkSteamWrapper "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping");
       in "${bin} ${concatStringsSep " " args}";
     in {
       wantedBy = mkIf cfg.autostart [ "multi-user.target" ];
@@ -245,8 +227,8 @@ in
 
       inherit script;
       preStart = ''
-        ${serverScripts.mkDirs name dirs}
-        ${serverScripts.mkFiles name files}
+        ${scripts.mkDirs name dirs}
+        ${scripts.mkFiles name files}
       '';
 
       serviceConfig = {
