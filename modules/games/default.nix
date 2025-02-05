@@ -49,6 +49,6 @@ in {
   };
 
   imports = [
-    ./palworld.nix
+    ./palworld
   ];
 }
