@@ -1,6 +1,13 @@
-{ lib, pkgs, ... }:
+self: pkgs @ {
+  lib,
+  runCommand,
+  depotdownloader,
+  cacert,
+  ...
+}:
 
-with lib; makeOverridable (
+with lib;
+makeOverridable (
   {
     name ? "steamapp-${appId}-${depotId}-${manifestId}",
     appId,
@@ -31,7 +38,7 @@ with lib; makeOverridable (
       ++ optionals debug [ "-debug" ];
 
     drvArgs = {
-      depsBuildBuild = [ pkgs.depotdownloader ];
+      depsBuildBuild = [ depotdownloader ];
 
       strictDeps = true;
 
@@ -39,14 +46,14 @@ with lib; makeOverridable (
       outputHashMode = "recursive";
       outputHash = if hash != "" then hash else fakeHash;
 
-      env.SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+      env.SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
 
       pos = builtins.unsafeGetAttrPos "manifestId" args;
 
       inherit passthru;
     } // optionalAttrs (args ? meta) { inherit meta; };
   in
-  pkgs.runCommand name drvArgs ''
+  runCommand name drvArgs ''
     HOME=$PWD DepotDownloader -dir "$out" ${escapeShellArgs downloadArgs}
     rm -r "$out"/.DepotDownloader
   ''
