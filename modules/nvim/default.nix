@@ -19,6 +19,7 @@ let
       bunx = '${pkgs.bun}/bin/bunx',
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
+      zls = '${pkgs.zls}/bin/zls',
     }
 
     hardline_colors = ${mkVimHardlineColors colors}

@@ -14,5 +14,6 @@ with lib; {
     ./js.nix
     ./react-native.nix
     ./terraform.nix
+    ./zig.nix
   ];
 }
