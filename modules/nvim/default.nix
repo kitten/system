@@ -20,6 +20,7 @@ let
       ripgrep = '${pkgs.ripgrep}/bin/rg',
       rustanalyzer = '${pkgs.rust-analyzer}/bin/rust-analyzer',
       zls = '${pkgs.zls}/bin/zls',
+      zig = '${pkgs.zig}/bin/zig',
     }
 
     hardline_colors = ${mkVimHardlineColors colors}

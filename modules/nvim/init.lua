@@ -500,6 +500,11 @@ lsp_setup('terraformls', {
 lsp_setup('zls', {
   cmd = { nix_bins.zls },
   flags = { debounce_text_changes = 200 },
+  settings = {
+    zls = {
+      zig_exe_path = nix_bins.zig,
+    },
+  }
 })
 
 -- treesitter
