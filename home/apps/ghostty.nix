@@ -56,6 +56,7 @@ in {
         palette = 14=${hex.cyan}
         palette = 15=${hex.muted}
 
+        split-divider-color = ${hex.split}
         cursor-color = ${hex.white}
         cursor-style = block
         cursor-style-blink = false
@@ -70,6 +71,7 @@ in {
         window-padding-color = extend
         window-theme = ghostty
         window-colorspace = display-p3
+        window-save-state = always
         unfocused-split-opacity = 0.9
 
         adjust-underline-thickness = -1
