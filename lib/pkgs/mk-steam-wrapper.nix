@@ -37,12 +37,7 @@ let
       runpaths = libs ++ optionals useBox64 nativeLibs;
       combinedEnv = optionalAttrs useBox64 {
         BOX64_LOG = logLevel;
-        BOX64_DYNAREC_STRONGMEM = 1;
-        BOX64_DYNAREC_BIGBLOCK = 1;
-        BOX64_DYNAREC_SAFEFLAGS = 1;
-        BOX64_DYNAREC_FASTROUND = 1;
-        BOX64_DYNAREC_FASTNAN = 1;
-        BOX64_DYNAREC_X87DOUBLE = 0;
+        BOX64_DYNAREC_STRONGMEM = 0;
       } // env;
     in bin:
       stdenv.mkDerivation rec {

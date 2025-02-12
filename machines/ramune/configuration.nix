@@ -61,6 +61,10 @@
           ServerName = "London Boroughs";
           AllowConnectPlatform = "Xbox";
           PalEggDefaultHatchingTime = 1;
+          GuildPlayerMaxNum = 10;
+          bShowPlayerList = true;
+          bEnableNonLoginPenalty = false;
+          bUseAuth = false;
         };
       };
     };

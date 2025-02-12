@@ -130,7 +130,8 @@
     } // {
       inherit (pkgs)
         steamworks-sdk-redist
-        systemd-transparent-udp-forwarderd;
+        systemd-transparent-udp-forwarderd
+        force-bind;
     });
 
     apps = eachSystem (system: import ./lib/apps {
