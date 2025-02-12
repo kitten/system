@@ -5,6 +5,7 @@ let
   isEnabled = config.modules.games.enable && config.modules.games.palworld.enable;
   baseCfg = config.modules.games;
   cfg = config.modules.games.palworld;
+  port = toString cfg.port;
 
   name = "palworld-server";
   scripts = (import ../lib/scripts.nix) args;
@@ -59,11 +60,6 @@ in
       description = "Whether to enable Community Server mode";
     };
 
-    autostart = mkOption {
-      default = false;
-      type = types.bool;
-    };
-
     datadir = mkOption {
       type = types.path;
       default = "${baseCfg.datadir}/palworld";
@@ -81,7 +77,7 @@ in
 
     threads = mkOption {
       type = types.int;
-      default = 4;
+      default = 5;
     };
 
     maxPlayers = mkOption {
@@ -110,6 +106,16 @@ in
       "d ${cfg.datadir} 0755 ${baseCfg.user} ${baseCfg.group} - -"
     ];
 
+    systemd.sockets."${name}" = {
+      wantedBy = [ "sockets.target" ];
+      partOf = [ "${name}.service" ];
+      listenDatagrams = [ "0.0.0.0:${port}" ];
+      socketConfig = {
+        SocketUser = "${baseCfg.user}";
+        SocketGroup = "${baseCfg.group}";
+      };
+    };
+
     systemd.services."${name}" = let
       dirs = {
         Pal = "${cfg.package}/Pal";
@@ -129,7 +135,8 @@ in
       script = let
         args = [
           "Pal"
-          "-port=${toString cfg.port}"
+          "-port=${port}"
+          "-publicport=${port}"
           "-useperfthreads"
           "-NoAsyncLoadingThread"
           "-UseMultithreadForDS"
@@ -139,10 +146,11 @@ in
           ++ optionals (cfg.ip != null) [ "-publicip=${cfg.ip}" ]
           ++ optionals cfg.public [ "-publiclobby" ];
         bin = getExe (pkgs.mkSteamWrapper "${cfg.datadir}/Pal/Binaries/Linux/PalServer-Linux-Shipping");
-      in "${bin} ${concatStringsSep " " args}";
+        forceBind = "${getExe pkgs.force-bind} -m '0.0.0.0:${port}=sd=0'";
+      in "${forceBind} ${bin} ${concatStringsSep " " args}";
     in {
-      wantedBy = mkIf cfg.autostart [ "multi-user.target" ];
-      after = [ "network.target" ];
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       path = with pkgs; [ xdg-user-dirs util-linux ];
 
       inherit script;
@@ -160,9 +168,10 @@ in
         Group = "${baseCfg.group}";
         WorkingDirectory = "${cfg.datadir}";
 
-        CPUWeight = 80;
+        CPUWeight = 90;
         CPUQuota = "${toString ((cfg.threads + 1) * 100)}%";
 
+        /*
         PrivateDevices = true;
         PrivateTmp = true;
         PrivateUsers = true;
@@ -172,7 +181,11 @@ in
         ProtectKernelModules = true;
         ProtectKernelTunables = true;
         RestrictRealtime = true;
-        LockPersonality = true;
+        */
+
+        # force-bind needs to stay unlocked and needs to be able to ptrace
+        LockPersonality = false;
+        CapabilityBoundingSet = [ "CAP_SYS_PTRACE" ];
 
         # Palworld needs namespaces and system calls
         RestrictNamespaces = false;

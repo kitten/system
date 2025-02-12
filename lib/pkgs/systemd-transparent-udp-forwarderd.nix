@@ -1,4 +1,4 @@
-pkgs @ {
+self: pkgs @ {
   stdenv,
   cmake,
   pkg-config,
@@ -7,7 +7,7 @@ pkgs @ {
   ...
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   pname = "systemd-transparent-udp-forwarderd";
   version = "0.0.1-add-activity-timeout-shutdown";
   nativeBuildInputs = [ cmake pkg-config ];
@@ -24,4 +24,6 @@ stdenv.mkDerivation {
     install -Dm755 systemd-transparent-udp-forwarderd "$out/bin/$pname"
     runHook postInstall
   '';
+
+  meta.mainProgram = pname;
 }

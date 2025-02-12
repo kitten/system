@@ -65,7 +65,6 @@ in {
       "kernel.sysrq" = 4;
       "kernel.unprivileged_bpf_disabled" = true;
       "kernel.perf_event_paranoid" = 3;
-      "kernel.yama.ptrace_scope" = 2;
       "kernel.kexec_load_disabled" = true;
       "net.core.bpf_jit_harden" = 2;
       "dev.tty.ldisc_autoload" = false;
