@@ -72,6 +72,7 @@ in {
         window-theme = ghostty
         window-colorspace = display-p3
         window-save-state = always
+        window-decoration = server
         unfocused-split-opacity = 0.9
 
         adjust-underline-thickness = -1
@@ -86,11 +87,17 @@ in {
 
         adw-toolbar-style = flat
 
-        shell-integration-features = no-cursor
+        shell-integration-features = no-cursor,sudo,title
         shell-integration = zsh
+
+        mouse-hide-while-typing = true
+        mouse-shift-capture = true
+        mouse-scroll-multiplier = 0.7
 
         clipboard-read = allow
         clipboard-paste-protection = false
+
+        quick-terminal-position = bottom
 
         keybind = clear
         keybind = super+q=quit
@@ -133,8 +140,10 @@ in {
         keybind = ctrl+a>l=resize_split:right,40
         keybind = ctrl+a>g=equalize_splits
 
-        keybind = super+c=copy_to_clipboard
-        keybind = super+v=paste_from_clipboard
+        keybind = performable:super+c=copy_to_clipboard
+        keybind = performable:super+v=paste_from_clipboard
+
+        keybind = global:cmd+grave_accent=toggle_quick_terminal
       '';
     }
   ]);
