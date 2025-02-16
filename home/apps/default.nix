@@ -3,7 +3,7 @@
 with lib; {
   options.modules.apps = {
     enable = mkOption {
-      default = true;
+      default = false;
       description = "Whether to enable Apps options.";
       type = types.bool;
     };
