@@ -15,7 +15,7 @@ let
     src = ./.;
     offlineCache = pkgs.fetchYarnDeps {
       yarnLock = src + "/yarn.lock";
-      hash = "sha256-fkBx0EGY70U/NXm4IY98MczG+1dNLbndY+ZFwvYvohY=";
+      hash = "sha256-a4zkEr/v6ZBTXS6Q5oij5G0zsGh1QCGa8/5Do0C/inM=";
     };
     strictDeps = true;
     nativeBuildInputs = with pkgs; [

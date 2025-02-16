@@ -7,8 +7,8 @@
     "homebridge-config-ui": "node_modules/homebridge-config-ui-x/dist/bin/standalone.js"
   },
   "dependencies": {
-    "homebridge": "^1.8.4",
-    "homebridge-config-ui-x": "^4.58.0",
-    "homebridge-z2m": "^1.11.0-beta.6"
+    "homebridge": "^1.9.0",
+    "homebridge-config-ui-x": "^4.71.0",
+    "homebridge-z2m": "^1.11.0-beta.10"
   }
 }
