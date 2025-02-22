@@ -114,6 +114,12 @@
       hostname = "ramune";
     };
 
+    nixosConfigurations."sodacream" = mkSystem {
+      inherit overlays;
+      system = "aarch64-linux";
+      hostname = "sodacream";
+    };
+
     packages = eachSystem (system: {
       inherit (inputs.agenix.packages.${system}) agenix;
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
