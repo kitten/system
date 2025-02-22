@@ -72,7 +72,7 @@ in {
         window-theme = ghostty
         window-colorspace = display-p3
         window-save-state = always
-        window-decoration = server
+        window-decoration = client
         unfocused-split-opacity = 0.9
 
         adjust-underline-thickness = -1

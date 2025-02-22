@@ -40,10 +40,11 @@ in {
       NODE_REPL_HISTORY = "${config.xdg.stateHome}/node_repl_history";
       NPM_CONFIG_USERCONFIG = "${NPMRC_PATH}";
       NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
-      NPM_CONFIG_TMP = "${config.xdg.runtimeDir}/npm";
+      NPM_CONFIG_TMP = "$XDG_RUNTIME_DIR/npm";
       VOLTA_HOME = "${config.xdg.dataHome}/volta";
 
       COREPACK_ENABLE_AUTO_PIN = "0"; # disable corepack creating packageManager entries
+      COREPACK_INTEGRITY_KEYS = "0";
     };
 
     home.file.".yarnrc".text = ''
