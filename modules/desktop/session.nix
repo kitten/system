@@ -14,7 +14,12 @@ in {
   };
 
   config = mkIf cfg.session.enable {
-    boot.plymouth.enable = true;
+    boot = {
+      plymouth.enable = true;
+      initrd.verbose = mkDefault false;
+      consoleLogLevel = 0;
+      loader.timeout = 0;
+    };
 
     services = {
       desktopManager.plasma6.enable = true;
