@@ -19,6 +19,7 @@ in {
       initrd.verbose = mkDefault false;
       consoleLogLevel = 0;
       loader.timeout = 0;
+      kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
     };
 
     services = {
@@ -41,6 +42,7 @@ in {
       ];
       plasma6 = {
         excludePackages = with pkgs.kdePackages; [
+          discover
           ffmpegthumbs
           plasma-browser-integration
           kate
