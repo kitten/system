@@ -37,6 +37,7 @@ in {
       systemPackages = with pkgs.kdePackages; [
         sddm-kcm
         qtmultimedia
+        pkgs.apple-cursor
       ];
       plasma6 = {
         excludePackages = with pkgs.kdePackages; [
@@ -61,6 +62,10 @@ in {
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
+      extraPortals = with pkgs; [
+        kdePackages.xdg-desktop-portal-kde
+        xdg-desktop-portal-gtk
+      ];
     };
   };
 }
