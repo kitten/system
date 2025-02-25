@@ -38,10 +38,7 @@ in {
           "font.default.x-western" = "sans-serif";
           "font.name.sans-serif.x-western" = "Inter";
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-
           "gfx.webrender.all" = true;
-          "gfx.webrender.compositor" = true;
-          "gfx.webrender.compositor.force-enabled" = true;
         };
       };
     };
