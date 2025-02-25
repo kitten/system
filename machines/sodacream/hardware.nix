@@ -74,6 +74,7 @@ with lib;
   hardware = {
     enableAllFirmware = true;
     graphics.enable = true;
+    bluetooth.enable = true;
     wirelessRegulatoryDatabase = true;
     asahi.useExperimentalGPUDriver = true;
   };
