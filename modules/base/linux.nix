@@ -50,8 +50,9 @@ in helpers.linuxAttrs {
       "quiet"
       "splash"
       "boot.shell_on_fail"
-      "rd.systemd.show_status=false"
+      "rd.systemd.show_status=auto"
       "rd.udev.log_level=3"
+      "udev.log_priority=3"
       "nmi_watchdog=0"
       "mitigations=off"
     ];

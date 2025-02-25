@@ -50,7 +50,6 @@ in {
     services = {
       hardware.bolt.enable = true;
       printing.enable = true;
-      flatpak.enable = true;
       colord.enable = true;
       fwupd.enable = true;
 

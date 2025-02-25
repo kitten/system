@@ -14,7 +14,13 @@ in {
   };
 
   config = mkIf cfg.session.enable {
-    boot.plymouth.enable = true;
+    boot = {
+      plymouth.enable = true;
+      initrd.verbose = mkDefault false;
+      consoleLogLevel = 0;
+      loader.timeout = 0;
+      kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
+    };
 
     services = {
       desktopManager.plasma6.enable = true;
@@ -32,9 +38,11 @@ in {
       systemPackages = with pkgs.kdePackages; [
         sddm-kcm
         qtmultimedia
+        pkgs.apple-cursor
       ];
       plasma6 = {
         excludePackages = with pkgs.kdePackages; [
+          discover
           ffmpegthumbs
           plasma-browser-integration
           kate
@@ -56,6 +64,10 @@ in {
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
+      extraPortals = with pkgs; [
+        kdePackages.xdg-desktop-portal-kde
+        xdg-desktop-portal-gtk
+      ];
     };
   };
 }

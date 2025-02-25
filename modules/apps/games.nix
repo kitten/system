@@ -34,7 +34,6 @@ in {
 
     hardware.steam-hardware.enable = true;
     users.users."${user}".extraGroups = [ "gamemode" ];
-    services.system76-scheduler.enable = true;
 
     environment.systemPackages = [
       (pkgs.lutris.override {

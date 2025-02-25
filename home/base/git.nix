@@ -5,6 +5,36 @@ let
   cfg = config.modules.git;
   home = config.home.homeDirectory;
 
+  excludesFile = pkgs.writeTextFile {
+    name = ".gitignore";
+    text = ''
+      # macOS: General
+      .DS_Store
+      .AppleDouble
+      .LSOverride
+      ._*
+
+      # macOS: Files that might appear in the root of a volume
+      .DocumentRevisions-V100
+      .fseventsd
+      .Spotlight-V100
+      .TemporaryItems
+      .Trashes
+      .VolumeIcon.icns
+      .com.apple.timemachine.donotpresent
+
+      # Xcode
+      xcuserdata/
+
+      # Linux: hidden files
+      *~
+      .fuse_hidden*
+      .directory
+      .Trash-*
+      .nfs*
+    '';
+  };
+
   userType = types.submodule {
     options = {
       name = mkOption {
@@ -80,11 +110,14 @@ in {
         tag.gpgSign = true;
         push.gpgSign = "if-asked";
 
+        column.ui = "auto";
         color.ui = "auto";
         init.defaultBranch = "main";
+        help.autocorrect = "prompt";
 
         branch.sort = "-committerdate";
-        tag.sort = "-taggerdate";
+        tag.sort = "-version:refname";
+        commit.verbose = true;
 
         status = {
           showUntrackedFiles = "all";
@@ -95,20 +128,23 @@ in {
           tool = "vimdiff";
           submodule = "log";
           algorithm = "histogram";
+          colorMoved = "plain";
           colorMovedWS = "allow-indentation-change";
+          mnemonicPrefix = true;
           compactionHeuristic = true;
-          context = 10;
+          rename = true;
         };
 
         push = {
           default = "simple";
           autoSetupRemote = true;
-          followtags = true;
+          followTags = true;
+          atomic = true;
         };
 
         rebase = {
-          autosquash = true;
-          autostash = true;
+          autoSquash = true;
+          autoStash = true;
           updateRefs = true;
           missingCommitsCheck = "error";
         };
@@ -121,7 +157,8 @@ in {
 
         fetch = {
           prune = true;
-          prunetags = true;
+          pruneTags = true;
+          all = true;
         };
 
         gitget = {
@@ -130,9 +167,17 @@ in {
           skip-host = true;
         };
 
-        core.autocrlf = false;
+        rerere = {
+          enabled = true;
+          autoupdate = true;
+        };
+
+        core = {
+          autocrlf = false;
+          excludesfile = toString excludesFile;
+        };
+
         pull.rebase = true;
-        rerere.enabled = true;
         difftool.prompt = false;
         mergetool.prompt = true;
         transfer.fsckobjects = true;
