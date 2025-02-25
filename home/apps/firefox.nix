@@ -1,4 +1,4 @@
-{ lib, config, helpers, ... }:
+{ lib, config, pkgs, helpers, ... }:
 
 with lib;
 let
@@ -19,6 +19,7 @@ in {
   config = mkIf (cfg.enable && cfg.firefox.enable) {
     programs.firefox = {
       enable = true;
+      package = with pkgs; (wrapFirefox (firefox-unwrapped.override { pipewireSupport = true; }) {});
       profiles.default = {
         settings = {
           "browser.aboutConfig.showWarning" = false;
@@ -36,8 +37,11 @@ in {
           "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
           "font.default.x-western" = "sans-serif";
           "font.name.sans-serif.x-western" = "Inter";
-          "dom.ipc.processCount" = 4;
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+          "gfx.webrender.all" = true;
+          "gfx.webrender.compositor" = true;
+          "gfx.webrender.compositor.force-enabled" = true;
         };
       };
     };
