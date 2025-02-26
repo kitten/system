@@ -86,11 +86,6 @@ in {
       };
     };
 
-    powerManagement = {
-      powerDownCommands = "systemctl stop system76-scheduler";
-      resumeCommands = "systemctl start system76-scheduler";
-    };
-
     assertions = singleton {
       assertion = mutuallyExclusive cfg.affinity.performanceCores cfg.affinity.efficiencyCores;
       message = "Performance and efficiency CPU cores must not overlap";
