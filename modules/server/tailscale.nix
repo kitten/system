@@ -1,4 +1,4 @@
-{ lib, config, hostname, ... }:
+{ lib, config, pkgs, user, hostname, ... }:
 
 with lib;
 let
@@ -34,11 +34,13 @@ in {
       useRoutingFeatures = if cfgRouter.enable then "server" else "none";
       extraUpFlags = if cfgRouter.enable
         then [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ]
-        else [ "--ssh" "--accept-dns=true" ];
+        else [ "--ssh" "--accept-dns=true" "--operator=${user}" ];
       extraDaemonFlags = [ "--no-logs-no-support" ];
       authKeyFile = "/run/secrets/tailscale";
     };
 
     systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
+
+    environment.systemPackages = mkIf config.modules.desktop.enable [ pkgs.tail-tray ];
   };
 }

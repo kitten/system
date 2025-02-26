@@ -20,8 +20,8 @@
     fonts.enable = true;
     server = {
       enable = true;
-      sshd.enable = true;
       tailscale.enable = true;
+      sshd.enable = false;
     };
   };
 

@@ -40,7 +40,10 @@ in {
       };
       networkmanager = {
         enable = mkDefault true;
-        wifi.powersave = true;
+        wifi = {
+          backend = "iwd";
+          powersave = true;
+        };
       };
     };
 
