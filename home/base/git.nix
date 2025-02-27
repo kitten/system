@@ -71,7 +71,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ git-crypt git-get ];
+    home.packages = with pkgs; [ git-crypt ];
 
     programs.git = {
       enable = true;
@@ -103,6 +103,7 @@ in {
         pushf = "push --force-with-lease";
         glog = "log --pretty=longline --decorate --all --graph --date=relative";
         journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
+        get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
       };
 
       extraConfig = {
@@ -161,12 +162,6 @@ in {
           all = true;
         };
 
-        gitget = {
-          root = "${home}/git";
-          host = "github.com";
-          skip-host = true;
-        };
-
         rerere = {
           enabled = true;
           autoupdate = true;
@@ -182,14 +177,24 @@ in {
         mergetool.prompt = true;
         transfer.fsckobjects = true;
         fetch.fsckobjects = true;
-        receive.fsckObjects = true;
         submodule.recurse = true;
+
+        receive = {
+          shallowUpdate = true;
+          fsckObjects = true;
+          autogc = true;
+        };
 
         "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
         pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cd, by %an)";
 
         "remote \"origin\"" = {
-          fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
+          fetch = [
+            "refs/pull/*/merge:refs/remotes/origin/pr/*"
+          ];
+          partialclonefilter = "blob:none";
+          tagOpt = "--no-tags";
+          promisor = true;
           pruneTags = true;
         };
       };
