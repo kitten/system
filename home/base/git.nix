@@ -98,10 +98,13 @@ in {
       aliases = {
         s = "status -s";
         last = "log -1";
-        lol = "log --pretty=longline";
+        lol = "log --pretty=longline --decorate --date=relative";
+        lrel = "log --pretty=longline --pretty=longline --graph --decorate --date=relative --boundary remotes/origin/HEAD...HEAD";
+        lloc = "log --pretty=longline --graph --decorate --date=relative --boundary ^remotes/origin/HEAD HEAD";
         recommit = "commit -a --amend --no-edit";
         pushf = "push --force-with-lease";
         glog = "log --pretty=longline --decorate --all --graph --date=relative";
+        base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
         journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
         get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
       };
@@ -180,18 +183,17 @@ in {
         submodule.recurse = true;
 
         receive = {
+          denyNonFastForwards = false;
           shallowUpdate = true;
           fsckObjects = true;
           autogc = true;
         };
 
         "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
-        pretty.longline = "tformat:%Cgreen%h %Cred%D %Creset%s %Cblue(%cd, by %an)";
+        pretty.longline = "tformat:%C(yellow)%h %Cred%D %Creset%<(50,mtrunc)%s %Cblue(%cd, %al)";
 
         "remote \"origin\"" = {
-          fetch = [
-            "refs/pull/*/merge:refs/remotes/origin/pr/*"
-          ];
+          fetch = "+refs/pull/*/merge:refs/remotes/origin/pr/*";
           partialclonefilter = "blob:none";
           tagOpt = "--no-tags";
           promisor = true;
