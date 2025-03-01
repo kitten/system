@@ -53,7 +53,8 @@ in {
           AllowedCPUs = efficiency;
           Delegate = "cpuset";
           Nice = 9;
-          IOSchedulingClass = "idle";
+          IOSchedulingClass = "best-effort";
+          IOSchedulingPriority = 0;
         };
         app.sliceConfig = {
           Nice = 0;

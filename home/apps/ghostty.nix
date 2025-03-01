@@ -83,6 +83,8 @@ in {
         confirm-close-surface = false
         quit-after-last-window-closed = true
 
+        linux-cgroup = always
+
         macos-option-as-alt = left
         macos-titlebar-style = tabs
 
