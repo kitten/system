@@ -53,6 +53,7 @@ in {
           oxygen
           oxygen-sounds
           khelpcenter
+          xwaylandvideobridge
         ];
       };
     };
