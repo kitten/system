@@ -12,6 +12,7 @@ with lib; {
   imports = [
     ./discord.nix
     ./firefox.nix
+    ./zen-browser.nix
     ./obsidian.nix
     ./ollama.nix
     ./minecraft.nix

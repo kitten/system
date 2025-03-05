@@ -9,8 +9,8 @@
     };
     apps = {
       enable = true;
-      firefox.enable = true;
       ghostty.enable = true;
+      zen-browser.enable = true;
     };
   };
 }

@@ -71,6 +71,11 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -82,6 +87,9 @@
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
       inputs.language-servers.overlays.default
+      (self: super: {
+        zen-browser = inputs.zen-browser.packages.${self.system}.beta;
+      })
     ];
   in {
     darwinConfigurations."sprite" = mkSystem {
