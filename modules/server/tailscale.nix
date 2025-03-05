@@ -17,7 +17,7 @@ in {
 
   config = mkIf (cfg.enable && cfgRoot.enable) {
     networking = {
-      domain = "fable-pancake.ts.net";
+      domain = mkIf cfgRouter.enable "fable-pancake.ts.net";
       search = [ "fable-pancake.ts.net" ];
       firewall.trustedInterfaces = [ "tailscale0" ];
       hosts."${cfgRouter.address}" = mkIf cfgRouter.enable [ "${hostname}.fable-pancake.ts.net" hostname ];
