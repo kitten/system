@@ -19,7 +19,17 @@ in {
     };
 
     cell_adjust = mkOption {
-      default = if helpers.isDarwin then -1 else 0;
+      default = if helpers.isDarwin then -1 else "-2%";
+      type = types.either types.int types.str;
+    };
+
+    window_padding_x = mkOption {
+      default = if helpers.isDarwin then 2 else 1;
+      type = types.int;
+    };
+
+    window_padding_y = mkOption {
+      default = if helpers.isDarwin then 3 else 0;
       type = types.int;
     };
   };
@@ -65,8 +75,8 @@ in {
         adjust-cursor-thickness = 1
 
         adjust-cell-width = ${toString cfg.ghostty.cell_adjust}
-        window-padding-x = 2
-        window-padding-y = 3
+        window-padding-x = ${toString cfg.ghostty.window_padding_x}
+        window-padding-y = ${toString cfg.ghostty.window_padding_y}
         window-padding-balance = true
         window-padding-color = extend
         window-theme = ghostty
@@ -75,6 +85,7 @@ in {
         window-decoration = client
         window-inherit-working-directory = true
         unfocused-split-opacity = 0.9
+        freetype-load-flags = no-monochrome
 
         adjust-underline-thickness = -1
         adjust-underline-position = 1
