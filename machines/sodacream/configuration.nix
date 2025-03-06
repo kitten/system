@@ -12,6 +12,10 @@
   };
 
   modules = {
+    apps = {
+      enable = true;
+      nix-ld.enable = true;
+    };
     desktop = {
       enable = true;
       rawaccel.enable = false;

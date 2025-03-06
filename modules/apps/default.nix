@@ -16,5 +16,6 @@ with lib; {
 } // helpers.linuxAttrs {
   imports = [
     ./games.nix
+    ./nix-ld.nix
   ];
 }
