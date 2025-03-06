@@ -77,14 +77,6 @@ with lib;
     bluetooth.enable = true;
     wirelessRegulatoryDatabase = true;
     asahi.useExperimentalGPUDriver = true;
-  };
-
-  services.udev.extraRules = ''
-    ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="none"
-  '';
-
-  systemd.services = {
-    mount-pstore.enable = mkDefault false;
-    ModemManager.enable = mkDefault false;
+    sensor.iio.enable = true;
   };
 }

@@ -60,16 +60,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1740250957,
-        "narHash": "sha256-FTmaWVUuJY4ibBcAyTKGEv8EGqiUquSUg9kV+DAYZIo=",
+        "lastModified": 1741365936,
+        "narHash": "sha256-RMGrQxGiF0L83VbTyFIcQFDMthtsIKrm59WjJlbyeNw=",
         "owner": "kitten",
         "repo": "nixos-apple-silicon",
-        "rev": "b27e311a81eba2cf149d36fabe550bab7994d355",
+        "rev": "7d091acd0c3fae6555bdcb90c2154b561ea86c2e",
         "type": "github"
       },
       "original": {
         "owner": "kitten",
-        "ref": "next",
+        "ref": "edge",
         "repo": "nixos-apple-silicon",
         "type": "github"
       }

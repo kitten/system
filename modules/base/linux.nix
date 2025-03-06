@@ -11,7 +11,7 @@ in helpers.linuxAttrs {
     useXkbConfig = true;
 
     colors = [
-      "${hex.black}"
+      "000000"
       "${hex.red}"
       "${hex.green}"
       "${hex.yellow}"

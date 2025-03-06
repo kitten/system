@@ -18,7 +18,6 @@ in {
       plymouth.enable = true;
       initrd.verbose = mkDefault false;
       consoleLogLevel = 0;
-      loader.timeout = 0;
       kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
     };
 
