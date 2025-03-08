@@ -70,7 +70,7 @@ in {
         ++ optionals cfg.react-native.cocoapods [ cocoapods ]
         ++ optionals cfg.react-native.fastlane [ fastlane ];
       home.sessionVariables = {
-        CP_HOME_DIR = mkIf cfg.react-native.cocoapods "$XDG_DATA_HOME/cocoapods";
+        CP_HOME_DIR = mkIf cfg.react-native.cocoapods "${config.xdg.dataHome}/cocoapods";
       };
     })
 
