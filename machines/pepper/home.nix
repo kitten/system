@@ -6,9 +6,9 @@
     apps = {
       enable = true;
       discord.enable = true;
-      firefox.enable = true;
       minecraft.enable = true;
       ghostty.enable = true;
+      zen-browser.enable = true;
     };
   };
 }

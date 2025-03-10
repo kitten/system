@@ -16,18 +16,16 @@ in {
   config = mkIf cfg.rawaccel.enable {
     hardware.yeetmouse = {
       enable = true;
-      parameters = {
-        Sensitivity = 0.56;
-        Acceleration = 3.97;
-        AccelerationMode = "jump";
-        Exponent = 1.0;
-        InputCap = 35.0;
-        Midpoint = 4.1;
-        Offset = 5.9;
-        PreScale = 0.17;
-        RotationAngle = 0.05;
-        ScrollsPerTick = 3;
-        UseSmoothing = true;
+      sensitivity = 0.56;
+      offset = 5.9;
+      inputCap = 35.0;
+      preScale = 0.17;
+      rotation.angle = 3.0;
+      mode.jump = {
+        acceleration = 3.97;
+        midpoint = 4.1;
+        smoothness = 1.0;
+        useSmoothing = true;
       };
     };
   };
