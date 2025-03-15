@@ -119,10 +119,14 @@ in {
         keybind = super+a=select_all
         keybind = super+h=toggle_visibility
 
-        keybind= super+zero=reset_font_size
-        keybind= super+equal=increase_font_size:2
-        keybind= super+plus=increase_font_size:2
-        keybind= super+minus=decrease_font_size:2
+        keybind = super+zero=reset_font_size
+        keybind = super+equal=increase_font_size:2
+        keybind = super+plus=increase_font_size:2
+        keybind = super+minus=decrease_font_size:2
+        keybind = ctrl+zero=reset_font_size
+        keybind = ctrl+equal=increase_font_size:2
+        keybind = ctrl+plus=increase_font_size:2
+        keybind = ctrl+minus=decrease_font_size:2
 
         keybind = ctrl+a>z=toggle_split_zoom
         keybind = ctrl+a>x=close_surface
