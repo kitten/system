@@ -9,6 +9,7 @@
       obsidian.enable = true;
       ollama.enable = true;
       ghostty.enable = true;
+      slack.enable = true;
     };
   };
 }

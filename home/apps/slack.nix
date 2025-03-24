@@ -4,17 +4,17 @@ with lib;
 let
   cfg = config.modules.apps;
 in {
-  options.modules.apps.discord = {
+  options.modules.apps.slack = {
     enable = mkOption {
       default = false;
-      description = "Whether to enable Discord.";
+      description = "Whether to enable Slack.";
       type = types.bool;
     };
   };
 
-  config = mkIf (cfg.enable && cfg.discord.enable) (mkMerge [
+  config = mkIf (cfg.enable && cfg.slack.enable) (mkMerge [
     {
-      home.packages = with pkgs; [ vesktop ];
+      home.packages = with pkgs; [ slack ];
     }
 
     (helpers.mkIfLinux {

@@ -10,6 +10,7 @@ with lib; {
   };
 
   imports = [
+    ./slack.nix
     ./discord.nix
     ./firefox.nix
     ./zen-browser.nix
