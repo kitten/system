@@ -102,6 +102,7 @@ in {
           sources-android-34
           sources-android-35
           ndk-26-1-10909125
+          ndk-27-1-12297006
           cmake-3-22-1
           sdk."system-images-android-34-google-apis-${android-arch}"
           sdk."system-images-android-34-google-apis-playstore-${android-arch}"
