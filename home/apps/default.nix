@@ -13,6 +13,7 @@ with lib; {
     ./slack.nix
     ./discord.nix
     ./firefox.nix
+    ./chromium.nix
     ./zen-browser.nix
     ./obsidian.nix
     ./ollama.nix

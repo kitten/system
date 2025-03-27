@@ -11,6 +11,8 @@
       enable = true;
       ghostty.enable = true;
       zen-browser.enable = true;
+      discord.enable = true;
+      chromium.enable = true;
     };
   };
 }

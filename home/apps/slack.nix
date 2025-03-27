@@ -14,7 +14,9 @@ in {
 
   config = mkIf (cfg.enable && cfg.slack.enable) (mkMerge [
     {
-      home.packages = with pkgs; [ slack ];
+      home.packages = with pkgs; let
+        pkg = if helpers.system == "aarch64-linux" then slacky else slack;
+      in [ pkg ];
     }
 
     (helpers.mkIfLinux {
