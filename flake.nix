@@ -8,8 +8,11 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-3.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0-3.tar.gz";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
     };
 
     apple-silicon = {
@@ -60,7 +63,7 @@
     };
 
     yeetmouse = {
-      url = "github:AndyFilter/yeetmouse/driver/experimental?dir=nix";
+      url = "github:AndyFilter/yeetmouse?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -74,7 +77,10 @@
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
   };
 
