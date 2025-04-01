@@ -142,7 +142,6 @@ in {
         push = {
           default = "simple";
           autoSetupRemote = true;
-          followTags = true;
           atomic = true;
         };
 
