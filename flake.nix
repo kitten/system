@@ -89,7 +89,7 @@
     inherit (import ./lib/system.nix inputs) mkSystem;
     eachSystem = lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
     overlays = [
-      inputs.lix-module.overlays.lixFromNixpkgs
+      inputs.lix-module.overlays.default
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
       inputs.language-servers.overlays.default
