@@ -23,5 +23,6 @@ with lib; {
     ./jellyfin.nix
     ./home-assistant.nix
     ./podman.nix
+    ./docker.nix
   ];
 }
