@@ -21,16 +21,18 @@ in {
       kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
     };
 
-    services = {
-      desktopManager.plasma6.enable = true;
-      displayManager = {
-        defaultSession = "plasma";
-        sddm = {
-          enable = true;
-          enableHidpi = true;
-          wayland.enable = true;
-        };
-      };
+    services.greetd = {
+      enable = true;
+    };
+
+    programs.regreet = {
+      enable = true;
+    };
+
+    programs.hyprland = {
+      enable = true;
+      withUWSM = true;
+      xwayland.enable = true;
     };
 
     environment = {
@@ -64,7 +66,7 @@ in {
       enable = true;
       xdgOpenUsePortal = true;
       extraPortals = with pkgs; [
-        kdePackages.xdg-desktop-portal-kde
+        xdg-desktop-portal-hyprland
         xdg-desktop-portal-gtk
       ];
     };
