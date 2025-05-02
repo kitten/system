@@ -25,7 +25,7 @@
     server = {
       enable = true;
       tailscale.enable = true;
-      sshd.enable = false;
+      sshd.enable = true;
       podman.enable = true;
     };
   };

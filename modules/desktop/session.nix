@@ -18,7 +18,6 @@ in {
       plymouth.enable = true;
       initrd.verbose = mkDefault false;
       consoleLogLevel = 0;
-      kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
     };
 
     services.greetd = {
@@ -33,29 +32,6 @@ in {
       enable = true;
       withUWSM = true;
       xwayland.enable = true;
-    };
-
-    environment = {
-      systemPackages = with pkgs.kdePackages; [
-        sddm-kcm
-        qtmultimedia
-        pkgs.apple-cursor
-      ];
-      plasma6 = {
-        excludePackages = with pkgs.kdePackages; [
-          discover
-          ffmpegthumbs
-          plasma-browser-integration
-          kate
-          konsole
-          krdp
-          elisa
-          gwenview
-          oxygen
-          oxygen-sounds
-          khelpcenter
-        ];
-      };
     };
 
     security = {

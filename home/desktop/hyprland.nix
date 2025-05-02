@@ -1,0 +1,71 @@
+{ lib, config, pkgs, ... }:
+
+with lib;
+let
+  cfg = config.modules.desktop;
+in {
+  options.modules.desktop.hyprland = {
+    enable = mkOption {
+      default = cfg.enable;
+      example = true;
+      description = "Whether to enable Hyprland configuration.";
+      type = types.bool;
+    };
+  };
+
+  config = mkIf cfg.hyprland.enable {
+    wayland.windowManager.hyprland = {
+      enable = true;
+      systemd.enable = false;
+      xwayland.enable = true;
+      settings = {
+        "$mod" = "SUPER";
+
+        general = {
+          gaps_out = 10;
+        };
+
+        input = {
+          kb_options = "ctrl:nocaps";
+          touchpad = {
+            clickfinger_behavior = true;
+            tap-to-click = false;
+            tap-and-drag = false;
+            scroll_factor = 0.2;
+          };
+        };
+
+        monitor = [
+          "eDP-1, preferred, 0x0, 1.6"
+          "eDP-1, addreserved, 35, 0, 0, 0"
+        ];
+
+        debug = {
+          error_position = 1;
+        };
+
+        bind = [
+          "$mod, Q, exec, uwsm app -- ghostty"
+        ];
+      };
+    };
+
+    home.pointerCursor = {
+      gtk.enable = true;
+      hyprcursor.enable = true;
+      x11.enable = true;
+      package = pkgs.apple-cursor;
+      name = "macOS";
+      size = 28;
+    };
+
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
+}

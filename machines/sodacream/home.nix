@@ -1,5 +1,6 @@
 { ... }: {
   modules = {
+    desktop.enable = true;
     development = {
       enable = true;
       js.enable = true;

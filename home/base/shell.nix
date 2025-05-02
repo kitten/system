@@ -55,7 +55,7 @@ in {
           src = pkgs.pure-prompt;
         }
       ];
-      initExtra = /*sh*/''
+      initContent = /*sh*/''
         setopt NO_NOMATCH
         stty -ixon -ixoff
       '';
