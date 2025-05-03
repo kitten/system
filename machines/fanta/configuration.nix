@@ -4,7 +4,6 @@
   imports = [ ];
 
   modules = {
-    fonts.enable = true;
     nvim.enable = true;
   };
 

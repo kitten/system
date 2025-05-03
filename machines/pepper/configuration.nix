@@ -13,7 +13,6 @@
 
   modules = {
     desktop.enable = true;
-    fonts.enable = true;
     server = {
       enable = true;
       sshd.enable = true;

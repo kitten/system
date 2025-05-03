@@ -6,5 +6,6 @@
     ./development
     ./desktop
     ./apps
+    ./fonts
   ];
 }

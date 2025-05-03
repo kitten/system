@@ -16,8 +16,12 @@ in {
   config = mkIf cfg.hyprland.enable {
     wayland.windowManager.hyprland = {
       enable = true;
+
+      package = null;
+      portalPackage = null;
       systemd.enable = false;
-      xwayland.enable = true;
+      xwayland.enable = false;
+
       settings = {
         "$mod" = "SUPER";
 
