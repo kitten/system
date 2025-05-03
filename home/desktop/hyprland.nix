@@ -63,13 +63,30 @@ in {
       size = 28;
     };
 
-    xdg.portal = {
+    gtk = {
       enable = true;
-      xdgOpenUsePortal = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
+      theme = {
+        package = pkgs.flat-remix-gtk;
+        name = "Flat-Remix-GTK-Grey-Darkest";
+      };
+      iconTheme = {
+        package = pkgs.adwaita-icon-theme;
+        name = "Adwaita";
+      };
+      font = {
+        name = "Inter";
+        size = 11;
+      };
+    };
+
+    fonts.fontconfig = {
+      enable = true;
+      defaultFonts = {
+        serif = [ "Noto Serif" "Noto Color Emoji" ];
+        sansSerif = [ "Inter" "Noto Color Emoji" ];
+        monospace = [ "Dank Mono" "Roboto Mono" "Noto Color Emoji" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
     };
   };
 }
