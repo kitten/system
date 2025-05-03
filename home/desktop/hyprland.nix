@@ -39,20 +39,22 @@ in {
           };
         };
 
+        debug.error_position = 1;
+        misc.middle_click_paste = false;
+
         monitor = [
           "eDP-1, preferred, 0x0, 1.6"
           "eDP-1, addreserved, 35, 0, 0, 0"
         ];
 
-        debug = {
-          error_position = 1;
-        };
-
         bind = [
-          "$mod, Q, exec, uwsm app -- ghostty"
+          "$mod, Q, exec, uwsm-app ghostty"
+          "$mod, B, exec, uwsm-app zen-beta"
         ];
       };
     };
+
+    services.hyprpolkitagent.enable = true;
 
     home.pointerCursor = {
       gtk.enable = true;
