@@ -20,22 +20,29 @@ in {
       consoleLogLevel = 0;
     };
 
-    services.greetd = {
-      enable = true;
+    services = {
+      greetd.enable = true;
+      hypridle.enable = true;
+      logind = {
+        powerKey = "suspend";
+        powerKeyLongPress = "poweroff";
+        lidSwitch = "suspend";
+      };
     };
 
-    programs.regreet = {
-      enable = true;
-    };
-
-    programs.hyprland = {
-      enable = true;
-      withUWSM = true;
-      xwayland.enable = true;
+    programs = {
+      regreet.enable = true;
+      hyprlock.enable = true;
+      hyprland = {
+        enable = true;
+        withUWSM = true;
+        xwayland.enable = true;
+      };
     };
 
     security = {
       polkit.enable = true;
+      pam.services.hyprlock = {};
     };
 
     xdg.portal = {
