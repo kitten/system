@@ -4,9 +4,12 @@ with lib;
 let
   cfg = config.modules.desktop;
 
+  hyprpanel = pkgs.callPackage ./hyprpanel {};
+
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
+  hyprshot = "${pkgs.hyprshot}/bin/hyprshot";
 in {
   options.modules.desktop.hyprland = {
     enable = mkOption {
@@ -28,10 +31,40 @@ in {
 
       settings = {
         general = {
-          gaps_out = 10;
+          gaps_out = 9;
+          gaps_in = 4;
           resize_on_border = true;
           hover_icon_on_border = false;
+          no_border_on_floating = true;
           extend_border_grab_area = 10;
+          border_size = 1;
+          "col.active_border" = "0xB35A5A5A";
+          "col.inactive_border" = "0x8C3A3A3A";
+        };
+
+        decoration = {
+          rounding = 9;
+          dim_inactive = true;
+          dim_strength = 0.12;
+
+          blur = {
+            enabled = true;
+            size = 16;
+            passes = 4;
+            contrast = 0.8;
+            brightness = 0.45;
+            vibrancy = 0.15;
+            vibrancy_darkness = 0.1;
+            ignore_opacity = true;
+            noise = 0.012;
+          };
+
+          shadow = {
+            color = "0x81000000";
+            range = 40;
+            render_power = 1;
+            offset = "5, 5";
+          };
         };
 
         input = {
@@ -47,7 +80,7 @@ in {
         gestures = {
           workspace_swipe = true;
           workspace_swipe_invert = false;
-          workspace_swipe_distance = 450;
+          workspace_swipe_distance = 600;
         };
 
         debug.error_position = 1;
@@ -82,6 +115,12 @@ in {
           "SUPER, T, exec, uwsm-app ghostty"
           "SUPER, B, exec, uwsm-app zen-beta"
           "SUPER, W, killactive"
+
+          "SUPERSHIFT, F, fullscreen, 1"
+
+          "SUPERSHIFT, 2, exec, ${hyprshot} -z -m window -m active"
+          "SUPERSHIFT, 3, exec, ${hyprshot} -z -m output -m active"
+          "SUPERSHIFT, 4, exec, ${hyprshot} -z -m region"
         ];
 
         windowrule = [
@@ -151,46 +190,6 @@ in {
             shadow_passes = 2;
           }
         ];
-      };
-    };
-
-    home.pointerCursor = {
-      gtk.enable = true;
-      hyprcursor.enable = true;
-      x11.enable = true;
-      package = pkgs.apple-cursor;
-      name = "macOS";
-      size = 28;
-    };
-
-    gtk = {
-      enable = true;
-      gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
-      theme = {
-        package = pkgs.flat-remix-gtk;
-        name = "Flat-Remix-GTK-Grey-Darkest";
-      };
-      iconTheme = {
-        name = "WhiteSur";
-        package = pkgs.whitesur-icon-theme.override {
-          boldPanelIcons = true;
-          alternativeIcons = true;
-        };
-      };
-      font = {
-        name = "SF Pro";
-        package = pkgs.sf-pro;
-        size = 11;
-      };
-    };
-
-    fonts.fontconfig = {
-      enable = true;
-      defaultFonts = {
-        serif = [ "Noto Serif" "Noto Color Emoji" ];
-        sansSerif = [ "Inter" "Noto Color Emoji" ];
-        monospace = [ "Dank Mono" "Roboto Mono" "Noto Color Emoji" ];
-        emoji = [ "Noto Color Emoji" ];
       };
     };
   };

@@ -22,8 +22,18 @@ in {
       consoleLogLevel = 0;
     };
 
+    environment.sessionVariables = {
+      GSK_RENDERER = mkDefault "ngl";
+      QT_QPA_PLATFORM = mkDefault "wayland";
+      GDK_BACKEND = mkDefault "wayland";
+      NIXOS_OZONE_WL = mkDefault "1";
+    };
+
     services = {
-      greetd.enable = true;
+      greetd = {
+        enable = true;
+        settings.terminal.vt = 1;
+      };
       hypridle.enable = true;
       logind = {
         powerKey = "suspend";
