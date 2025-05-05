@@ -3,6 +3,10 @@
 with lib;
 let
   cfg = config.modules.desktop;
+
+  wpctl = "${pkgs.wireplumber}/bin/wpctl";
+  brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+  playerctl = "${pkgs.playerctl}/bin/playerctl";
 in {
   options.modules.desktop.hyprland = {
     enable = mkOption {
@@ -23,10 +27,11 @@ in {
       xwayland.enable = false;
 
       settings = {
-        "$mod" = "SUPER";
-
         general = {
           gaps_out = 10;
+          resize_on_border = true;
+          hover_icon_on_border = false;
+          extend_border_grab_area = 10;
         };
 
         input = {
@@ -39,6 +44,12 @@ in {
           };
         };
 
+        gestures = {
+          workspace_swipe = true;
+          workspace_swipe_invert = false;
+          workspace_swipe_distance = 450;
+        };
+
         debug.error_position = 1;
         misc.middle_click_paste = false;
 
@@ -47,16 +58,41 @@ in {
           "eDP-1, addreserved, 35, 0, 0, 0"
         ];
 
+        bindm = [
+          "SUPER, mouse:272, movewindow"
+          "SUPERSHIFT, mouse:272, resizewindow"
+        ];
+
+        bindel = [
+          ", XF86AudioRaiseVolume, exec, ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 3%+"
+          ", XF86AudioLowerVolume, exec, ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 3%-"
+          ", XF86MonBrightnessDown, exec, ${brightnessctl} s 10%-"
+          ", XF86MonBrightnessUp, exec, ${brightnessctl} set +10%"
+        ];
+
+        bindl = [
+          ", XF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ", XF86AudioPlay, exec, ${playerctl} play-pause"
+          ", XF86AudioPause, exec, ${playerctl} play-pause"
+          ", XF86AudioNext, exec, ${playerctl} next"
+          ", XF86AudioPrev, exec, ${playerctl} previous"
+        ];
+
         bind = [
-          "$mod, T, exec, uwsm-app ghostty"
-          "$mod, B, exec, uwsm-app zen-beta"
-          "$mod, W, killactive"
+          "SUPER, T, exec, uwsm-app ghostty"
+          "SUPER, B, exec, uwsm-app zen-beta"
+          "SUPER, W, killactive"
+        ];
+
+        windowrule = [
+          "float, class:zen-beta,initialTitle:(Picture-in-Picture)"
         ];
       };
     };
 
     services = {
       hyprpolkitagent.enable = true;
+      playerctld.enable = true;
       hypridle = {
         enable = true;
         package = null;
