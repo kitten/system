@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, user, ... }:
 
 with lib;
 let
@@ -14,6 +14,8 @@ in {
   };
 
   config = mkIf cfg.session.enable {
+    users.users."${user}".extraGroups = [ "video" ];
+
     boot = {
       plymouth.enable = true;
       initrd.verbose = mkDefault false;

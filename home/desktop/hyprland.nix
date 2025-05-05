@@ -165,16 +165,21 @@ in {
 
     gtk = {
       enable = true;
+      gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
       theme = {
         package = pkgs.flat-remix-gtk;
         name = "Flat-Remix-GTK-Grey-Darkest";
       };
       iconTheme = {
-        package = pkgs.adwaita-icon-theme;
-        name = "Adwaita";
+        name = "WhiteSur";
+        package = pkgs.whitesur-icon-theme.override {
+          boldPanelIcons = true;
+          alternativeIcons = true;
+        };
       };
       font = {
-        name = "Inter";
+        name = "SF Pro";
+        package = pkgs.sf-pro;
         size = 11;
       };
     };
