@@ -95,7 +95,7 @@
       inputs.language-servers.overlays.default
       (self: super: {
         zen-browser = inputs.zen-browser.packages.${self.system}.beta;
-      })
+      } // (import ./lib/pkgs self))
     ];
   in {
     darwinConfigurations."sprite" = mkSystem {
