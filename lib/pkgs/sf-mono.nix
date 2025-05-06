@@ -5,14 +5,14 @@
   unzip,
   ...
 }: stdenv.mkDerivation rec {
-  pname = "SF-Pro-mono";
-  version = "v3.0.0";
+  pname = "SF-Mono";
+  version = "0";
 
   src = fetchFromGitHub {
-    owner = "shaunsingh";
-    repo = "SFMono-Nerd-Font-Ligaturized";
-    rev = "main";
-    sha256 = "sha256-AYjKrVLISsJWXN6Cj74wXmbJtREkFDYOCRw1t2nVH2w=";
+    owner = "supercomputra";
+    repo = "SF-Mono-Font";
+    rev = "master";
+    sha256 = "sha256-3wG3M4Qep7MYjktzX9u8d0iDWa17FSXYnObSoTG2I/o=";
   };
 
   nativeBuildInputs = [unzip];

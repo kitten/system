@@ -6,7 +6,7 @@
   ...
 }: stdenv.mkDerivation rec {
   pname = "SF-Pro";
-  version = "v3.0.0";
+  version = "0";
 
   src = fetchFromGitHub {
     owner = "sahibjotsaggu";

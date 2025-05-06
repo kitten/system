@@ -27,6 +27,28 @@
         "type": "github"
       }
     },
+    "ags": {
+      "inputs": {
+        "astal": "astal",
+        "nixpkgs": [
+          "system-shell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1744557573,
+        "narHash": "sha256-XAyj0iDuI51BytJ1PwN53uLpzTDdznPDQFG4RwihlTQ=",
+        "owner": "aylur",
+        "repo": "ags",
+        "rev": "3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aylur",
+        "repo": "ags",
+        "type": "github"
+      }
+    },
     "android-sdk": {
       "inputs": {
         "devshell": "devshell",
@@ -71,6 +93,28 @@
         "owner": "kitten",
         "ref": "edge",
         "repo": "nixos-apple-silicon",
+        "type": "github"
+      }
+    },
+    "astal": {
+      "inputs": {
+        "nixpkgs": [
+          "system-shell",
+          "ags",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1742571008,
+        "narHash": "sha256-5WgfJAeBpxiKbTR/gJvxrGYfqQRge5aUDcGKmU1YZ1Q=",
+        "owner": "aylur",
+        "repo": "astal",
+        "rev": "dc0e5d37abe9424c53dcbd2506a4886ffee6296e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aylur",
+        "repo": "astal",
         "type": "github"
       }
     },
@@ -805,6 +849,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nvim-plugins": "nvim-plugins",
+        "system-shell": "system-shell",
         "yeetmouse": "yeetmouse",
         "zen-browser": "zen-browser"
       }
@@ -827,6 +872,30 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "system-shell": {
+      "inputs": {
+        "ags": "ags",
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1746537812,
+        "narHash": "sha256-gr1DbuTbbEa53Hx0BlC+9a382hcUn/XZfdFiQhO8nNw=",
+        "owner": "kitten",
+        "repo": "system-shell",
+        "rev": "bccdaa60737f39c008a79c84fb7b5e36f14dc911",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kitten",
+        "repo": "system-shell",
         "type": "github"
       }
     },

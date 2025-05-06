@@ -4,8 +4,6 @@ with lib;
 let
   cfg = config.modules.desktop;
 
-  hyprpanel = pkgs.callPackage ./hyprpanel {};
-
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
@@ -55,7 +53,9 @@ in {
             brightness = 0.45;
             vibrancy = 0.15;
             vibrancy_darkness = 0.1;
-            ignore_opacity = true;
+            ignore_opacity = false;
+            popups_ignorealpha = 0.1;
+            input_methods_ignorealpha = 0.1;
             noise = 0.012;
           };
 
@@ -88,7 +88,6 @@ in {
 
         monitor = [
           "eDP-1, preferred, 0x0, 1.6"
-          "eDP-1, addreserved, 35, 0, 0, 0"
         ];
 
         bindm = [
@@ -97,8 +96,8 @@ in {
         ];
 
         bindel = [
-          ", XF86AudioRaiseVolume, exec, ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 3%+"
-          ", XF86AudioLowerVolume, exec, ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 3%-"
+          ", XF86AudioRaiseVolume, exec, ${wpctl} set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 3%+"
+          ", XF86AudioLowerVolume, exec, ${wpctl} set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 3%-"
           ", XF86MonBrightnessDown, exec, ${brightnessctl} s 10%-"
           ", XF86MonBrightnessUp, exec, ${brightnessctl} set +10%"
         ];
@@ -130,6 +129,9 @@ in {
 
         layerrule = [
           "blur, hyprpanel"
+          "ignorezero, hyprpanel"
+          "xray, hyprpanel"
+          "animation slide, hyprpanel"
         ];
       };
     };
@@ -195,6 +197,21 @@ in {
             shadow_passes = 2;
           }
         ];
+      };
+    };
+
+    systemd.user.services.hyprpanel = {
+      Install.WantedBy = ["graphical-session.target"];
+      Service = {
+        ExecStart = "${lib.getExe pkgs.system-shell}";
+        Restart = "on-failure";
+        RestartSec = 5;
+        Environment = [ "GSK_RENDERER=ngl" ];
+      };
+      Unit = {
+        After = [ "graphical-session.target" ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
+        PartOf = [ "graphical-session.target" ];
       };
     };
   };
