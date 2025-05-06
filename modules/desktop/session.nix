@@ -35,6 +35,7 @@ in {
         settings.terminal.vt = 1;
       };
       hypridle.enable = true;
+      upower.enable = true;
       logind = {
         powerKey = "suspend";
         powerKeyLongPress = "poweroff";

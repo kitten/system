@@ -2,77 +2,37 @@ using Gtk 4.0;
 using Astal 4.0;
 
 template $Bar: Astal.Window {
+    default-height: 40;
+
     CenterBox centerbox {
         start-widget: Box {
-            MenuButton {
-                Label {
-                    label: bind template.clock;
-                }
-
-                popover: Popover popover {
-                    Calendar calendar {
-                        show-day-names: true;
-                        show-heading: true;
-                        show-week-numbers: true;
-                    }
-                };
-            }
         };
 
         center-widget: Box {
-            Box {
-                visible: bind template.mpris-visible;
-
-                Image {
-                    file: bind template.mpris-art;
-                }
-
-                Label {
-                    label: bind template.mpris-label;
-                }
-            }
         };
 
         end-widget: Box {
-            spacing: 4;
+            spacing: 14;
 
             Image {
-                visible: bind template.bluetooth-visible;
-                icon-name: "bluetooth-symbolic";
-            }
-
-            Image {
-                icon-name: bind template.power-profile-icon;
-            }
-
-            Image {
+                styles ["menubar-item"]
                 icon-name: bind template.network-icon;
             }
 
             Box {
+                styles ["menubar-item"]
                 Image {
                     icon-name: bind template.volume-icon;
-                }
-
-                Scale {
-                    width-request: 100;
-                    change-value => $change_volume();
-
-                    adjustment: Adjustment {
-                        value: bind template.volume;
-                        lower: 0;
-                        upper: 1;
-                    };
                 }
             }
 
             Box {
-                Image {
-                    icon-name: bind template.battery-icon;
-                }
-
+                styles ["menubar-item"]
                 Label {
                     label: bind template.battery-label;
+                }
+                Image {
+                    icon-name: bind template.battery-icon;
                 }
             }
         };
