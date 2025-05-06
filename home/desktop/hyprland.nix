@@ -26,6 +26,7 @@ in {
       portalPackage = null;
       systemd.enable = false;
       xwayland.enable = false;
+      plugins = with pkgs.hyprlandPlugins; [ hyprspace ];
 
       settings = {
         general = {
@@ -47,9 +48,9 @@ in {
 
           blur = {
             enabled = true;
-            size = 5;
+            size = 6;
             passes = 4;
-            contrast = 0.8;
+            contrast = 0.74;
             brightness = 0.45;
             vibrancy = 0.15;
             vibrancy_darkness = 0.1;
@@ -62,7 +63,7 @@ in {
           shadow = {
             color = "0x81000000";
             range = 40;
-            render_power = 1;
+            render_power = 2;
             offset = "5, 5";
           };
         };
@@ -80,11 +81,22 @@ in {
         gestures = {
           workspace_swipe = true;
           workspace_swipe_invert = false;
-          workspace_swipe_distance = 600;
+          workspace_swipe_distance = 540;
         };
 
         debug.error_position = 1;
         misc.middle_click_paste = false;
+
+        plugin.overview = {
+          autoDrag = true;
+          hideOverlayLayers = false;
+          exitOnSwitch = true;
+          reverseSwipe = true;
+          dragAlpha = 0.85;
+          workspaceMargin = 16;
+          panelHeight = 150;
+          reservedArea = 38;
+        };
 
         monitor = [
           "eDP-1, preferred, 0x0, 1.6"
