@@ -74,18 +74,20 @@ in {
             clickfinger_behavior = true;
             tap-to-click = false;
             tap-and-drag = false;
-            scroll_factor = 0.2;
+            scroll_factor = 0.18;
           };
         };
 
         gestures = {
           workspace_swipe = true;
           workspace_swipe_invert = false;
-          workspace_swipe_distance = 540;
+          workspace_swipe_cancel_ratio = 0.2;
+          workspace_swipe_distance = 560;
         };
 
         debug.error_position = 1;
         misc.middle_click_paste = false;
+        binds.movefocus_cycles_fullscreen = true;
 
         plugin.overview = {
           autoDrag = true;
@@ -128,15 +130,69 @@ in {
           "SUPER, B, exec, uwsm-app zen-beta"
           "SUPER, W, killactive"
 
-          "SUPERSHIFT, F, fullscreen, 1"
+          "SUPER_SHIFT, F, fullscreen, 1"
 
-          "SUPERSHIFT, 2, exec, ${hyprshot} -z -m window -m active"
-          "SUPERSHIFT, 3, exec, ${hyprshot} -z -m output -m active"
-          "SUPERSHIFT, 4, exec, ${hyprshot} -z -m region"
+          "SUPER, left, movefocus, l"
+          "SUPER, down, movefocus, d"
+          "SUPER, up, movefocus, l"
+          "SUPER, right, movefocus, r"
+          "SUPER_SHIFT, left, movewindow, l"
+          "SUPER_SHIFT, down, movewindow, d"
+          "SUPER_SHIFT, up, movewindow, u"
+          "SUPER_SHIFT, right, movewindow, r"
+
+          "SUPER, H, movefocus, l"
+          "SUPER, J, movefocus, d"
+          "SUPER, K, movefocus, l"
+          "SUPER, L, movefocus, r"
+          "SUPER_SHIFT, H, movewindow, l"
+          "SUPER_SHIFT, J, movewindow, d"
+          "SUPER_SHIFT, K, movewindow, u"
+          "SUPER_SHIFT, L, movewindow, r"
+
+          "SUPER, 1, workspace, 1"
+          "SUPER, 2, workspace, 2"
+          "SUPER, 3, workspace, 3"
+          "SUPER, 4, workspace, 4"
+          "SUPER, 5, workspace, 5"
+          "SUPER, 6, workspace, 6"
+          "SUPER, 7, workspace, 7"
+          "SUPER, 8, workspace, 8"
+          "SUPER, 9, workspace, 9"
+          "SUPER, 0, workspace, 10"
+
+          "SUPER_CONTROL, 1, movetoworkspace, 1"
+          "SUPER_CONTROL, 2, movetoworkspace, 2"
+          "SUPER_CONTROL, 3, movetoworkspace, 3"
+          "SUPER_CONTROL, 4, movetoworkspace, 4"
+          "SUPER_CONTROL, 5, movetoworkspace, 5"
+          "SUPER_CONTROL, 6, movetoworkspace, 6"
+          "SUPER_CONTROL, 7, movetoworkspace, 7"
+          "SUPER_CONTROL, 8, movetoworkspace, 8"
+          "SUPER_CONTROL, 9, movetoworkspace, 9"
+          "SUPER_CONTROL, 0, movetoworkspace, 10"
+
+          "SUPER_SHIFT, 2, exec, ${hyprshot} -z -m window -m active"
+          "SUPER_SHIFT, 3, exec, ${hyprshot} -z -m output -m active"
+          "SUPER_SHIFT, 4, exec, ${hyprshot} -z -m region"
+          ", Print, exec, ${hyprshot} -z -m window -m active"
+          "SUPER, Print, exec, ${hyprshot} -z -m output -m active"
+          "SUPER_SHIFT, Print, exec, ${hyprshot} -z -m region"
         ];
 
         windowrule = [
-          "float, class:zen-beta,initialTitle:(Picture-in-Picture)"
+          "suppressevent maximize, class:.*"
+          "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+
+          "float, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
+          "pin, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
+          "idleinhibit fullscreen,class:zen-beta"
+
+          "float,title:^(Open)$"
+          "float,title:^(Choose Files)$"
+          "float,title:^(Save As)$"
+          "float,title:^(Confirm to replace files)$"
+          "float,title:^(File Operation Progress)$"
         ];
 
         layerrule = [
