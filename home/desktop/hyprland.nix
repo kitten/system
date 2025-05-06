@@ -47,7 +47,7 @@ in {
 
           blur = {
             enabled = true;
-            size = 16;
+            size = 5;
             passes = 4;
             contrast = 0.8;
             brightness = 0.45;
@@ -128,10 +128,10 @@ in {
         ];
 
         layerrule = [
-          "blur, hyprpanel"
-          "ignorezero, hyprpanel"
-          "xray, hyprpanel"
-          "animation slide, hyprpanel"
+          "blur, system-shell"
+          "ignorezero, system-shell"
+          "xray, system-shell"
+          "animation slide, system-shell"
         ];
       };
     };
