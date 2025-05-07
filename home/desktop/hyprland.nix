@@ -133,7 +133,7 @@ in {
         ];
 
         bind = [
-          "SUPER, SPACE, exec, ${system-shell} launcher"
+          "SUPER, SUPER_L, exec, ${system-shell} launcher"
 
           "SUPER, T, exec, uwsm-app ghostty"
           "SUPER, B, exec, uwsm-app zen-beta"
@@ -169,6 +169,16 @@ in {
           "SUPER, 8, workspace, 8"
           "SUPER, 9, workspace, 9"
           "SUPER, 0, workspace, 10"
+
+          "SUPER_CONTROL, H, workspace, e-1"
+          "SUPER_CONTROL, J, focusmonitor, +1"
+          "SUPER_CONTROL, K, focusmonitor, -1"
+          "SUPER_CONTROL, L, workspace, e+1"
+
+          "SUPER_CONTROL_SHIFT, H, movetoworkspace, e-1"
+          "SUPER_CONTROL_SHIFT, J, moveworkspacetomonitor, +1"
+          "SUPER_CONTROL_SHIFT, K, moveworkspacetomonitor, -1"
+          "SUPER_CONTROL_SHIFT, L, movetoworkspace, e+1"
 
           "SUPER_CONTROL, 1, movetoworkspace, 1"
           "SUPER_CONTROL, 2, movetoworkspace, 2"
