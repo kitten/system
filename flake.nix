@@ -101,9 +101,9 @@
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
       inputs.language-servers.overlays.default
+      inputs.system-shell.overlays.default
       (self: super: {
         zen-browser = inputs.zen-browser.packages.${self.system}.beta;
-        system-shell = inputs.system-shell.packages.${self.system}.default;
       } // (import ./lib/pkgs self))
     ];
   in {

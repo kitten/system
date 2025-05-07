@@ -69,7 +69,10 @@ in {
         };
 
         input = {
-          kb_options = "ctrl:nocaps";
+          kb_model = "apple";
+          kb_layout = "gb";
+          kb_variant = "mac";
+          kb_options = "ctrl:nocaps,lv3:alt_switch";
           touchpad = {
             clickfinger_behavior = true;
             tap-to-click = false;
@@ -85,8 +88,12 @@ in {
           workspace_swipe_distance = 560;
         };
 
+        misc = {
+          middle_click_paste = false;
+          focus_on_activate = true;
+        };
+
         debug.error_position = 1;
-        misc.middle_click_paste = false;
         binds.movefocus_cycles_fullscreen = true;
 
         plugin.overview = {
@@ -268,8 +275,21 @@ in {
       };
     };
 
-    systemd.user.services.hyprpanel = {
-      Install.WantedBy = ["graphical-session.target"];
+    systemd.user.services.system-shell-notifd = {
+      Install.WantedBy = [ "system-shell.service" ];
+      Service = {
+        ExecStart = "${lib.getExe pkgs.astal.notifd} -d";
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+      Unit = {
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+    };
+
+    systemd.user.services.system-shell = {
+      Install.WantedBy = [ "graphical-session.target" ];
       Service = {
         ExecStart = "${lib.getExe pkgs.system-shell}";
         Restart = "on-failure";
@@ -277,7 +297,9 @@ in {
         Environment = [ "GSK_RENDERER=ngl" ];
       };
       Unit = {
-        After = [ "graphical-session.target" ];
+        After = [
+          "graphical-session.target"
+        ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
         PartOf = [ "graphical-session.target" ];
       };
