@@ -29,7 +29,7 @@ let
     Question.fg = magenta;
     SpecialKey.fg = grey;
 
-    StatusLine = { fg = white; bg = cursor; };
+    StatusLine = { fg = white; };
     StatusLineNC.fg = muted;
     Title.fg = green;
     Visual.bg = cursor;
