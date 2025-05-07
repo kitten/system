@@ -4,9 +4,9 @@ with lib;
 let
   cfg = config.modules.desktop;
 
+  system-shell = "${getExe pkgs.system-shell}";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-  playerctl = "${pkgs.playerctl}/bin/playerctl";
   hyprshot = "${pkgs.hyprshot}/bin/hyprshot";
 in {
   options.modules.desktop.hyprland = {
@@ -126,13 +126,15 @@ in {
         bindl = [
           ", XF86AudioMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
           ", XF86AudioMicMute, exec, ${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-          ", XF86AudioPlay, exec, ${playerctl} play-pause"
-          ", XF86AudioPause, exec, ${playerctl} play-pause"
-          ", XF86AudioNext, exec, ${playerctl} next"
-          ", XF86AudioPrev, exec, ${playerctl} previous"
+          ", XF86AudioPlay, exec, ${system-shell} play_pause"
+          ", XF86AudioPause, exec, ${system-shell} play_pause"
+          ", XF86AudioNext, exec, ${system-shell} play_next"
+          ", XF86AudioPrev, exec, ${system-shell} play_previous"
         ];
 
         bind = [
+          "SUPER, SPACE, exec, ${system-shell} launcher"
+
           "SUPER, T, exec, uwsm-app ghostty"
           "SUPER, B, exec, uwsm-app zen-beta"
           "SUPER, W, killactive"
@@ -213,7 +215,6 @@ in {
 
     services = {
       hyprpolkitagent.enable = true;
-      playerctld.enable = true;
       hypridle = {
         enable = true;
         package = null;
@@ -278,7 +279,7 @@ in {
     systemd.user.services.system-shell-notifd = {
       Install.WantedBy = [ "system-shell.service" ];
       Service = {
-        ExecStart = "${lib.getExe pkgs.astal.notifd} -d";
+        ExecStart = "${pkgs.astal.notifd}/bin/astal-notifd -d";
         Restart = "on-failure";
         RestartSec = 5;
       };
@@ -291,7 +292,7 @@ in {
     systemd.user.services.system-shell = {
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
-        ExecStart = "${lib.getExe pkgs.system-shell}";
+        ExecStart = "${system-shell}";
         Restart = "on-failure";
         RestartSec = 5;
         Environment = [ "GSK_RENDERER=ngl" ];
