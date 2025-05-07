@@ -36,6 +36,7 @@ in {
       };
       hypridle.enable = true;
       upower.enable = true;
+      gvfs.enable = true;
       logind = {
         powerKey = "suspend";
         powerKeyLongPress = "poweroff";
