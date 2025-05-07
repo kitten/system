@@ -7,7 +7,13 @@ let
   system-shell = "${getExe pkgs.system-shell}";
   wpctl = "${pkgs.wireplumber}/bin/wpctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-  hyprshot = "${pkgs.hyprshot}/bin/hyprshot";
+
+  hyprshot = getExe (pkgs.hyprshot.overrideAttrs (oldAttrs: {
+    postInstall = (oldAttrs.postInstall or "") + ''
+      wrapProgram $out/bin/hyprshot \
+        --set HYPRSHOT_DIR "${config.xdg.userDirs.pictures}/Screenshots"
+    '';
+  }));
 in {
   options.modules.desktop.hyprland = {
     enable = mkOption {
