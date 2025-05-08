@@ -38,6 +38,7 @@ in {
 
     boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "kernel.unprivileged_userns_clone" = true;
+      "net.ipv4.ip_unprivileged_port_start" = "80";
       "net.ipv4.ping_group_range" = "0 65536";
     };
   };
