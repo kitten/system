@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, user, ... }:
 
 with lib;
 let
@@ -26,12 +26,15 @@ in {
       oci-containers.backend = "podman";
       podman = {
         enable = true;
+        dockerCompat = true;
         autoPrune.enable = true;
         defaultNetwork.settings = {
           dns_enabled = true;
         };
       };
     };
+
+    users.users."${user}".extraGroups = [ "podman" ];
 
     boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "kernel.unprivileged_userns_clone" = true;

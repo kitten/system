@@ -26,7 +26,7 @@
       enable = true;
       tailscale.enable = true;
       sshd.enable = false;
-      docker.enable = true;
+      podman.enable = true;
     };
   };
 
