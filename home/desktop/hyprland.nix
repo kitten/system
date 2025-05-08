@@ -78,7 +78,7 @@ in {
           kb_model = "apple";
           kb_layout = "gb";
           kb_variant = "mac";
-          kb_options = "ctrl:nocaps,lv3:alt_switch";
+          kb_options = "ctrl:nocaps,lv3:ralt_switch";
           touchpad = {
             clickfinger_behavior = true;
             tap-to-click = false;
