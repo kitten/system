@@ -45,6 +45,11 @@ in {
       gamemode.enable = true;
       gamescope = {
         enable = true;
+        package = pkgs.gamescope.overrideAttrs (old: {
+          enableWsi = true;
+          enableExecutable = true;
+          NIX_CFLAGS_COMPILE = [ "-fno-fast-math" "-fno-omit-frame-pointer" ];
+        });
         env = {
           PROTON_ENABLE_AMD_AGS = "1";
           ENABLE_HDR_WSI = "1";
