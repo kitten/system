@@ -131,6 +131,7 @@ in {
           focus_on_activate = true;
         };
 
+        render.direct_scanout = 1;
         debug.error_position = 1;
         binds.movefocus_cycles_fullscreen = true;
 
@@ -171,6 +172,7 @@ in {
         ];
 
         bindp = [
+          ", F11, fullscreen, 0"
           "SUPER, W, killactive"
           "SUPER, O, overview:toggle, all"
 
@@ -245,11 +247,12 @@ in {
 
         windowrule = [
           "suppressevent maximize, class:.*"
-          "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
 
-          "renderunfocused,fullscreenstate:2"
-          "immediate,fullscreenstate:2"
-          "forcergbx,fullscreenstate:2"
+          "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
+
+          "immediate, fullscreenstate:2"
+          "immediate, fullscreenstate:3"
+          "idleinhibit, fullscreen:1"
 
           "float, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
           "pin, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
