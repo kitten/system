@@ -23,6 +23,30 @@ in {
       type = types.bool;
     };
 
+    input = mkOption {
+      default = { };
+      type = types.submodule {
+        options = {
+          sensitivity = mkOption {
+            default = 0.0;
+            type = types.float;
+          };
+          kb_model = mkOption {
+            default = "apple";
+            type = types.str;
+          };
+          kb_variant = mkOption {
+            default = "mac";
+            type = types.str;
+          };
+          kb_layout = mkOption {
+            default = "gb";
+            type = types.str;
+          };
+        };
+      };
+    };
+
     monitor = mkOption {
       description = "Monitor configuration";
       default = [ ];
@@ -82,11 +106,11 @@ in {
         };
 
         input = {
-          kb_model = "apple";
-          kb_layout = "gb";
-          kb_variant = "mac";
           kb_options = "ctrl:nocaps,lv3:ralt_switch";
-          sensitivity = -0.5;
+          kb_model = cfg.hyprland.input.kb_model;
+          kb_layout = cfg.hyprland.input.kb_layout;
+          kb_variant = cfg.hyprland.input.kb_variant;
+          sensitivity = cfg.hyprland.input.sensitivity;
           touchpad = {
             clickfinger_behavior = true;
             tap-to-click = false;
