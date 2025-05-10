@@ -26,6 +26,7 @@ in {
       GSK_RENDERER = mkDefault "ngl";
       QT_QPA_PLATFORM = mkDefault "wayland";
       GDK_BACKEND = mkDefault "wayland";
+      SDL_VIDEODRIVER = mkDefault "wayland";
       NIXOS_OZONE_WL = mkDefault "1";
     };
 

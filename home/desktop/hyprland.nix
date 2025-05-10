@@ -22,6 +22,12 @@ in {
       description = "Whether to enable Hyprland configuration.";
       type = types.bool;
     };
+
+    monitor = mkOption {
+      description = "Monitor configuration";
+      default = [ ];
+      type = lib.types.listOf lib.types.str;
+    };
   };
 
   config = mkIf cfg.hyprland.enable {
@@ -38,6 +44,7 @@ in {
         general = {
           gaps_out = 9;
           gaps_in = 4;
+          allow_tearing = true;
           resize_on_border = true;
           hover_icon_on_border = false;
           no_border_on_floating = true;
@@ -79,6 +86,7 @@ in {
           kb_layout = "gb";
           kb_variant = "mac";
           kb_options = "ctrl:nocaps,lv3:ralt_switch";
+          sensitivity = -0.5;
           touchpad = {
             clickfinger_behavior = true;
             tap-to-click = false;
@@ -113,8 +121,8 @@ in {
           reservedArea = 38;
         };
 
-        monitor = [
-          "eDP-1, preferred, 0x0, 1.6"
+        monitor = cfg.hyprland.monitor ++ [
+          ", preferred, auto, 1"
         ];
 
         bindm = [
@@ -125,7 +133,7 @@ in {
         bindel = [
           ", XF86AudioRaiseVolume, exec, ${wpctl} set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 3%+"
           ", XF86AudioLowerVolume, exec, ${wpctl} set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 3%-"
-          ", XF86MonBrightnessDown, exec, ${brightnessctl} s 10%-"
+          ", XF86MonBrightnessDown, exec, ${brightnessctl} set 10%-"
           ", XF86MonBrightnessUp, exec, ${brightnessctl} set +10%"
         ];
 
@@ -138,28 +146,39 @@ in {
           ", XF86AudioPrev, exec, ${system-shell} play_previous"
         ];
 
+        bindp = [
+          "SUPER, W, killactive"
+          "SUPER, O, overview:toggle, all"
+
+          "SUPER, left, movefocus, l"
+          "SUPER, down, movefocus, d"
+          "SUPER, up, movefocus, u"
+          "SUPER, right, movefocus, r"
+
+          "SUPER, H, movefocus, l"
+          "SUPER, J, movefocus, d"
+          "SUPER, K, movefocus, u"
+          "SUPER, L, movefocus, r"
+
+          "SUPER_CONTROL, H, workspace, e-1"
+          "SUPER_CONTROL, J, focusmonitor, +1"
+          "SUPER_CONTROL, K, focusmonitor, -1"
+          "SUPER_CONTROL, L, workspace, e+1"
+        ];
+
         bind = [
           "SUPER, SUPER_L, exec, ${system-shell} launcher"
 
           "SUPER, T, exec, uwsm-app ghostty"
           "SUPER, B, exec, uwsm-app zen-beta"
-          "SUPER, W, killactive"
 
           "SUPER_SHIFT, F, fullscreen, 1"
 
-          "SUPER, left, movefocus, l"
-          "SUPER, down, movefocus, d"
-          "SUPER, up, movefocus, l"
-          "SUPER, right, movefocus, r"
           "SUPER_SHIFT, left, movewindow, l"
           "SUPER_SHIFT, down, movewindow, d"
           "SUPER_SHIFT, up, movewindow, u"
           "SUPER_SHIFT, right, movewindow, r"
 
-          "SUPER, H, movefocus, l"
-          "SUPER, J, movefocus, d"
-          "SUPER, K, movefocus, l"
-          "SUPER, L, movefocus, r"
           "SUPER_SHIFT, H, movewindow, l"
           "SUPER_SHIFT, J, movewindow, d"
           "SUPER_SHIFT, K, movewindow, u"
@@ -175,11 +194,6 @@ in {
           "SUPER, 8, workspace, 8"
           "SUPER, 9, workspace, 9"
           "SUPER, 0, workspace, 10"
-
-          "SUPER_CONTROL, H, workspace, e-1"
-          "SUPER_CONTROL, J, focusmonitor, +1"
-          "SUPER_CONTROL, K, focusmonitor, -1"
-          "SUPER_CONTROL, L, workspace, e+1"
 
           "SUPER_CONTROL_SHIFT, H, movetoworkspace, e-1"
           "SUPER_CONTROL_SHIFT, J, moveworkspacetomonitor, +1"
@@ -208,6 +222,10 @@ in {
         windowrule = [
           "suppressevent maximize, class:.*"
           "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+
+          "renderunfocused,fullscreenstate:2"
+          "immediate,fullscreenstate:2"
+          "forcergbx,fullscreenstate:2"
 
           "float, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
           "pin, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
