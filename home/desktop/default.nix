@@ -13,5 +13,6 @@ with lib; {
   imports = [
     ./hyprland.nix
     ./theme.nix
+    ./tools.nix
   ];
 }
