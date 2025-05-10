@@ -3,18 +3,19 @@
 with lib;
 let
   cfg = config.modules.fonts;
-  fontsPath = if helpers.isDarwin then "/Library/Fonts" else "/usr/share/fonts/nonfree";
+  fontsPath = if helpers.isDarwin then "Library/Fonts" else "${config.xdg.dataHome}/fonts";
 in {
   options.modules.fonts = {
     enable = mkOption {
-      default = false;
-      example = true;
+      default = true;
       description = "Whether to enable fonts options.";
       type = types.bool;
     };
   };
 
   config = mkIf cfg.enable {
+    fonts.fontconfig.enable = true;
+
     age.secrets."DankMono-Regular.otf" = {
       symlink = false;
       file = ./encrypt/DankMono-Regular.otf.age;

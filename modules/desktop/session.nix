@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, user, ... }:
 
 with lib;
 let
@@ -14,57 +14,57 @@ in {
   };
 
   config = mkIf cfg.session.enable {
+    users.users."${user}".extraGroups = [ "video" ];
+
     boot = {
       plymouth.enable = true;
       initrd.verbose = mkDefault false;
       consoleLogLevel = 0;
-      kernelParams = [ "console=tty1" "vt.global_cursor_default=0" ];
+    };
+
+    environment.sessionVariables = {
+      GSK_RENDERER = mkDefault "ngl";
+      QT_QPA_PLATFORM = mkDefault "wayland;xcb";
+      GDK_BACKEND = mkDefault "wayland,x11,*";
+      SDL_VIDEODRIVER = mkDefault "wayland,x11";
+      NIXOS_OZONE_WL = mkDefault "1";
     };
 
     services = {
-      desktopManager.plasma6.enable = true;
-      displayManager = {
-        defaultSession = "plasma";
-        sddm = {
-          enable = true;
-          enableHidpi = true;
-          wayland.enable = true;
-        };
+      greetd = {
+        enable = true;
+        settings.terminal.vt = 1;
+      };
+      hypridle.enable = true;
+      upower.enable = true;
+      gvfs.enable = true;
+      logind = {
+        powerKey = "suspend";
+        powerKeyLongPress = "poweroff";
+        lidSwitch = "suspend";
       };
     };
 
-    environment = {
-      systemPackages = with pkgs.kdePackages; [
-        sddm-kcm
-        qtmultimedia
-        pkgs.apple-cursor
-      ];
-      plasma6 = {
-        excludePackages = with pkgs.kdePackages; [
-          discover
-          ffmpegthumbs
-          plasma-browser-integration
-          kate
-          konsole
-          krdp
-          elisa
-          gwenview
-          oxygen
-          oxygen-sounds
-          khelpcenter
-        ];
+    programs = {
+      regreet.enable = true;
+      hyprlock.enable = true;
+      hyprland = {
+        enable = true;
+        withUWSM = true;
+        xwayland.enable = true;
       };
     };
 
     security = {
       polkit.enable = true;
+      pam.services.hyprlock = {};
     };
 
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
       extraPortals = with pkgs; [
-        kdePackages.xdg-desktop-portal-kde
+        xdg-desktop-portal-hyprland
         xdg-desktop-portal-gtk
       ];
     };

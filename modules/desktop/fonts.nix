@@ -14,22 +14,26 @@ in {
   };
 
   config = mkIf cfg.fonts.enable {
-
     fonts = {
-      fontDir.enable = true;
+      fontDir = {
+        enable = true;
+        decompressFonts = true;
+      };
 
       packages = with pkgs; [
+        sf-pro
+        sf-mono
+        new-york
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-emoji
-        roboto-mono
         inter
       ];
 
       fontconfig.defaultFonts = {
-        serif = [ "Noto Serif" "Noto Color Emoji" ];
-        sansSerif = [ "Inter" "Noto Color Emoji" ];
-        monospace = [ "Dank Mono" "Roboto Mono" "Noto Color Emoji" ];
+        serif = [ "New York" "Noto Serif" "Noto Color Emoji" ];
+        sansSerif = [ "SF Pro Display" "Inter" "Noto Color Emoji" ];
+        monospace = [ "Dank Mono" "SF Mono" "Noto Color Emoji" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };

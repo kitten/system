@@ -82,7 +82,7 @@ in {
         window-theme = ghostty
         window-colorspace = display-p3
         window-save-state = always
-        window-decoration = client
+        window-decoration = server
         window-inherit-working-directory = true
         unfocused-split-opacity = 0.9
         freetype-load-flags = no-monochrome
@@ -100,6 +100,7 @@ in {
         macos-titlebar-style = tabs
 
         adw-toolbar-style = flat
+        gtk-titlebar = false
 
         shell-integration-features = no-cursor,sudo,title
         shell-integration = zsh

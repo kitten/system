@@ -21,11 +21,10 @@
       rawaccel.enable = false;
       affinity.performanceCores = [ 4 5 6 7 ];
     };
-    fonts.enable = true;
     server = {
       enable = true;
       tailscale.enable = true;
-      sshd.enable = false;
+      sshd.enable = true;
       podman.enable = true;
     };
   };
