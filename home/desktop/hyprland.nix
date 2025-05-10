@@ -342,8 +342,8 @@ in {
         RestartSec = 5;
       };
       Unit = {
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [ config.wayland.systemd.target ];
+        PartOf = [ config.wayland.systemd.target ];
       };
     };
 
@@ -352,15 +352,13 @@ in {
       Service = {
         ExecStart = "${system-shell}";
         Restart = "on-failure";
-        RestartSec = 5;
+        RestartSec = 10;
         Environment = [ "GSK_RENDERER=ngl" ];
       };
       Unit = {
-        After = [
-          "graphical-session.target"
-        ];
+        After = [ config.wayland.systemd.target ];
         ConditionEnvironment = "WAYLAND_DISPLAY";
-        PartOf = [ "graphical-session.target" ];
+        PartOf = [ config.wayland.systemd.target ];
       };
     };
   };
