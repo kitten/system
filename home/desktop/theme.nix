@@ -50,7 +50,7 @@ in {
       gtk.enable = true;
       hyprcursor.enable = true;
       x11.enable = true;
-      size = 28;
+      size = 24;
     };
 
     home.packages = with pkgs; [
@@ -98,11 +98,7 @@ in {
     dconf = {
       enable = true;
       settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          gtk-theme = gtkTheme.name;
-          icon-theme = iconTheme.name;
-        };
+        "org/gnome/desktop/interface".color-scheme = "prefer-dark";
       };
     };
 
