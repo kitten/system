@@ -134,6 +134,7 @@ in {
         };
 
         render.direct_scanout = 1;
+        render.expand_undersized_textures = false;
         debug.error_position = 1;
         binds.movefocus_cycles_fullscreen = true;
 
