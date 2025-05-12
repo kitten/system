@@ -59,7 +59,6 @@ in {
       enable = true;
 
       package = null;
-      portalPackage = null;
       systemd.enable = false;
       xwayland.enable = false;
       plugins = with pkgs.hyprlandPlugins; [ hyprspace ];
@@ -271,6 +270,16 @@ in {
           "xray, system-shell"
           "animation slide, system-shell"
         ];
+      };
+    };
+
+    home.packages = with pkgs; [ nautilus ];
+
+    xdg.portal = {
+      enable = true;
+      config.preferred = {
+        default = [ "hyprland" "gtk" ];
+        "org.freedesktop.impl.portal.FileChooser" = "gtk";
       };
     };
 
