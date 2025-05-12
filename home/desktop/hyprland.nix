@@ -278,6 +278,12 @@ in {
 
     home.packages = with pkgs; [ nautilus ];
 
+    xdg.configFile."uwsm/env".source = let
+      inherit (config.home) sessionVariables;
+      export = k: v: "export ${builtins.toString k}=${builtins.toString v}";
+      env = strings.concatLines (attrsets.mapAttrsToList export sessionVariables);
+    in pkgs.writeText "env" env;
+
     services = {
       hyprpolkitagent.enable = true;
       hypridle = {
