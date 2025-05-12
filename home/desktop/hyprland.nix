@@ -59,6 +59,7 @@ in {
       enable = true;
 
       package = null;
+      portalPackage = null;
       systemd.enable = false;
       xwayland.enable = false;
       plugins = with pkgs.hyprlandPlugins; [ hyprspace ];
@@ -128,6 +129,8 @@ in {
         misc = {
           middle_click_paste = false;
           focus_on_activate = true;
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
         };
 
         render.direct_scanout = 1;
@@ -275,14 +278,6 @@ in {
 
     home.packages = with pkgs; [ nautilus ];
 
-    xdg.portal = {
-      enable = true;
-      config.preferred = {
-        default = [ "hyprland" "gtk" ];
-        "org.freedesktop.impl.portal.FileChooser" = "gtk";
-      };
-    };
-
     services = {
       hyprpolkitagent.enable = true;
       hypridle = {
@@ -309,6 +304,18 @@ in {
               on-timeout = "systemctl suspend";
             }
           ];
+        };
+      };
+      wpaperd = {
+        enable = true;
+        package = pkgs.wpaperd.overrideAttrs (old: {
+          cargoBuildFlags = [ "--no-default-features" ];
+        });
+        settings.default = {
+          path = "${config.xdg.userDirs.pictures}/Wallpapers";
+          mode = "center";
+          duration = "8h";
+          sorting = "random";
         };
       };
     };
