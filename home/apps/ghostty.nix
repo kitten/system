@@ -14,8 +14,8 @@ in {
     };
 
     font_size = mkOption {
-      default = if helpers.isDarwin then 14 else 12;
-      type = types.int;
+      default = if helpers.isDarwin then 14 else 11.5;
+      type = types.either types.int types.float;
     };
 
     cell_adjust = mkOption {
