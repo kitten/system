@@ -360,31 +360,39 @@ in {
       };
     };
 
-    systemd.user.services.system-shell-notifd = {
-      Install.WantedBy = [ "system-shell.service" ];
-      Service = {
-        ExecStart = "${pkgs.astal.notifd}/bin/astal-notifd -d";
-        Restart = "on-failure";
-        RestartSec = 5;
-      };
-      Unit = {
-        After = [ config.wayland.systemd.target ];
-        PartOf = [ config.wayland.systemd.target ];
-      };
-    };
+    systemd.user.services = {
+      hyprpolkitagent.Service.Slice = "session.slice";
+      hypridle.Service.Slice = "session.slice";
+      wpaperd.Service.Slice = "session.slice";
 
-    systemd.user.services.system-shell = {
-      Install.WantedBy = [ "graphical-session.target" ];
-      Service = {
-        ExecStart = "${system-shell}";
-        Restart = "on-failure";
-        RestartSec = 10;
-        Environment = [ "GSK_RENDERER=ngl" ];
+      system-shell-notifd = {
+        Install.WantedBy = [ "system-shell.service" ];
+        Service = {
+          ExecStart = "${pkgs.astal.notifd}/bin/astal-notifd -d";
+          Restart = "on-failure";
+          RestartSec = 5;
+          Slice = "background.slice";
+        };
+        Unit = {
+          After = [ config.wayland.systemd.target ];
+          PartOf = [ config.wayland.systemd.target ];
+        };
       };
-      Unit = {
-        After = [ config.wayland.systemd.target ];
-        ConditionEnvironment = "WAYLAND_DISPLAY";
-        PartOf = [ config.wayland.systemd.target ];
+
+      system-shell = {
+        Install.WantedBy = [ "graphical-session.target" ];
+        Service = {
+          ExecStart = "${system-shell}";
+          Restart = "on-failure";
+          RestartSec = 10;
+          Environment = [ "GSK_RENDERER=ngl" ];
+          Slice = "session.slice";
+        };
+        Unit = {
+          After = [ config.wayland.systemd.target ];
+          ConditionEnvironment = "WAYLAND_DISPLAY";
+          PartOf = [ config.wayland.systemd.target ];
+        };
       };
     };
   };

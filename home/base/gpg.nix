@@ -31,6 +31,8 @@ in {
       ];
     };
 
+    systemd.user.services.gpg-agent.Service.Slice = "session.slice";
+
     # See: https://github.com/nix-community/home-manager/pull/5901
     programs.zsh.initExtra = let
       gpgPkg = config.programs.gpg.package;

@@ -15,6 +15,7 @@ in {
 
   config = mkIf cfg.tools.enable {
     home.packages = with pkgs; [
+      pwvucontrol
       mission-center
     ];
   };
