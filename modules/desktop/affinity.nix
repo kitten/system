@@ -43,30 +43,20 @@ in {
       user.slices = {
         background.sliceConfig = {
           AllowedCPUs = efficiency;
-          Delegate = "cpuset";
           CPUWeight = 80;
-          Nice = 6;
-          IOSchedulingClass = "idle";
+          IOWeight = 60;
         };
         session.sliceConfig = {
           StartupAllowedCPUs = mkIf (performance != "") "${efficiency},${performance}";
           AllowedCPUs = efficiency;
-          Delegate = "cpuset";
-          Nice = 9;
-          IOSchedulingClass = "best-effort";
-          IOSchedulingPriority = 0;
+          IOWeight = 90;
         };
-        app.sliceConfig = {
-          Nice = 0;
-          IOSchedulingClass = "best-effort";
-          IOSchedulingPriority = 0;
-        };
+        app.sliceConfig.IOWeight = 100;
       };
       slices = {
         system.sliceConfig = {
           AllowedCPUs = efficiency;
-          Nice = 12;
-          IOSchedulingClass = "idle";
+          IOWeight = 120;
         };
         nix.sliceConfig = mkIf cfg.affinity.isolateNixDaemon {
           CPUQuota = "80%";
