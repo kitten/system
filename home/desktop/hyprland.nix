@@ -129,6 +129,7 @@ in {
         misc = {
           middle_click_paste = false;
           focus_on_activate = true;
+          key_press_enables_dpms = true;
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
         };
@@ -189,10 +190,10 @@ in {
           "SUPER, K, movefocus, u"
           "SUPER, L, movefocus, r"
 
-          "SUPER_CONTROL, H, workspace, e-1"
+          "SUPER_CONTROL, H, workspace, m-1"
           "SUPER_CONTROL, J, focusmonitor, +1"
           "SUPER_CONTROL, K, focusmonitor, -1"
-          "SUPER_CONTROL, L, workspace, e+1"
+          "SUPER_CONTROL, L, workspace, m+1"
         ];
 
         bind = [
@@ -224,10 +225,10 @@ in {
           "SUPER, 9, workspace, 9"
           "SUPER, 0, workspace, 10"
 
-          "SUPER_CONTROL_SHIFT, H, movetoworkspace, e-1"
+          "SUPER_CONTROL_SHIFT, H, movetoworkspace, m-1"
           "SUPER_CONTROL_SHIFT, J, moveworkspacetomonitor, +1"
           "SUPER_CONTROL_SHIFT, K, moveworkspacetomonitor, -1"
-          "SUPER_CONTROL_SHIFT, L, movetoworkspace, e+1"
+          "SUPER_CONTROL_SHIFT, L, movetoworkspace, m+1"
 
           "SUPER_CONTROL, 1, movetoworkspace, 1"
           "SUPER_CONTROL, 2, movetoworkspace, 2"
