@@ -60,9 +60,9 @@ in {
         };
         nix.sliceConfig = mkIf cfg.affinity.isolateNixDaemon {
           CPUQuota = "80%";
+          IOWeight = 90;
           ManagedOOMMemoryPressure = "kill";
           ManagedOOMMemoryPressureLimit = "80%";
-          Nice = 9;
         };
       };
       services = {

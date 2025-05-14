@@ -5,69 +5,55 @@ let
   inherit (generators) toLua;
   cfg = config.modules.desktop;
 in {
-  options.modules.desktop.services = {
+  options.modules.desktop.audio = {
     enable = mkOption {
-      default = cfg.enable;
+      default = true;
       example = true;
-      description = "Whether to enable services.";
+      description = "Whether to enable Pipewire audio.";
       type = types.bool;
     };
 
-    pipewire = {
-      enable = mkOption {
-        default = cfg.services.enable;
-        example = true;
-        description = "Whether to enable Pipewire low latency.";
-        type = types.bool;
-      };
+    lowLatency = mkOption {
+      default = true;
+      example = true;
+      description = "Whether to enable Pipewire low latency.";
+      type = types.bool;
+    };
 
-      lowLatency = mkOption {
-        default = true;
-        example = true;
-        description = "Whether to enable Pipewire low latency.";
-        type = types.bool;
-      };
+    quantum = mkOption {
+      description = "Minimum quantum to set";
+      type = types.int;
+      default = 64;
+      example = 32;
+    };
 
-      quantum = mkOption {
-        description = "Minimum quantum to set";
-        type = types.int;
-        default = 64;
-        example = 32;
-      };
-
-      rate = mkOption {
-        description = "Rate to set";
-        type = types.int;
-        default = 48000;
-        example = 96000;
-      };
+    rate = mkOption {
+      description = "Rate to set";
+      type = types.int;
+      default = 48000;
+      example = 96000;
     };
   };
 
-  config = mkIf cfg.services.enable {
-    users.users."${user}".extraGroups = [ "video" ];
+  config = mkIf cfg.audio.enable {
+    security.rtkit.enable = true;
 
     services = {
-      hardware.bolt.enable = true;
-      printing.enable = true;
-      colord.enable = true;
-      fwupd.enable = true;
-
       pipewire = let
-        quantum = cfg.services.pipewire.quantum;
-        rate = cfg.services.pipewire.rate;
+        quantum = cfg.audio.quantum;
+        rate = cfg.audio.rate;
         qr = "${toString quantum}/${toString rate}";
       in {
-        enable = cfg.services.pipewire.enable;
+        enable = cfg.audio.enable;
         pulse.enable = true;
         jack.enable = true;
         alsa = {
           enable = true;
-          support32Bit = true;
+          support32Bit = mkDefault true;
         };
 
         # write extra config
-        extraConfig.pipewire = mkIf cfg.services.pipewire.lowLatency {
+        extraConfig.pipewire = mkIf cfg.audio.lowLatency {
           "99-lowlatency" = {
             context = {
               properties.default.clock.min-quantum = quantum;
