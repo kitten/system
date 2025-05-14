@@ -35,7 +35,6 @@ in {
         enable = true;
         settings.terminal.vt = 1;
       };
-      hypridle.enable = true;
       upower.enable = true;
       gvfs.enable = true;
       logind = {

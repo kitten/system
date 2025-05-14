@@ -289,7 +289,6 @@ in {
       hyprpolkitagent.enable = true;
       hypridle = {
         enable = true;
-        package = null;
         settings = {
           general = {
             lock_cmd = "pidof hyprlock || hyprlock";
