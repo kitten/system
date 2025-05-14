@@ -22,7 +22,7 @@ in {
       };
 
       lowLatency = mkOption {
-        default = cfg.services.pipewire.enable;
+        default = true;
         example = true;
         description = "Whether to enable Pipewire low latency.";
         type = types.bool;
