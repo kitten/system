@@ -132,6 +132,7 @@ in {
           key_press_enables_dpms = true;
           disable_hyprland_logo = true;
           disable_splash_rendering = true;
+          vrr = 1;
         };
 
         render.direct_scanout = 1;
@@ -254,9 +255,15 @@ in {
 
           "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
 
+          "content game, tag:games"
+          "tag +games, content:game"
+
           "immediate, fullscreenstate:2"
           "immediate, fullscreenstate:3"
           "idleinhibit, fullscreen:1"
+
+          "fullscreen, tag:games"
+          "immediate, tag:games"
 
           "float, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
           "pin, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
