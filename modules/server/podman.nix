@@ -1,4 +1,4 @@
-{ lib, config, user, ... }:
+{ lib, config, user, pkgs, ... }:
 
 with lib;
 let
@@ -28,13 +28,21 @@ in {
         enable = true;
         dockerCompat = true;
         autoPrune.enable = true;
+        extraPackages = with pkgs; [ podman-compose ];
         defaultNetwork.settings = {
           dns_enabled = true;
         };
       };
     };
 
+    environment.systemPackages = with pkgs; [ docker-compose ];
     users.users."${user}".extraGroups = [ "podman" ];
+
+    environment.extraInit = ''
+      if [ -z "$DOCKER_HOST" -a -n "$XDG_RUNTIME_DIR" ]; then
+        export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+      fi
+    '';
 
     boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "kernel.unprivileged_userns_clone" = true;
