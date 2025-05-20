@@ -233,8 +233,8 @@ in {
         layerrule = [
           "blur, system-shell"
           "ignorezero, system-shell"
-          "xray, system-shell"
           "animation slide, system-shell"
+          "abovelock, system-shell"
         ];
       };
     };
