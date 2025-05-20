@@ -54,26 +54,8 @@ in {
         theme = gtkTheme;
         settings.GTK.application_prefer_dark_theme = true;
       };
-      hyprlock.enable = true;
-      hyprland = {
-        enable = true;
-        withUWSM = true;
-        xwayland.enable = true;
-      };
     };
 
-    security = {
-      polkit.enable = true;
-      pam.services.hyprlock = {};
-    };
-
-    xdg.portal = {
-      enable = true;
-      xdgOpenUsePortal = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
-    };
+    security.polkit.enable = true;
   };
 }

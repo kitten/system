@@ -24,6 +24,7 @@ in {
     ./rawaccel.nix
     ./audio.nix
     ./networking.nix
+    ./hyprland.nix
   ];
 
   config = mkIf cfg.enable {

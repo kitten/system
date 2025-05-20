@@ -22,36 +22,6 @@ in {
       description = "Whether to enable Hyprland configuration.";
       type = types.bool;
     };
-
-    input = mkOption {
-      default = { };
-      type = types.submodule {
-        options = {
-          sensitivity = mkOption {
-            default = 0.0;
-            type = types.float;
-          };
-          kb_model = mkOption {
-            default = "apple";
-            type = types.str;
-          };
-          kb_variant = mkOption {
-            default = "mac";
-            type = types.str;
-          };
-          kb_layout = mkOption {
-            default = "gb";
-            type = types.str;
-          };
-        };
-      };
-    };
-
-    monitor = mkOption {
-      description = "Monitor configuration";
-      default = [ ];
-      type = lib.types.listOf lib.types.str;
-    };
   };
 
   config = mkIf cfg.hyprland.enable {
@@ -65,6 +35,8 @@ in {
       plugins = with pkgs.hyprlandPlugins; [ hyprspace ];
 
       settings = {
+        source = [ "/etc/hypr/hyprland.conf" ];
+
         general = {
           gaps_out = 9;
           gaps_in = 4;
@@ -105,20 +77,6 @@ in {
           };
         };
 
-        input = {
-          kb_options = "ctrl:nocaps,lv3:ralt_switch";
-          kb_model = cfg.hyprland.input.kb_model;
-          kb_layout = cfg.hyprland.input.kb_layout;
-          kb_variant = cfg.hyprland.input.kb_variant;
-          sensitivity = cfg.hyprland.input.sensitivity;
-          touchpad = {
-            clickfinger_behavior = true;
-            tap-to-click = false;
-            tap-and-drag = false;
-            scroll_factor = 0.18;
-          };
-        };
-
         gestures = {
           workspace_swipe = true;
           workspace_swipe_invert = false;
@@ -150,10 +108,6 @@ in {
           panelHeight = 150;
           reservedArea = 38;
         };
-
-        monitor = cfg.hyprland.monitor ++ [
-          ", preferred, auto, 1"
-        ];
 
         bindm = [
           "SUPER, mouse:272, movewindow"

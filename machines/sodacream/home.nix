@@ -1,9 +1,6 @@
 { ... }: {
   modules = {
-    desktop = {
-      enable = true;
-      hyprland.monitor = [ "eDP-1, preferred, 0x0, 1.6" ];
-    };
+    desktop.enable = true;
     development = {
       enable = true;
       js.enable = true;
