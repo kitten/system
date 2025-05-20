@@ -1,7 +1,8 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, pkgs, user, ... } @ inputs:
 
 with lib;
 let
+  inherit (import ../../lib/theme.nix inputs) cursorTheme defaultFont iconTheme gtkTheme kvantumTheme;
   cfg = config.modules.desktop;
 in {
   options.modules.desktop.session = {
@@ -45,7 +46,14 @@ in {
     };
 
     programs = {
-      regreet.enable = true;
+      regreet = {
+        enable = true;
+        cageArgs = [ "-s" "-mlast" ];
+        inherit cursorTheme iconTheme;
+        font = defaultFont;
+        theme = gtkTheme;
+        settings.GTK.application_prefer_dark_theme = true;
+      };
       hyprlock.enable = true;
       hyprland = {
         enable = true;

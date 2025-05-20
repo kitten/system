@@ -1,39 +1,9 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, ... } @ inputs:
 
 with lib;
 let
+  inherit (import ../../lib/theme.nix inputs) cursorTheme defaultFont iconTheme gtkTheme kvantumTheme;
   cfg = config.modules.desktop;
-
-  cursorTheme = {
-    name = "macOS";
-    package = pkgs.apple-cursor;
-  };
-
-  iconTheme = {
-    name = "WhiteSur";
-    package = pkgs.whitesur-icon-theme.override {
-      boldPanelIcons = true;
-      alternativeIcons = true;
-    };
-  };
-
-  gtkTheme = {
-    name = "WhiteSur-Dark-solid";
-    package = pkgs.whitesur-gtk-theme;
-  };
-
-  kvantumTheme = rec {
-    name = "WhiteSur-opaqueDark";
-    package = pkgs.stdenv.mkDerivation {
-      pname = "whitesur-kde";
-      version = pkgs.whitesur-kde.version;
-      src = pkgs.whitesur-kde.src;
-      installPhase = /*sh*/''
-        mkdir -p "$out/share/Kvantum/${name}"
-        cp -R Kvantum/**/* "$out/share/Kvantum/${name}"
-      '';
-    };
-  };
 in {
   options.modules.desktop.theme = {
     enable = mkOption {
@@ -54,7 +24,6 @@ in {
     };
 
     home.packages = with pkgs; [
-      catppuccin-kvantum
       libsForQt5.qtstyleplugin-kvantum
       libsForQt5.qt5ct
     ];
@@ -85,11 +54,7 @@ in {
       enable = true;
       inherit iconTheme;
       theme = gtkTheme;
-      font = {
-        name = "SF Pro Display";
-        package = pkgs.sf-pro;
-        size = 11;
-      };
+      font = defaultFont;
       gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
       gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
       gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
@@ -105,9 +70,9 @@ in {
     fonts.fontconfig = {
       enable = true;
       defaultFonts = {
-        serif = [ "Noto Serif" "Noto Color Emoji" ];
-        sansSerif = [ "Inter" "Noto Color Emoji" ];
-        monospace = [ "Dank Mono" "Roboto Mono" "Noto Color Emoji" ];
+        serif = [ "New York" "Noto Serif" "Noto Color Emoji" ];
+        sansSerif = [ "SF Pro Display" "Inter" "Noto Color Emoji" ];
+        monospace = [ "Dank Mono" "SF Mono" "Noto Color Emoji" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };
