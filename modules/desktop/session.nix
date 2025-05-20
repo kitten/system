@@ -34,7 +34,25 @@ in {
     services = {
       greetd = {
         enable = true;
-        settings.terminal.vt = 1;
+        settings = {
+          terminal.vt = 1;
+          default_session.command = let
+            hyprConfig = pkgs.writeTextFile {
+              name = "hyprland-greeter.conf";
+              text = ''
+                source=${toString cfg.hyprland.configFile}
+                exec-once = ${getExe config.programs.regreet.package}; hyprctl dispatch exit
+                animations {
+                  enabled = false
+                }
+              '';
+            };
+          in escapeShellArgs [
+            "${pkgs.dbus}/bin/dbus-run-session"
+            "${getExe pkgs.hyprland}"
+            "-c" (toString hyprConfig)
+          ];
+        };
       };
       upower.enable = true;
       gvfs.enable = true;
@@ -48,7 +66,6 @@ in {
     programs = {
       regreet = {
         enable = true;
-        cageArgs = [ "-s" "-mlast" ];
         inherit cursorTheme iconTheme;
         font = defaultFont;
         theme = gtkTheme;

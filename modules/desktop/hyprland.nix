@@ -3,6 +3,53 @@
 with lib;
 let
   cfg = config.modules.desktop;
+
+  mkConfig = input: monitor: pkgs.writeText "hyprland.conf" ''
+    debug {
+      error_position=1
+    }
+
+    general {
+      allow_tearing=true
+    }
+
+    input {
+      touchpad {
+        clickfinger_behavior=true
+        scroll_factor=0.180000
+        tap-and-drag=false
+        tap-to-click=false
+      }
+      kb_options=ctrl:nocaps,lv3:ralt_switch
+      kb_layout=${cfg.hyprland.input.kb_layout}
+      kb_model=${cfg.hyprland.input.kb_model}
+      kb_variant=${cfg.hyprland.input.kb_variant}
+      sensitivity=${toString cfg.hyprland.input.sensitivity}
+    }
+
+    misc {
+      disable_hyprland_logo=true
+      disable_splash_rendering=true
+      vrr=1
+    }
+
+    render {
+      direct_scanout=1
+      expand_undersized_textures=false
+    }
+
+    cursor {
+      sync_gsettings_theme=false
+    }
+
+    ecosystem {
+      no_update_news = true
+      no_donation_nag = true
+    }
+
+    ${concatMapStringsSep "\n" (x: "monitor=${x}") cfg.hyprland.monitor}
+    monitor=, preferred, auto, 1
+  '';
 in {
   options.modules.desktop.hyprland = {
     enable = mkOption {
@@ -41,6 +88,10 @@ in {
       default = [ ];
       type = lib.types.listOf lib.types.str;
     };
+
+    configFile = mkOption {
+      default = mkConfig cfg.hyprland.input cfg.hyprland.monitor;
+    };
   };
 
   config = mkIf cfg.hyprland.enable {
@@ -64,42 +115,6 @@ in {
       ];
     };
 
-    environment.etc."hypr/hyprland.conf".text = ''
-      debug {
-        error_position=1
-      }
-
-      general {
-        allow_tearing=true
-      }
-
-      input {
-        touchpad {
-          clickfinger_behavior=true
-          scroll_factor=0.180000
-          tap-and-drag=false
-          tap-to-click=false
-        }
-        kb_options=ctrl:nocaps,lv3:ralt_switch
-        kb_layout=${cfg.hyprland.input.kb_layout}
-        kb_model=${cfg.hyprland.input.kb_model}
-        kb_variant=${cfg.hyprland.input.kb_variant}
-        sensitivity=${toString cfg.hyprland.input.sensitivity}
-      }
-
-      misc {
-        disable_hyprland_logo=true
-        disable_splash_rendering=true
-        vrr=1
-      }
-
-      render {
-        direct_scanout=1
-        expand_undersized_textures=false
-      }
-
-      ${concatMapStringsSep "\n" (x: "monitor=${x}") cfg.hyprland.monitor}
-      monitor=, preferred, auto, 1
-    '';
+    environment.etc."hypr/hyprland.conf".source = cfg.hyprland.configFile;
   };
 }
