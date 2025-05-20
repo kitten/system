@@ -16,6 +16,13 @@ in {
       type = types.bool;
     };
 
+    oomd = mkOption {
+      default = false;
+      example = true;
+      description = "Enable systemd-oomd";
+      type = types.bool;
+    };
+
     performanceCores = mkOption {
       type = with types; listOf ints.unsigned;
       default = [ ];
@@ -40,6 +47,7 @@ in {
       ++ optionals (performance != "") [ "nohz_full=${performance}" ];
 
     systemd = {
+      oomd.enable = false;
       user.slices = {
         background.sliceConfig = {
           AllowedCPUs = efficiency;
@@ -61,8 +69,6 @@ in {
         nix.sliceConfig = mkIf cfg.affinity.isolateNixDaemon {
           CPUQuota = "80%";
           IOWeight = 90;
-          ManagedOOMMemoryPressure = "kill";
-          ManagedOOMMemoryPressureLimit = "80%";
         };
       };
       services = {

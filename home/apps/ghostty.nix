@@ -94,7 +94,7 @@ in {
         confirm-close-surface = false
         quit-after-last-window-closed = true
 
-        linux-cgroup = always
+        linux-cgroup = single-instance
 
         macos-option-as-alt = left
         macos-titlebar-style = tabs
