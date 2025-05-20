@@ -235,6 +235,11 @@ in {
           "ignorezero, system-shell"
           "animation slide, system-shell"
           "abovelock, system-shell"
+
+          "blur, system-bar"
+          "xray on, system-bar"
+          "ignorezero, system-bar"
+          "animation slide, system-bar"
         ];
       };
     };
