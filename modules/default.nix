@@ -5,6 +5,7 @@
     ./base
     ./apps
     ./desktop
+    ./games
     ./nvim
     ./router
     ./server

@@ -51,6 +51,23 @@
       caddy.enable = true;
       vaultwarden.enable = true;
     };
+    games = {
+      enable = true;
+      palworld = {
+        enable = true;
+        public = true;
+        ip = "51.38.68.193";
+        settings = {
+          ServerName = "London Boroughs";
+          AllowConnectPlatform = "Xbox";
+          PalEggDefaultHatchingTime = 1;
+          GuildPlayerMaxNum = 10;
+          bShowPlayerList = true;
+          bEnableNonLoginPenalty = false;
+          bUseAuth = false;
+        };
+      };
+    };
   };
 
   system.stateVersion = "24.11";
