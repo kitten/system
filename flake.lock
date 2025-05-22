@@ -886,11 +886,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747755255,
-        "narHash": "sha256-BaBRqPKEWHfR5J+h6z7XHwEa4sSjf0tuYr0g1ldyPvk=",
+        "lastModified": 1747901587,
+        "narHash": "sha256-woibJpFc92skmZdLRC1NtLOq/g15fe3HzHTWlx15K1c=",
         "owner": "kitten",
         "repo": "system-shell",
-        "rev": "a4c72b7ac3f2c403868e033c47991d5a535648f8",
+        "rev": "dcf54ab46c3bb697f9c36e210a51f34f47985d6c",
         "type": "github"
       },
       "original": {
