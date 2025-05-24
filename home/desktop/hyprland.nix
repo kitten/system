@@ -133,22 +133,32 @@ in {
         bindp = [
           ", F11, fullscreen, 0"
           "SUPER, W, killactive"
-          "SUPER, O, overview:toggle, all"
-
-          "SUPER, left, movefocus, l"
-          "SUPER, down, movefocus, d"
-          "SUPER, up, movefocus, u"
-          "SUPER, right, movefocus, r"
 
           "SUPER, H, movefocus, l"
           "SUPER, J, movefocus, d"
           "SUPER, K, movefocus, u"
           "SUPER, L, movefocus, r"
+          "SUPER_SHIFT, H, movewindow, l"
+          "SUPER_SHIFT, J, movewindow, d"
+          "SUPER_SHIFT, K, movewindow, u"
+          "SUPER_SHIFT, L, movewindow, r"
 
+          "SUPER_CONTROL, K, overview:toggle, all"
           "SUPER_CONTROL, H, workspace, m-1"
-          "SUPER_CONTROL, J, focusmonitor, +1"
-          "SUPER_CONTROL, K, focusmonitor, -1"
           "SUPER_CONTROL, L, workspace, m+1"
+          "SUPER_CONTROL_SHIFT, H, movetoworkspace, -1"
+          "SUPER_CONTROL_SHIFT, L, movetoworkspace, +1"
+
+          "SUPER, up, overview:toggle, all"
+          "SUPER, left, workspace, m-1"
+          "SUPER, right, workspace, m+1"
+          "SUPER_SHIFT, left, movetoworkspace, m-1"
+          "SUPER_SHIFT, right, movetoworkspace, m+1"
+
+          "SUPER_CONTROL, left, focusmonitor, -1"
+          "SUPER_CONTROL, right, focusmonitor, +1"
+          "SUPER_CONTROL_SHIFT, left, movecurrentworkspacetomonitor, -1"
+          "SUPER_CONTROL_SHIFT, right, movecurrentworkspacetomonitor, +1"
         ];
 
         bind = [
@@ -164,11 +174,6 @@ in {
           "SUPER_SHIFT, up, movewindow, u"
           "SUPER_SHIFT, right, movewindow, r"
 
-          "SUPER_SHIFT, H, movewindow, l"
-          "SUPER_SHIFT, J, movewindow, d"
-          "SUPER_SHIFT, K, movewindow, u"
-          "SUPER_SHIFT, L, movewindow, r"
-
           "SUPER, 1, workspace, 1"
           "SUPER, 2, workspace, 2"
           "SUPER, 3, workspace, 3"
@@ -179,22 +184,6 @@ in {
           "SUPER, 8, workspace, 8"
           "SUPER, 9, workspace, 9"
           "SUPER, 0, workspace, 10"
-
-          "SUPER_CONTROL_SHIFT, H, movetoworkspace, m-1"
-          "SUPER_CONTROL_SHIFT, J, moveworkspacetomonitor, +1"
-          "SUPER_CONTROL_SHIFT, K, moveworkspacetomonitor, -1"
-          "SUPER_CONTROL_SHIFT, L, movetoworkspace, m+1"
-
-          "SUPER_CONTROL, 1, movetoworkspace, 1"
-          "SUPER_CONTROL, 2, movetoworkspace, 2"
-          "SUPER_CONTROL, 3, movetoworkspace, 3"
-          "SUPER_CONTROL, 4, movetoworkspace, 4"
-          "SUPER_CONTROL, 5, movetoworkspace, 5"
-          "SUPER_CONTROL, 6, movetoworkspace, 6"
-          "SUPER_CONTROL, 7, movetoworkspace, 7"
-          "SUPER_CONTROL, 8, movetoworkspace, 8"
-          "SUPER_CONTROL, 9, movetoworkspace, 9"
-          "SUPER_CONTROL, 0, movetoworkspace, 10"
 
           "SUPER_SHIFT, 2, exec, ${hyprshot} -z -m window -m active"
           "SUPER_SHIFT, 3, exec, ${hyprshot} -z -m output -m active"
