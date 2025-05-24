@@ -23,7 +23,6 @@ in {
       shellAliases = {
         ls = "ls --color=auto";
         ll = "ls -l";
-        wx = "wezmux";
         http = "xh";
       };
       history = {
