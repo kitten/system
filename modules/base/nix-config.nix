@@ -5,7 +5,7 @@ with lib; mkMerge [
     age.secrets."nix-access-tokens.conf".file = ./encrypt/nix-access-tokens.conf.age;
 
     nix = {
-      package = pkgs.nix;
+      package = pkgs.lix;
       channel.enable = mkForce false;
 
       # make flake registry and nix path match flake inputs

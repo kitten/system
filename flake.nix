@@ -7,14 +7,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.93.0.tar.gz";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
     apple-silicon = {
       url = "github:kitten/nixos-apple-silicon/edge";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -98,7 +90,7 @@
     eachSystem = lib.genAttrs ["aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux"];
     overlays = [
       self.overlays.default
-      inputs.lix-module.overlays.default
+      self.overlays.lix
       inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
       inputs.language-servers.overlays.default
@@ -146,12 +138,13 @@
 
     overlays = {
       default = import ./lib/pkgs;
+      lix = import ./lib/lix-overlay.nix;
     };
 
     packages = eachSystem (system: let
       pkgs = import inputs.nixpkgs {
         inherit system;
-        overlays = [ self.overlays.default ];
+        overlays = [ self.overlays.default self.overlays.lix ];
       };
     in {
       inherit (inputs.agenix.packages.${system}) agenix;
