@@ -29,6 +29,6 @@ in {
   config = mkIf (cfg.enable && cfg.wezterm.enable) {
     home.packages = [ wezterm ];
     xdg.configFile."wezterm/wezterm.lua".text = configStr;
-    programs.zsh.initExtra = shellIntegrationStr;
+    programs.zsh.initContent = shellIntegrationStr;
   };
 }

@@ -34,7 +34,7 @@ in {
     systemd.user.services.gpg-agent.Service.Slice = "session.slice";
 
     # See: https://github.com/nix-community/home-manager/pull/5901
-    programs.zsh.initExtra = let
+    programs.zsh.initContent = let
       gpgPkg = config.programs.gpg.package;
     in optionalString helpers.isDarwin ''
       ${gpgPkg}/bin/gpg-connect-agent --quiet updatestartuptty /bye > /dev/null 2>&1
