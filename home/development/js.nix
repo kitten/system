@@ -20,6 +20,11 @@ in {
       default = cfg.js.enable;
       type = types.bool;
     };
+
+    wasmtime = mkOption {
+      default = cfg.js.enable;
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.js.enable {
@@ -66,6 +71,8 @@ in {
     home.packages = with pkgs; [
       corepack_22
       nodejs_22
-    ] ++ optionals cfg.js.bun [ pkgs.bun ];
+    ]
+      ++ optionals cfg.js.bun [ pkgs.bun ]
+      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ];
   };
 }
