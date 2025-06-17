@@ -3,8 +3,9 @@
 with lib;
 let
   cfg = config.modules.apps;
+  ollama = cfg.ollama.package;
   ollamaArgs = [
-    "${pkgs.ollama}/bin/ollama"
+    "${ollama}/bin/ollama"
     "serve"
   ];
 
@@ -22,6 +23,11 @@ in {
       default = false;
       description = "Whether to enable Ollama.";
       type = types.bool;
+    };
+
+    package = mkOption {
+      default = pkgs.ollama;
+      type = types.package;
     };
 
     host = mkOption {
@@ -63,7 +69,7 @@ in {
 
   config = mkIf (cfg.enable && cfg.ollama.enable) (mkMerge [
     {
-      home.packages = [ pkgs.ollama ];
+      home.packages = [ ollama ];
     }
 
     (helpers.mkIfLinux {
