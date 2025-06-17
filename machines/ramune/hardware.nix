@@ -57,6 +57,4 @@
   ];
 
   nixpkgs.overlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
-
-  hardware.asahi.useExperimentalGPUDriver = true;
 }

@@ -76,7 +76,6 @@ with lib;
     graphics.enable = true;
     bluetooth.enable = true;
     wirelessRegulatoryDatabase = true;
-    asahi.useExperimentalGPUDriver = true;
     sensor.iio.enable = true;
   };
 }
