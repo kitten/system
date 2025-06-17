@@ -197,8 +197,6 @@ in {
       });
     };
 
-    services.irqbalance.enable = true;
-
     services.resolved = {
       enable = true;
       llmnr = "false";
