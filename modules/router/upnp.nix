@@ -32,5 +32,9 @@ in {
         deny 0-65535 ${extern.cidr} 0-65535
       '';
     };
+
+    systemd.services.miniupnpd = {
+      after = [ "network-online.target" ];
+    };
   };
 }
