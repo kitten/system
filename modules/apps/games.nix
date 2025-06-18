@@ -27,9 +27,6 @@ in {
 
     environment.sessionVariables = {
       PROTONPATH = "${pkgs.proton-ge-bin.steamcompattool}/";
-      PROTON_ENABLE_AMD_AGS = "1";
-      ENABLE_HDR_WSI = "1";
-      DXVK_HDR = "1";
     };
 
     hardware.steam-hardware.enable = true;
@@ -51,9 +48,8 @@ in {
           NIX_CFLAGS_COMPILE = [ "-fno-fast-math" "-fno-omit-frame-pointer" ];
         });
         env = {
-          PROTON_ENABLE_AMD_AGS = "1";
-          ENABLE_HDR_WSI = "1";
-          DXVK_HDR = "1";
+          PROTON_ENABLE_WAYLAND = "1";
+          PROTON_ENABLE_HDR = "1";
         };
         args = [
           "--backend" "wayland"

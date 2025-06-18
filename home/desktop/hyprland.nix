@@ -93,10 +93,7 @@ in {
           vrr = 1;
         };
 
-        render.direct_scanout = 1;
-        render.expand_undersized_textures = false;
         debug.error_position = 1;
-        binds.movefocus_cycles_fullscreen = true;
 
         plugin.overview = {
           autoDrag = true;
@@ -169,11 +166,6 @@ in {
 
           "SUPER_SHIFT, F, fullscreen, 1"
 
-          "SUPER_SHIFT, left, movewindow, l"
-          "SUPER_SHIFT, down, movewindow, d"
-          "SUPER_SHIFT, up, movewindow, u"
-          "SUPER_SHIFT, right, movewindow, r"
-
           "SUPER, 1, workspace, 1"
           "SUPER, 2, workspace, 2"
           "SUPER, 3, workspace, 3"
@@ -197,16 +189,21 @@ in {
           "suppressevent maximize, class:.*"
 
           "nofocus, class:^$, title:^$, xwayland:1, floating:1, fullscreen:0, pinned:0"
+          "tag +games, initialClass:^(.*)[.]exe$, fullscreenstate:* 2"
+
+          "immediate, fullscreenstate:2"
+          "immediate, fullscreenstate:3"
+          "syncfullscreen, fullscreen:1"
+          "idleinhibit, fullscreen:1"
 
           "content game, tag:games"
           "tag +games, content:game"
 
-          "immediate, fullscreenstate:2"
-          "immediate, fullscreenstate:3"
-          "idleinhibit, fullscreen:1"
-
-          "fullscreen, tag:games"
+          "opaque, tag:games"
           "immediate, tag:games"
+          "idleinhibit fullscreen, tag:games"
+          "fullscreenstate:3 3, tag:games, fullscreen:1"
+          "float, tag:games, fullscreen:1"
 
           "float, class:zen-beta,initialTitle:^(Picture-in-Picture)$"
           "pin, class:zen-beta,initialTitle:^(Picture-in-Picture)$"

@@ -21,7 +21,7 @@
       rawaccel.enable = false;
       affinity.performanceCores = [ 4 5 6 7 ];
       hyprland = {
-        monitor = [ "eDP-1, preferred, 0x0, 1.6" ];
+        monitor = [ "eDP-1, preferred, 0x0, 1.6, bitdepth, 10, cm, edid" ];
       };
     };
     server = {

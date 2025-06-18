@@ -36,6 +36,12 @@ let
     render {
       direct_scanout=1
       expand_undersized_textures=false
+      cm_fs_passthrough=1
+      cm_enabled=true
+    }
+
+    experimental {
+      xx_color_management_v4=true
     }
 
     cursor {
