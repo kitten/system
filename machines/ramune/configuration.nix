@@ -15,6 +15,7 @@
     router = {
       enable = true;
       ipv6 = true;
+      upnp.enable = false;
       interfaces = {
         external = {
           name = "extern0";

@@ -9,7 +9,7 @@ in {
   options.modules.router = {
     upnp = {
       enable = mkOption {
-        default = cfg.enable;
+        default = false;
         description = "Whether to enable UPNP";
         type = types.bool;
       };
