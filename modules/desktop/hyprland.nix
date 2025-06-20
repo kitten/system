@@ -34,6 +34,7 @@ let
     }
 
     render {
+      explicit_sync=0
       direct_scanout=1
       expand_undersized_textures=false
       cm_fs_passthrough=1
