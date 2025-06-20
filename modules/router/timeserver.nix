@@ -20,12 +20,11 @@ in {
   config = mkIf cfg.timeserver.enable {
     networking.timeServers = [
       "time.cloudflare.com"
-      "time.google.com"
+      "uk.pool.ntp.org"
     ];
 
     services.chrony = {
       enable = true;
-      enableNTS = true;
       extraConfig = ''
         allow all
         ${bindDevices}
