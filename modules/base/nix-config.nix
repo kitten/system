@@ -32,6 +32,7 @@ with lib; mkMerge [
         ];
         trusted-users = [ "root" "@wheel" ];
         allowed-users = [ "root" "@wheel" "${user}" ];
+        extra-trusted-users = [ "${user}" ];
         # on Apple Silicon, Rosetta 2 allows for this
         extra-platforms = mkIf (helpers.system == "aarch64-darwin") [ helpers.system "x86_64-darwin" ];
       };
