@@ -52,6 +52,12 @@ helpers.darwinAttrs {
         "com.apple.swipescrolldirection" = false;
       };
       spaces.spans-displays = false;
+
+      CustomSystemPreferences = {
+        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
+        "com.apple.ImageCapture".disableHotPlug = true;
+        "com.apple.gamed".Disabled = true;
+      };
     };
   };
 }
