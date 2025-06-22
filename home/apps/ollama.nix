@@ -25,6 +25,12 @@ in {
       type = types.bool;
     };
 
+    enableServer = mkOption {
+      default = false;
+      description = "Whether to enable Ollama's server.";
+      type = types.bool;
+    };
+
     package = mkOption {
       default = pkgs.ollama;
       type = types.package;
@@ -37,7 +43,7 @@ in {
     };
 
     flashAttention = mkOption {
-      default = false;
+      default = true;
       description = ''
         Enables experimental flash att  ention feature.
         Effect: Activates an experimental optimization for attention mechanisms.
@@ -73,7 +79,7 @@ in {
     }
 
     (helpers.mkIfLinux {
-      systemd.user.services.ollama = {
+      systemd.user.services.ollama = mkIf cfg.ollama.enableServer {
         Unit = {
           Description = "Ollama";
           Documentation = "https://github.com/jmorganca/ollama";
@@ -89,7 +95,7 @@ in {
     })
 
     (helpers.mkIfDarwin {
-      launchd.agents.ollama = {
+      launchd.agents.ollama = mkIf cfg.ollama.enableServer{
         enable = true;
         config = {
           EnvironmentVariables = env;
