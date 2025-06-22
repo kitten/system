@@ -5,7 +5,7 @@ let
   cfgRoot = config.modules.server;
   cfgRouter = config.modules.router;
   cfg = config.modules.server.tailscale;
-in helpers.linuxAttrs {
+in {
   options.modules.server.tailscale = {
     enable = mkOption {
       default = false;
@@ -15,7 +15,7 @@ in helpers.linuxAttrs {
     };
   };
 
-  config = mkIf (cfg.enable && cfgRoot.enable) {
+  config = mkIf (cfg.enable && cfgRoot.enable) (helpers.linuxAttrs {
     networking = {
       domain = mkIf cfgRouter.enable "fable-pancake.ts.net";
       search = [ "fable-pancake.ts.net" ];
@@ -42,5 +42,12 @@ in helpers.linuxAttrs {
     systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
 
     environment.systemPackages = mkIf config.modules.desktop.enable [ pkgs.tail-tray ];
-  };
+  } // helpers.darwinAttrs {
+    networking.search = [ "fable-pancake.ts.net" ];
+
+    services.tailscale = {
+      enable = true;
+      overrideLocalDns = true;
+    };
+  });
 }
