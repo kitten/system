@@ -1,4 +1,4 @@
-{ lib, config, hostname, ... }:
+{ lib, config, hostname, helpers, ... }:
 
 with lib;
 let
