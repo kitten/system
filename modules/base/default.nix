@@ -6,5 +6,6 @@
     ./certs.nix
     ./shell.nix
     ./linux.nix
+    ./macos.nix
   ];
 }
