@@ -1,10 +1,10 @@
-{ lib, config, hostname, ... }:
+{ lib, config, hostname, helpers, ... }:
 
 with lib;
 let
   address = config.modules.router.adress;
   cfg = config.modules.server;
-in {
+in helpers.linuxAttrs {
   options.modules.server.vaultwarden = {
     enable = mkOption {
       default = false;

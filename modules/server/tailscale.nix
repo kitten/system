@@ -1,11 +1,11 @@
-{ lib, config, pkgs, user, hostname, ... }:
+{ lib, config, pkgs, user, helpers, hostname, ... }:
 
 with lib;
 let
   cfgRoot = config.modules.server;
   cfgRouter = config.modules.router;
   cfg = config.modules.server.tailscale;
-in {
+in helpers.linuxAttrs {
   options.modules.server.tailscale = {
     enable = mkOption {
       default = false;
