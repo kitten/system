@@ -10,6 +10,7 @@
     };
     apps = {
       enable = true;
+      ollama.enable = true;
       ghostty.enable = true;
       zen-browser.enable = true;
       discord.enable = true;

@@ -26,7 +26,7 @@ in {
     };
 
     enableServer = mkOption {
-      default = false;
+      default = true;
       description = "Whether to enable Ollama's server.";
       type = types.bool;
     };
