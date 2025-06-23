@@ -147,6 +147,20 @@ in rec {
   in
     colors: (concatStringsSep "\n" (mapAttrsToList toValue (toFlatAttrs colors)));
 
+  mkZedStyles = let
+    valueToString = value: "${value.gui}";
+    isValue = value: isAttrs value && hasAttr "gui" value;
+    recurse = path: value:
+      if isAttrs value && !(isValue value) then
+        mapAttrsToList
+          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
+          value
+      else {
+        ${concatStringsSep "." path} = valueToString value;
+      };
+  in
+    styles: lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] styles));
+
   mkVimHardlineColors = colors:
     with colors; ''
       {

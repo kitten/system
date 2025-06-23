@@ -15,6 +15,7 @@
       zen-browser.enable = true;
       discord.enable = true;
       chromium.enable = true;
+      zed-editor.enable = true;
     };
   };
 }

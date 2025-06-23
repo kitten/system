@@ -20,5 +20,6 @@ with lib; {
     ./minecraft.nix
     ./ghostty.nix
     ./wezterm
+    ./zed-editor
   ];
 }
