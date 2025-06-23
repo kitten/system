@@ -1,10 +1,10 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, helpers, ... }:
 
 with lib;
 let
   cfgRoot = config.modules.server;
   cfg = config.modules.server.hd-idle;
-in {
+in helpers.linuxAttrs {
   options.modules.server.hd-idle = {
     enable = mkOption {
       default = false;

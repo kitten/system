@@ -1,4 +1,4 @@
-{ lib, config, hostname, ... }:
+{ lib, config, hostname, helpers, ... }:
 
 with lib;
 let
@@ -67,7 +67,7 @@ let
       }
     '') cfg.caddy.exposeFolders;
   in strings.concatStringsSep "\n\n" configs;
-in {
+in helpers.linuxAttrs {
   options.modules.server.caddy = {
     enable = mkOption {
       default = false;

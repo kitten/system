@@ -10,10 +10,6 @@ with lib; {
     };
   };
 
-  config.modules.server = {
-    enable = if helpers.isLinux then (mkDefault false) else (mkForce false);
-  };
-} // helpers.linuxAttrs {
   imports = [
     ./sshd.nix
     ./tailscale.nix
@@ -23,5 +19,6 @@ with lib; {
     ./jellyfin.nix
     ./home-assistant.nix
     ./podman.nix
+    ./macos.nix
   ];
 }

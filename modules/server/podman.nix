@@ -1,10 +1,10 @@
-{ lib, config, user, pkgs, ... }:
+{ lib, config, user, pkgs, helpers, ... }:
 
 with lib;
 let
   cfgRoot = config.modules.server;
   cfg = config.modules.server.podman;
-in {
+in helpers.linuxAttrs {
   options.modules.server.podman = {
     enable = mkOption {
       default = false;

@@ -1,4 +1,4 @@
-{ lib, config, user, ... }:
+{ lib, config, user, helpers, ... }:
 
 with lib;
 let
@@ -20,6 +20,7 @@ in {
 
     services.openssh = {
       enable = true;
+    } // helpers.linuxAttrs {
       openFirewall = mkDefault (!config.modules.router.enable);
     };
   };

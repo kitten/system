@@ -1,4 +1,4 @@
-{ lib, pkgs, inputs, helpers, config, ... }:
+{ lib, pkgs, inputs, helpers, user, config, ... }:
 
 with lib; mkMerge [
   {
@@ -31,6 +31,8 @@ with lib; mkMerge [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         ];
         trusted-users = [ "root" "@wheel" ];
+        allowed-users = [ "root" "@wheel" "${user}" ];
+        extra-trusted-users = [ "${user}" ];
         # on Apple Silicon, Rosetta 2 allows for this
         extra-platforms = mkIf (helpers.system == "aarch64-darwin") [ helpers.system "x86_64-darwin" ];
       };
@@ -53,7 +55,6 @@ with lib; mkMerge [
     };
   }
   (helpers.darwinAttrs {
-    system.stateVersion = 5;
-    ids.gids.nixbld = 30000;
+    system.stateVersion = 6;
   })
 ]

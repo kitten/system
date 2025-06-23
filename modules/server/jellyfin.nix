@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, pkgs, user, helpers, ... }:
 
 with lib;
 let
@@ -6,7 +6,7 @@ let
   cfg = config.modules.server.jellyfin;
 
   group = "share";
-in {
+in helpers.linuxAttrs {
   options.modules.server.jellyfin = {
     enable = mkOption {
       default = false;

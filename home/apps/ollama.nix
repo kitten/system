@@ -16,12 +16,21 @@ let
     OLLAMA_FLASH_ATTENTION = if cfg.ollama.flashAttention then "1" else "0";
     OLLAMA_SCHED_SPREAD = if cfg.ollama.schedSpread then "1" else "0";
     OLLAMA_INTEL_GPU = if cfg.ollama.intelGpu then "1" else "0";
+    OLLAMA_KV_CACHE_TYPE = cfg.ollama.kvCacheType;
+    OLLAMA_CONTEXT_LENGTH = toString cfg.ollama.defaultContextLength;
+    OLLAMA_MAX_LOADED_MODELS = toString cfg.ollama.maxLoadedModels;
   };
 in {
   options.modules.apps.ollama = {
     enable = mkOption {
       default = false;
       description = "Whether to enable Ollama.";
+      type = types.bool;
+    };
+
+    enableServer = mkOption {
+      default = true;
+      description = "Whether to enable Ollama's server.";
       type = types.bool;
     };
 
@@ -36,14 +45,35 @@ in {
       type = types.str;
     };
 
+    maxLoadedModels = mkOption {
+      default = 3;
+      type = types.int;
+    };
+
+    defaultContextLength = mkOption {
+      default = 32768;
+      type = types.int;
+    };
+
     flashAttention = mkOption {
-      default = false;
+      default = true;
       description = ''
-        Enables experimental flash att  ention feature.
+        Enables experimental flash attention feature.
         Effect: Activates an experimental optimization for attention mechanisms.
         Scenario: Can potentially improve performance on compatible hardware but may introduce instability.
       '';
       type = types.bool;
+    };
+
+    kvCacheType = mkOption {
+      default = "q8_0";
+      type = types.enum [ "f16" "q8_0" "q4_0" ];
+      description = ''
+        Determines the K/V cache quantization type
+        Effect: Activates quantization of the K/V cache reducing memory usage with flash attention.
+        Scenario: Can lead to reduced VRAM usage at the cost of accuracy.
+        Models with a higher Grouped Query Attention (GQA) count (e.g. Qwen 2) will see a larger negative impact.
+      '';
     };
 
     schedSpread = mkOption {
@@ -73,7 +103,7 @@ in {
     }
 
     (helpers.mkIfLinux {
-      systemd.user.services.ollama = {
+      systemd.user.services.ollama = mkIf cfg.ollama.enableServer {
         Unit = {
           Description = "Ollama";
           Documentation = "https://github.com/jmorganca/ollama";
@@ -89,7 +119,7 @@ in {
     })
 
     (helpers.mkIfDarwin {
-      launchd.agents.ollama = {
+      launchd.agents.ollama = mkIf cfg.ollama.enableServer{
         enable = true;
         config = {
           EnvironmentVariables = env;

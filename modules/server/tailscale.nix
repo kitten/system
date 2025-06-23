@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, hostname, ... }:
+{ lib, config, pkgs, user, helpers, hostname, ... }:
 
 with lib;
 let
@@ -15,7 +15,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfgRoot.enable) {
+  config = mkIf (cfg.enable && cfgRoot.enable) (helpers.linuxAttrs {
     networking = {
       domain = mkIf cfgRouter.enable "fable-pancake.ts.net";
       search = [ "fable-pancake.ts.net" ];
@@ -42,5 +42,12 @@ in {
     systemd.services.tailscaled.serviceConfig.Environment = [ "TS_DEBUG_DISABLE_PORTLIST=true" ];
 
     environment.systemPackages = mkIf config.modules.desktop.enable [ pkgs.tail-tray ];
-  };
+  } // helpers.darwinAttrs {
+    networking.search = [ "fable-pancake.ts.net" ];
+
+    services.tailscale = {
+      enable = true;
+      overrideLocalDns = true;
+    };
+  });
 }

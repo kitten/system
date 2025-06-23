@@ -112,6 +112,12 @@
       hostname = "fanta";
     };
 
+    darwinConfigurations."irnbru" = mkSystem {
+      inherit overlays;
+      system = "aarch64-darwin";
+      hostname = "irnbru";
+    };
+
     nixosConfigurations."pepper" = mkSystem {
       inherit overlays;
       system = "x86_64-linux";

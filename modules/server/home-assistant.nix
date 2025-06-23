@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, helpers, ... }:
 
 with lib;
 let
@@ -10,7 +10,7 @@ let
   containerImage = if stdenv.isAarch64
     then "ghcr.io/home-assistant/aarch64-homeassistant:${cfg.revision}"
     else "ghcr.io/home-assistant/home-assistant:${cfg.revision}";
-in {
+in helpers.linuxAttrs {
   options.modules.server.home-assistant = {
     enable = mkOption {
       default = false;
