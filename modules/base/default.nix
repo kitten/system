@@ -7,5 +7,6 @@
     ./shell.nix
     ./linux.nix
     ./macos.nix
+    ./macos-vram.nix
   ];
 }
