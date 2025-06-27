@@ -25,7 +25,6 @@ in helpers.darwinAttrs {
 
     power = {
       restartAfterFreeze = true;
-      restartAfterPowerFailure = true;
       sleep = {
         allowSleepByPowerButton = false;
         computer = "never";
