@@ -10,11 +10,9 @@
     lib = (import nixpkgs { inherit overlays system; }).lib;
 
     age = {
-      identityPaths = [
-        "/var/lib/persistent/agenix"
-        "${rootDir}/.ssh/agenix"
-        "${homeDir}/.ssh/agenix"
-      ];
+      identityPaths = let
+        identityPath = if isDarwin then "/usr/local/persistent/agenix" else "/var/lib/persistent/agenix";
+      in [ identityPath ];
     };
 
     systemModules = modules ++ [
