@@ -118,6 +118,12 @@
       hostname = "irnbru";
     };
 
+    darwinConfigurations."sodacream" = mkSystem {
+      inherit overlays;
+      system = "aarch64-darwin";
+      hostname = "sodacream";
+    };
+
     nixosConfigurations."pepper" = mkSystem {
       inherit overlays;
       system = "x86_64-linux";
@@ -134,12 +140,6 @@
       inherit overlays;
       system = "aarch64-linux";
       hostname = "ramune";
-    };
-
-    nixosConfigurations."sodacream" = mkSystem {
-      inherit overlays;
-      system = "aarch64-linux";
-      hostname = "sodacream";
     };
 
     overlays = {
