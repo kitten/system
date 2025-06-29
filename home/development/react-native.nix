@@ -8,8 +8,8 @@ let
 
   create-avd = pkgs.writeShellScriptBin "create-avd" ''
     avdmanager create avd \
-      --name android-34 \
-      --package 'system-images;android-34;google_apis_playstore;${android-arch}' \
+      --name android-35 \
+      --package 'system-images;android-35;google_apis_playstore;${android-arch}' \
       --tag google_apis_playstore \
       --device pixel_8 \
       --force
@@ -92,16 +92,12 @@ in {
       android-sdk = {
         enable = true;
         packages = sdk: with sdk; [
-          build-tools-34-0-0
           build-tools-35-0-0
           cmdline-tools-latest
           emulator
           platform-tools
-          platforms-android-34
           platforms-android-35
-          sources-android-34
           sources-android-35
-          ndk-26-1-10909125
           ndk-27-1-12297006
           cmake-3-22-1
           sdk."system-images-android-34-google-apis-${android-arch}"
