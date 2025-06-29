@@ -19,12 +19,12 @@
       interfaces = {
         external = {
           name = "extern0";
-          macAddress = "5c:1b:f4:7f:dc:cd";
+          macAddress = "ec:75:0c:2e:93:b0";
           adoptMacAddress = "64:20:9f:16:70:a6";
         };
         internal = {
           name = "intern0";
-          macAddress = "9c:bf:0d:00:23:5d";
+          macAddress = "ec:75:0c:2e:92:1c";
           cidr = "10.0.0.1/24";
         };
       };
