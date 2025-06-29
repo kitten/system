@@ -769,6 +769,15 @@ require('gitsigns').setup {
     topdelete = { text = '' },
     changedelete = { text = '' },
   },
+  diff_opts = {
+    algorithm = 'histogram',
+    internal = true,
+    linematch = true,
+    indent_heuristic = true,
+    ignore_blank_lines = true,
+    ignore_whitespace_change = true,
+    ignore_whitespace_change_at_eol = true,
+  },
   preview_config = {
     border = 'none',
     style = 'minimal',

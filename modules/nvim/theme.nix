@@ -43,9 +43,9 @@ let
 
     Diff = {
       Add.bg = gutter;
-      Change.force = true;
+      Change.bg = gutter;
       Delete.fg = muted;
-      Text = { strikethrough = true; };
+      Text.force = true;
     };
 
     Pmenu = {
@@ -72,7 +72,7 @@ let
       Add.fg = green;
       Change.fg = blue;
       Delete.fg = brightRed;
-      Changedelete.link = "GitSignsChange";
+      Changedelete.strikethrough = true;
       Topdelete.link = "GitSignsDelete";
     };
 
