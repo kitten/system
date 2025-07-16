@@ -109,7 +109,13 @@ in {
       };
       nameservers = [
         "1.1.1.1#cloudflare-dns.com"
-      ] ++ (if cfg.ipv6 then [ "2606:4700:4700::1111#cloudflare-dns.com" ] else []);
+        "9.9.9.9#dns.quad9.net"
+        "8.8.8.8#dns.google"
+      ] ++ (optionals cfg.ipv6 [
+        "2606:4700:4700::1111#cloudflare-dns.com"
+        "2620:fe::9#dns.quad9.net"
+        "2001:4860:4860::8888#dns.google"
+      ]);
     };
 
     boot.initrd.systemd.network = {
@@ -203,7 +209,11 @@ in {
       domains = [ "~." ];
       fallbackDns = [
         "1.0.0.1"
-      ] ++ (if cfg.ipv6 then [ "2606:4700:4700::1001" ] else []);
+        "8.8.4.4"
+      ] ++ (optionals cfg.ipv6 [
+        "2606:4700:4700::1001"
+        "2001:4860:4860::8844"
+      ]);
       dnsovertls = "opportunistic";
       extraConfig = strings.concatStringsSep "\n" [
         "[Resolve]"
