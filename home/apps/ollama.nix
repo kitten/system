@@ -16,6 +16,7 @@ let
     OLLAMA_FLASH_ATTENTION = if cfg.ollama.flashAttention then "1" else "0";
     OLLAMA_SCHED_SPREAD = if cfg.ollama.schedSpread then "1" else "0";
     OLLAMA_INTEL_GPU = if cfg.ollama.intelGpu then "1" else "0";
+    OLLAMA_NEW_ENGINE = if cfg.ollama.newEngine then "1" else "0";
     OLLAMA_KV_CACHE_TYPE = cfg.ollama.kvCacheType;
     OLLAMA_CONTEXT_LENGTH = toString cfg.ollama.defaultContextLength;
     OLLAMA_MAX_LOADED_MODELS = toString cfg.ollama.maxLoadedModels;
@@ -83,6 +84,11 @@ in {
         Effect: Enables multi-GPU usage for model inference.
         Scenario: Beneficial in high-performance computing environments with multiple GPUs to maximize hardware utilization.
       '';
+      type = types.bool;
+    };
+
+    newEngine = mkOption {
+      default = true;
       type = types.bool;
     };
 
