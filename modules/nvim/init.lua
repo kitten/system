@@ -336,6 +336,7 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
 -- register custom filetypes
 vim.filetype.add({
   extension = {
+    mdx = 'markdown',
     astro = 'astro',
     envrc = 'bash',
   },
