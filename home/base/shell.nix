@@ -19,7 +19,7 @@ in {
       enableVteIntegration = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      dotDir = ".config/zsh";
+      dotDir = "${config.xdg.configHome}/zsh";
       shellAliases = {
         ls = "ls --color=auto";
         ll = "ls -l";
