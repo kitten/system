@@ -5,6 +5,7 @@ let
   cfg = config.modules.server;
 
   domain = config.networking.domain;
+  knotEnabled = cfg.tangled.enable;
   tailscaleEnabled = cfg.tailscale.enable;
   vaultwardenEnabled = cfg.vaultwarden.enable;
   jellyfinEnabled = cfg.jellyfin.enable;
@@ -43,6 +44,12 @@ let
   tailscaleConfig = if tailscaleEnabled then ''
     ${hostname}.${domain} {
       import network_paths
+    }
+  '' else "";
+
+  knotConfig = if knotEnabled then ''
+    ${cfg.tangled.hostname} {
+      reverse_proxy localhost:5555
     }
   '' else "";
 
@@ -101,6 +108,7 @@ in helpers.linuxAttrs {
         }
 
         ${tailscaleConfig}
+        ${knotConfig}
 
         :80 {
           import network_paths
@@ -111,5 +119,8 @@ in helpers.linuxAttrs {
         }
       '';
     };
+
+    networking.firewall.allowedTCPPorts = [ 80 443 ];
+    networking.firewall.allowedUDPPorts = [ 443 ];
   };
 }
