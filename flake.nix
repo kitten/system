@@ -82,6 +82,11 @@
         home-manager.follows = "home-manager";
       };
     };
+
+    tangled = {
+      url = "git+ssh://git@tangled.sh/tangled.sh/core";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ { self, ... }: let
@@ -140,6 +145,7 @@
       inherit overlays;
       system = "aarch64-linux";
       hostname = "ramune";
+      modules = [ inputs.tangled.nixosModules.knot ];
     };
 
     overlays = {

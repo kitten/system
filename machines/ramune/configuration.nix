@@ -52,6 +52,7 @@
       tailscale.enable = true;
       caddy.enable = true;
       vaultwarden.enable = true;
+      tangled.enable = true;
     };
   };
 
