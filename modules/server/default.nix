@@ -20,5 +20,6 @@ with lib; {
     ./home-assistant.nix
     ./podman.nix
     ./macos.nix
+    ./tangled.nix
   ];
 }
