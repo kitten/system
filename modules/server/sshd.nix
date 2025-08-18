@@ -20,9 +20,9 @@ in {
 
     services.openssh = {
       enable = true;
-      ports = [ 22 2222 ];
     } // helpers.linuxAttrs {
       openFirewall = mkDefault (!config.modules.router.enable);
+      ports = [ 22 2222 ];
     };
   };
 }

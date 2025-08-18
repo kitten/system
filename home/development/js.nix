@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.modules.development;
+  hasReactNative = config.modules.development.enable;
   NPMRC_PATH = "${config.xdg.configHome}/npm/npmrc";
   BUNFIG_PATH = "${config.xdg.configHome}/.bunfig.toml";
   BUN_HOME = "${config.xdg.dataHome}/bun";
@@ -73,6 +74,7 @@ in {
       nodejs_22
     ]
       ++ optionals cfg.js.bun [ pkgs.bun ]
-      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ];
+      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ]
+      ++ optionals hasReactNative [ pkgs.flow ];
   };
 }
