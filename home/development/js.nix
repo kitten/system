@@ -51,6 +51,7 @@ in {
 
       COREPACK_ENABLE_AUTO_PIN = "0"; # disable corepack creating packageManager entries
       COREPACK_INTEGRITY_KEYS = "0";
+      COREPACK_ENABLE_STRICT = "0";
     };
 
     home.file.".yarnrc".text = ''
