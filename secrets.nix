@@ -8,7 +8,6 @@ in
 
   "./modules/server/encrypt/tailscale.age".publicKeys = keys;
   "./modules/server/encrypt/rclone.conf.age".publicKeys = keys;
-  "./modules/server/encrypt/tangled-knot-secret.age".publicKeys = keys;
   "./modules/server/encrypt/tangled-knot-ssh.age".publicKeys = keys;
 
   "./home/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
