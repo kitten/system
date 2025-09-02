@@ -29,7 +29,7 @@ in {
         clean_ruleset_interval=600
         uuid=78b8b903-83c1-4036-8fcd-f64aee25baca
         allow 1024-65535 ${intern.cidr} 1024-65535
-        deny 0-65535 ${extern.cidr} 0-65535
+        deny 0-65535 0.0.0.0/0 0-65535
       '';
     };
 
