@@ -163,6 +163,7 @@
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
     } // {
       inherit (pkgs)
+        pinentry-touchid
         steamworks-sdk-redist
         systemd-transparent-udp-forwarderd
         force-bind;

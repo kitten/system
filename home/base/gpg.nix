@@ -22,22 +22,19 @@ in {
       publicKeys = [
         { source = ./assets/pubring.asc; trust = "ultimate"; }
       ];
-      settings = {
-        default-key = "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5";
-        keyserver = "hkps://keys.openpgp.org";
-        keyserver-options = "auto-key-retrieve";
-      };
-      scdaemonSettings = {
-        disable-ccid = true;
-      };
     };
 
     services.gpg-agent = {
       enable = true;
       enableSshSupport = true;
       verbose = true;
-      pinentry.package = pkgs.pinentry_mac;
       sshKeys = [ "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5" ];
+      defaultCacheTtl = 1;
+      defaultCacheTtlSsh = 1;
+      pinentry = helpers.mkIfDarwin {
+        package = pkgs.pinentry-touchid;
+        program = "pinentry-touchid";
+      };
     };
 
     systemd.user.services.gpg-agent.Service.Slice = "session.slice";
