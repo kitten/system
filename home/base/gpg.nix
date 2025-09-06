@@ -44,7 +44,7 @@ in {
         })
         (helpers.mkIfLinux {
           package = pkgs.pinentry-all;
-          program = "pinentry-qt";
+          program = "pinentry";
         })
       ];
     };

@@ -1,4 +1,4 @@
-{ lib, config, hostname, helpers, ... }:
+{ lib, config, hostname, helpers, pkgs, ... }:
 
 with lib;
 let
@@ -33,6 +33,30 @@ in helpers.linuxAttrs {
         listenAddr = "127.0.0.1:5555";
         owner = cfg.tangled.owner;
       };
+    };
+
+    programs.git = {
+      enable = true;
+      config = {
+        gpg.program = "${pkgs.gnupg}/bin/gpg";
+        receive = {
+          advertisePushOptions = true;
+          denyFastForwards = false;
+          fsckObjects = true;
+          autogc = true;
+        };
+
+        include.path = "/etc/gitconfig.private";
+      };
+    };
+
+    age.secrets."gitconfig.private" = {
+      symlink = false;
+      path = "/etc/gitconfig.private";
+      file = ./encrypt/gitconfig.age;
+      owner = cfg.tangled.owner;
+      group = cfg.tangled.owner;
+      mode = "0444";
     };
   };
 }
