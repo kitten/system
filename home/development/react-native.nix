@@ -66,7 +66,7 @@ in {
     }
 
     (helpers.mkIfDarwin {
-      home.packages = with pkgs; []
+      home.packages = with pkgs; [ cmake ]
         ++ optionals cfg.react-native.cocoapods [ cocoapods ]
         ++ optionals cfg.react-native.fastlane [ fastlane ];
       home.sessionVariables = {

@@ -57,6 +57,7 @@ helpers.darwinAttrs {
         "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
         "com.apple.ImageCapture".disableHotPlug = true;
         "com.apple.gamed".Disabled = true;
+        "com.apple.dt.XCode".IDEIndexDisable = 1;
       };
     };
   };
