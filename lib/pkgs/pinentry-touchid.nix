@@ -8,29 +8,28 @@ self: pkgs @ {
 with lib;
 buildGoModule rec {
   pname = "pinentry-touchid";
-  version = "v0.0.5";
-  vendorHash = "sha256-3NeKIdsZ7uQQmVXDZ6zUQ0QMF4uxFcUDEOHbPSqoqOg=";
+  version = "v0.0.4";
+  vendorHash = "sha256-v3JtUk94/javwhtUsPUFV9EwFfaixZpb4AqKpCEaZp4=";
   proxyVendor = true;
 
   doCheck = false;
   doInstallCheck = true;
 
   src = fetchFromGitHub {
-    owner = "kitten";
+    owner = "lujstn";
     repo = "pinentry-touchid";
-    rev = "07322ff7e6509a575ce282aeb3b47db74a142a18";
-    sha256 = "sha256-anSdpuUbB1VIIaU28kIqLjsdIEAgHxgzSf0g68MK2as=";
+    rev = "v0.0.4";
+    sha256 = "sha256-2+AuUbyA1CZQROjX/Wlcx+OVsvOQgli5oPjAEdKB1Gk=";
   };
 
   subPackages = [ "." ];
   buildInputs = with pkgs; [ makeBinaryWrapper ];
-  nativeBuildInputs = with pkgs; [ pinentry_mac writableTmpDirAsHomeHook ];
+  nativeBuildInputs = with pkgs; [ pinentry_mac ];
   ldflags = [ "-s" "-w" "-X main.version=${version}" "-X main.commit=${src.rev}" ];
 
   patchPhase = ''
     substituteInPlace go.mod \
-      --replace-fail "=> ./go-assuan" "=> $src/go-assuan" \
-      --replace-fail "=> ./go-touchid" "=> $src/go-touchid"
+      --replace-fail "=> ./go-assuan" "=> $src/go-assuan"
   '';
 
   postInstall = ''
