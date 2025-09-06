@@ -31,6 +31,9 @@ in {
       sshKeys = [ "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5" ];
       defaultCacheTtl = 1;
       defaultCacheTtlSsh = 1;
+      maxCacheTtl = 10;
+      maxCacheTtlSsh = 10;
+      noAllowExternalCache = true;
       pinentry = helpers.mkIfDarwin {
         package = pkgs.pinentry-touchid;
         program = "pinentry-touchid";
