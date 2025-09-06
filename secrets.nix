@@ -16,10 +16,9 @@ in
   "./home/fonts/encrypt/codicon.otf.age".publicKeys = keys;
   "./home/fonts/encrypt/faicon.ttf.age".publicKeys = keys;
 
-  "./home/base/encrypt/pubring.kbx.age".publicKeys = keys;
-  "./home/base/encrypt/75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7.key.age".publicKeys = keys;
-  "./home/base/encrypt/E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6.key.age".publicKeys = keys;
-  "./home/base/encrypt/CA84692E3CC846C8EC7272468E962B63FC599E49.key.age".publicKeys = keys;
+  "./home/base/encrypt/147CBD801C5E0D0C27DD006653D3D96FF952F652.key.age".publicKeys = keys;
+  "./home/base/encrypt/DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5.key.age".publicKeys = keys;
+  "./home/base/encrypt/F6BECEF8FA360886C588883F90AD03CBE7B6450A.key.age".publicKeys = keys;
 
   "./home/development/encrypt/npmrc.age".publicKeys = keys;
 

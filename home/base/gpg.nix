@@ -1,4 +1,4 @@
-{ lib, helpers, config, ... }:
+{ lib, helpers, config, pkgs, ... }:
 
 with lib;
 let
@@ -18,44 +18,51 @@ in {
       enable = true;
       homedir = home;
       mutableKeys = true;
+      mutableTrust = true;
+      publicKeys = [
+        { source = ./assets/pubring.asc; trust = "ultimate"; }
+      ];
+      settings = {
+        default-key = "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5";
+        keyserver = "hkps://keys.openpgp.org";
+        keyserver-options = "auto-key-retrieve";
+      };
+      scdaemonSettings = {
+        disable-ccid = true;
+      };
     };
 
     services.gpg-agent = {
       enable = true;
       enableSshSupport = true;
       verbose = true;
-      sshKeys = [
-        "E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6"
-        "75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7"
-      ];
+      pinentry.package = pkgs.pinentry_mac;
+      sshKeys = [ "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5" ];
     };
 
     systemd.user.services.gpg-agent.Service.Slice = "session.slice";
 
-    modules.git.signingKey = mkDefault "303B6A9A312AA035";
+    modules.git.signingKey = mkDefault "4EAF3D43CDBB01C9";
 
-    age.secrets."pubring.kbx" = {
+    home.file."${home}/sshcontrol".text = "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5";
+
+    # ed25519 2025-09-06 [C]
+    age.secrets."147CBD801C5E0D0C27DD006653D3D96FF952F652.key" = {
       symlink = true;
-      path = "${home}/pubring.kbx";
-      file = ./encrypt/pubring.kbx.age;
+      path = "${home}/private-keys-v1.d/147CBD801C5E0D0C27DD006653D3D96FF952F652.key";
+      file = ./encrypt/147CBD801C5E0D0C27DD006653D3D96FF952F652.key.age;
     };
-
-    age.secrets."75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7.key" = {
+    # ed25519 2025-09-06 [SA]
+    age.secrets."DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5.key" = {
       symlink = true;
-      path = "${home}/private-keys-v1.d/75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7.key";
-      file = ./encrypt/75EF1DBB30A59CFB56BCE06A88CCF363DA63B1A7.key.age;
+      path = "${home}/private-keys-v1.d/DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5.key";
+      file = ./encrypt/DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5.key.age;
     };
-
-    age.secrets."E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6.key" = {
+    # cv25519 2025-09-06 [E]
+    age.secrets."F6BECEF8FA360886C588883F90AD03CBE7B6450A.key" = {
       symlink = true;
-      path = "${home}/private-keys-v1.d/E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6.key";
-      file = ./encrypt/E2BFF19637FDC25A02F45583176FAD1ED1F6BDD6.key.age;
-    };
-
-    age.secrets."CA84692E3CC846C8EC7272468E962B63FC599E49.key" = {
-      symlink = true;
-      path = "${home}/private-keys-v1.d/CA84692E3CC846C8EC7272468E962B63FC599E49.key";
-      file = ./encrypt/CA84692E3CC846C8EC7272468E962B63FC599E49.key.age;
+      path = "${home}/private-keys-v1.d/F6BECEF8FA360886C588883F90AD03CBE7B6450A.key";
+      file = ./encrypt/F6BECEF8FA360886C588883F90AD03CBE7B6450A.key.age;
     };
   };
 }
