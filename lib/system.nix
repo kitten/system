@@ -77,6 +77,7 @@
     nixpkgs.lib.nixosSystem {
       inherit system specialArgs lib;
       modules = systemModules ++ [
+        inputs.tangled.nixosModules.knot
         inputs.yeetmouse.nixosModules.default
         inputs.agenix.nixosModules.default
         home-manager.nixosModules.home-manager {
