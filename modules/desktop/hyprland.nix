@@ -25,6 +25,7 @@ let
       kb_model=${cfg.hyprland.input.kb_model}
       kb_variant=${cfg.hyprland.input.kb_variant}
       sensitivity=${toString cfg.hyprland.input.sensitivity}
+      accel_profile = "flat"
     }
 
     misc {
@@ -34,7 +35,6 @@ let
     }
 
     render {
-      explicit_sync=0
       direct_scanout=1
       expand_undersized_textures=false
       cm_fs_passthrough=1

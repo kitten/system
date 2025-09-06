@@ -145,7 +145,6 @@
       inherit overlays;
       system = "aarch64-linux";
       hostname = "ramune";
-      modules = [ inputs.tangled.nixosModules.knot ];
     };
 
     overlays = {

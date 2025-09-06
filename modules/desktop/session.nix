@@ -56,7 +56,7 @@ in {
       };
       upower.enable = true;
       gvfs.enable = true;
-      logind = {
+      logind.settings.Login = {
         powerKey = "suspend";
         powerKeyLongPress = "poweroff";
         lidSwitch = "suspend";

@@ -22,29 +22,36 @@ in {
       publicKeys = [
         { source = ./assets/pubring.asc; trust = "ultimate"; }
       ];
+      scdaemonSettings = {
+        disable-ccid = true;
+      };
     };
 
     services.gpg-agent = {
       enable = true;
       enableSshSupport = true;
+      enableScDaemon = false;
       verbose = true;
-      sshKeys = [ "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5" ];
-      defaultCacheTtl = 1;
-      defaultCacheTtlSsh = 1;
-      maxCacheTtl = 10;
-      maxCacheTtlSsh = 10;
+      defaultCacheTtl = 20;
+      defaultCacheTtlSsh = 20;
+      maxCacheTtl = 60;
+      maxCacheTtlSsh = 60;
       noAllowExternalCache = true;
-      pinentry = helpers.mkIfDarwin {
-        package = pkgs.pinentry-touchid;
-        program = "pinentry-touchid";
-      };
+      pinentry = mkMerge [
+        (helpers.mkIfDarwin {
+          package = pkgs.pinentry-touchid;
+          program = "pinentry-touchid";
+        })
+        (helpers.mkIfLinux {
+          package = pkgs.pinentry-all;
+          program = "pinentry-qt";
+        })
+      ];
     };
 
     systemd.user.services.gpg-agent.Service.Slice = "session.slice";
 
     modules.git.signingKey = mkDefault "4EAF3D43CDBB01C9";
-
-    home.file."${home}/sshcontrol".text = "DDA4674BEB2FBE8A1EFB6F542FA66EDC2BFD54F5";
 
     # ed25519 2025-09-06 [C]
     age.secrets."147CBD801C5E0D0C27DD006653D3D96FF952F652.key" = {
