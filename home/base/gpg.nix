@@ -20,6 +20,7 @@ in {
       mutableKeys = true;
       mutableTrust = true;
       publicKeys = [
+        # gpg -a --export
         { source = ./assets/pubring.asc; trust = "ultimate"; }
       ];
       scdaemonSettings = {
