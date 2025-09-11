@@ -192,7 +192,7 @@ in {
         pretty.longline = "tformat:%C(yellow)%h %Cred%D %Creset%<(50,mtrunc)%s %Cblue(%cd, %al)";
 
         "remote \"origin\"" = {
-          fetch = "+refs/pull/*/merge:refs/remotes/origin/pr/*";
+          fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
           partialclonefilter = "blob:none";
           tagOpt = "--no-tags";
           promisor = true;
