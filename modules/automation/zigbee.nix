@@ -58,7 +58,10 @@ in {
       enable = true;
       settings = {
         permit_join = cfg.zigbee.permitJoin;
-        serial.port = cfg.zigbee.serialPort;
+        serial = {
+          adapter = "zstack";
+          port = cfg.zigbee.serialPort;
+        };
         frontend = if cfg.zigbee.frontend.enable then cfg.zigbee.frontend else false;
         ota.disable_automatic_update_check = true;
         mqtt = mkIf cfg.mqtt.enable {
