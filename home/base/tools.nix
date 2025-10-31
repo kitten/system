@@ -18,9 +18,11 @@ in
       sd
       fd
       jq
+      ast-grep
     ];
     shellAliases = {
       http = "xh";
+      sg = "ast-grep";
     };
   };
 
