@@ -20,7 +20,6 @@ in {
     services.miniupnpd = {
       enable = true;
       upnp = true;
-      natpmp = true;
       internalIPs = if intern != null then [ intern.name ] else [];
       externalInterface = extern.name;
       appendConfig = ''
@@ -31,10 +30,6 @@ in {
         allow 1024-65535 ${intern.cidr} 1024-65535
         deny 0-65535 0.0.0.0/0 0-65535
       '';
-    };
-
-    systemd.services.miniupnpd = {
-      after = [ "network-online.target" ];
     };
   };
 }

@@ -25,12 +25,11 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.tangled.enable) {
-    services.tangled-knot = {
+    services.tangled.knot = {
       enable = true;
       openFirewall = true;
       server = {
         hostname = cfg.tangled.hostname;
-        listenAddr = "127.0.0.1:5555";
         owner = cfg.tangled.owner;
       };
     };
@@ -45,17 +44,18 @@ in helpers.linuxAttrs {
           fsckObjects = true;
           autogc = true;
         };
-
-        include.path = "/etc/gitconfig.private";
+        include.path = config.age.secrets."gitconfig.private".path;
       };
     };
 
-    age.secrets."gitconfig.private" = {
+    age.secrets."gitconfig.private" = let
+      user = config.services.tangled.knot.gitUser;
+    in {
       symlink = false;
       path = "/etc/gitconfig.private";
       file = ./encrypt/gitconfig.age;
-      owner = cfg.tangled.owner;
-      group = cfg.tangled.owner;
+      owner = user;
+      group = user;
       mode = "0444";
     };
   };

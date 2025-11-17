@@ -49,7 +49,7 @@ let
 
   knotConfig = if knotEnabled then ''
     ${cfg.tangled.hostname} {
-      reverse_proxy localhost:5555
+      reverse_proxy ${config.services.tangled.knot.server.listenAddr}
     }
   '' else "";
 
