@@ -19,7 +19,7 @@ in {
     };
 
     cell_adjust = mkOption {
-      default = if helpers.isDarwin then -1 else "-2%";
+      default = if helpers.isDarwin then 0 else "-2%";
       type = types.either types.int types.str;
     };
 
@@ -29,7 +29,7 @@ in {
     };
 
     window_padding_y = mkOption {
-      default = if helpers.isDarwin then 3 else 0;
+      default = 0;
       type = types.int;
     };
   };
