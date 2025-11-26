@@ -21,6 +21,7 @@ in {
     services.openssh = {
       enable = true;
     } // helpers.linuxAttrs {
+      settings.PermitRootLogin = mkDefault "no";
       openFirewall = mkDefault (!config.modules.router.enable);
       ports = [ 22 2222 ];
     };
