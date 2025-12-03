@@ -75,8 +75,6 @@ in {
 
     programs.git = {
       enable = true;
-      userName = cfg.user.name;
-      userEmail = cfg.user.email;
 
       signing = mkIf (cfg.signingKey != null) {
         signByDefault = true;
@@ -95,21 +93,23 @@ in {
         enable = true;
       };
 
-      aliases = {
-        s = "status -s";
-        last = "log -1";
-        lol = "log --pretty=longline --decorate --date=relative";
-        lrel = "log --pretty=longline --pretty=longline --graph --decorate --date=relative --boundary remotes/origin/HEAD...HEAD";
-        lloc = "log --pretty=longline --graph --decorate --date=relative --boundary ^remotes/origin/HEAD HEAD";
-        recommit = "commit -a --amend --no-edit";
-        pushf = "push --force-with-lease";
-        glog = "log --pretty=longline --decorate --all --graph --date=relative";
-        base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
-        journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
-        get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
-      };
+      settings = {
+        user = cfg.user;
 
-      extraConfig = {
+        alias = {
+          s = "status -s";
+          last = "log -1";
+          lol = "log --pretty=longline --decorate --date=relative";
+          lrel = "log --pretty=longline --pretty=longline --graph --decorate --date=relative --boundary remotes/origin/HEAD...HEAD";
+          lloc = "log --pretty=longline --graph --decorate --date=relative --boundary ^remotes/origin/HEAD HEAD";
+          recommit = "commit -a --amend --no-edit";
+          pushf = "push --force-with-lease";
+          glog = "log --pretty=longline --decorate --all --graph --date=relative";
+          base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
+          journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
+          get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
+        };
+
         commit.gpgSign = true;
         tag.gpgSign = true;
         push.gpgSign = "if-asked";
