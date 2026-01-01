@@ -6,7 +6,7 @@ let
 in {
   options.modules.desktop.tools = {
     enable = mkOption {
-      default = cfg.enable;
+      default = false;
       example = true;
       description = "Whether to enable basic desktop tools.";
       type = types.bool;

@@ -1,0 +1,8 @@
+spawn-at-startup "cosmic-ext-alternative-startup"
+
+binds {
+  Super+T { spawn "ghostty"; }
+  Super+Space { spawn "cosmic-launcher"; }
+  Super+Shift+Space { spawn "cosmic-app-library"; }
+  Super+Alt+L { spawn "cosmic-greeter"; }
+}

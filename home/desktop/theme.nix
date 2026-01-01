@@ -7,7 +7,7 @@ let
 in {
   options.modules.desktop.theme = {
     enable = mkOption {
-      default = cfg.enable;
+      default = false;
       example = true;
       description = "Whether to enable theming configuration.";
       type = types.bool;

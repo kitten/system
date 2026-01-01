@@ -17,7 +17,7 @@ let
 in {
   options.modules.desktop.hyprland = {
     enable = mkOption {
-      default = cfg.enable;
+      default = false;
       example = true;
       description = "Whether to enable Hyprland configuration.";
       type = types.bool;
