@@ -216,13 +216,16 @@ in {
       upower.enable = true;
 
       acpid.enable = mkDefault true;
-      gnome.gnome-keyring.enable = mkDefault true;
       gvfs.enable = mkDefault true;
+      gnome = {
+        gnome-keyring.enable = mkDefault true;
+        gcr-ssh-agent.enable = mkDefault false;
+      };
 
       logind.settings.Login = {
-        powerKey = "suspend";
-        powerKeyLongPress = "poweroff";
-        lidSwitch = "suspend";
+        powerKey = mkDefault "suspend";
+        powerKeyLongPress = mkDefault "poweroff";
+        lidSwitch = mkDefault "suspend";
       };
 
       geoclue2 = {
