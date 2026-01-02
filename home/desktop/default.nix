@@ -12,5 +12,6 @@ with lib; {
 
   imports = [
     ./niri/default.nix
+    ./tools.nix
   ];
 }
