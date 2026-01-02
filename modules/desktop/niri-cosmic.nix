@@ -22,6 +22,8 @@ let
     cosmic-settings
     cosmic-settings-daemon
     cosmic-workspaces-epoch
+    pop-icon-theme
+    pop-launcher
   ];
 
   optionalPackages = with pkgs; [
