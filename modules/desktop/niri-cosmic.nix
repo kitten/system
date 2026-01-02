@@ -24,20 +24,9 @@ let
     cosmic-workspaces-epoch
   ];
 
-  supportPackages = with pkgs; [
-    adwaita-icon-theme
-    alsa-utils
-    glib
-    hicolor-icon-theme
-    playerctl
-    pop-icon-theme
-    pop-launcher
-    pulseaudio
-    xdg-user-dirs
-  ];
-
   optionalPackages = with pkgs; [
     xwayland-satellite
+    xdg-user-dirs
     cosmic-icons
     cosmic-screenshot
     cosmic-wallpapers
@@ -190,7 +179,7 @@ in {
         "/share/cosmic-layouts"
         "/share/cosmic-themes"
       ];
-      systemPackages = corePackages ++ supportPackages ++ optionalPackages ++ [
+      systemPackages = corePackages ++ optionalPackages ++ [
         cosmic-base-config
       ];
       sessionVariables = {
