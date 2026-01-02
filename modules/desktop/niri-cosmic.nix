@@ -54,6 +54,11 @@ let
       "com.system76.CosmicComp/v1/autotile_behavior" = ''
         PerWorkspace
       '';
+      "com.system76.CosmicPanel/v1/entries" = ''
+        [
+          "Panel",
+        ]
+      '';
     };
     fileDrvs =
       attrsets.mapAttrsToList
