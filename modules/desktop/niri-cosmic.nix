@@ -43,27 +43,48 @@ let
     cosmic-wallpapers
   ];
 
+  cosmic-configs = {
+    "com.system76.CosmicComp/v1/workspaces" = ''
+      (
+        workspace_mode: OutputBound,
+        workspace_layout: Horizontal,
+      )
+    '';
+    "com.system76.CosmicComp/v1/autotile_behavior" = ''
+      PerWorkspace
+    '';
+    "com.system76.CosmicPanel/v1/entries" = ''
+      [
+        "Panel",
+      ]
+    '';
+    "com.system76.CosmicTk/v1/interface_font" = let
+      defaultFont = head config.fonts.fontconfig.defaultFonts.sansSerif;
+    in ''
+      (
+          family: "${defaultFont}",
+          weight: Normal,
+          stretch: Normal,
+          style: Normal,
+      )
+    '';
+    "com.system76.CosmicTk/v1/monospace_font" = let
+      defaultFont = head config.fonts.fontconfig.defaultFonts.monospace;
+    in ''
+      (
+          family: "${defaultFont}",
+          weight: Normal,
+          stretch: Normal,
+          style: Normal,
+      )
+    '';
+  };
+
   cosmic-base-config = let
-    configs = {
-      "com.system76.CosmicComp/v1/workspaces" = ''
-        (
-          workspace_mode: OutputBound,
-          workspace_layout: Horizontal,
-        )
-      '';
-      "com.system76.CosmicComp/v1/autotile_behavior" = ''
-        PerWorkspace
-      '';
-      "com.system76.CosmicPanel/v1/entries" = ''
-        [
-          "Panel",
-        ]
-      '';
-    };
     fileDrvs =
       attrsets.mapAttrsToList
         (name: text: pkgs.writeTextDir "share/cosmic/${name}" text)
-        configs;
+        cosmic-configs;
   in pkgs.buildEnv {
     name = "cosmic-base-config";
     paths = fileDrvs;
@@ -74,7 +95,12 @@ let
     startCosmicExtNiri = pkgs.writeShellApplication {
       name = "start-cosmic-ext-niri";
       runtimeInputs = with pkgs; [ systemd coreutils ];
-      text = with pkgs; /*sh*/''
+      text = with pkgs; let
+        cleanupCosmicConfigs =
+          concatMapAttrsStringSep "\n"
+            (name: _value: ''rm -f "$XDG_CONFIG_HOME/cosmic/${name}"'')
+            cosmic-configs;
+      in /*sh*/''
         set -e
 
         if systemctl --user -q is-active cosmic-niri-session.service; then
@@ -90,6 +116,10 @@ let
             fi
           done
         done
+
+        XDG_CONFIG_HOME="''${XDG_CONFIG_HOME:-$HOME/.config}"
+        touch "$XDG_CONFIG_HOME/cosmic-initial-setup-done"
+        ${cleanupCosmicConfigs}
 
         export XDG_CURRENT_DESKTOP="''${XDG_CURRENT_DESKTOP:=niri}"
         export XDG_SESSION_TYPE="''${XDG_SESSION_TYPE:=wayland}"
