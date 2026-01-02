@@ -1,5 +1,3 @@
-spawn-at-startup "cosmic-ext-alternative-startup"
-
 binds {
   Super+T { spawn "ghostty"; }
   Super+Space { spawn "cosmic-launcher"; }

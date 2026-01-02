@@ -192,7 +192,6 @@ in {
       ];
       systemPackages = corePackages ++ supportPackages ++ optionalPackages ++ [
         cosmic-base-config
-        cosmic-ext-alternative-startup
       ];
       sessionVariables = {
         X11_BASE_RULES_XML = "${config.services.xserver.xkb.dir}/rules/base.xml";
@@ -253,22 +252,30 @@ in {
       user.services = {
         cosmic-niri-session = let
           set-environment = config.system.build.setEnvironment;
+          init-session = pkgs.writeShellScriptBin "init-cosmic-niri-session" /*sh*/ ''
+            XDG_CONFIG_HOME="''${XDG_CONFIG_HOME:-$HOME/.config}"
+            NIRI_CONFIG="''${NIRI_CONFIG:-$XDG_CONFIG_HOME/niri/config.kdl}"
+            printf "%s\n" \
+              "spawn-at-startup \"${getExe cosmic-ext-alternative-startup}\"" \
+              "include \"$NIRI_CONFIG\"" \
+              > "$RUNTIME_DIRECTORY/.niri-config.kdl"
+          '';
           run-session = pkgs.writeShellScriptBin "run-cosmic-niri-session" /*sh*/''
             source ${set-environment}
             ${getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
+            export NIRI_CONFIG="$RUNTIME_DIRECTORY/.niri-config.kdl"
             exec ${getBin pkgs.cosmic-session}/bin/cosmic-session ${getBin pkgs.niri}/bin/niri --session
           '';
         in {
           bindsTo = [ "graphical-session.target" ];
           serviceConfig = {
-            Environment = [
-              "RUST_BACKTRACE=1"
-              "RUST_LOG=info"
-            ];
+            RuntimeDirectory = "cosmic-niri-session";
+            RuntimeDirectoryMode = "0700";
             Type = "notify";
             NotifyAccess = "all";
             Slice = "session.slice";
             Restart = "on-failure";
+            ExecStartPre = getExe init-session;
             ExecStart = getExe run-session;
           };
         };
