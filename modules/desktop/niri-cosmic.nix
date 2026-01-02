@@ -288,14 +288,12 @@ in {
       portal = {
         enable = true;
         xdgOpenUsePortal = true;
-        configPackages = mkDefault [ pkgs.xdg-desktop-portal-cosmic ];
         extraPortals = with pkgs; [
           xdg-desktop-portal-gnome
-          xdg-desktop-portal-cosmic
           xdg-desktop-portal-gtk
         ];
         config.niri = {
-          default = [ "gnome" "cosmic" "gtk" ];
+          default = [ "gnome" "gtk" ];
           "org.freedesktop.impl.portal.Access" = "gtk";
           "org.freedesktop.impl.portal.Notification" = "gtk";
           "org.freedesktop.impl.portal.Secret" = "gnome-keyring";
