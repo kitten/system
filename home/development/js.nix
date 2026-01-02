@@ -3,7 +3,7 @@
 with lib;
 let
   cfg = config.modules.development;
-  hasReactNative = config.modules.development.enable;
+  hasReactNative = config.modules.development.react-native.enable;
   NPMRC_PATH = "${config.xdg.configHome}/npm/npmrc";
   BUNFIG_PATH = "${config.xdg.configHome}/.bunfig.toml";
   BUN_HOME = "${config.xdg.dataHome}/bun";
