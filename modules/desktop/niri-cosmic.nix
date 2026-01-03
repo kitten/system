@@ -18,6 +18,7 @@ let
     cosmic-notifications
     cosmic-osd
     cosmic-panel
+    cosmic-randr
     cosmic-session
     cosmic-settings
     cosmic-settings-daemon
@@ -30,6 +31,7 @@ let
     xwayland-satellite
     xdg-user-dirs
     cosmic-icons
+    cosmic-player
     cosmic-screenshot
     cosmic-wallpapers
   ];
