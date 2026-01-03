@@ -21,13 +21,23 @@ in {
   };
 
   config = mkIf (cfg.enable && cfg.games.enable) {
-    boot.kernel.sysctl = {
-      "kernel.unprivileged_userns_clone" = true;
+    boot = {
+      kernel.sysctl."kernel.unprivileged_userns_clone" = true;
+      kernelModules = [ "ntsync" ];
     };
 
     environment.sessionVariables = {
       PROTONPATH = "${pkgs.proton-ge-bin.steamcompattool}/";
+      PROTON_USE_NTSYNC = mkDefault 1;
     };
+
+    services.udev.packages = [
+      (pkgs.writeTextFile {
+        name = "ntsync-udev-rules";
+        text = ''KERNEL=="ntsync", MODE="0660", TAG+="uaccess"'';
+        destination = "/etc/udev/rules.d/70-ntsync.rules";
+      })
+    ];
 
     hardware.steam-hardware.enable = true;
     users.users."${user}".extraGroups = [ "gamemode" ];
@@ -49,13 +59,11 @@ in {
         });
         env = {
           PROTON_ENABLE_WAYLAND = "1";
-          PROTON_ENABLE_HDR = "1";
         };
         args = [
           "--backend" "wayland"
           "--adaptive-sync"
           "--expose-wayland"
-          "--hdr-enabled"
           "--immediate-flips"
           "--force-grab-cursor"
           "--rt"
