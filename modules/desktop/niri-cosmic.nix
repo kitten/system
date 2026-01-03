@@ -188,11 +188,14 @@ in {
         X11_BASE_RULES_XML = "${config.services.xserver.xkb.dir}/rules/base.xml";
         X11_EXTRA_RULES_XML = "${config.services.xserver.xkb.dir}/rules/base.extras.xml";
 
-        GSK_RENDERER = mkDefault "ngl";
+        _JAVA_AWT_WM_NONREPARENTING = mkDefault 1;
+        QT_AUTO_SCREEN_SCALE_FACTOR = mkDefault 1;
+        QT_ENABLE_HIGHDPI_SCALING = mkDefault 1;
         QT_QPA_PLATFORM = mkDefault "wayland;xcb";
         GDK_BACKEND = mkDefault "wayland,x11,*";
         SDL_VIDEODRIVER = mkDefault "wayland,x11";
         NIXOS_OZONE_WL = mkDefault 1;
+        MOZ_ENABLE_WAYLAND = mkDefault 1;
         COSMIC_DATA_CONTROL_ENABLED = mkDefault 1;
       };
     };

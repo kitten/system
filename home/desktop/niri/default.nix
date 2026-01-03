@@ -15,5 +15,11 @@ in {
 
   config = mkIf cfg.niri.enable {
     xdg.configFile."niri/config.kdl".text = (builtins.readFile ./config.kdl);
+
+    systemd.user.sessionVariables = {
+      XCURSOR_THEME = "Cosmic";
+      GTK_THEME = "Adwaita:dark";
+      QT_STYLE_OVERRIDE = "adwaita-dark";
+    };
   };
 }
