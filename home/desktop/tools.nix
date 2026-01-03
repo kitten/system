@@ -14,19 +14,9 @@ in {
   };
 
   config = mkIf cfg.tools.enable {
-    home.packages = with pkgs; let
-      switchboard = (pkgs.pantheon.switchboard-with-plugs.override {
-        useDefaultPlugs = false;
-        plugs = with pkgs.pantheon; [
-          switchboard-plug-sound
-          switchboard-plug-network
-          switchboard-plug-bluetooth
-        ];
-      });
-    in [
+    home.packages = with pkgs; [
       pwvucontrol
       mission-center
-      switchboard
     ];
   };
 }

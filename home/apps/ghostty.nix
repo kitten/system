@@ -108,7 +108,6 @@ in {
 
         mouse-hide-while-typing = true
         mouse-shift-capture = true
-        mouse-scroll-multiplier = 0.7
 
         clipboard-read = allow
         clipboard-paste-protection = false

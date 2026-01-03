@@ -18,16 +18,11 @@ in {
   };
 } // helpers.linuxAttrs {
   imports = [
-    ./session.nix
     ./affinity.nix
     ./fonts.nix
     ./rawaccel.nix
     ./audio.nix
     ./networking.nix
-    ./hyprland.nix
+    ./niri-cosmic.nix
   ];
-
-  config = mkIf cfg.enable {
-    users.users."${user}".extraGroups = [ "video" ];
-  };
 }

@@ -11,8 +11,7 @@ with lib; {
   };
 
   imports = [
-    ./hyprland.nix
-    ./theme.nix
+    ./niri/default.nix
     ./tools.nix
   ];
 }

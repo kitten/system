@@ -43,7 +43,7 @@ in {
           program = "pinentry-touchid";
         })
         (helpers.mkIfLinux {
-          package = pkgs.pinentry-all;
+          package = pkgs.pinentry-gnome3;
           program = "pinentry";
         })
       ];

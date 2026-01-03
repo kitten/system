@@ -36,6 +36,8 @@ in {
   };
 
   config = mkIf cfg.audio.enable {
+    xdg.sounds.enable = true;
+
     security.rtkit.enable = true;
 
     services = {

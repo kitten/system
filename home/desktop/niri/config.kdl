@@ -1,0 +1,118 @@
+prefer-no-csd
+
+binds {
+  Mod+T { spawn "ghostty"; }
+  Mod+Space { spawn "cosmic-launcher"; }
+  Mod+Shift+Space { spawn "cosmic-app-library"; }
+
+  Mod+Escape repeat=false { toggle-keyboard-shortcuts-inhibit; }
+
+  Mod+O repeat=false { toggle-overview; }
+  Mod+W repeat=false { close-window; }
+
+  Mod+F       { maximize-column; }
+  Mod+Shift+F { fullscreen-window; }
+  Mod+Z       { center-column; }
+
+  Mod+Minus { set-column-width "-10%"; }
+  Mod+Equal { set-column-width "+10%"; }
+
+  Mod+Left  { focus-column-left; }
+  Mod+Down  { focus-window-down; }
+  Mod+Up    { focus-window-up; }
+  Mod+Right { focus-column-right; }
+  Mod+H     { focus-column-left; }
+  Mod+J     { focus-window-or-workspace-down; }
+  Mod+K     { focus-window-or-workspace-up; }
+  Mod+L     { focus-column-right; }
+
+  Mod+Ctrl+Left  { move-column-left; }
+  Mod+Ctrl+Down  { move-window-down; }
+  Mod+Ctrl+Up    { move-window-up; }
+  Mod+Ctrl+Right { move-column-right; }
+  Mod+Ctrl+H     { move-column-left; }
+  Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
+  Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
+  Mod+Ctrl+L     { move-column-right; }
+
+  Mod+Shift+Left  { focus-monitor-left; }
+  Mod+Shift+Down  { focus-monitor-down; }
+  Mod+Shift+Up    { focus-monitor-up; }
+  Mod+Shift+Right { focus-monitor-right; }
+  Mod+Shift+H     { focus-monitor-left; }
+  Mod+Shift+J     { focus-monitor-down; }
+  Mod+Shift+K     { focus-monitor-up; }
+  Mod+Shift+L     { focus-monitor-right; }
+
+  Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+  Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+  Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+  Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+  Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+  Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+  Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+  Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+
+  Mod+Page_Down      { focus-workspace-down; }
+  Mod+Page_Up        { focus-workspace-up; }
+  Mod+U              { focus-workspace-down; }
+  Mod+I              { focus-workspace-up; }
+  Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+  Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
+  Mod+Ctrl+U         { move-column-to-workspace-down; }
+  Mod+Ctrl+I         { move-column-to-workspace-up; }
+
+  Mod+Shift+Page_Down { move-workspace-down; }
+  Mod+Shift+Page_Up   { move-workspace-up; }
+  Mod+Shift+U         { move-workspace-down; }
+  Mod+Shift+I         { move-workspace-up; }
+
+  Mod+WheelScrollDown { focus-column-right; }
+  Mod+WheelScrollUp   { focus-column-left; }
+
+  Mod+BracketLeft  { consume-or-expel-window-left; }
+  Mod+BracketRight { consume-or-expel-window-right; }
+  Mod+Comma        { consume-window-into-column; }
+  Mod+Period       { expel-window-from-column; }
+
+  Print { screenshot; }
+  Ctrl+Print { screenshot-screen; }
+  Alt+Print { screenshot-window; }
+}
+
+input {
+  warp-mouse-to-focus
+}
+
+layout {
+  gaps 16
+  center-focused-column "never"
+
+  focus-ring {
+    width 2
+  }
+}
+
+cursor {
+  hide-after-inactive-ms 2000
+}
+
+hotkey-overlay {
+  hide-not-bound
+}
+
+window-rule {
+  match title="^Picture-in-Picture$"
+  open-floating true
+}
+
+window-rule {
+  match is-urgent=true
+  match is-floating=true
+  open-focused true
+}
+
+window-rule {
+  geometry-corner-radius 9
+  clip-to-geometry true
+}
