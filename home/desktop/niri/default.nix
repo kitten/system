@@ -82,7 +82,11 @@ in {
         }
       ];
 
-      binds = {
+      binds = let
+        wpctl = "${getBin pkgs.wireplumber}/bin/wpctl";
+        brightnessctl = "${getBin pkgs.brightnessctl}/bin/brightnessctl";
+        playerctl = "${getBin config.services.playerctld.package}/bin/playerctl";
+      in {
         "Mod+T".action.spawn = "ghostty";
         "Mod+Space".action.spawn = "cosmic-launcher";
         "Mod+Shift+Space".action.spawn = "cosmic-app-library";
@@ -170,8 +174,21 @@ in {
         "Print".action.screenshot = {};
         "Ctrl+Print".action.screenshot-screen = {};
         "Alt+Print".action.screenshot-window = {};
+
+        "XF86AudioRaiseVolume".action.spawn = map escapeShellArg [ wpctl "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "3%+" ];
+        "XF86AudioLowerVolume".action.spawn = map escapeShellArg [ wpctl "set-volume" "-l" "1.0" "@DEFAULT_AUDIO_SINK@" "3%-" ];
+        "XF86AudioMute".action.spawn = map escapeShellArg [ wpctl "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle" ];
+        "XF86AudioMicMute".action.spawn = map escapeShellArg [ wpctl "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle" ];
+        "XF86MonBrightnessDown".action.spawn = map escapeShellArg [ brightnessctl "set" "3%-" ];
+        "XF86MonBrightnessUp".action.spawn = map escapeShellArg [ brightnessctl "set" "+3%" ];
+        "XF86AudioPlay".action.spawn = map escapeShellArg [ playerctl "play-pause" ];
+        "XF86AudioPause".action.spawn = map escapeShellArg [ playerctl "pause" ];
+        "XF86AudioNext".action.spawn = map escapeShellArg [ playerctl "next" ];
+        "XF86AudioPrev".action.spawn = map escapeShellArg [ playerctl "previous" ];
       };
     };
+
+    services.playerctld.enable = mkDefault true;
 
     xdg.configFile.niri-config = {
       target = "niri/config.kdl";
