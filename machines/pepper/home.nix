@@ -2,7 +2,17 @@
 
 {
   modules = {
-    desktop.enable = true;
+    desktop = {
+      enable = true;
+      niri.settings.outputs."Samsung Electric Company Odyssey G60SD HNAX300205" = {
+        variable-refresh-rate = true;
+        mode = {
+          width = 2560;
+          height = 1440;
+          refresh = 359.999;
+        };
+      };
+    };
     development = {
       enable = true;
       zig.enable = false;
