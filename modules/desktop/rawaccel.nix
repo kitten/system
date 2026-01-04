@@ -17,14 +17,14 @@ in {
     hardware.yeetmouse = {
       enable = true;
       sensitivity = 0.56;
-      offset = 5.9;
-      inputCap = 35.0;
-      preScale = 0.17;
-      rotation.angle = 3.0;
-      mode.jump = {
-        acceleration = 3.97;
-        midpoint = 4.1;
-        smoothness = 1.0;
+      offset = 11.6;
+      inputCap = 35.4;
+      preScale = 800.0 / 1600.0;
+      rotation.angle = 5.0;
+      mode.classic = {
+        acceleration = 0.0398 * 1.3333;
+        exponent = 3.28;
+        smoothCap = 5.0;
         useSmoothing = true;
       };
     };

@@ -11,13 +11,6 @@ in {
       description = "Whether to enable games.";
       type = types.bool;
     };
-
-    hdr = mkOption {
-      default = cfg.games.enable;
-      example = true;
-      description = "Whether to enable HDR.";
-      type = types.bool;
-    };
   };
 
   config = mkIf (cfg.enable && cfg.games.enable) {
@@ -28,6 +21,7 @@ in {
 
     environment.sessionVariables = {
       PROTONPATH = "${pkgs.proton-ge-bin.steamcompattool}/";
+      PROTON_ENABLE_WAYLAND = mkDefault 1;
       PROTON_USE_NTSYNC = mkDefault 1;
     };
 
@@ -50,30 +44,6 @@ in {
 
     programs = {
       gamemode.enable = true;
-      gamescope = {
-        enable = true;
-        package = pkgs.gamescope.overrideAttrs (old: {
-          enableWsi = true;
-          enableExecutable = true;
-          NIX_CFLAGS_COMPILE = [ "-fno-fast-math" "-fno-omit-frame-pointer" ];
-        });
-        env = {
-          PROTON_ENABLE_WAYLAND = "1";
-        };
-        args = [
-          "--backend" "wayland"
-          "--adaptive-sync"
-          "--expose-wayland"
-          "--immediate-flips"
-          "--force-grab-cursor"
-          "--rt"
-          "-f"
-          "-S" "fit"
-          "-W" "2560"
-          "-H" "1440"
-          "-r" "360"
-        ];
-      };
       steam = {
         enable = true;
         package = pkgs.steam.override {

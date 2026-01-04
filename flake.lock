@@ -1093,16 +1093,16 @@
       },
       "locked": {
         "dir": "nix",
-        "lastModified": 1766418762,
-        "narHash": "sha256-TMEwb+kecsxOqFt3czzUWYOP+f154hZT2jXChmbjhAY=",
-        "owner": "AndyFilter",
+        "lastModified": 1767535906,
+        "narHash": "sha256-vWfL353H1wU7EkISZOTjhSZhlRkXgVz0szl81uOU2n8=",
+        "owner": "kitten",
         "repo": "yeetmouse",
-        "rev": "4e3247a4b0ae76bc2af5b8826febed8aeef8a742",
+        "rev": "9753ce8918a91273c8fae5a60a2127e196178ded",
         "type": "github"
       },
       "original": {
         "dir": "nix",
-        "owner": "AndyFilter",
+        "owner": "kitten",
         "repo": "yeetmouse",
         "type": "github"
       }
