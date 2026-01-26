@@ -498,6 +498,11 @@ lsp_setup('terraformls', {
   flags = { debounce_text_changes = 200 },
 })
 
+lsp_setup('sourcekit', {
+  cmd = { nix_bins.sourcekitls },
+  flags = { debounce_text_changes = 200 },
+})
+
 lsp_setup('zls', {
   cmd = { nix_bins.zls },
   flags = { debounce_text_changes = 200 },
