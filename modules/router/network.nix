@@ -205,25 +205,27 @@ in {
 
     services.resolved = {
       enable = true;
-      llmnr = "false";
-      domains = [ "~." ];
-      fallbackDns = [
-        "1.0.0.1"
-        "8.8.4.4"
-      ] ++ (optionals cfg.ipv6 [
-        "2606:4700:4700::1001"
-        "2001:4860:4860::8844"
-      ]);
-      dnsovertls = "opportunistic";
-      extraConfig = strings.concatStringsSep "\n" [
-        "[Resolve]"
-        (optionalString cfg.mdns ''
-          MulticastDNS=yes
-        '')
-        (optionalString (intern != null) ''
-          DNSStubListener=yes
-          DNSStubListenerExtra=${ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)}
-        '')
+      settings.Resolve = mkMerge [
+        {
+          LLMNR = false;
+          Domains = [ "~." ];
+          FallbackDNS = [
+            "1.0.0.1"
+            "8.8.4.4"
+          ] ++ (optionals cfg.ipv6 [
+            "2606:4700:4700::1001"
+            "2001:4860:4860::8844"
+          ]);
+          DNSOverTLS = "opportunistic";
+          MulticastDNS = mkIf cfg.mdns true;
+        }
+        (mkIf cfg.mdns {
+          MulticastDNS = true;
+        })
+        (mkIf (intern != null) {
+          DNSStubListener = true;
+          DNSStubListenerExtra = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
+        })
       ];
     };
   };
