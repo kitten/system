@@ -15,7 +15,7 @@ let
     src = ./.;
     offlineCache = pkgs.fetchYarnDeps {
       yarnLock = src + "/yarn.lock";
-      hash = "sha256-a4zkEr/v6ZBTXS6Q5oij5G0zsGh1QCGa8/5Do0C/inM=";
+      hash = "sha256-JZX1il8e29gGeK49k9drNN1x3Rog+XClaScNCWUk0dE=";
     };
     strictDeps = true;
     nativeBuildInputs = with pkgs; [
@@ -205,7 +205,7 @@ in {
       requires = [ config.systemd.services.homebridge.name ];
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [
-        nodejs_20
+        nodejs
         nettools
         gcc
         gnumake
