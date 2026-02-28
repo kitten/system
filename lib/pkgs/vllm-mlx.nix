@@ -1,16 +1,86 @@
 self: pkgs @ {
   lib,
+  stdenv,
   python3Packages,
   fetchFromGitHub,
+  fixDarwinDylibNames,
   ...
 }:
 
 let
   pythonPackages = python3Packages.overrideScope (pself: psuper: {
+    inherit mlx;
     accelerate = psuper.accelerate.overridePythonAttrs {
       doCheck = false;
     };
   });
+
+  mlx-metal = pythonPackages.buildPythonPackage rec {
+    pname = "mlx_metal";
+    version = "0.30.5";
+    format = "wheel";
+
+    src = pythonPackages.fetchPypi {
+      inherit pname version format;
+      python = "py3";
+      dist = "py3";
+      platform = "macosx_15_0_arm64";
+      hash = "sha256-nOCxaexwQ9RtY6ewTgSP3VEkahNMjufsy537jbnz9Gg=";
+    };
+
+    dontStrip = true;
+    doCheck = false;
+  };
+
+  # See: https://github.com/aldur/dotfiles/blob/1b93ba9/nix/packages/mlx/default.nix
+  mlx = pythonPackages.buildPythonPackage rec {
+    pname = "mlx";
+    version = "0.30.5";
+    format = "wheel";
+
+    src = pythonPackages.fetchPypi {
+      inherit pname version format;
+      python = "cp313";
+      dist = "cp313";
+      abi = "cp313";
+      platform = "macosx_15_0_arm64";
+      hash = "sha256-jiTUDoxYJ6JC17i6I3nI7OV3a3Fj4FzrehEOwWFYL5E=";
+    };
+
+    nativeBuildInputs = [ fixDarwinDylibNames ];
+    dependencies = [ mlx-metal ];
+
+    postInstall = ''
+      libdir=${mlx-metal}/lib/python3.13/site-packages/mlx
+      cp -r "$libdir/lib" "$out/lib/python3.13/site-packages/mlx/"
+    '';
+
+    postFixup = lib.optionalString stdenv.isDarwin ''
+      libdir="$out/lib/python3.13/site-packages/mlx"
+
+      if [ -f "$libdir/lib/libmlx.dylib" ]; then
+        for so in "$libdir"/*.so; do
+          if [ -f "$so" ] && [ "$so" != "$libdir/core.cpython-313-darwin.so" ]; then
+            install_name_tool -add_rpath "$libdir/lib" "$so" 2>/dev/null || true
+            install_name_tool -change @rpath/libmlx.dylib "$libdir/lib/libmlx.dylib" "$so" 2>/dev/null || true
+          fi
+        done
+        exit 0
+      fi
+
+      echo "ERROR: libmlx.dylib not found after copying from mlx_metal"
+      exit 1
+    '';
+
+    dontStrip = true;
+    doCheck = false;
+    pythonImportsCheck = [ "mlx.core" ];
+
+    meta = {
+      platforms = lib.platforms.darwin;
+      broken = !stdenv.isDarwin || !stdenv.isAarch64;
+    };
+  };
 
   gradio = pythonPackages.gradio.overridePythonAttrs {
     pythonRelaxDeps = true;
