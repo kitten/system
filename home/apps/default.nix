@@ -17,6 +17,7 @@ with lib; {
     ./zen-browser.nix
     ./obsidian.nix
     ./ollama.nix
+    ./vllm.nix
     ./minecraft.nix
     ./ghostty.nix
     ./wezterm
