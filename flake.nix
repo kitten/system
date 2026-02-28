@@ -156,7 +156,8 @@
         pinentry-touchid
         steamworks-sdk-redist
         systemd-transparent-udp-forwarderd
-        force-bind;
+        force-bind
+        vllm-mlx;
     });
 
     apps = eachSystem (system: import ./lib/apps {
