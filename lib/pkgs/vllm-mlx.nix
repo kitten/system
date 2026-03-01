@@ -125,14 +125,14 @@ let
 
 in pythonPackages.buildPythonApplication rec {
   pname = "vllm-mlx";
-  version = "0.2.6";
+  version = "0.3.0-kitten.d9694ae";
   pyproject = true;
 
   src = fetchFromGitHub {
-    owner = "waybarrios";
+    owner = "kitten";
     repo = "vllm-mlx";
-    rev = "v${version}";
-    hash = "sha256-cLit8xU9ihEEj4siOAl+mPaETN68z3hpiOUGMHzUKgw=";
+    rev = "d9694aefcd2dd1985409076bb1b9a80b59b04ab0";
+    hash = "sha256-oQ0D29g3psLk4ux2QwpTz+TrtOLISjmVzyeBtwjtWO4=";
   };
 
   build-system = with pythonPackages; [
