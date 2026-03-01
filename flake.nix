@@ -157,7 +157,8 @@
         steamworks-sdk-redist
         systemd-transparent-udp-forwarderd
         force-bind
-        vllm-mlx;
+        vllm-mlx
+        llama-cpp;
     });
 
     apps = eachSystem (system: import ./lib/apps {

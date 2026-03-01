@@ -12,4 +12,5 @@ self: super: {
   palworld-server = import ./palworld-server.nix self super;
   pinentry-touchid = import ./pinentry-touchid.nix self super;
   vllm-mlx = import ./vllm-mlx.nix self super;
+  llama-cpp = import ./llama-cpp.nix self super;
 }
