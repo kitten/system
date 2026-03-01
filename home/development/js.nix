@@ -74,8 +74,6 @@ in {
       corepack_22
       nodejs_22
     ]
-      ++ optionals cfg.js.bun [ pkgs.bun ]
-      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ]
-      ++ optionals hasReactNative [ pkgs.flow ];
+      ++ optionals cfg.js.bun [ pkgs.bun ];
   };
 }
