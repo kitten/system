@@ -11,6 +11,8 @@ in
   "./modules/server/encrypt/tangled-knot-ssh.age".publicKeys = keys;
   "./modules/server/encrypt/gitconfig.age".publicKeys = keys;
 
+  "./modules/router/encrypt/pppoe-options.age".publicKeys = keys;
+
   "./home/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
   "./home/fonts/encrypt/DankMono-Bold.otf.age".publicKeys = keys;
   "./home/fonts/encrypt/DankMono-Italic.otf.age".publicKeys = keys;

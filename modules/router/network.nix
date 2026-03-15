@@ -1,4 +1,4 @@
-{ lib, config, ... } @ inputs:
+{ lib, pkgs, config, ... } @ inputs:
 
 with lib;
 let
@@ -41,6 +41,22 @@ let
     };
   };
 
+  pppType = types.submodule {
+    options = {
+      enable = mkOption {
+        default = false;
+        example = true;
+        description = "Whether to enable PPPoE";
+        type = types.bool;
+      };
+      mtu = mkOption {
+        default = null;
+        type = types.nullOr types.int;
+      };
+    };
+  };
+
+  ppp = cfg.ppp;
   extern = cfg.interfaces.external;
   intern = cfg.interfaces.internal;
 in {
@@ -76,20 +92,37 @@ in {
       type = types.listOf leaseType;
       description = "List of reserved IP address leases";
     };
+    ppp = mkOption {
+      default = { };
+      type = pppType;
+    };
   };
 
   config = let
     links = {
       "10-${extern.name}" = {
         matchConfig.PermanentMACAddress = extern.macAddress;
-        linkConfig = {
+        linkConfig = if ppp.enable then {
+          Description = "PPPoE Network Interface";
+          Name = "wan";
+          MACAddress = extern.adoptMacAddress;
+          MTUBytes = mkIf (ppp.mtu != null) (toString (ppp.mtu + 8));
+        } else {
           Description = "External Network Interface";
           Name = extern.name;
           MACAddress = extern.adoptMacAddress;
           MTUBytes = "1500";
         };
       };
-    } // (optionalAttrs (intern != null) {
+    } // (optionalAttrs ppp.enable {
+      "10-ppp" = {
+        matchConfig.Type = "ppp";
+        linkConfig = {
+          Description = "External Network Interface";
+          Name = extern.name;
+        };
+      };
+    }) // (optionalAttrs (intern != null) {
       "11-${intern.name}" = {
         matchConfig.PermanentMACAddress = intern.macAddress;
         linkConfig = {
@@ -132,10 +165,15 @@ in {
         "10-${extern.name}" = {
           name = extern.name;
           networkConfig = {
-            DHCP = if cfg.ipv6 then "yes" else "ipv4";
+            DHCP = if ppp.enable
+              then if cfg.ipv6 then "ipv6" else "no"
+              else if cfg.ipv6 then "yes" else "ipv4";
             IPv4Forwarding = true;
             IPv6Forwarding = true;
             IPv6AcceptRA = mkIf cfg.ipv6 true;
+            LinkLocalAddressing = mkIf cfg.ipv6 "ipv6";
+            KeepConfiguration = mkIf ppp.enable "static";
+            DefaultRouteOnDevice = mkIf ppp.enable true;
           };
           cakeConfig = {
             Parent = "root";
@@ -147,6 +185,7 @@ in {
           };
           dhcpV6Config = mkIf cfg.ipv6 {
             WithoutRA = "solicit";
+            UseNTP = true;
             UseDNS = false;
             UseDomains = false;
             UseAddress = false;
@@ -155,14 +194,20 @@ in {
           };
           dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
             UplinkInterface = ":self";
+            SubnetId = 0;
             Announce = false;
           };
           ipv6AcceptRAConfig = mkIf cfg.ipv6 {
             UseDNS = false;
             UseDomains = false;
+            UseMTU = false;
+            UseOnLinkPrefix = false;
             DHCPv6Client = "always";
             Token = mkIf (extern.adoptMacAddress != null) "static:::${extern.adoptMacAddress}";
           };
+          routes = optionals ppp.enable [
+            { Gateway = "::"; }
+          ];
         };
       } // (optionalAttrs (intern != null) {
         "11-${intern.name}" = {
@@ -200,7 +245,37 @@ in {
             Announce = true;
           };
         };
+      }) // (optionalAttrs ppp.enable {
+        "10-ppp" = {
+          name = "wan";
+          networkConfig.ConfigureWithoutCarrier = true;
+        };
       });
+    };
+
+    services.pppd = mkIf ppp.enable {
+      enable = true;
+      peers.extern.config = ''
+        plugin pppoe.so wan
+        ifname ${extern.name}
+        noipdefault
+        defaultroute
+        replacedefaultroute
+        persist
+        maxfail 0
+        holdoff 5
+        lcp-echo-adaptive
+        default-asyncmap
+        noaccomp
+        file ${config.age.secrets.pppoe-options.path}
+        ${optionalString cfg.ipv6 "+ipv6"}
+        ${optionalString (ppp.mtu != null) "mtu ${toString ppp.mtu}"}
+        ${optionalString (ppp.mtu != null) "mru ${toString ppp.mtu}"}
+      '';
+    };
+
+    age.secrets.pppoe-options = mkIf ppp.enable {
+      file = ./encrypt/pppoe-options.age;
     };
 
     services.resolved = {
