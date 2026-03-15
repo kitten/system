@@ -25,11 +25,13 @@
           name = "extern0";
           macAddress = "ec:75:0c:2e:93:b0";
           adoptMacAddress = "64:20:9f:16:70:a6";
+          address = "2a11:2646:11e9::1/48";
         };
         internal = {
           name = "intern0";
           macAddress = "ec:75:0c:2e:92:1c";
           cidr = "10.0.0.1/24";
+          cidrV6 = "2a11:2646:11e9:1::1/64";
         };
       };
       leases = [

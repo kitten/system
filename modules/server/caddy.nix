@@ -2,9 +2,8 @@
 
 with lib;
 let
-  inherit (import ../../lib/ipv4.nix inputs) ipv4;
-
   cfg = config.modules.server;
+  cfgRouter = config.modules.router;
 
   domain = config.networking.domain;
   knotEnabled = cfg.tangled.enable;
@@ -102,11 +101,7 @@ in helpers.linuxAttrs {
       enable = true;
       email = "phil@kitten.sh";
       extraConfig = let
-        intern = config.modules.router.interfaces.internal;
-        gateway = if config.modules.router.enable && intern != null
-          then ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)
-          else null;
-        addresses = filter (x: x != null) [ gateway "127.0.0.1" "[::1]" ];
+        addresses = filter (x: x != null) [ cfgRouter.address "127.0.0.1" "[::1]" ];
       in ''
         (network_paths) {
           ${vaultwardenHandlerConfig}

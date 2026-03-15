@@ -33,10 +33,25 @@ let
         type = types.nullOr types.str;
         example = "00:00:00:00:00:00";
       };
+      address = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "1.2.3.4";
+      };
+      addressV6 = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "fe80::1/48";
+      };
       cidr = mkOption {
         type = types.str;
         default = "0.0.0.0/0";
         example = "10.0.0.1/24";
+      };
+      cidrV6 = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "fe80::1/48";
       };
     };
   };
@@ -67,7 +82,9 @@ in {
   in {
     address = mkOption {
       type = types.str;
-      default = defaultAddress;
+      default = if intern != null
+        then ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)
+        else "127.0.0.1";
       example = "127.0.0.1";
     };
     mdns = mkOption {
@@ -159,9 +176,7 @@ in {
     systemd.network = {
       enable = true;
       inherit links;
-      networks = let
-        gatewayAddress = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
-      in {
+      networks = {
         "10-${extern.name}" = {
           name = extern.name;
           networkConfig = {
@@ -170,10 +185,13 @@ in {
               else if cfg.ipv6 then "yes" else "ipv4";
             IPv4Forwarding = true;
             IPv6Forwarding = true;
-            IPv6AcceptRA = mkIf cfg.ipv6 true;
-            LinkLocalAddressing = mkIf cfg.ipv6 "ipv6";
+            IPv6AcceptRA = mkIf (cfg.ipv6 && extern.addressV6 == null) true;
+            LinkLocalAddressing = mkIf (cfg.ipv6 && extern.addressV6 != null) "ipv6";
             KeepConfiguration = mkIf ppp.enable "static";
             DefaultRouteOnDevice = mkIf ppp.enable true;
+            Address = let
+              addresses = filter (x: x != null) [ extern.address extern.addressV6 ];
+            in mkIf (addresses != []) addresses;
           };
           cakeConfig = {
             Parent = "root";
@@ -183,7 +201,7 @@ in {
             UseDomains = false;
             UseNTP = !cfg.timeserver.enable;
           };
-          dhcpV6Config = mkIf cfg.ipv6 {
+          dhcpV6Config = mkIf (cfg.ipv6 && extern.addressV6 == null) {
             WithoutRA = "solicit";
             UseNTP = true;
             UseDNS = false;
@@ -192,12 +210,12 @@ in {
             DUIDType = "link-layer";
             DUIDRawData = mkIf (extern.adoptMacAddress != null) "00:01:${extern.adoptMacAddress}";
           };
-          dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
+          dhcpPrefixDelegationConfig = mkIf (cfg.ipv6 && extern.addressV6 == null) {
             UplinkInterface = ":self";
             SubnetId = 0;
             Announce = false;
           };
-          ipv6AcceptRAConfig = mkIf cfg.ipv6 {
+          ipv6AcceptRAConfig = mkIf (cfg.ipv6 && extern.addressV6 == null) {
             UseDNS = false;
             UseDomains = false;
             UseMTU = false;
@@ -213,14 +231,14 @@ in {
         "11-${intern.name}" = {
           name = intern.name;
           networkConfig = {
-            Address = intern.cidr;
+            Address = filter (x: x != null) [ intern.cidr intern.cidrV6 ];
             DHCPServer = true;
             IPv4Forwarding = true;
             IPv6Forwarding = cfg.ipv6;
             IPMasquerade = "ipv4";
             ConfigureWithoutCarrier = true;
             MulticastDNS = cfg.mdns;
-            DHCPPrefixDelegation = cfg.ipv6;
+            DHCPPrefixDelegation = cfg.ipv6 && intern.cidrV6 == null;
             IPv6SendRA = cfg.ipv6;
             IPv6AcceptRA = mkIf cfg.ipv6 false;
           };
@@ -234,16 +252,25 @@ in {
           dhcpServerConfig = {
             EmitDNS = true;
             EmitNTP = true;
-            DNS = gatewayAddress;
-            NTP = gatewayAddress;
+            DNS = cfg.address;
+            NTP = cfg.address;
             DefaultLeaseTimeSec = 43200;
             MaxLeaseTimeSec = 86400;
           };
-          dhcpPrefixDelegationConfig = mkIf cfg.ipv6 {
+          dhcpPrefixDelegationConfig = mkIf (cfg.ipv6 && intern.cidrV6 == null) {
             UplinkInterface = extern.name;
             Token = "static:::1";
             Announce = true;
           };
+          ipv6Prefixes = mkIf (cfg.ipv6 && intern.cidrV6 != null) [
+            {
+              Prefix = intern.cidrV6;
+              PreferredLifetimeSec = 3600;
+              ValidLifetimeSec = 7200;
+              OnLink = "yes";
+              AddressAutoconfiguration = "yes";
+            }
+          ];
         };
       }) // (optionalAttrs ppp.enable {
         "10-ppp" = {
