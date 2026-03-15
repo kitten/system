@@ -58,7 +58,15 @@ in {
 
       tables.filter = {
         family = "inet";
-        content = ''
+        content = let
+          inherit (config.networking.firewall) allowedTCPPorts allowedUDPPorts;
+          tcpAccept = optionalString (allowedTCPPorts != []) ''
+            tcp dport {${concatMapStringsSep ", " (x: toString x) allowedTCPPorts}} ct state new accept
+          '';
+          udpAccept = optionalString (allowedTCPPorts != []) ''
+            udp dport {${concatMapStringsSep ", " (x: toString x) allowedUDPPorts}} ct state new accept
+          '';
+        in ''
           chain prerouting {
             type nat hook prerouting priority 0; policy accept;
             ${capturePortsRules}
@@ -85,6 +93,8 @@ in {
             ip6 ecn not-ect accept
             udp dport dhcpv6-client ct state { new, untracked } accept
             udp dport 41641 ct state new accept
+            ${tcpAccept}
+            ${udpAccept}
             reject with icmpx type port-unreachable
           }
 

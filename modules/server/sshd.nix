@@ -22,8 +22,8 @@ in {
       enable = true;
     } // helpers.linuxAttrs {
       settings.PermitRootLogin = mkDefault "no";
-      openFirewall = mkDefault (!config.modules.router.enable);
-      ports = [ 22 2222 ];
+      openFirewall = mkDefault true;
+      ports = [ 22 ];
     };
   };
 }

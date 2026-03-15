@@ -1,7 +1,9 @@
-{ lib, config, hostname, helpers, ... }:
+{ lib, config, hostname, helpers, ... } @ inputs:
 
 with lib;
 let
+  inherit (import ../../lib/ipv4.nix inputs) ipv4;
+
   cfg = config.modules.server;
 
   domain = config.networking.domain;
@@ -99,7 +101,13 @@ in helpers.linuxAttrs {
     services.caddy = {
       enable = true;
       email = "phil@kitten.sh";
-      extraConfig = ''
+      extraConfig = let
+        intern = config.modules.router.interfaces.internal;
+        gateway = if config.modules.router.enable && intern != null
+          then ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)
+          else null;
+        addresses = filter (x: x != null) [ gateway "127.0.0.1" "[::1]" ];
+      in ''
         (network_paths) {
           ${vaultwardenHandlerConfig}
           ${jellyfinHandlerConfig}
@@ -111,10 +119,12 @@ in helpers.linuxAttrs {
         ${knotConfig}
 
         :80 {
+          bind ${concatStringsSep " " addresses}
           import network_paths
         }
 
         :443 {
+          bind ${concatStringsSep " " addresses}
           import network_paths
         }
       '';
