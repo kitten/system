@@ -55,7 +55,7 @@
     };
 
     yeetmouse = {
-      url = "github:kitten/yeetmouse?dir=nix";
+      url = "github:AndyFilter/yeetmouse?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
