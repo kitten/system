@@ -50,11 +50,10 @@ in {
     services = {
       resolved = {
         enable = true;
-        llmnr = "false";
-        extraConfig = ''
-          [Resolve]
-          MulticastDNS=yes
-        '';
+        settings.Resolve = {
+          LLMNR = false;
+          MulticastDNS = true;
+        };
       };
 
       printing = mkIf cfg.networking.printing {
