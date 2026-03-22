@@ -25,15 +25,23 @@ in {
       PROTON_USE_NTSYNC = mkDefault 1;
     };
 
-    services.udev.packages = [
-      (pkgs.writeTextFile {
-        name = "ntsync-udev-rules";
-        text = ''KERNEL=="ntsync", MODE="0660", TAG+="uaccess"'';
-        destination = "/etc/udev/rules.d/70-ntsync.rules";
-      })
-    ];
+    services.udev = {
+      packages = [
+        (pkgs.writeTextFile {
+          name = "ntsync-udev-rules";
+          text = ''KERNEL=="ntsync", MODE="0660", TAG+="uaccess"'';
+          destination = "/etc/udev/rules.d/70-ntsync.rules";
+        })
+      ];
+      extraRules = ''
+        SUBSYSTEM=="input", ATTRS{idVendor}=="045e", ATTRS{idProduct}=="02dd", MODE="0660", GROUP="input"
+      '';
+    };
 
-    hardware.steam-hardware.enable = true;
+    hardware = {
+      steam-hardware.enable = true;
+    };
+
     users.users."${user}".extraGroups = [ "gamemode" ];
 
     environment.systemPackages = [
