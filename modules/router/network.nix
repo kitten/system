@@ -262,6 +262,10 @@ in {
             Token = "static:::1";
             Announce = true;
           };
+          ipv6SendRAConfig = mkIf cfg.ipv6 {
+            EmitDNS = true;
+            DNS = "_link_local";
+          };
           ipv6Prefixes = mkIf (cfg.ipv6 && intern.cidrV6 != null) [
             {
               Prefix = intern.cidrV6;
@@ -326,7 +330,9 @@ in {
         })
         (mkIf (intern != null) {
           DNSStubListener = true;
-          DNSStubListenerExtra = ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr);
+          DNSStubListenerExtra = [
+            (ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr))
+          ] ++ (optionals cfg.ipv6 [ "::" ]);
         })
       ];
     };
