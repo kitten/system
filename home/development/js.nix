@@ -29,12 +29,6 @@ in {
   };
 
   config = mkIf cfg.js.enable {
-    age.secrets."${NPMRC_PATH}" = {
-      symlink = true;
-      path = "${NPMRC_PATH}";
-      file = ./encrypt/npmrc.age;
-    };
-
     home.sessionPath = [
       "./node_modules/.bin"
       PNPM_HOME
@@ -75,7 +69,6 @@ in {
       nodejs_22
     ]
       ++ optionals cfg.js.bun [ pkgs.bun ]
-      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ]
-      ++ optionals hasReactNative [ pkgs.flow ];
+      ++ optionals cfg.js.wasmtime [ pkgs.wasmtime ];
   };
 }
