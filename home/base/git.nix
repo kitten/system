@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.modules.git;
+  claude = config.modules.development.claude;
   home = config.home.homeDirectory;
 
   excludesFile = pkgs.writeTextFile {
@@ -32,7 +33,10 @@ let
       .directory
       .Trash-*
       .nfs*
-    '';
+    '' +
+      (optionalString claude.enable ''
+        .claude/
+      '');
   };
 
   userType = types.submodule {

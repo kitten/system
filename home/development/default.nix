@@ -11,6 +11,7 @@ with lib; {
   };
 
   imports = [
+    ./claude.nix
     ./js.nix
     ./react-native.nix
     ./terraform.nix
