@@ -21,9 +21,15 @@ in {
     services.openssh = {
       enable = true;
     } // helpers.linuxAttrs {
-      settings.PermitRootLogin = mkDefault "no";
       openFirewall = mkDefault true;
       ports = [ 22 ];
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        MaxAuthTries = 3;
+        LoginGraceTime = 30;
+      };
     };
   };
 }
