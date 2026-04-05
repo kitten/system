@@ -2,7 +2,6 @@
 
 with lib;
 let
-  address = config.modules.router.adress;
   cfg = config.modules.server;
 in helpers.linuxAttrs {
   options.modules.server.tangled = {
@@ -38,12 +37,23 @@ in helpers.linuxAttrs {
       enable = true;
       config = {
         gpg.program = "${pkgs.gnupg}/bin/gpg";
+        transfer.fsckObjects = true;
         receive = {
           advertisePushOptions = true;
           denyFastForwards = false;
+          denyDeleteCurrent = true;
           fsckObjects = true;
           autogc = true;
         };
+        uploadpack = {
+          allowFilter = true;
+          allowReachableSHA1InWant = true;
+        };
+        pack = {
+          threads = 0;
+          windowMemory = "256m";
+        };
+        repack.writeBitmaps = true;
         include.path = config.age.secrets."gitconfig.private".path;
       };
     };
