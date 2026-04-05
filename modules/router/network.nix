@@ -75,11 +75,7 @@ let
   extern = cfg.interfaces.external;
   intern = cfg.interfaces.internal;
 in {
-  options.modules.router = let
-    defaultAddress = if intern != null
-      then ipv4.prettyIp (ipv4.cidrToIpAddress intern.cidr)
-      else "127.0.0.1";
-  in {
+  options.modules.router = {
     address = mkOption {
       type = types.str;
       default = if intern != null
@@ -242,8 +238,11 @@ in {
             IPv6SendRA = cfg.ipv6;
             IPv6AcceptRA = mkIf cfg.ipv6 false;
           };
-          fairQueueingControlledDelayConfig = {
+          cakeConfig = {
             Parent = "root";
+            NAT = true;
+            FlowIsolationMode = "triple";
+            Wash = true;
           };
           dhcpServerStaticLeases = builtins.map (lease: {
             Address = lease.ipAddress;

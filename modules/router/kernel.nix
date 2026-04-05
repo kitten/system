@@ -60,9 +60,13 @@ in {
       "net.ipv6.conf.all.autoconf" = false;
       "net.ipv6.conf.all.use_tempaddr" = false;
 
+      "net.netfilter.nf_conntrack_tcp_timeout_established" = 7200;
+      "net.netfilter.nf_conntrack_udp_timeout_stream" = 120;
+      "net.netfilter.nf_conntrack_max" = 131072;
+
       "kernel.kptr_restrict" = 2;
-      "kernel.dmesg_restrict" = 0;
-      "kernel.sysrq" = 4;
+      "kernel.dmesg_restrict" = 1;
+      "kernel.sysrq" = 0;
       "kernel.unprivileged_bpf_disabled" = true;
       "kernel.perf_event_paranoid" = 3;
       "kernel.kexec_load_disabled" = true;
