@@ -12,6 +12,18 @@ in helpers.linuxAttrs {
       description = "Whether to enable Vaultwarden.";
       type = types.bool;
     };
+
+    port = mkOption {
+      default = 8000;
+      description = "Vaultwarden HTTP port.";
+      type = types.port;
+    };
+
+    websocketPort = mkOption {
+      default = 8001;
+      description = "Vaultwarden WebSocket port.";
+      type = types.port;
+    };
   };
 
   config = mkIf (cfg.enable && cfg.vaultwarden.enable) {
@@ -19,7 +31,7 @@ in helpers.linuxAttrs {
       baseURL = if (cfg.caddy.enable && cfg.tailscale.enable)
         then "https://${hostname}.${cfg.tailscale.domain}/vault/"
         else if cfg.caddy.enable then "http://${address}/vault/"
-        else "http://${address}:8000/vault/";
+        else "http://${address}:${toString cfg.vaultwarden.port}/vault/";
     in {
       enable = true;
       dbBackend = "sqlite";
@@ -31,8 +43,8 @@ in helpers.linuxAttrs {
         DOMAIN = baseURL;
         WEBSOCKET_ADDRESS = "127.0.0.1";
         ROCKET_ADDRESS = "127.0.0.1";
-        WEBSOCKET_PORT = "8001";
-        ROCKET_PORT = "8000";
+        WEBSOCKET_PORT = toString cfg.vaultwarden.websocketPort;
+        ROCKET_PORT = toString cfg.vaultwarden.port;
         ROCKET_LIMITS = "{json=10485760}";
       };
     };

@@ -12,15 +12,18 @@ let
   jellyfinEnabled = cfg.jellyfin.enable;
   hassEnabled = cfg.home-assistant.enable;
 
-  vaultwardenHandlerConfig = if vaultwardenEnabled then ''
+  vaultwardenHandlerConfig = let
+    port = toString cfg.vaultwarden.port;
+    wsPort = toString cfg.vaultwarden.websocketPort;
+  in if vaultwardenEnabled then ''
     handle_path /vault {
       redir * /vault/
     }
 
     handle_path /vault/* {
-      reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000
-      reverse_proxy /notifications/hub 127.0.0.1:8001
-      reverse_proxy 127.0.0.1:8000 {
+      reverse_proxy /notifications/hub/negotiate 127.0.0.1:${port}
+      reverse_proxy /notifications/hub 127.0.0.1:${wsPort}
+      reverse_proxy 127.0.0.1:${port} {
         header_up X-Real-IP {remote_host}
       }
     }
