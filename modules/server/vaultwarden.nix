@@ -2,7 +2,7 @@
 
 with lib;
 let
-  address = config.modules.router.adress;
+  address = config.modules.router.address;
   cfg = config.modules.server;
 in helpers.linuxAttrs {
   options.modules.server.vaultwarden = {
@@ -17,7 +17,7 @@ in helpers.linuxAttrs {
   config = mkIf (cfg.enable && cfg.vaultwarden.enable) {
     services.vaultwarden = let
       baseURL = if (cfg.caddy.enable && cfg.tailscale.enable)
-        then "https://${hostname}.fable-pancake.ts.net/vault/"
+        then "https://${hostname}.${cfg.tailscale.domain}/vault/"
         else if cfg.caddy.enable then "http://${address}/vault/"
         else "http://${address}:8000/vault/";
     in {

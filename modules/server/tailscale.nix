@@ -13,14 +13,20 @@ in {
       description = "Whether to enable Tailscale.";
       type = types.bool;
     };
+
+    domain = mkOption {
+      default = "fable-pancake.ts.net";
+      description = "Tailscale MagicDNS domain.";
+      type = types.str;
+    };
   };
 
   config = mkIf (cfg.enable && cfgRoot.enable) (helpers.linuxAttrs {
     networking = {
-      domain = mkIf cfgRouter.enable "fable-pancake.ts.net";
-      search = [ "fable-pancake.ts.net" ];
+      domain = mkIf cfgRouter.enable cfg.domain;
+      search = [ cfg.domain ];
       firewall.trustedInterfaces = [ "tailscale0" ];
-      hosts."${cfgRouter.address}" = mkIf cfgRouter.enable [ "${hostname}.fable-pancake.ts.net" hostname ];
+      hosts."${cfgRouter.address}" = mkIf cfgRouter.enable [ "${hostname}.${cfg.domain}" hostname ];
     };
 
     age.secrets."tailscale" = {
@@ -43,7 +49,7 @@ in {
 
     environment.systemPackages = mkIf config.modules.desktop.enable [ pkgs.tail-tray ];
   } // helpers.darwinAttrs {
-    networking.search = [ "fable-pancake.ts.net" ];
+    networking.search = [ cfg.domain ];
 
     services.tailscale = {
       enable = true;

@@ -20,7 +20,7 @@ let
     handle_path /vault/* {
       reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000
       reverse_proxy /notifications/hub 127.0.0.1:8001
-      reverse_proxy localhost:8000 {
+      reverse_proxy 127.0.0.1:8000 {
         header_up X-Real-IP {remote_host}
       }
     }
@@ -31,7 +31,7 @@ let
       redir * /media/
     }
 
-    reverse_proxy /media/* localhost:8096 {
+    reverse_proxy /media/* 127.0.0.1:8096 {
       header_up X-Real-IP {remote_host}
     }
   '' else "";
@@ -44,13 +44,30 @@ let
 
   tailscaleConfig = if tailscaleEnabled then ''
     ${hostname}.${domain} {
+      bind tailscale0
+      tls {
+        protocols tls1.3
+      }
       import network_paths
     }
   '' else "";
 
   knotConfig = if knotEnabled then ''
     ${cfg.tangled.hostname} {
-      reverse_proxy ${config.services.tangled.knot.server.listenAddr}
+      log
+      request_body {
+        max_size 512MB
+      }
+      header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+      }
+      reverse_proxy ${config.services.tangled.knot.server.listenAddr} {
+        header_up X-Real-IP {remote_host}
+      }
     }
   '' else "";
 
@@ -86,7 +103,7 @@ in helpers.linuxAttrs {
 
     exposeFolders = mkOption {
       default = {};
-      description = "Folders to expose via Cadddy.";
+      description = "Folders to expose via Caddy.";
       example = { files = "/share/files"; };
       type = types.attrsOf types.str;
     };
@@ -100,10 +117,31 @@ in helpers.linuxAttrs {
     services.caddy = {
       enable = true;
       email = "phil@kitten.sh";
+      globalConfig = ''
+        servers {
+          timeouts {
+            read_body   10s
+            read_header 5s
+            idle        60s
+          }
+          max_header_size 16384
+          protocols h1 h2 h3
+        }
+      '';
       extraConfig = let
         addresses = filter (x: x != null) [ cfgRouter.address "127.0.0.1" "[::1]" ];
       in ''
         (network_paths) {
+          request_body {
+            max_size 10MB
+          }
+          header {
+            X-Content-Type-Options nosniff
+            X-Frame-Options SAMEORIGIN
+            Referrer-Policy strict-origin-when-cross-origin
+            Strict-Transport-Security "max-age=31536000"
+            -Server
+          }
           ${vaultwardenHandlerConfig}
           ${jellyfinHandlerConfig}
           ${hassHandlerConfig}
@@ -115,7 +153,7 @@ in helpers.linuxAttrs {
 
         :80 {
           bind ${concatStringsSep " " addresses}
-          import network_paths
+          redir https://${if cfgRouter.address != null then cfgRouter.address else "{host}"}{uri} permanent
         }
 
         :443 {
