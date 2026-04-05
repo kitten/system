@@ -29,6 +29,14 @@ in {
         KbdInteractiveAuthentication = false;
         MaxAuthTries = 3;
         LoginGraceTime = 30;
+        MaxSessions = 3;
+        MaxStartups = "3:50:10";
+        ClientAliveInterval = 60;
+        ClientAliveCountMax = 3;
+        AllowAgentForwarding = false;
+        AllowTcpForwarding = false;
+        X11Forwarding = false;
+        AllowStreamLocalForwarding = false;
       };
     };
   };
