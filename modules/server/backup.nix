@@ -48,21 +48,21 @@ let
         ${coreutils}/bin/cp -a "${path.path}/${item}" "$TMP/${path.name}/"
       fi
     '') path.extras}
-    ${rclone} ${rcloneFlags} copy "$TMP/${path.name}" "r2-encrypted:${path.name}/$DATE/"
+    ${rclone} ${rcloneFlags} copy "$TMP/${path.name}" "r2crypt:${path.name}/$DATE/"
   '';
 
   mkSqlitePrune = path: ''
     CUTOFF=$(${coreutils}/bin/date -d '-${toString backup.retention} days' +%Y-%m-%d)
-    ${rclone} ${rcloneFlags} lsd "r2-encrypted:${path.name}/" 2>/dev/null | ${coreutils}/bin/awk '{print $NF}' | while read -r dir; do
+    ${rclone} ${rcloneFlags} lsd "r2crypt:${path.name}/" 2>/dev/null | ${coreutils}/bin/awk '{print $NF}' | while read -r dir; do
       if [[ "$dir" < "$CUTOFF" ]]; then
-        ${rclone} ${rcloneFlags} purge "r2-encrypted:${path.name}/$dir/" || true
+        ${rclone} ${rcloneFlags} purge "r2crypt:${path.name}/$dir/" || true
       fi
     done
   '';
 
   mkSyncBackup = path: ''
     echo "Syncing ${path.name}..."
-    ${rclone} ${rcloneFlags} sync "${path.path}" "r2-encrypted:${path.name}/"
+    ${rclone} ${rcloneFlags} sync "${path.path}" "r2crypt:${path.name}/"
   '';
 
 in helpers.linuxAttrs {
@@ -120,7 +120,7 @@ in helpers.linuxAttrs {
       endpoint = https://${backup.r2AccountId}.r2.cloudflarestorage.com
       acl = private
 
-      [r2-encrypted]
+      [r2crypt]
       type = crypt
       remote = r2:${backup.bucket}
     '';

@@ -23,7 +23,7 @@ in
   toString (pkgs.writers.writeBash "restoreBackup" ''
     set -euo pipefail
 
-    REMOTE="r2-encrypted"
+    REMOTE="r2crypt"
     CONFIG="${defaultConf}"
     ENV_FILE="${defaultEnv}"
     SERVICE=""
