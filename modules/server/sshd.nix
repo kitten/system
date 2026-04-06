@@ -44,6 +44,7 @@ in {
         AllowTcpForwarding = false;
         X11Forwarding = false;
         AllowStreamLocalForwarding = false;
+        AllowUsers = [ user ];
       };
     };
   };

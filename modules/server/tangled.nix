@@ -24,12 +24,21 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.tangled.enable) {
-    services.tangled.knot = {
-      enable = true;
-      openFirewall = true;
-      server = {
-        hostname = cfg.tangled.hostname;
-        owner = cfg.tangled.owner;
+    services = {
+      tangled.knot = {
+        enable = true;
+        openFirewall = true;
+        server = {
+          hostname = cfg.tangled.hostname;
+          owner = cfg.tangled.owner;
+        };
+      };
+
+      openssh.settings = let
+        user = config.services.tangled.knot.gitUser;
+      in {
+        AllowUsers = [ user ];
+        AllowGroups = [ user ];
       };
     };
 

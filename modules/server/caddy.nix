@@ -55,7 +55,9 @@ let
     }
   '' else "";
 
-  knotConfig = if knotEnabled then ''
+  knotConfig = let
+    knotAddr = config.services.tangled.knot.server.listenAddr;
+  in if knotEnabled then ''
     ${cfg.tangled.hostname} {
       log
       request_body {
@@ -68,7 +70,13 @@ let
         Strict-Transport-Security "max-age=31536000"
         -Server
       }
-      reverse_proxy ${config.services.tangled.knot.server.listenAddr} {
+      handle /events {
+        reverse_proxy ${knotAddr} {
+          header_up X-Real-IP {remote_host}
+          flush_interval -1
+        }
+      }
+      reverse_proxy ${knotAddr} {
         header_up X-Real-IP {remote_host}
       }
     }
