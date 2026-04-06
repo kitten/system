@@ -11,6 +11,7 @@ in
   "./modules/server/encrypt/tangled-knot-ssh.age".publicKeys = keys;
   "./modules/server/encrypt/gitconfig.age".publicKeys = keys;
   "./modules/server/encrypt/vaultwarden.age".publicKeys = keys;
+  "./modules/server/encrypt/rclone-backup.env.age".publicKeys = keys;
 
   "./modules/router/encrypt/pppoe-options.age".publicKeys = keys;
 

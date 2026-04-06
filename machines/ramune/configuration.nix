@@ -54,6 +54,11 @@
       caddy.enable = true;
       vaultwarden.enable = true;
       tangled.enable = true;
+      backup = {
+        enable = true;
+        r2AccountId = "a261b92e6b94f88e79c9c863e19accd4";
+        bucket = "ramune-backup";
+      };
     };
   };
 

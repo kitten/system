@@ -24,6 +24,10 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.tangled.enable) {
+    modules.server.backup.paths.tangled = {
+      path = "${config.services.tangled.knot.stateDir}/repos";
+    };
+
     services = {
       tangled.knot = {
         enable = true;

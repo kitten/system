@@ -21,5 +21,6 @@ with lib; {
     ./podman.nix
     ./macos.nix
     ./tangled.nix
+    ./backup.nix
   ];
 }

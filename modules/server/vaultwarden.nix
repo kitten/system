@@ -27,6 +27,12 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.vaultwarden.enable) {
+    modules.server.backup.paths.vaultwarden = {
+      path = "/var/lib/vaultwarden";
+      sqlite = "db.sqlite3";
+      extras = [ "attachments" "rsa_key.pem" "rsa_key.pub.pem" ];
+    };
+
     age.secrets."vaultwarden" = {
       symlink = true;
       path = "/run/secrets/vaultwarden.env";
