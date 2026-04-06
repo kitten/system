@@ -18,12 +18,6 @@ in helpers.linuxAttrs {
       description = "Vaultwarden HTTP port.";
       type = types.port;
     };
-
-    websocketPort = mkOption {
-      default = 8001;
-      description = "Vaultwarden WebSocket port.";
-      type = types.port;
-    };
   };
 
   config = mkIf (cfg.enable && cfg.vaultwarden.enable) {
@@ -40,9 +34,9 @@ in helpers.linuxAttrs {
 
     services.vaultwarden = let
       baseURL = if (cfg.caddy.enable && cfg.tailscale.enable)
-        then "https://${hostname}.${cfg.tailscale.domain}/vault/"
-        else if cfg.caddy.enable then "http://${address}/vault/"
-        else "http://${address}:${toString cfg.vaultwarden.port}/vault/";
+        then "https://${hostname}.${cfg.tailscale.domain}/vault"
+        else if cfg.caddy.enable then "http://${address}/vault"
+        else "http://${address}:${toString cfg.vaultwarden.port}/vault";
     in {
       enable = true;
       dbBackend = "sqlite";
@@ -50,9 +44,7 @@ in helpers.linuxAttrs {
       config = {
         IP_HEADER = "X-Real-IP";
         DOMAIN = baseURL;
-        WEBSOCKET_ADDRESS = "127.0.0.1";
         ROCKET_ADDRESS = "127.0.0.1";
-        WEBSOCKET_PORT = toString cfg.vaultwarden.websocketPort;
         ROCKET_PORT = toString cfg.vaultwarden.port;
         ROCKET_LIMITS = "{json=10485760}";
 

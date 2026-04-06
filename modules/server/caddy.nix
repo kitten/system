@@ -16,14 +16,8 @@ let
     port = toString cfg.vaultwarden.port;
     wsPort = toString cfg.vaultwarden.websocketPort;
   in if vaultwardenEnabled then ''
-    handle_path /vault {
-      redir * /vault/
-    }
-
-    handle_path /vault/* {
-      reverse_proxy /notifications/hub/negotiate 127.0.0.1:${port}
-      reverse_proxy /notifications/hub 127.0.0.1:${wsPort}
-      reverse_proxy 127.0.0.1:${port} {
+    route /vault* {
+      reverse_proxy /vault/* 127.0.0.1:${port} {
         header_up X-Real-IP {remote_host}
       }
     }
@@ -47,7 +41,6 @@ let
 
   tailscaleConfig = if tailscaleEnabled then ''
     ${hostname}.${domain} {
-      bind tailscale0
       tls {
         protocols tls1.3
       }
