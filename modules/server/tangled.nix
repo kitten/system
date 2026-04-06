@@ -100,7 +100,7 @@ in helpers.linuxAttrs {
         Type = "oneshot";
         User = knot.gitUser;
         ExecStart = pkgs.writeShellScript "tangled-motd" ''
-          ${pkgs.fortune-kind}/bin/fortune-kind | ${pkgs.coreutils}/bin/head -1 > "${knot.stateDir}/motd"
+          ${pkgs.fortune-kind}/bin/fortune-kind > "${knot.stateDir}/motd"
         '';
       };
     };
