@@ -30,7 +30,6 @@ in helpers.linuxAttrs {
     modules.server.backup.paths.vaultwarden = {
       path = "/var/lib/vaultwarden";
       sqlite = "db.sqlite3";
-      extras = [ "attachments" "rsa_key.pem" "rsa_key.pub.pem" ];
     };
 
     age.secrets."vaultwarden" = {

@@ -8,14 +8,15 @@ let
   rclone = "${pkgs.rclone}/bin/rclone";
   coreutils = pkgs.coreutils;
 
-  rcloneFlags = "--config ${backup.configPath}";
+  rcloneConf = "/etc/rclone-backup.conf";
+  rcloneFlags = "--config ${rcloneConf} --skip-links --ignore-errors --fast-list --size-only";
 
   pathType = types.submodule ({ name, ... }: {
     options = {
       name = mkOption {
         default = name;
-        description = "Name used as the backup subdirectory in the remote. Defaults to the attribute name.";
         type = types.str;
+        internal = true;
       };
 
       path = mkOption {
@@ -29,40 +30,36 @@ let
         type = types.nullOr types.str;
       };
 
-      extras = mkOption {
+      exclude = mkOption {
         default = [];
-        description = "Additional files/directories within path to copy alongside a sqlite backup.";
+        description = "Patterns to exclude from sync backups.";
         type = types.listOf types.str;
       };
+
     };
   });
+
+  mkSyncBackup = path: let
+    sqliteExcludes = optionals (path.sqlite != null)
+      (map (s: "--exclude ${escapeShellArg s}") [ path.sqlite "${path.sqlite}-shm" "${path.sqlite}-wal" ]);
+    userExcludes = map (p: "--exclude ${escapeShellArg p}") path.exclude;
+    excludeFlags = concatStringsSep " " (sqliteExcludes ++ userExcludes);
+  in ''
+    echo "Syncing ${path.name}..."
+    ${rclone} ${rcloneFlags} sync ${excludeFlags} "${path.path}" "r2crypt:${path.name}/"
+  '';
 
   mkSqliteBackup = path: let
     sqlite = "${pkgs.sqlite}/bin/sqlite3";
   in ''
-    echo "Backing up ${path.name}..."
+    echo "Backing up ${path.name} database..."
     ${coreutils}/bin/mkdir -p "$TMP/${path.name}"
     ${sqlite} "${path.path}/${path.sqlite}" ".backup $TMP/${path.name}/${path.sqlite}"
-    ${concatMapStringsSep "\n" (item: ''
-      if [ -e "${path.path}/${item}" ]; then
-        ${coreutils}/bin/cp -a "${path.path}/${item}" "$TMP/${path.name}/"
-      fi
-    '') path.extras}
-    ${rclone} ${rcloneFlags} copy "$TMP/${path.name}" "r2crypt:${path.name}/$DATE/"
+    ${rclone} ${rcloneFlags} copy "$TMP/${path.name}" "r2crypt:${path.name}-db/$DATE/"
   '';
 
   mkSqlitePrune = path: ''
-    CUTOFF=$(${coreutils}/bin/date -d '-${toString backup.retention} days' +%Y-%m-%d)
-    ${rclone} ${rcloneFlags} lsd "r2crypt:${path.name}/" 2>/dev/null | ${coreutils}/bin/awk '{print $NF}' | while read -r dir; do
-      if [[ "$dir" < "$CUTOFF" ]]; then
-        ${rclone} ${rcloneFlags} purge "r2crypt:${path.name}/$dir/" || true
-      fi
-    done
-  '';
-
-  mkSyncBackup = path: ''
-    echo "Syncing ${path.name}..."
-    ${rclone} ${rcloneFlags} sync "${path.path}" "r2crypt:${path.name}/"
+    ${rclone} ${rcloneFlags} delete --min-age ${toString backup.retention}d "r2crypt:${path.name}-db/"
   '';
 
 in helpers.linuxAttrs {
@@ -96,12 +93,6 @@ in helpers.linuxAttrs {
       type = types.int;
     };
 
-    configPath = mkOption {
-      default = "/etc/rclone-backup.conf";
-      description = "Path to the rclone configuration file.";
-      type = types.str;
-    };
-
     paths = mkOption {
       default = {};
       description = "Paths to back up. Other modules can append to this attrset.";
@@ -110,9 +101,10 @@ in helpers.linuxAttrs {
   };
 
   config = let
-    sqlitePaths = filter (p: p.sqlite != null) (attrValues backup.paths);
-    syncPaths = filter (p: p.sqlite == null) (attrValues backup.paths);
+    allPaths = attrValues backup.paths;
+    sqlitePaths = filter (p: p.sqlite != null) allPaths;
   in mkIf (cfg.enable && backup.enable) {
+
     environment.etc."rclone-backup.conf".text = ''
       [r2]
       type = s3
@@ -123,6 +115,8 @@ in helpers.linuxAttrs {
       [r2crypt]
       type = crypt
       remote = r2:${backup.bucket}
+      filename_encryption = off
+      directory_name_encryption = false
     '';
 
     age.secrets."rclone-backup.env" = {
@@ -146,16 +140,16 @@ in helpers.linuxAttrs {
           trap '${coreutils}/bin/rm -rf "$TMP"' EXIT
 
           ${concatMapStringsSep "\n" (p: ''
+            (set -e; ${mkSyncBackup p}) || FAILED=1
+          '') allPaths}
+
+          ${concatMapStringsSep "\n" (p: ''
             (set -e; ${mkSqliteBackup p}) || FAILED=1
           '') sqlitePaths}
 
           ${concatMapStringsSep "\n" (p: ''
             (set -e; ${mkSqlitePrune p}) || true
           '') sqlitePaths}
-
-          ${concatMapStringsSep "\n" (p: ''
-            (set -e; ${mkSyncBackup p}) || FAILED=1
-          '') syncPaths}
 
           exit "$FAILED"
         '';

@@ -23,11 +23,15 @@ in helpers.linuxAttrs {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.tangled.enable) {
+  config = let
+    knot = config.services.tangled.knot;
+  in mkIf (cfg.enable && cfg.tangled.enable) {
     modules.server = {
-      sshd.allowUsers = [ config.services.tangled.knot.gitUser ];
+      sshd.allowUsers = [ knot.gitUser ];
       backup.paths.tangled = {
-        path = "${config.services.tangled.knot.stateDir}/repos";
+        path = knot.stateDir;
+        sqlite = "knotserver.db";
+        exclude = [ "motd" ".*/**" ".*" ];
       };
     };
 
@@ -94,11 +98,9 @@ in helpers.linuxAttrs {
       description = "Update Tangled MOTD";
       serviceConfig = {
         Type = "oneshot";
-        User = config.services.tangled.knot.gitUser;
-        ExecStart = let
-          stateDir = config.services.tangled.knot.stateDir;
-        in pkgs.writeShellScript "tangled-motd" ''
-          ${pkgs.fortune-kind}/bin/fortune-kind | ${pkgs.coreutils}/bin/head -1 > "${stateDir}/motd"
+        User = knot.gitUser;
+        ExecStart = pkgs.writeShellScript "tangled-motd" ''
+          ${pkgs.fortune-kind}/bin/fortune-kind | ${pkgs.coreutils}/bin/head -1 > "${knot.stateDir}/motd"
         '';
       };
     };
@@ -111,14 +113,12 @@ in helpers.linuxAttrs {
       };
     };
 
-    age.secrets."gitconfig.private" = let
-      user = config.services.tangled.knot.gitUser;
-    in {
+    age.secrets."gitconfig.private" = {
       symlink = false;
       path = "/etc/gitconfig.private";
       file = ./encrypt/gitconfig.age;
-      owner = user;
-      group = user;
+      owner = knot.gitUser;
+      group = knot.gitUser;
       mode = "0444";
     };
   };
