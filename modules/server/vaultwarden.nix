@@ -27,6 +27,12 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.vaultwarden.enable) {
+    age.secrets."vaultwarden" = {
+      symlink = true;
+      path = "/run/secrets/vaultwarden.env";
+      file = ./encrypt/vaultwarden.age;
+    };
+
     services.vaultwarden = let
       baseURL = if (cfg.caddy.enable && cfg.tailscale.enable)
         then "https://${hostname}.${cfg.tailscale.domain}/vault/"
@@ -35,17 +41,28 @@ in helpers.linuxAttrs {
     in {
       enable = true;
       dbBackend = "sqlite";
+      environmentFile = "/run/secrets/vaultwarden.env";
       config = {
         IP_HEADER = "X-Real-IP";
-        ADMIN_TOKEN = "$argon2id$v=19$m=65540,t=3,p=4$+5A5H6YiN6OxyrFggkrft8Mm+sxgh/tL3USbaYFZ/h8$qj8NjE+COL4WXjmjkPWSQk7iLfhaBfBtV6k06Bql3CQ";
-        PASSWORD_HINTS_ALLOWED = "false";
-        SIGNUPS_ALLOWED = "false";
         DOMAIN = baseURL;
         WEBSOCKET_ADDRESS = "127.0.0.1";
         ROCKET_ADDRESS = "127.0.0.1";
         WEBSOCKET_PORT = toString cfg.vaultwarden.websocketPort;
         ROCKET_PORT = toString cfg.vaultwarden.port;
         ROCKET_LIMITS = "{json=10485760}";
+
+        LOGIN_RATELIMIT_SECONDS = "60";
+        LOGIN_RATELIMIT_MAX_BURST = "10";
+        ADMIN_RATELIMIT_SECONDS = "300";
+        ADMIN_RATELIMIT_MAX_BURST = "3";
+
+        PASSWORD_HINTS_ALLOWED = "false";
+        SHOW_PASSWORD_HINT = "false";
+        SIGNUPS_ALLOWED = "false";
+        INVITATIONS_ALLOWED = "false";
+        EMERGENCY_ACCESS_ALLOWED = "false";
+        SENDS_ALLOWED = "false";
+        ORG_CREATION_USERS = "none";
       };
     };
   };
