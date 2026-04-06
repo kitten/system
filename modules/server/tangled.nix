@@ -44,18 +44,41 @@ in helpers.linuxAttrs {
           denyDeleteCurrent = true;
           fsckObjects = true;
           autogc = true;
+          maxInputSize = "500m";
         };
+        protocol.version = 2;
         uploadpack = {
           allowFilter = true;
           allowReachableSHA1InWant = true;
+          keepAlive = 5;
+        };
+        core = {
+          bigFileThreshold = "50m";
+          commitGraph = true;
+          multiPackIndex = true;
+          packedGitLimit = "256m";
+          packedGitWindowSize = "1m";
+          deltaBaseCacheLimit = "96m";
         };
         pack = {
           threads = 0;
           windowMemory = "256m";
+          window = 25;
+        };
+        gc = {
+          bigPackThreshold = "512m";
+          writeCommitGraph = true;
         };
         repack.writeBitmaps = true;
         include.path = config.age.secrets."gitconfig.private".path;
       };
+    };
+
+    systemd.services.knot.serviceConfig = {
+      MemoryMax = "8G";
+      MemoryHigh = "6G";
+      CPUWeight = 80;
+      TasksMax = 128;
     };
 
     age.secrets."gitconfig.private" = let

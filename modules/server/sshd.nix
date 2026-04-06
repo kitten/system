@@ -18,6 +18,13 @@ in {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGgNlwxQFRcZjnOyoNQ9HDkhGrESU8J5fwd0HeF6CiYg"
     ];
 
+    systemd.services.sshd.serviceConfig = helpers.linuxAttrs {
+      MemoryMax = "8G";
+      MemoryHigh = "6G";
+      CPUWeight = 80;
+      TasksMax = 256;
+    };
+
     services.openssh = {
       enable = true;
     } // helpers.linuxAttrs {
@@ -29,8 +36,8 @@ in {
         KbdInteractiveAuthentication = false;
         MaxAuthTries = 3;
         LoginGraceTime = 30;
-        MaxSessions = 3;
-        MaxStartups = "3:50:10";
+        MaxSessions = 5;
+        MaxStartups = "10:30:60";
         ClientAliveInterval = 60;
         ClientAliveCountMax = 3;
         AllowAgentForwarding = false;
