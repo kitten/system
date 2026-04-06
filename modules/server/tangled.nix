@@ -90,6 +90,27 @@ in helpers.linuxAttrs {
       TasksMax = 128;
     };
 
+    systemd.services.tangled-motd = {
+      description = "Update Tangled MOTD";
+      serviceConfig = {
+        Type = "oneshot";
+        User = config.services.tangled.knot.gitUser;
+        ExecStart = let
+          stateDir = config.services.tangled.knot.stateDir;
+        in pkgs.writeShellScript "tangled-motd" ''
+          ${pkgs.fortune-kind}/bin/fortune-kind | ${pkgs.coreutils}/bin/head -1 > "${stateDir}/motd"
+        '';
+      };
+    };
+
+    systemd.timers.tangled-motd = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "hourly";
+        Persistent = true;
+      };
+    };
+
     age.secrets."gitconfig.private" = let
       user = config.services.tangled.knot.gitUser;
     in {
