@@ -24,8 +24,11 @@ in helpers.linuxAttrs {
   };
 
   config = mkIf (cfg.enable && cfg.tangled.enable) {
-    modules.server.backup.paths.tangled = {
-      path = "${config.services.tangled.knot.stateDir}/repos";
+    modules.server = {
+      sshd.allowUsers = [ config.services.tangled.knot.gitUser ];
+      backup.paths.tangled = {
+        path = "${config.services.tangled.knot.stateDir}/repos";
+      };
     };
 
     services = {
@@ -37,8 +40,6 @@ in helpers.linuxAttrs {
           owner = cfg.tangled.owner;
         };
       };
-
-      modules.server.sshd.allowUsers = [ config.services.tangled.knot.gitUser ];
     };
 
     programs.git = {
