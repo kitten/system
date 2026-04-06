@@ -11,6 +11,12 @@ in {
       description = "Whether to enable SSH server.";
       type = types.bool;
     };
+
+    allowUsers = mkOption {
+      default = [ user ];
+      description = "Users allowed to log in via SSH.";
+      type = types.listOf types.str;
+    };
   };
 
   config = mkIf cfg.sshd.enable {
@@ -44,7 +50,7 @@ in {
         AllowTcpForwarding = false;
         X11Forwarding = false;
         AllowStreamLocalForwarding = false;
-        AllowUsers = [ user ];
+        AllowUsers = cfg.sshd.allowUsers;
       };
     };
   };

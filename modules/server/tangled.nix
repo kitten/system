@@ -38,12 +38,7 @@ in helpers.linuxAttrs {
         };
       };
 
-      openssh.settings = let
-        user = config.services.tangled.knot.gitUser;
-      in {
-        AllowUsers = [ user ];
-        AllowGroups = [ user ];
-      };
+      modules.server.sshd.allowUsers = [ config.services.tangled.knot.gitUser ];
     };
 
     programs.git = {
