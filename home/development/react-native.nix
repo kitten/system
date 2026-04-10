@@ -6,6 +6,8 @@ let
 
   android-arch = if helpers.system == "aarch64-darwin" then "arm64-v8a" else "x86-64";
 
+  jdk = pkgs.jdk17;
+
   create-avd = pkgs.writeShellScriptBin "create-avd" ''
     avdmanager create avd \
       --name android-35 \
@@ -83,7 +85,7 @@ in {
       ];
 
       home.sessionVariables = rec {
-        JAVA_HOME = pkgs.jdk.home;
+        JAVA_HOME = jdk.home;
         ANDROID_USER_HOME = "${config.xdg.stateHome}/android";
         ANDROID_AVD_HOME = "${ANDROID_USER_HOME}/avd";
         GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
