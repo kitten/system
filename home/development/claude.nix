@@ -16,6 +16,7 @@ in {
   config = mkIf cfg.claude.enable {
     programs.claude-code = {
       enable = true;
+      package = pkgs.claude-code-bin;
       settings = {
         env = {
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
@@ -25,7 +26,7 @@ in {
         spinnerTipsEnabled = false;
         feedbackSurveyRate = 0.0;
         editorMode = "vim";
-        theme = "light-ansi";
+        theme = "dark-ansi";
       };
     };
   };
