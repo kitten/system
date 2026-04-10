@@ -19,19 +19,12 @@ in {
     };
   };
 
-  config = mkIf cfg.sshd.enable {
+  config = mkIf cfg.sshd.enable ({
     modules.server.sshd.allowUsers = [ user ];
 
     users.users."${user}".openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGgNlwxQFRcZjnOyoNQ9HDkhGrESU8J5fwd0HeF6CiYg"
     ];
-
-    systemd.services.sshd.serviceConfig = helpers.linuxAttrs {
-      MemoryMax = "8G";
-      MemoryHigh = "6G";
-      CPUWeight = 80;
-      TasksMax = 256;
-    };
 
     services.openssh = {
       enable = true;
@@ -55,5 +48,12 @@ in {
         AllowUsers = cfg.sshd.allowUsers;
       };
     };
-  };
+  } // helpers.linuxAttrs {
+    systemd.services.sshd.serviceConfig = {
+      MemoryMax = "8G";
+      MemoryHigh = "6G";
+      CPUWeight = 80;
+      TasksMax = 256;
+    };
+  });
 }
