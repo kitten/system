@@ -20,6 +20,7 @@ in {
       settings = {
         env = {
           CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
+          CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING = "1";
         };
         autoUpdates = false;
         includeCoAuthoredBy = false;
@@ -27,6 +28,7 @@ in {
         feedbackSurveyRate = 0.0;
         editorMode = "vim";
         theme = "dark-ansi";
+        effortLevel = "high";
       };
     };
   };
