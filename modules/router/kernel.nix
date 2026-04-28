@@ -50,10 +50,11 @@ in {
       "net.ipv4.tcp_keepalive_intvl" = 10;
       "net.ipv4.tcp_keepalive_probes" = 6;
 
-      "net.core.default_qdisc" = "fq_codel";
+      "net.core.default_qdisc" = "fq";
       "net.ipv4.tcp_congestion_control" = "bbr";
       "net.ipv4.tcp_window_scaling" = true;
       "net.ipv4.tcp_syncookies" = true;
+      "net.ipv4.tcp_notsent_lowat" = 16384;
 
       "net.ipv6.conf.all.forwarding" = true;
       "net.ipv6.conf.all.accept_ra" = if cfg.ipv6 then 2 else false;
