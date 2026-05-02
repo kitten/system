@@ -18,6 +18,7 @@ with lib; {
     ./network.nix
     ./timeserver.nix
     ./nftables.nix
+    ./nftables-blocklist.nix
     ./upnp.nix
     ./kernel.nix
   ];

@@ -39,9 +39,12 @@
         { macAddress = "c4:f1:74:51:4c:f2"; ipAddress = "10.0.0.124"; } # eero router
         { macAddress = "1c:1d:d3:de:4b:06"; ipAddress = "10.0.0.35"; }  # irnbru
       ];
-      nftables.blockForward = [
-        "ec:e5:12:1d:23:40" # tado
-      ];
+      nftables = {
+        blocklist.enable = true;
+        blockForward = [
+          "ec:e5:12:1d:23:40" # tado
+        ];
+      };
     };
     automation = {
       enable = true;

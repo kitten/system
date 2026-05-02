@@ -3,6 +3,9 @@
 with lib;
 let
   cfg = config.modules.router;
+  blcfg = cfg.nftables.blocklist;
+  blSetV4 = "blocklist_v4";
+  blSetV6 = "blocklist_v6";
 
   extern = cfg.interfaces.external;
   intern = cfg.interfaces.internal;
@@ -75,7 +78,25 @@ in {
             udp dport {${udpPorts}} ct state new meter udp6-conncount { ip6 saddr . udp dport ct count over 150 } counter drop
             udp dport {${udpPorts}} ct state new accept
           '';
+          blocklistSets = optionalString blcfg.enable ''
+            set ${blSetV4} {
+              type ipv4_addr
+              flags interval
+              auto-merge
+            }
+            set ${blSetV6} {
+              type ipv6_addr
+              flags interval
+              auto-merge
+            }
+          '';
+          blocklistRules = optionalString blcfg.enable ''
+            ip saddr @${blSetV4} counter drop
+            ip6 saddr @${blSetV6} counter drop
+          '';
         in ''
+          ${blocklistSets}
+
           chain prerouting {
             type nat hook prerouting priority dstnat; policy accept;
             ${capturePortsRules}
@@ -92,6 +113,8 @@ in {
             ct state invalid drop
 
             iifname { ${concatIfnames trustedInterfaces} } accept
+
+            ${blocklistRules}
 
             tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
             tcp flags & (fin|syn|rst|psh|ack|urg) == fin|syn|rst|psh|ack|urg counter drop
@@ -195,5 +218,6 @@ in {
         '';
       };
     };
+
   };
 }
