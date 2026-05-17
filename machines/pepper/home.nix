@@ -24,11 +24,6 @@
       discord.enable = true;
       ghostty.enable = true;
       zen-browser.enable = true;
-      ollama = {
-        enable = true;
-        package = pkgs.ollama-rocm;
-        flashAttention = true;
-      };
     };
   };
 }

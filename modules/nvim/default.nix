@@ -64,7 +64,6 @@ let
       telescope-zf-native-nvim
 
       nvim-treesitter
-      nvim-treesitter-refactor
       nvim-treesitter-textobjects
     ];
   };

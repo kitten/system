@@ -44,14 +44,36 @@ in {
 
     users.users."${user}".extraGroups = [ "gamemode" ];
 
-    environment.systemPackages = [
-      (pkgs.lutris.override {
-        extraPkgs = (pkgs: with pkgs; [ gamemode ]);
-      })
-    ];
+    environment.systemPackages = with pkgs; [ heroic ];
 
     programs = {
       gamemode.enable = true;
+      gamescope = {
+        enable = true;
+        package = pkgs.gamescope.overrideAttrs (old: {
+          enableWsi = true;
+          enableExecutable = true;
+          NIX_CFLAGS_COMPILE = [ "-fno-fast-math" ];
+        });
+        env = {
+          PROTON_ENABLE_WAYLAND = "1";
+          PROTON_USE_NTSYNC = "1";
+          SDL_VIDEODRIVER = "windows,wayland,x11";
+        };
+        args = [
+          "--backend" "wayland"
+          "--adaptive-sync"
+          "--expose-wayland"
+          "--immediate-flips"
+          "--force-grab-cursor"
+          "--rt"
+          "-f"
+          "-S" "fit"
+          "-W" "2560"
+          "-H" "1440"
+          "-r" "360"
+        ];
+      };
       steam = {
         enable = true;
         package = pkgs.steam.override {
