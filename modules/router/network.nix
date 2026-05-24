@@ -286,7 +286,8 @@ in {
     services.pppd = mkIf ppp.enable {
       enable = true;
       peers.extern.config = ''
-        plugin pppoe.so wan
+        plugin pppoe.so
+        nic-wan
         ifname ${extern.name}
         noipdefault
         defaultroute
