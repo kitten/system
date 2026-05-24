@@ -615,6 +615,29 @@
         "type": "github"
       }
     },
+    "pinentry-touchid": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779650060,
+        "narHash": "sha256-mRc63HiKSl9PhqEfRSNW5cXijcIcp3wL+Vs6pNodS5g=",
+        "owner": "kitten",
+        "repo": "pinentry-touchid",
+        "rev": "527f8074c1151a4c7cf8e2137687b54e8d76d6de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kitten",
+        "repo": "pinentry-touchid",
+        "type": "github"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -649,6 +672,7 @@
         "lanzaboote": "lanzaboote",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "pinentry-touchid": "pinentry-touchid",
         "system-nvim": "system-nvim",
         "tangled": "tangled",
         "yeetmouse": "yeetmouse",

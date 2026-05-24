@@ -33,10 +33,10 @@ in {
       enableSshSupport = true;
       enableScDaemon = false;
       verbose = true;
-      defaultCacheTtl = 10;
-      defaultCacheTtlSsh = 10;
-      maxCacheTtl = 60;
-      maxCacheTtlSsh = 60;
+      defaultCacheTtl = 120;
+      defaultCacheTtlSsh = 120;
+      maxCacheTtl = 120;
+      maxCacheTtlSsh = 120;
       pinentry = mkMerge [
         (helpers.mkIfDarwin {
           package = pkgs.pinentry-touchid;

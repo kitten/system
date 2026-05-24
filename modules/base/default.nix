@@ -8,5 +8,6 @@
     ./linux.nix
     ./macos.nix
     ./macos-vram.nix
+    ./agenix.nix
   ];
 }

@@ -10,5 +10,4 @@ self: super: {
   force-bind = import ./force-bind-seccomp.nix self super;
   steamworks-sdk-redist = import ./steamworks-sdk-redist.nix self super;
   palworld-server = import ./palworld-server.nix self super;
-  pinentry-touchid = import ./pinentry-touchid.nix self super;
 }

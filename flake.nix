@@ -71,6 +71,14 @@
       url = "git+https://tangled.org/@tangled.org/core?ref=v1.14.0-alpha";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    pinentry-touchid = {
+      url = "github:kitten/pinentry-touchid";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
   };
 
   outputs = inputs @ { self, ... }: let
@@ -83,6 +91,7 @@
       inputs.android-sdk.overlays.default
       (self: super: {
         zen-browser = inputs.zen-browser.packages.${self.system}.beta;
+        pinentry-touchid = inputs.pinentry-touchid.packages.${self.system}.default;
       })
     ];
   in {
