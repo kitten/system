@@ -725,11 +725,11 @@
         "nvim-treesitter-textobjects": "nvim-treesitter-textobjects"
       },
       "locked": {
-        "lastModified": 1779643175,
-        "narHash": "sha256-51hMknVFw0DWRFSt/Uc+AgQASwxue8txgtboWnr62NI=",
+        "lastModified": 1779646571,
+        "narHash": "sha256-mz+FjG1Mwo34as6M3O3bNDA1lHCgNlTOZctltkNcQsI=",
         "owner": "kitten",
         "repo": "system-nvim",
-        "rev": "a5647f3e9cda6723e1dbc2c27610f1ed2366ecc0",
+        "rev": "5a739d14ecb237fe3f596613e90df80350a92027",
         "type": "github"
       },
       "original": {
