@@ -3,7 +3,7 @@
 with lib;
 let
   cfg = config.modules.fonts;
-  fontsPath = if helpers.isDarwin then "Library/Fonts" else "${config.xdg.dataHome}/fonts";
+  fontsPath = if helpers.isDarwin then "${config.home.homeDirectory}/Library/Fonts" else "${config.xdg.dataHome}/fonts";
 in {
   options.modules.fonts = {
     enable = mkOption {
