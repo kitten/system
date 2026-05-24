@@ -17,6 +17,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.file.".hushlogin".text = "";
+
     programs.zsh = rec {
       enable = true;
       enableCompletion = true;
