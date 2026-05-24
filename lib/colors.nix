@@ -92,60 +92,8 @@ in rec {
   transparent = (mkColor "NONE" "NONE" 0);
 
   mkHighlight = { fg ? transparent, bg ? transparent, style ? "NONE" }: { fg=fg; bg=bg; style=style; };
-  mkVimHighlight = group: { fg ? transparent, bg ? transparent, style ? "NONE" }:
-    "highlight ${group} guifg=${fg.gui} guibg=${bg.gui} gui=${style} ctermfg=${toString fg.cterm} ctermbg=${toString bg.cterm} cterm=${style}";
   mkLuaVariable = name: { gui, ... }: "${name} = \"${gui}\",";
   mkScssVariable = name: { gui, ... }: "\$color-${name}: ${gui};";
-
-  mkNeovimHighlights = let
-    isValue = value:
-      isAttrs value && (
-        (hasAttr "link" value) ||
-        (hasAttr "fg" value) ||
-        (hasAttr "bg" value) ||
-        (hasAttr "sp" value) ||
-        (hasAttr "bold" value) ||
-        (hasAttr "italic" value) ||
-        (hasAttr "underline" value) ||
-        (hasAttr "strikethrough" value) ||
-        (hasAttr "reverse" value) ||
-        (hasAttr "default" value) ||
-        (hasAttr "force" value)
-      );
-    recurse = path: value:
-      if isAttrs value && !(isValue value) then
-        mapAttrsToList
-          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
-          value
-      else {
-        ${concatStrings path} = value;
-      };
-    toFlatAttrs = attrs:
-      lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
-    toValueString = value:
-      if value == "NONE" then
-        "\"NONE\""
-      else if isInt value then
-        "${toString value}"
-      else if isBool value then
-        "${boolToString value}"
-      else
-        "\"${toString value}\"";
-    toValueAttribute = name: value:
-      if name == "sp" then
-        "${name} = ${toValueString value.gui}"
-      else if name == "fg" || name == "bg" then
-        "${name} = ${toValueString value.gui}, cterm${name} = ${toValueString value.cterm}"
-      else
-        "${name} = ${toValueString value}";
-    withDefaults = value: { fg = transparent; bg = transparent; } // value;
-    toValue = name: value:
-      if (hasAttr "force" value) && value.force then
-        "vim.api.nvim_set_hl(0, \"${name}\", { fg = \"NONE\", bg = \"NONE\", ctermfg = \"NONE\", ctermbg = \"NONE\" })"
-      else
-        "vim.api.nvim_set_hl(0, \"${name}\", { ${concatStringsSep ", " (mapAttrsToList toValueAttribute (withDefaults value))} })";
-  in
-    colors: (concatStringsSep "\n" (mapAttrsToList toValue (toFlatAttrs colors)));
 
   mkZedStyles = let
     valueToString = value: "${value.gui}";
@@ -160,23 +108,6 @@ in rec {
       };
   in
     styles: lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] styles));
-
-  mkVimHardlineColors = colors:
-    with colors; ''
-      {
-        text = {gui = "${element.gui}", cterm = "${toString element.cterm}", cterm16 = "${toString element.cterm16}"},
-        normal = {gui = "${green.gui}", cterm = "${toString green.cterm}", cterm16 = "${toString green.cterm16}"},
-        insert = {gui = "${blue.gui}", cterm = "${toString blue.cterm}", cterm16 = "${toString blue.cterm16}"},
-        replace = {gui = "${yellow.gui}", cterm = "${toString yellow.cterm}", cterm16 = "${toString yellow.cterm16}"},
-        inactive_comment = {gui = "${muted.gui}", cterm = "${toString muted.cterm}", cterm16 = "${toString muted.cterm16}"},
-        inactive_cursor = {gui = "NONE", cterm = "NONE", cterm16 = "0"},
-        inactive_menu = {gui = "${gutter.gui}", cterm = "${toString gutter.cterm}", cterm16 = "${toString gutter.cterm16}"},
-        visual = {gui = "${aqua.gui}", cterm = "${toString aqua.cterm}", cterm16 = "${toString aqua.cterm16}"},
-        command = {gui = "${magenta.gui}", cterm = "${toString magenta.cterm}", cterm16 = "${toString magenta.cterm16}"},
-        alt_text = {gui = "${white.gui}", cterm = "${toString white.cterm}", cterm16 = "${toString white.cterm16}"},
-        warning = {gui = "${orange.gui}", cterm = "${toString orange.cterm}", cterm16 = "${toString orange.cterm16}"},
-      }
-    '';
 
   mkLuaSyntax = let
     recurse = path: value:
@@ -207,29 +138,4 @@ in rec {
       lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
   in colors:
     (concatStringsSep "\n" (mapAttrsToList mkScssVariable (toFlatAttrs colors)));
-
-  mkVimSyntax = let
-    recurse = path: value:
-      if isAttrs value && !(hasAttr "fg" value) && !(hasAttr "bg" value) && !(hasAttr "style" value) then
-        mapAttrsToList
-          (name: value: recurse (path ++ (if name != "base" then [name] else [])) value)
-          value
-      else {
-        ${concatStrings path} = value;
-      };
-    toFlatAttrs = attrs:
-      lib.foldl lib.recursiveUpdate {} (lib.flatten (recurse [] attrs));
-  in name: attrs:
-    ''
-    highlight clear
-
-    if exists("syntax_on")
-      syntax reset
-    endif
-
-    set t_Co=256
-    let g:colors_name="${name}"
-
-    ${concatStringsSep "\n" (mapAttrsToList mkVimHighlight (toFlatAttrs attrs))}
-    '' + "\nset background=dark";
 }

@@ -38,16 +38,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    language-servers = {
-      url = "github:kitten/language-servers.nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
-
-    nvim-plugins = {
-      url = "github:kitten/system-nvim-plugins.nix";
+    system-nvim = {
+      url = "github:kitten/system-nvim";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
@@ -88,9 +80,7 @@
     overlays = [
       self.overlays.default
       self.overlays.lix
-      inputs.nvim-plugins.overlays.default
       inputs.android-sdk.overlays.default
-      inputs.language-servers.overlays.default
       (self: super: {
         zen-browser = inputs.zen-browser.packages.${self.system}.beta;
       })
