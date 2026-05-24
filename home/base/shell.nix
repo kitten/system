@@ -3,6 +3,10 @@
 with lib;
 let
   cfg = config.modules.shell;
+
+  # Vendored fork of pure-prompt 1.27.0 (MIT, https://github.com/sindresorhus/pure)
+  # — files live at ./zsh/. Forked so we own the color palette (only ANSI 0-15).
+  prompt-src = ./zsh;
 in {
   options.modules.shell = {
     enable = mkOption {
@@ -18,8 +22,23 @@ in {
       enableCompletion = true;
       enableVteIntegration = true;
       autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
+      # Disabled: we source it via zsh-defer below so it loads after first prompt
+      syntaxHighlighting.enable = false;
       dotDir = "${config.xdg.configHome}/zsh";
+      completionInit = ''
+        autoload -Uz compinit
+        # Anonymous function scopes extended_glob/local_options so they don't
+        # leak globally — local_options would otherwise undo prompt_subst when
+        # prompt_pure_setup() returns, breaking prompt expansion.
+        () {
+          setopt localoptions extended_glob
+          if [[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]]; then
+            compinit
+          else
+            compinit -C
+          fi
+        }
+      '';
       shellAliases = {
         ls = "ls --color=auto";
         ll = "ls -l";
@@ -45,30 +64,41 @@ in {
       plugins = [
         {
           name = "pure-prompt";
-          file = "share/zsh/site-functions/async";
-          src = pkgs.pure-prompt;
+          file = "async.zsh";
+          src = prompt-src;
         }
         {
           name = "pure-prompt";
-          file = "share/zsh/site-functions/prompt_pure_setup";
-          src = pkgs.pure-prompt;
+          file = "prompt_pure_setup.zsh";
+          src = prompt-src;
         }
       ];
       initContent = /*sh*/''
         setopt NO_NOMATCH
         stty -ixon -ixoff
+        # Pre-evaluated hooks (avoid forking on every shell start)
+        source ${pkgs.runCommand "direnv-hook.zsh" {} ''
+          ${pkgs.direnv}/bin/direnv hook zsh > $out
+        ''}
+        source ${pkgs.runCommand "zoxide-init.zsh" {} ''
+          ${pkgs.zoxide}/bin/zoxide init zsh > $out
+        ''}
+        # Defer syntax-highlighting until after the first prompt is drawn
+        source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
+        zsh-defer source ${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
       '';
     };
 
     programs.direnv = {
       enable = true;
-      enableZshIntegration = true;
+      enableZshIntegration = false;
       nix-direnv.enable = true;
     };
 
     programs.zoxide = {
       enable = true;
-      enableZshIntegration = true;
+      enableZshIntegration = false;
       enableNushellIntegration = mkDefault false;
       enableFishIntegration = mkDefault false;
     };
