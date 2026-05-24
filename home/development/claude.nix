@@ -19,12 +19,16 @@ in {
       package = pkgs.claude-code-bin;
       settings = {
         env = {
-          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
+          DISABLE_UPDATES = "1";
+          DISABLE_FEEDBACK_COMMAND = "1";
+          DISABLE_ERROR_REPORTING = "1";
           CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING = "1";
         };
         autoUpdates = false;
         includeCoAuthoredBy = false;
         spinnerTipsEnabled = false;
+        awaySummaryEnabled = false;
+        disableRemoteControl = false;
         feedbackSurveyRate = 0.0;
         editorMode = "vim";
         theme = "dark-ansi";
