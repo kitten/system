@@ -160,7 +160,7 @@ in {
         keybind = ctrl+a>g=equalize_splits
 
         keybind = performable:super+c=copy_to_clipboard
-        keybind = performable:super+v=paste_from_clipboard
+        keybind = super+shift+v=paste_from_clipboard
 
         keybind = global:cmd+grave_accent=toggle_quick_terminal
       '';
