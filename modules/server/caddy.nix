@@ -43,6 +43,7 @@ let
     ${hostname}.${domain} {
       tls {
         protocols tls1.3
+        get_certificate tailscale
       }
       import network_paths
     }
