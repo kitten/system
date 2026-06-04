@@ -33,6 +33,12 @@ let
       .directory
       .Trash-*
       .nfs*
+
+      # direnv + nix devshell artifacts (no-op when already tracked)
+      /.envrc
+      /.envrc.local
+      /.direnv/
+      /.devshell/
     '' +
       (optionalString claude.enable ''
         .claude/
