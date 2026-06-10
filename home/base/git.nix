@@ -118,6 +118,7 @@ in {
           base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
           journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
           get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
+          normalize-remotes = "!f() { for r in $(git remote); do git config remote.\"$r\".partialclonefilter blob:none && git config remote.\"$r\".promisor true && echo \"normalized $r\"; done; }; f";
         };
 
         commit.gpgSign = true;
