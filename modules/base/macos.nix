@@ -9,6 +9,7 @@ helpers.darwinAttrs {
 
     activationScripts.postActivation.text = ''
       # disable spotlight
+      mdutil -a -i off >/dev/null 2>&1 || true
       launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist >/dev/null 2>&1 || true
       # disable fseventsd on /nix volume
       mkdir -p /nix/.fseventsd
