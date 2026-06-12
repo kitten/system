@@ -509,16 +509,16 @@
     "nvim-fff": {
       "flake": false,
       "locked": {
-        "lastModified": 1779589736,
-        "narHash": "sha256-u9R6JY1WyRfc+8ANf7742LPMcktIl+352ID+ggM/aZ4=",
+        "lastModified": 1781044538,
+        "narHash": "sha256-q/RfjfVZMM8RyfOP1o2NjUP6NrOh7D2ribgq5Dvwxkc=",
         "owner": "dmtrKovalenko",
         "repo": "fff.nvim",
-        "rev": "5c3a615e76157c091268a8ac249dd220d73ed56a",
+        "rev": "7d7910b6ba78ea8406671eaac8cdb5eb9850d9d1",
         "type": "github"
       },
       "original": {
         "owner": "dmtrKovalenko",
-        "ref": "v0.8.2",
+        "ref": "v0.9.4",
         "repo": "fff.nvim",
         "type": "github"
       }
@@ -754,11 +754,11 @@
         "nvim-treesitter-textobjects": "nvim-treesitter-textobjects"
       },
       "locked": {
-        "lastModified": 1779795324,
-        "narHash": "sha256-tUN3gd6CqujAieAdM5nka01DYqjmV4NecFxsYnmEvrM=",
+        "lastModified": 1781541014,
+        "narHash": "sha256-qsv1lN29w4mR6P8Wa/q/HC9fv+ZhghWTwXee43bykqA=",
         "owner": "kitten",
         "repo": "system-nvim",
-        "rev": "8bbe250caddfdae2660bb61f8f563cd5819eb06d",
+        "rev": "d5cf4997c490ed1310028dc7a712306e7a652136",
         "type": "github"
       },
       "original": {
