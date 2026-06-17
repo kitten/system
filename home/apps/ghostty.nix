@@ -81,7 +81,7 @@ in {
         window-padding-color = extend
         window-theme = ghostty
         window-colorspace = display-p3
-        window-save-state = always
+        window-save-state = never
         window-decoration = server
         window-vsync = true
         window-inherit-working-directory = true
