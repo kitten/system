@@ -16,7 +16,7 @@ in {
   config = mkIf cfg.claude.enable {
     programs.claude-code = {
       enable = true;
-      package = pkgs.claude-code-bin;
+      package = pkgs.claude-code;
       settings = {
         env = {
           DISABLE_UPDATES = "1";

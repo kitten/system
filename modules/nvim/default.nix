@@ -9,7 +9,7 @@
 with lib;
 let
   cfg = config.modules.nvim;
-  neovim = inputs.system-nvim.packages.${pkgs.system}.neovim;
+  neovim = inputs.system-nvim.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
   vim = pkgs.writeShellScriptBin "vim" ''exec ${neovim}/bin/nvim "$@"'';
   vi = pkgs.writeShellScriptBin "vi" ''exec ${neovim}/bin/nvim "$@"'';
 in
