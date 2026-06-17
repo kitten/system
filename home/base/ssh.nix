@@ -5,20 +5,20 @@ with lib;
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."*" = {
-      forwardAgent = false;
-      addKeysToAgent = "no";
-      hashKnownHosts = false;
-      userKnownHostsFile = "~/.ssh/known_hosts";
-      controlMaster = "no";
-      controlPath = "~/.ssh/master-%r@%n:%p";
-      controlPersist = "no";
+    settings."*" = {
+      ForwardAgent = false;
+      AddKeysToAgent = "no";
+      HashKnownHosts = false;
+      UserKnownHostsFile = "~/.ssh/known_hosts";
+      ControlMaster = "no";
+      ControlPath = "~/.ssh/master-%r@%n:%p";
+      ControlPersist = "no";
 
-      compression = true;
-      serverAliveInterval = 60;
-      serverAliveCountMax = 5;
-      extraOptions.IPQoS = "none";
-      setEnv.TERM = "xterm";
+      Compression = true;
+      ServerAliveInterval = 60;
+      ServerAliveCountMax = 5;
+      IPQoS = "none";
+      SetEnv.TERM = "xterm";
     };
   };
 }
