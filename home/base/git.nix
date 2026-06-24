@@ -183,6 +183,8 @@ in {
         core = {
           autocrlf = false;
           excludesfile = toString excludesFile;
+          fsmonitor = true;
+          untrackedCache = true;
         };
 
         pull.rebase = true;
