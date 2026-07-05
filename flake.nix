@@ -17,7 +17,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v1.0.0";
+      url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -51,7 +51,7 @@
     };
 
     yeetmouse = {
-      url = "github:AndyFilter/yeetmouse?dir=nix";
+      url = "github:kitten/yeetmouse/@kitten/fix/nix-build-gui-config-changes?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

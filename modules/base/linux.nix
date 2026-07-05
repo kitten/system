@@ -31,7 +31,6 @@ in helpers.linuxAttrs {
   };
 
   boot = {
-    bootspec.enable = mkDefault true;
     consoleLogLevel = mkDefault 2;
 
     loader = {
