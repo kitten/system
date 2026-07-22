@@ -35,8 +35,8 @@ let
       .nfs*
 
       # direnv + nix devshell artifacts (no-op when already tracked)
-      /.envrc
-      /.envrc.local
+      .envrc
+      .envrc.local
       /.direnv/
       /.devshell/
     '' +
