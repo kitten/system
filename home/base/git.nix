@@ -152,6 +152,7 @@ in {
 
         push = {
           default = "simple";
+          recurseSubmodules = "on-demand";
           autoSetupRemote = true;
           atomic = true;
         };
@@ -173,6 +174,7 @@ in {
           prune = true;
           pruneTags = true;
           all = true;
+          recurseSubmodules = "on-demand";
         };
 
         rerere = {
