@@ -42,6 +42,7 @@ in helpers.linuxAttrs {
         server = {
           hostname = cfg.tangled.hostname;
           owner = cfg.tangled.owner;
+          secureMode = true;
         };
       };
     };

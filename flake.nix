@@ -72,7 +72,7 @@
     };
 
     tangled = {
-      url = "git+https://tangled.org/@tangled.org/core?ref=v1.14.0-alpha";
+      url = "git+https://tangled.org/@tangled.org/core?ref=v1.16.1-alpha";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
