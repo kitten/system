@@ -103,7 +103,13 @@ in {
         enable = true;
       };
 
-      settings = {
+      settings = let
+        remoteConfig = {
+          partialclonefilter = "blob:none";
+          tagOpt = "--no-tags";
+          promisor = true;
+        };
+      in {
         user = cfg.user;
 
         alias = {
@@ -118,6 +124,7 @@ in {
           base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
           journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
           get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
+          pr = "!f() { git fetch origin \"+refs/pull/$1/head:refs/pull/origin/$1\" && git switch --detach \"refs/pull/origin/$1\"; }; f";
           normalize-remotes = "!f() { for r in $(git remote); do git config remote.\"$r\".partialclonefilter blob:none && git config remote.\"$r\".promisor true && echo \"normalized $r\"; done; }; f";
         };
 
@@ -172,7 +179,6 @@ in {
 
         fetch = {
           prune = true;
-          pruneTags = true;
           all = true;
           recurseSubmodules = "on-demand";
         };
@@ -206,13 +212,8 @@ in {
         "mergetool \"vimdiff\"".cmd = "nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'";
         pretty.longline = "tformat:%C(yellow)%h %Cred%D %Creset%<(50,mtrunc)%s %Cblue(%cd, %al)";
 
-        "remote \"origin\"" = {
-          fetch = "+refs/pull/*/head:refs/remotes/origin/pr/*";
-          partialclonefilter = "blob:none";
-          tagOpt = "--no-tags";
-          promisor = true;
-          pruneTags = true;
-        };
+        "remote \"origin\"" = remoteConfig;
+        "remote \"upstream\"" = remoteConfig;
       };
     };
   };
