@@ -213,7 +213,6 @@ in {
         pretty.longline = "tformat:%C(yellow)%h %Cred%D %Creset%<(50,mtrunc)%s %Cblue(%cd, %al)";
 
         "remote \"origin\"" = remoteConfig;
-        "remote \"upstream\"" = remoteConfig;
       };
     };
   };
