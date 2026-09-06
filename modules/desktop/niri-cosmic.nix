@@ -8,7 +8,7 @@ let
     niri
     config.services.displayManager.cosmic-greeter.package
     cosmic-applets
-    cosmic-applibrary
+    cosmic-app-library
     cosmic-bg
     cosmic-comp
     cosmic-files
