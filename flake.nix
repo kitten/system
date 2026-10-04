@@ -23,11 +23,7 @@
 
     agenix = {
       url = "github:ryantm/agenix";
-      inputs = {
-        darwin.follows = "darwin";
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     flake-utils.url = "github:numtide/flake-utils";

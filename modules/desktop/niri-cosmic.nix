@@ -266,6 +266,7 @@ in {
             exec ${getBin pkgs.cosmic-session}/bin/cosmic-session ${getBin pkgs.niri}/bin/niri --session
           '';
         in {
+          restartIfChanged = false;
           bindsTo = [ "graphical-session.target" ];
           serviceConfig = {
             RuntimeDirectory = "cosmic-niri-session";

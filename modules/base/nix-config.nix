@@ -1,6 +1,9 @@
 { lib, pkgs, inputs, helpers, user, config, ... }:
 
-with lib; mkMerge [
+with lib; let
+  # make nix path match flake inputs
+  nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
+in mkMerge [
   {
     age.secrets."nix-access-tokens.conf".file = ./encrypt/nix-access-tokens.conf.age;
 
@@ -8,9 +11,8 @@ with lib; mkMerge [
       package = pkgs.lix;
       channel.enable = mkForce false;
 
-      # make flake registry and nix path match flake inputs
+      # make flake registry match flake inputs
       registry = mkForce (mapAttrs (_: flake: {inherit flake;}) inputs);
-      nixPath = mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
 
       settings = {
         # Enable flakes and new 'nix' command
@@ -21,7 +23,7 @@ with lib; mkMerge [
         # disable global registry
         flake-registry = "";
         # Workaround for https://github.com/NixOS/nix/issues/9574
-        nix-path = config.nix.nixPath;
+        nix-path = nixPath;
         # Use xdg spec for .nix-defexpr
         use-xdg-base-directories = true;
         # binary caches
@@ -59,5 +61,8 @@ with lib; mkMerge [
   }
   (helpers.darwinAttrs {
     system.stateVersion = 6;
+    # on nix-darwin `nix.nixPath` is still a separate option that feeds NIX_PATH,
+    # while on NixOS it is only a deprecated alias of `nix.settings.nix-path`
+    nix.nixPath = nixPath;
   })
 ]
