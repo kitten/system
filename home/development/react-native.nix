@@ -103,6 +103,7 @@ in {
           platforms-android-37-0
           ndk-27-1-12297006
           ndk-27-0-12077973
+          ndk-28-2-13676358
           cmake-3-22-1
           sdk."system-images-android-35-google-apis-${android-arch}"
           sdk."system-images-android-35-google-apis-playstore-${android-arch}"
