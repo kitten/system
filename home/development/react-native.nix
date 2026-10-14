@@ -46,7 +46,7 @@ in {
     };
 
     maestro = mkOption {
-      default = cfg.react-native.enable;
+      default = false;
       type = types.bool;
     };
 
