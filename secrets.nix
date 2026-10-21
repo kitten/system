@@ -6,6 +6,8 @@ in
 {
   "./modules/base/encrypt/nix-access-tokens.conf.age".publicKeys = keys;
 
+  "./modules/agent/encrypt/agent-ssh.age".publicKeys = keys;
+
   "./modules/server/encrypt/tailscale.age".publicKeys = keys;
   "./modules/server/encrypt/rclone.conf.age".publicKeys = keys;
   "./modules/server/encrypt/tangled-knot-ssh.age".publicKeys = keys;
@@ -14,6 +16,10 @@ in
   "./modules/server/encrypt/rclone-backup.env.age".publicKeys = keys;
 
   "./modules/router/encrypt/pppoe-options.age".publicKeys = keys;
+
+  "./home/development/encrypt/claude.env.age".publicKeys = keys;
+  "./home/development/encrypt/cursor.env.age".publicKeys = keys;
+  "./home/development/encrypt/grok.env.age".publicKeys = keys;
 
   "./home/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;
   "./home/fonts/encrypt/DankMono-Bold.otf.age".publicKeys = keys;

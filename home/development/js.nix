@@ -3,7 +3,6 @@
 with lib;
 let
   cfg = config.modules.development;
-  hasReactNative = config.modules.development.react-native.enable;
   NPMRC_PATH = "${config.xdg.configHome}/npm/npmrc";
   BUNFIG_PATH = "${config.xdg.configHome}/.bunfig.toml";
   BUN_HOME = "${config.xdg.dataHome}/bun";
@@ -26,13 +25,17 @@ in {
       default = cfg.js.enable;
       type = types.bool;
     };
+
+    projectBinInPath = mkOption {
+      default = true;
+      description = "Whether to add ./node_modules/.bin to the session PATH.";
+      type = types.bool;
+    };
   };
 
   config = mkIf cfg.js.enable {
-    home.sessionPath = [
-      "./node_modules/.bin"
-      PNPM_HOME
-    ] ++ optionals cfg.js.bun [ BUN_HOME ];
+    home.sessionPath = optional cfg.js.projectBinInPath "./node_modules/.bin"
+      ++ [ PNPM_HOME ] ++ optional cfg.js.bun BUN_HOME;
 
     home.sessionVariables = {
       inherit PNPM_HOME;

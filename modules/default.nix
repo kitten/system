@@ -3,6 +3,7 @@
 {
   imports = [
     ./base
+    ./agent
     ./apps
     ./desktop
     ./games

@@ -77,7 +77,7 @@ in {
       ];
       initContent = /*sh*/''
         setopt NO_NOMATCH
-        stty -ixon -ixoff
+        if [[ -t 0 ]]; then stty -ixon -ixoff; fi
         # Pre-evaluated hooks (avoid forking on every shell start)
         source ${pkgs.runCommand "direnv-hook.zsh" {} ''
           ${pkgs.direnv}/bin/direnv hook zsh > $out

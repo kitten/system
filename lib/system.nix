@@ -5,7 +5,6 @@
     inherit (lib.systems.elaborate { inherit system; }) isDarwin;
 
     homeDir = if isDarwin then "/Users/${user}" else "/home/${user}";
-    rootDir = if isDarwin then "/var/root" else "/root";
 
     lib = (import nixpkgs { inherit overlays system; }).lib;
 
@@ -31,22 +30,14 @@
       })
     ];
 
-    home = { ... }: {
-      inherit age;
-
-      manual.manpages.enable = false;
-      xdg.enable = true;
-      home = {
-        stateVersion = "25.05";
-        enableNixpkgsReleaseCheck = false;
-      };
-
+    home = { osConfig, ... }: {
       imports = [
         inputs.agenix.homeManagerModules.default
         inputs.android-sdk.hmModules.android
-        ../home/default.nix
+        ../home
         ../machines/${hostname}/home.nix
       ];
+      age.identityPaths = osConfig.age.identityPaths;
     };
 
     specialArgs = {

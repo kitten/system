@@ -22,5 +22,6 @@ with lib; {
     ./macos.nix
     ./tangled.nix
     ./backup.nix
+    ./t3code
   ];
 }
