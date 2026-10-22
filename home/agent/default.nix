@@ -142,11 +142,19 @@ in {
 
     modules.git = {
       user = { inherit (cfg) name email; };
-      signingKey = if cfg.signing.enable then signingKey else mkDefault null;
+      signingKey = if cfg.signing.enable then signingKey else null;
     };
 
+    # Agent accounts use their own Git identity and never start a GPG agent.
+    programs.gpg.enable = mkDefault false;
+    services.gpg-agent.enable = mkDefault false;
+
     programs.git = {
-      signing.format = mkIf cfg.signing.enable "ssh";
+      signing = {
+        signByDefault = cfg.signing.enable;
+        key = if cfg.signing.enable then signingKey else null;
+        format = mkIf cfg.signing.enable "ssh";
+      };
       settings = mkMerge [
         {
           commit.gpgSign = mkOverride 60 false;
