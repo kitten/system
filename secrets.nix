@@ -7,6 +7,7 @@ in
   "./modules/base/encrypt/nix-access-tokens.conf.age".publicKeys = keys;
 
   "./modules/agent/encrypt/agent-ssh.age".publicKeys = keys;
+  "./modules/agent/encrypt/agent.env.age".publicKeys = keys;
 
   "./modules/server/encrypt/tailscale.age".publicKeys = keys;
   "./modules/server/encrypt/rclone.conf.age".publicKeys = keys;

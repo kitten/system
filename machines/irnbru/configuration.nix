@@ -7,7 +7,10 @@
     agents.agent = {
       uid = 550;
       git.email = "phil+agent@kitten.sh";
-      secrets.ssh = ../../modules/agent/encrypt/agent-ssh.age;
+      secrets = {
+        ssh = ../../modules/agent/encrypt/agent-ssh.age;
+        env = ../../modules/agent/encrypt/agent.env.age;
+      };
       home.modules.development = {
         enable = true;
         codex.enable = true;
