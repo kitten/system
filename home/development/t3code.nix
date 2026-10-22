@@ -11,6 +11,7 @@ let
     "--set-default" "T3CODE_TELEMETRY_ENABLED" (boolToString cfg.telemetry)
     "--set" "T3CODE_DISABLE_AUTO_UPDATE" "true"
   ]
+    ++ concatLists (mapAttrsToList (name: value: [ "--set-default" name value ]) cfg.environment)
     ++ auth.wrapperArgs envFiles;
 
   configureSettings = pkgs.writeShellScript "t3code-settings" ''
@@ -52,6 +53,17 @@ let
   };
 in {
   options.modules.development.t3code = {
+    environment = mkOption {
+      type = types.attrsOf types.str;
+      default = {
+        T3CODE_CLOUDFLARED_PATH = "${pkgs.cloudflared}/bin/cloudflared";
+        T3CODE_CLERK_PUBLISHABLE_KEY = "pk_live_Y2xlcmsudDMuY29kZXMk";
+        T3CODE_CLERK_CLI_OAUTH_CLIENT_ID = "hzxSgY2cH10sDU2r";
+        T3CODE_RELAY_URL = "https://relay.t3.codes";
+      };
+      description = "Default runtime environment shared by the T3 wrappers and server. Public configuration only; use environmentFile for credentials.";
+    };
+
     settings = mkOption {
       default = { };
       type = json.type;

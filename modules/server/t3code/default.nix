@@ -35,6 +35,9 @@ let
     export T3CODE_HOME=${home}/.t3 T3CODE_NO_BROWSER=true
     export T3CODE_TELEMETRY_ENABLED=${boolToString homeCfg.telemetry}
     export T3CODE_DISABLE_AUTO_UPDATE=true
+    ${concatStringsSep "\n" (mapAttrsToList (name: value:
+      "export ${name}=${escapeShellArg value}"
+    ) homeCfg.environment)}
     export GIT_TERMINAL_PROMPT=0 GH_PROMPT_DISABLED=1 GH_NO_UPDATE_NOTIFIER=1
 
     # agenix installs secrets asynchronously at boot.
@@ -71,6 +74,11 @@ let
   pairHelper = pkgs.writeShellScriptBin "t3code-pair" ''
     exec ${shellHelper}/bin/t3code-shell ${t3} auth pairing create \
       --base-dir ${home}/.t3 --base-url ${cfg.publicUrl} --ttl 10m "$@"
+  '';
+
+  connectHelper = pkgs.writeShellScriptBin "t3code-connect" ''
+    exec ${shellHelper}/bin/t3code-shell ${t3} connect link \
+      --base-dir ${home}/.t3 --headless "$@"
   '';
 
 in helpers.darwinAttrs {
@@ -118,7 +126,7 @@ in helpers.darwinAttrs {
       };
     };
 
-    environment.systemPackages = [ shellHelper pairHelper ];
+    environment.systemPackages = [ shellHelper pairHelper connectHelper ];
 
     power.restartAfterPowerFailure = mkDefault true;
 
