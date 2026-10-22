@@ -3,10 +3,28 @@
 with lib;
 let
   cfg = config.modules.development.t3code;
+  json = pkgs.formats.json { };
+  settings = json.generate "t3code-settings.json" cfg.settings;
   auth = import ../../lib/shell-env-wrapper.nix { inherit lib pkgs; };
   envFiles = auth.runtimeFiles "${config.home.username}-t3code" cfg.environmentFile osConfig.age.secrets;
-  wrapperArgs = [ "--set-default" "T3CODE_TELEMETRY_ENABLED" (boolToString cfg.telemetry) ]
+  wrapperArgs = [
+    "--set-default" "T3CODE_TELEMETRY_ENABLED" (boolToString cfg.telemetry)
+    "--set" "T3CODE_DISABLE_AUTO_UPDATE" "true"
+  ]
     ++ auth.wrapperArgs envFiles;
+
+  configureSettings = pkgs.writeShellScript "t3code-settings" ''
+    set -euo pipefail
+    umask 077
+    directory=${escapeShellArg "${config.home.homeDirectory}/.t3/userdata"}
+    mkdir -p "$directory"
+    temporary=$(mktemp "$directory/settings.json.XXXXXX")
+    trap 'rm -f "$temporary"' EXIT
+    touch "$directory/settings.json"
+    ${pkgs.jq}/bin/jq -s 'reduce .[] as $settings ({}; . * $settings)' \
+      "$directory/settings.json" ${settings} > "$temporary"
+    mv "$temporary" "$directory/settings.json"
+  '';
 
   cliPackage = pkgs.runCommand "t3code-cli" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
     mkdir -p $out/bin
@@ -34,6 +52,12 @@ let
   };
 in {
   options.modules.development.t3code = {
+    settings = mkOption {
+      default = { };
+      type = json.type;
+      description = "T3 server settings merged on activation; declared values override UI settings.";
+    };
+
     environmentFile = auth.environmentFileOptions [
       ./encrypt/cursor.env.age
       ./encrypt/grok.env.age
@@ -78,6 +102,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    modules.development.t3code.settings.enableProviderUpdateChecks = mkDefault false;
     home.packages = [ (if cfg.desktop.enable then desktopPackage else cliPackage) ];
+    home.activation.t3codeSettings = mkIf (cfg.settings != { }) (hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${configureSettings}
+    '');
   };
 }

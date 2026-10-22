@@ -34,6 +34,7 @@ let
 
     export T3CODE_HOME=${home}/.t3 T3CODE_NO_BROWSER=true
     export T3CODE_TELEMETRY_ENABLED=${boolToString homeCfg.telemetry}
+    export T3CODE_DISABLE_AUTO_UPDATE=true
     export GIT_TERMINAL_PROMPT=0 GH_PROMPT_DISABLED=1 GH_NO_UPDATE_NOTIFIER=1
 
     # agenix installs secrets asynchronously at boot.
