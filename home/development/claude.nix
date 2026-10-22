@@ -1,22 +1,31 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, osConfig, ... }:
 
 with lib;
 let
   cfg = config.modules.development;
+  auth = import ../../lib/shell-env-wrapper.nix { inherit lib pkgs; };
 in {
   options.modules.development.claude = {
+    environmentFile = auth.environmentFileOptions ./encrypt/claude.env.age;
+
     enable = mkOption {
       default = cfg.js.enable || cfg.react-native.enable;
       example = true;
       description = "Whether to enable Claude Code configuration.";
       type = types.bool;
     };
+
+    package = mkOption {
+      default = pkgs.claude-code;
+      description = "Claude Code CLI package.";
+      type = types.package;
+    };
   };
 
   config = mkIf cfg.claude.enable {
     programs.claude-code = {
       enable = true;
-      package = pkgs.claude-code;
+      package = auth.wrap cfg.claude.package (auth.runtimeFiles "${config.home.username}-claude" cfg.claude.environmentFile osConfig.age.secrets) [ "claude" ];
       settings = {
         env = {
           DISABLE_UPDATES = "1";

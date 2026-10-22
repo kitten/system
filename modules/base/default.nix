@@ -9,5 +9,6 @@
     ./macos.nix
     ./macos-vram.nix
     ./agenix.nix
+    ./home.nix
   ];
 }

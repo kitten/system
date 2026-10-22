@@ -12,9 +12,13 @@ with lib; {
 
   imports = [
     ./claude.nix
+    ./codex.nix
+    ./cursor.nix
+    ./grok.nix
     ./js.nix
     ./react-native.nix
     ./terraform.nix
     ./zig.nix
+    ./t3code.nix
   ];
 }

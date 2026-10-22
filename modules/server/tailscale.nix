@@ -49,11 +49,7 @@ in {
 
     environment.systemPackages = mkIf config.modules.desktop.enable [ pkgs.tail-tray ];
   } // helpers.darwinAttrs {
-    networking.search = [ cfg.domain ];
-
-    services.tailscale = {
-      enable = true;
-      overrideLocalDns = true;
-    };
+    environment.etc."resolver/ts.net".enable = false;
+    services.tailscale.enable = true;
   });
 }

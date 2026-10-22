@@ -690,11 +690,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780667833,
-        "narHash": "sha256-iGe7UdfXvvRDslfkEmCeHepSBFLHVo99G8M5jZGbdnc=",
+        "lastModified": 1792631796,
+        "narHash": "sha256-OwWlZ11RncCuEjrgLV7SXjT2m0M1c8S2nwmnimy5uuA=",
         "owner": "kitten",
         "repo": "pinentry-touchid",
-        "rev": "388b3db20358a2418b18e44fa79a5041b31f6638",
+        "rev": "ef65e0d899f48108c60b78c6ba44ac1539397b80",
         "type": "github"
       },
       "original": {
