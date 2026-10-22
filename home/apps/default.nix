@@ -19,6 +19,7 @@ with lib; {
     ./ollama.nix
     ./minecraft.nix
     ./ghostty.nix
+    ./rex
     ./wezterm
     ./zed-editor
   ];

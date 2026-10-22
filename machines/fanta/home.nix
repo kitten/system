@@ -9,6 +9,7 @@
     apps = {
       enable = true;
       ghostty.enable = true;
+      rex.enable = true;
     };
   };
 }
