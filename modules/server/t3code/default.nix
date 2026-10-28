@@ -52,6 +52,10 @@ let
     done
     export GITHUB_TOKEN="''${GITHUB_TOKEN:-''${GH_TOKEN:-}}"
 
+    ${optionalString (cfg.extraPackages != [ ]) ''
+      export PATH=${escapeShellArg (makeBinPath cfg.extraPackages)}:"$PATH"
+    ''}
+
     exec "$@"
   '';
 
@@ -96,6 +100,13 @@ in helpers.darwinAttrs {
       default = "agent";
       description = "Agent account to enable and run T3 Code as (modules.agents.<name>).";
       type = types.strMatching "[a-z_][a-z0-9_-]*";
+    };
+
+    extraPackages = mkOption {
+      default = [ pkgs.ffmpeg ];
+      defaultText = literalExpression "[ pkgs.ffmpeg ]";
+      description = "CLI tools added to PATH for the T3 server and its environment helpers.";
+      type = types.listOf types.package;
     };
 
     port = mkOption {
