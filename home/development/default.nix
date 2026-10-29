@@ -11,6 +11,7 @@ with lib; {
   };
 
   imports = [
+    ./instructions.nix
     ./claude.nix
     ./codex.nix
     ./cursor.nix

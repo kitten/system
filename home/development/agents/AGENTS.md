@@ -1,0 +1,19 @@
+- Shared repos live at `~/git/<org>/<repo>`; clone with `git get <org>/<repo>`
+  - Use SSH remotes
+  - For forks, `origin` is the fork and `upstream` the canonical repo. The local default branch tracks `upstream/<default>`
+  - After adding any remote, run `git normalize-remotes`
+  - Check branch/status and preserve unrelated changes. Other threads may share checkouts
+- Tools come from Nix; use `nix run nixpkgs#tool -- args` for additional tools
+  - Don't directly alter live configs or tooling outside ~/git unless requested
+  - Enter configured devshells with `nix develop -c <command>` or `direnv exec . <command>` as needed; shells may not load them automatically
+  - Don't assume Homebrew, nvm, or Cargo paths
+  - Check pinned/installed versions and supported options
+  - Shells use zsh. Quote search globs
+- Your session is headless. Don't depend on a desktop login.
+  - While working, prefer headless/offscreen harnesses for testing, screenshots, or interactive checks
+  - Discover sessions, ports, and flags through CLI help rather than guessing
+- Use repo-declared preferences, package managers, scripts, and formatters
+  - Check dependencies against the current checkout before diagnosing test failures.
+  - For cross-repo testing, verify resolved packages and built artifacts, including native binaries; links can alter resolution
+  - When benchmarking, prefer representative workloads against the intended baseline
+  - Keep changes and explanations focused. Avoid redundant docs/comments and committed temporary artifacts

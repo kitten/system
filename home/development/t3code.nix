@@ -114,7 +114,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    modules.development.t3code.settings.enableProviderUpdateChecks = mkDefault false;
+    modules.development.t3code.settings = {
+      enableProviderUpdateChecks = mkDefault false;
+      worktreesDirectory = mkDefault "${config.modules.git.directory}/.worktrees";
+    };
     home.packages = [ (if cfg.desktop.enable then desktopPackage else cliPackage) ];
     home.activation.t3codeSettings = mkIf (cfg.settings != { }) (hm.dag.entryAfter [ "writeBoundary" ] ''
       run ${configureSettings}

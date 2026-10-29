@@ -74,6 +74,13 @@ in {
       type = userType;
     };
 
+    directory = mkOption {
+      type = types.strMatching "/[^\n]+";
+      default = "${home}/git";
+      defaultText = literalExpression "\"\${config.home.homeDirectory}/git\"";
+      description = "Absolute directory for GitHub clones and shared agent instructions, within the home directory.";
+    };
+
     signingKey = mkOption {
       description = "Git Signing key";
       type = types.nullOr types.str;
@@ -82,6 +89,10 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [ git-crypt ];
+
+    home.activation.gitDirectory = hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+      run mkdir -p -m 0755 -- ${escapeShellArg cfg.directory}
+    '';
 
     programs.git = {
       enable = true;
@@ -123,7 +134,7 @@ in {
           glog = "log --pretty=longline --decorate --all --graph --date=relative";
           base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
           journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
-          get = "!f() { git clone \"git@github.com:$1.git\" \"$HOME/git/$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
+          get = "!f() { git clone \"git@github.com:$1.git\" ${escapeShellArg cfg.directory}/\"$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
           pr = "!f() { git fetch origin \"+refs/pull/$1/head:refs/pull/origin/$1\" && git switch --detach \"refs/pull/origin/$1\"; }; f";
           normalize-remotes = "!f() { for r in $(git remote); do git config remote.\"$r\".partialclonefilter blob:none && git config remote.\"$r\".promisor true && echo \"normalized $r\"; done; }; f";
         };

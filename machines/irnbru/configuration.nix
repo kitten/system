@@ -11,23 +11,6 @@
         ssh = ../../modules/agent/encrypt/agent-ssh.age;
         env = ../../modules/agent/encrypt/agent.env.age;
       };
-      home.modules.development = {
-        enable = true;
-        codex.enable = true;
-        claude = {
-          enable = true;
-          environmentFile.enable = true;
-        };
-        cursor = {
-          enable = true;
-          environmentFile.enable = true;
-        };
-        grok = {
-          enable = true;
-          environmentFile.enable = true;
-        };
-        t3code.environmentFile.enable = true;
-      };
     };
     vram = {
       wiredLimit = 8;

@@ -1,4 +1,4 @@
-{ lib, config, pkgs, helpers, hostname, ... }:
+{ lib, config, pkgs, helpers, hostname, user, ... }:
 
 with lib;
 let
@@ -15,6 +15,7 @@ let
     ++ auth.runtimeFiles "${cfg.account}-t3code" homeCfg.environmentFile config.age.secrets;
 
   homeCfg = hm.modules.development.t3code;
+  parentDevelopment = config.home-manager.users.${user}.modules.development;
 
   shell = "${hm.programs.zsh.package}/bin/zsh";
 
@@ -129,10 +130,29 @@ in helpers.darwinAttrs {
   config = mkIf (cfgRoot.enable && cfg.enable) {
     modules.agents.${cfg.account} = {
       enable = true;
-      home = {
-        modules.development.t3code = {
+      home.modules.development = {
+        enable = mkDefault true;
+        js.enable = mkDefault parentDevelopment.js.enable;
+        react-native.enable = mkDefault parentDevelopment.react-native.enable;
+        terraform.enable = mkDefault parentDevelopment.terraform.enable;
+        zig.enable = mkDefault parentDevelopment.zig.enable;
+        claude = {
+          enable = mkDefault true;
+          environmentFile.enable = mkDefault true;
+        };
+        codex.enable = mkDefault true;
+        cursor = {
+          enable = mkDefault true;
+          environmentFile.enable = mkDefault true;
+        };
+        grok = {
+          enable = mkDefault true;
+          environmentFile.enable = mkDefault true;
+        };
+        t3code = {
           enable = true;
           desktop.enable = false;
+          environmentFile.enable = mkDefault true;
         };
       };
     };
