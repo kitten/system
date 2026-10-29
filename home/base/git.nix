@@ -115,6 +115,66 @@ in {
       };
 
       settings = let
+        getAlias = removeSuffix "\n" ''
+          !f() {
+            if [ "$#" -ne 1 ]; then
+              echo "Usage: git get <org>/<repo>" >&2
+              return 2
+            fi
+            owner=''${1%%/*}
+            repo=''${1#*/}
+            case "$owner" in
+              ""|*[!a-zA-Z0-9-]*) echo "Invalid GitHub owner: $owner" >&2; return 2 ;;
+            esac
+            case "$repo" in
+              ""|.|..|*[!a-zA-Z0-9._-]*) echo "Invalid GitHub repository: $repo" >&2; return 2 ;;
+            esac
+            [ "$owner/$repo" = "$1" ] || { echo "Expected <org>/<repo>" >&2; return 2; }
+            directory=${escapeShellArg cfg.directory}/"$1"
+            if [ -e "$directory" ] || [ -L "$directory" ]; then
+              if [ ! -d "$directory" ] || [ "$(git -C "$directory" rev-parse --show-toplevel 2>/dev/null)" != "$(cd "$directory" && pwd -P)" ]; then
+                echo "Not a checkout: $directory" >&2
+                return 1
+              fi
+              expected=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
+              matched=false
+              for remote in $(git -C "$directory" remote); do
+                url=$(git -C "$directory" remote get-url "$remote") || return
+                case "$url" in
+                  git@github.com:*) url=''${url#git@github.com:} ;;
+                  ssh://git@github.com/*) url=''${url#ssh://git@github.com/} ;;
+                  https://github.com/*) url=''${url#https://github.com/} ;;
+                  *) continue ;;
+                esac
+                url=''${url%.git}
+                [ "$(printf '%s' "$url" | tr '[:upper:]' '[:lower:]')" = "$expected" ] && matched=true
+              done
+              if [ "$matched" != true ]; then
+                echo "No remote matches $1 in $directory" >&2
+                return 1
+              fi
+            else
+              git clone "git@github.com:$1.git" "$directory" --no-single-branch --shallow-since="1 year ago" || return
+            fi
+            printf '%s\n' "$directory"
+          }; f
+        '';
+        prAlias = removeSuffix "\n" ''
+          !f() {
+            if [ "$#" -ne 1 ]; then
+              echo "Usage: git pr <number>" >&2
+              return 2
+            fi
+            case "$1" in
+              ""|*[!0-9]*) echo "Expected a PR number" >&2; return 2 ;;
+            esac
+            remote=origin
+            if git remote get-url upstream >/dev/null 2>&1; then remote=upstream; fi
+            ref="refs/pull/$remote/$1"
+            git fetch "$remote" "+refs/pull/$1/head:$ref" && git switch --detach "$ref"
+          }; f
+        '';
+
         remoteConfig = {
           partialclonefilter = "blob:none";
           tagOpt = "--no-tags";
@@ -134,8 +194,8 @@ in {
           glog = "log --pretty=longline --decorate --all --graph --date=relative";
           base = "!f() { git cherry remotes/origin/HEAD HEAD | awk '/^\\+/ {print $2;exit}'; }; f";
           journal = "!f() { git commit -a -m \"$(date +'%Y-%m-%d %H:%M:%S')\"; }; f";
-          get = "!f() { git clone \"git@github.com:$1.git\" ${escapeShellArg cfg.directory}/\"$1\" --no-single-branch --shallow-since=\"1 year ago\"; }; f";
-          pr = "!f() { git fetch origin \"+refs/pull/$1/head:refs/pull/origin/$1\" && git switch --detach \"refs/pull/origin/$1\"; }; f";
+          get = getAlias;
+          pr = prAlias;
           normalize-remotes = "!f() { for r in $(git remote); do git config remote.\"$r\".partialclonefilter blob:none && git config remote.\"$r\".promisor true && echo \"normalized $r\"; done; }; f";
         };
 
