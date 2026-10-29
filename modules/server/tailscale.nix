@@ -5,6 +5,9 @@ let
   cfgRoot = config.modules.server;
   cfgRouter = config.modules.router;
   cfg = config.modules.server.tailscale;
+  tailscaleFlags = if cfgRouter.enable
+    then [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ]
+    else [ "--ssh" "--accept-dns=true" "--operator=${user}" ];
 in {
   options.modules.server.tailscale = {
     enable = mkOption {
@@ -38,9 +41,8 @@ in {
     services.tailscale = {
       enable = true;
       useRoutingFeatures = if cfgRouter.enable then "server" else "none";
-      extraUpFlags = if cfgRouter.enable
-        then [ "--advertise-exit-node" "--ssh" "--accept-dns=false" ]
-        else [ "--ssh" "--accept-dns=true" "--operator=${user}" ];
+      extraUpFlags = tailscaleFlags;
+      extraSetFlags = tailscaleFlags;
       extraDaemonFlags = [ "--no-logs-no-support" ];
       authKeyFile = "/run/secrets/tailscale";
     };

@@ -37,7 +37,7 @@
       leases = [
         { macAddress = "98:ed:7e:c6:57:b2"; ipAddress = "10.0.0.102"; } # eero router
         { macAddress = "c4:f1:74:51:4c:f2"; ipAddress = "10.0.0.124"; } # eero router
-        { macAddress = "1c:1d:d3:de:4b:06"; ipAddress = "10.0.0.35"; }  # irnbru
+        { macAddress = "1c:1d:d3:de:4b:06"; ipAddress = "10.0.0.35"; hostName = "irnbru"; }
       ];
       nftables = {
         blocklist.enable = true;

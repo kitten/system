@@ -5,6 +5,9 @@ let
   inherit (import ../../lib/ipv4.nix inputs) ipv4;
 
   cfg = config.modules.router;
+  tailscale = config.modules.server.tailscale;
+  domain = config.networking.domain;
+  namedLeases = filter (lease: lease.hostName != null) cfg.leases;
 
   leaseType = types.submodule {
     options = {
@@ -15,6 +18,12 @@ let
       ipAddress = mkOption {
         type = types.str;
         example = "10.0.0.10";
+      };
+      hostName = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "irnbru";
+        description = "Name to publish for this address in local DNS.";
       };
     };
   };
@@ -148,7 +157,12 @@ in {
   in mkIf cfg.enable {
     networking = {
       useNetworkd = true;
-      hosts."127.0.0.2" = mkForce [];
+      hosts = {
+        "127.0.0.2" = mkForce [];
+      } // optionalAttrs (domain != null) (listToAttrs (map (lease: {
+        name = lease.ipAddress;
+        value = [ "${lease.hostName}.${domain}" lease.hostName ];
+      }) namedLeases));
       networkmanager.enable = mkForce false;
       firewall = mkIf (intern != null) {
         trustedInterfaces = [ "lo" intern.name ];
@@ -247,6 +261,8 @@ in {
           dhcpServerStaticLeases = builtins.map (lease: {
             Address = lease.ipAddress;
             MACAddress = lease.macAddress;
+          } // optionalAttrs (lease.hostName != null) {
+            Hostname = lease.hostName;
           }) cfg.leases;
           dhcpServerConfig = {
             EmitDNS = true;
@@ -255,16 +271,22 @@ in {
             NTP = cfg.address;
             DefaultLeaseTimeSec = 43200;
             MaxLeaseTimeSec = 86400;
+          } // optionalAttrs (domain != null) {
+            EmitDomain = true;
+            Domain = domain;
           };
           dhcpPrefixDelegationConfig = mkIf (cfg.ipv6 && intern.cidrV6 == null) {
             UplinkInterface = extern.name;
             Token = "static:::1";
             Announce = true;
           };
-          ipv6SendRAConfig = mkIf cfg.ipv6 {
+          ipv6SendRAConfig = mkIf cfg.ipv6 ({
             EmitDNS = true;
             DNS = "_link_local";
-          };
+          } // optionalAttrs (domain != null) {
+            EmitDomains = true;
+            Domains = domain;
+          });
           ipv6Prefixes = mkIf (cfg.ipv6 && intern.cidrV6 != null) [
             {
               Prefix = intern.cidrV6;
@@ -311,6 +333,12 @@ in {
 
     services.resolved = {
       enable = true;
+      dnsDelegates = mkIf (tailscale.enable && domain != null) {
+        tailscale.Delegate = {
+          DNS = [ "100.100.100.100" ];
+          Domains = [ "~${domain}" ];
+        };
+      };
       settings.Resolve = mkMerge [
         {
           LLMNR = false;
