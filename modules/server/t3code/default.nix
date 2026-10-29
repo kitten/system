@@ -16,6 +16,9 @@ let
 
   homeCfg = hm.modules.development.t3code;
   parentDevelopment = config.home-manager.users.${user}.modules.development;
+  developmentDefaults = mapAttrs (_: mkDefault) (removeAttrs parentDevelopment [
+    "enable" "instructions" "claude" "codex" "cursor" "grok" "t3code"
+  ]);
 
   shell = "${hm.programs.zsh.package}/bin/zsh";
 
@@ -130,12 +133,8 @@ in helpers.darwinAttrs {
   config = mkIf (cfgRoot.enable && cfg.enable) {
     modules.agents.${cfg.account} = {
       enable = true;
-      home.modules.development = {
+      home.modules.development = mkMerge [ developmentDefaults {
         enable = mkDefault true;
-        js.enable = mkDefault parentDevelopment.js.enable;
-        react-native.enable = mkDefault parentDevelopment.react-native.enable;
-        terraform.enable = mkDefault parentDevelopment.terraform.enable;
-        zig.enable = mkDefault parentDevelopment.zig.enable;
         claude = {
           enable = mkDefault true;
           environmentFile.enable = mkDefault true;
@@ -154,7 +153,7 @@ in helpers.darwinAttrs {
           desktop.enable = false;
           environmentFile.enable = mkDefault true;
         };
-      };
+      } ];
     };
 
     environment.systemPackages = [ shellHelper pairHelper connectHelper ];

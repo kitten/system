@@ -105,7 +105,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    modules.development.js.projectBinInPath = mkDefault false;
+    modules.development.js.projectBinInPath = mkForce false;
 
     # Session variables load before .zshrc; non-terminal shells can skip the UI.
     programs.zsh.initContent = mkBefore ''
