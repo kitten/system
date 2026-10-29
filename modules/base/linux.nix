@@ -38,11 +38,6 @@ in helpers.linuxAttrs {
       systemd-boot.configurationLimit = mkDefault 3;
     };
 
-    initrd = {
-      verbose = false;
-      systemd.enable = true;
-    };
-
     kernelPackages = mkDefault pkgs.linuxPackages_latest;
 
     kernelParams = [

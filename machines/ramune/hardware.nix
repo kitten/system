@@ -8,6 +8,8 @@
 
   networking.hostId = "e8618fd7";
 
+  hardware.asahi.enable = true;
+
   boot = {
     supportedFilesystems = [ "btrfs" ];
     loader = {

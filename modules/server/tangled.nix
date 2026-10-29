@@ -1,8 +1,13 @@
-{ lib, config, hostname, helpers, pkgs, ... }:
+{ lib, config, hostname, helpers, pkgs, inputs, ... }:
 
 with lib;
 let
   cfg = config.modules.server;
+
+  # wrapProgram emits a shell script but nixpkgs refuses a capability wrapper whose target is not an ELF.
+  knotPackage = inputs.tangled.packages.${pkgs.stdenv.hostPlatform.system}.knot.override {
+    makeWrapper = pkgs.makeBinaryWrapper;
+  };
 in helpers.linuxAttrs {
   options.modules.server.tangled = {
     enable = mkOption {
@@ -39,6 +44,7 @@ in helpers.linuxAttrs {
       tangled.knot = {
         enable = true;
         openFirewall = true;
+        package = knotPackage;
         server = {
           hostname = cfg.tangled.hostname;
           owner = cfg.tangled.owner;

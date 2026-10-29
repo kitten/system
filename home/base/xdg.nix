@@ -22,7 +22,10 @@ in {
   config = mkIf cfg.enable {
     xdg = {
       enable = true;
-      userDirs.enable = mkDefault helpers.isLinux;
+      userDirs = {
+        enable = mkDefault helpers.isLinux;
+        setSessionVariables = true;
+      };
       systemDirs.data = mkIf helpers.isLinux [
         "/usr/share"
         "/usr/local/share"

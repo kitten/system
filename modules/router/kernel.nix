@@ -13,8 +13,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    boot.initrd.systemd.enable = mkDefault true;
-
     boot.kernel.sysctl = mkIf cfg.tweakKernel {
       "net.core.somaxconn" = 4096;
       "net.core.netdev_max_backlog" = 2000;
