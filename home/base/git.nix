@@ -58,6 +58,8 @@ let
     };
   };
 in {
+  imports = [ ./git-ssh-access.nix ];
+
   options.modules.git = {
     enable = mkOption {
       default = true;

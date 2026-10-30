@@ -11,6 +11,17 @@ in {
       description = "Whether to install shared personal agent instructions.";
     };
 
+    authorizedGitKeys = mkOption {
+      type = types.listOf types.str;
+      default = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJffcTjACQ0XJLO7iv16MVgM783KAn1q1LsaIT/kWqNn phil+agent@kitten.sh"
+      ];
+      description = ''
+        Public SSH keys granted Git-only access when shared instructions are enabled.
+        Independent of agent account enablement. Set to an empty list to opt out.
+      '';
+    };
+
     extra = mkOption {
       type = types.lines;
       default = "";
@@ -26,6 +37,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    modules.git.sshAccess = {
+      enable = mkDefault true;
+      authorizedKeys = cfg.authorizedGitKeys;
+    };
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
   };
 }
