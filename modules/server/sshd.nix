@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.modules.server;
+  agentUsers = attrNames (filterAttrs (_: account: account.enable) config.modules.agents);
   allowedUsers = unique cfg.sshd.allowUsers;
   loginKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGgNlwxQFRcZjnOyoNQ9HDkhGrESU8J5fwd0HeF6CiYg"
@@ -51,7 +52,7 @@ in {
       message = "modules.server.sshd.allowUsers must not be empty when SSH is enabled.";
     }];
 
-    modules.server.sshd.allowUsers = [ user ];
+    modules.server.sshd.allowUsers = [ user ] ++ agentUsers;
 
     users.users.${user}.openssh.authorizedKeys.keys = loginKeys;
 
