@@ -70,9 +70,9 @@ in
         AddKeysToAgent = "no";
         HashKnownHosts = false;
         UserKnownHostsFile = "~/.ssh/known_hosts";
-        ControlMaster = "no";
-        ControlPath = "~/.ssh/master-%r@%n:%p";
-        ControlPersist = "no";
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/master-%C";
+        ControlPersist = "5m";
 
         Compression = true;
         ServerAliveInterval = 60;

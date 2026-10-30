@@ -95,7 +95,20 @@ impl Access {
     }
 
     fn repository(&self, name: &str) -> Result<PathBuf> {
-        let repository = self.home.join(name).canonicalize()?;
+        let path = self.home.join(name);
+        let repository = match path.canonicalize() {
+            Ok(repository) => repository,
+            Err(error)
+                if error.kind() == io::ErrorKind::NotFound
+                    && path.file_name().is_some_and(|part| part != ".git")
+                    && name.ends_with(".git") =>
+            {
+                self.home
+                    .join(name.strip_suffix(".git").unwrap())
+                    .canonicalize()?
+            }
+            Err(error) => return Err(error.into()),
+        };
         self.within_root(&repository)?;
         if repository
             .strip_prefix(&self.root)?
