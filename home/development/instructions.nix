@@ -11,6 +11,7 @@ let
       - After adding any remote, run `git normalize-remotes`
       - Fetch third-party PRs with `git pr <number>` (no fork remote needed; detached HEAD)
       - Send your branch to other accounts or machines with `git send [user@host|host]`
+      - Receive a branch with `git receive [user@host|host]`; updates are fast-forward only. Add `--branch <name>` to select another branch
       - Check branch/status and preserve unrelated changes. Other threads may share checkouts
     - Tools come from Nix; use `nix run nixpkgs#tool -- args` for additional tools
       - Don't directly alter live configs or tooling outside ~/git unless requested
@@ -103,6 +104,95 @@ let
         "''${receive[@]}" "''${lease[@]}" "$host:$path" "$sha:$ref"
     '';
   };
+  receive = pkgs.writeShellApplication {
+    name = "git-receive";
+    runtimeInputs = [ pkgs.git pkgs.openssh ];
+    text = ''
+      branch=""
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --branch)
+          if [[ $# -lt 2 || -z "$2" ]]; then
+            echo '--branch requires a branch name' >&2
+            exit 2
+          fi
+          branch=$2
+          shift
+          ;;
+        --help | -h)
+          echo 'Usage: git receive [--branch name] [user@host|host]'
+          exit 0
+          ;;
+        *) break ;;
+        esac
+        shift
+      done
+      if [[ $# -gt 1 || ''${1-} == -* ]]; then
+        echo 'Usage: git receive [--branch name] [user@host|host]' >&2
+        exit 2
+      fi
+
+      host=''${1-localhost}
+      if [[ "$host" != *@* ]]; then host=${escapeShellArg user}@"$host"; fi
+      if [[ ! "$host" =~ ^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+$ ]]; then
+        echo 'Expected a hostname or user@hostname' >&2
+        exit 2
+      fi
+      root=$(cd ${escapeShellArg config.modules.git.directory} && pwd -P)
+      common=$(git rev-parse --path-format=absolute --git-common-dir)
+      case "$common" in
+        "$root"/*/.git)
+          path="git/''${common#"$root"/}"
+          path=''${path%/.git}
+          ;;
+        *) echo "Repository must live beneath $root" >&2; exit 2 ;;
+      esac
+      current=$(git symbolic-ref --quiet HEAD || true)
+      if [[ -z "$branch" ]]; then
+        if [[ -z "$current" ]]; then
+          echo 'Detached HEAD; select a branch with --branch <name>' >&2
+          exit 2
+        fi
+        branch=''${current#refs/heads/}
+      fi
+      ref="refs/heads/$branch"
+      if [[ ! "$ref" =~ ^refs/heads/[a-zA-Z0-9@._/-]+$ ]]; then
+        echo "Unsupported branch: $branch" >&2
+        exit 2
+      fi
+      git check-ref-format "$ref"
+      if git symbolic-ref --quiet "$ref" >/dev/null; then
+        echo "Refusing to update symbolic branch $ref; select a direct branch" >&2
+        exit 1
+      fi
+      source="$host:$path"
+      fetch=(git -c fetch.prune=false -c fetch.pruneTags=false fetch --no-tags --no-recurse-submodules --refmap=)
+      if [[ "$ref" == "$current" ]]; then
+        if [[ -n "$(git status --porcelain --untracked-files=normal --ignore-submodules=none)" ]]; then
+          echo 'Commit or stash local changes before receiving into the current branch' >&2
+          exit 1
+        fi
+        temporary="refs/git-receive/$$"
+        trap 'git update-ref -d "$temporary"' EXIT
+        "''${fetch[@]}" "$source" "+$ref:$temporary"
+        fetched=$(git rev-parse --verify "$temporary^{commit}")
+        if [[ "$(git symbolic-ref --quiet HEAD || true)" != "$ref" ]]; then
+          echo 'Current branch changed during fetch; fetched history remains in FETCH_HEAD. Switch back before retrying' >&2
+          exit 1
+        fi
+        if ! git merge --ff-only --no-autostash "$fetched"; then
+          printf 'Could not fast-forward %s from %s. Fetched history remains in FETCH_HEAD; inspect it with: git log --left-right --graph %q\n' "$ref" "$source" "$ref...FETCH_HEAD" >&2
+          exit 1
+        fi
+      else
+        # Fetch protects branches checked out in any worktree and rejects rewinds.
+        if ! "''${fetch[@]}" "$source" "$ref:$ref"; then
+          printf 'Could not receive %s from %s. Resolve the fetch error above; if histories diverged, inspect FETCH_HEAD before merging or rebasing.\n' "$ref" "$source" >&2
+          exit 1
+        fi
+      fi
+    '';
+  };
 in {
   options.modules.development.instructions = {
     enable = mkOption {
@@ -145,6 +235,8 @@ in {
     };
     programs.git.settings.alias.send = mkIf config.modules.git.enable
       "!${send}/bin/git-send";
+    programs.git.settings.alias.receive = mkIf config.modules.git.enable
+      "!${receive}/bin/git-receive";
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
   };
 }
