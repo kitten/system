@@ -3,13 +3,14 @@
 with lib;
 let
   cfg = config.modules.development.instructions;
+  isAgent = config.modules.agent.enable or false;
   sharedInstructions = ''
     - Shared repos live at `~/git/<org>/<repo>`; clone with `git get <org>/<repo>`
       - Use SSH remotes
       - For forks, `origin` is the fork and `upstream` the canonical repo. The local default branch tracks `upstream/<default>`
       - After adding any remote, run `git normalize-remotes`
       - Fetch third-party PRs with `git pr <number>` (no fork remote needed; detached HEAD)
-      - Send your branch to other accounts or machines with `git send --local-only [user@host|host]`. Omitting `--local-only` instructs the destination to push to its `origin`
+      - Send your branch to other accounts or machines with `git send [user@host|host]`
       - Check branch/status and preserve unrelated changes. Other threads may share checkouts
     - Tools come from Nix; use `nix run nixpkgs#tool -- args` for additional tools
       - Don't directly alter live configs or tooling outside ~/git unless requested
@@ -30,13 +31,13 @@ let
     Agent account:
     - You are operating in the dedicated agent account `${config.home.username}`, separate from the operator account `${user}`
     - This account is headless; don't depend on a desktop login
-    - Use `git send ${user}@localhost` to target the operator's matching repo; this destination is the default
+    - Use `git send ${user}@localhost` to send a branch to the operator's matching repo; this destination is the default. Add `--local-only` to prevent the destination from forwarding the branch to its `origin`
   '';
   send = pkgs.writeShellApplication {
     name = "git-send";
     runtimeInputs = [ pkgs.git pkgs.openssh ];
     text = ''
-      local_only=false
+      local_only=${boolToString (!isAgent)}
       force=false
       branch=""
       while [[ $# -gt 0 ]]; do
@@ -52,7 +53,7 @@ let
           shift
           ;;
         --help | -h)
-          echo 'Usage: git send [--local-only] [--force-with-lease] [--branch name] [user@host|host]'
+          echo 'Usage: git send ${optionalString isAgent "[--local-only] "}[--force-with-lease] [--branch name] [user@host|host]'
           exit 0
           ;;
         *) break ;;
@@ -60,7 +61,7 @@ let
         shift
       done
       if [[ $# -gt 1 || ''${1-} == -* ]]; then
-        echo 'Usage: git send [--local-only] [--force-with-lease] [--branch name] [user@host|host]' >&2
+        echo 'Usage: git send ${optionalString isAgent "[--local-only] "}[--force-with-lease] [--branch name] [user@host|host]' >&2
         exit 2
       fi
 
@@ -131,7 +132,7 @@ in {
       type = types.lines;
       readOnly = true;
       default = sharedInstructions
-        + optionalString (config.modules.agent.enable or false) ("\n" + agentInstructions)
+        + optionalString isAgent ("\n" + agentInstructions)
         + optionalString (cfg.extra != "") ("\n" + cfg.extra + "\n");
       description = "Shared personal instructions, including account-specific additions.";
     };
