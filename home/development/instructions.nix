@@ -9,29 +9,27 @@ let
       - Use SSH remotes
       - For forks, `origin` is the fork and `upstream` the canonical repo. The local default branch tracks `upstream/<default>`
       - After adding any remote, run `git normalize-remotes`
-      - Fetch third-party PRs with `git pr <number>` (no fork remote needed; detached HEAD)
+      - Fetch third-party PRs with `git pr <number>` (detached HEAD)
       - Send your branch to other accounts or machines with `git send [user@host|host]`
       - Receive a branch with `git receive [user@host|host]`; updates are fast-forward only. Add `--branch <name>` to select another branch
-      - Check branch/status and preserve unrelated changes. Other threads may share checkouts
+      - Check branch/status; preserve unrelated changes in shared checkouts
     - Tools come from Nix; use `nix run nixpkgs#tool -- args` for additional tools
       - Don't directly alter live configs or tooling outside ~/git unless requested
-      - Enter configured devshells with `nix develop -c <command>` or `direnv exec . <command>` as needed; shells may not load them automatically
+      - Use configured devshells: `nix develop -c <command>` or `direnv exec . <command>`
       - Don't assume Homebrew, nvm, or Cargo paths
-      - Check pinned/installed versions and supported options
+      - Check installed/pinned versions; discover supported commands and flags via CLI help
       - Shells use zsh. Quote search globs
-      - Discover sessions, ports, and flags through CLI help rather than guessing
-    - Use repo-declared preferences, package managers, scripts, and formatters
-      - Read each checkout's own agent instructions before editing there
-      - Check dependencies against the current checkout before diagnosing test failures
-      - For cross-repo testing, verify resolved packages and built artifacts, including native binaries; links can alter resolution
-      - Prefer headless/offscreen harnesses for testing, screenshots, or interactive checks
-      - When benchmarking, prefer representative workloads against the intended baseline
+    - Follow repo instructions, package managers, scripts, and formatters; read each checkout's agent instructions before editing
+      - Verify checkout dependencies before diagnosing test failures
+      - Cross-repo tests: verify resolved packages and built artifacts, including native binaries; links affect resolution
+      - Prefer headless/offscreen testing
+      - When benchmarking, use representative workloads and the intended baseline
       - Keep changes and explanations focused. Avoid redundant docs/comments and committed temporary artifacts
   '';
   agentInstructions = ''
     Agent account:
-    - You are operating in the dedicated agent account `${config.home.username}`, separate from the operator account `${user}`
-    - This account is headless; don't depend on a desktop login
+    - Running as `${config.home.username}`; operator: `${user}`
+    - Headless; don't depend on a desktop login
     - Use `git send ${user}@localhost` to send a branch to the operator's matching repo; this destination is the default. Add `--local-only` to prevent the destination from forwarding the branch to its `origin`
   '';
   send = pkgs.writeShellApplication {
