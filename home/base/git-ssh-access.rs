@@ -126,8 +126,11 @@ impl Access {
         let [mode, reference, sha] = fields.as_slice() else {
             return Err("expected forwarding mode, branch ref, and commit".into());
         };
-        if !matches!(*mode, "ff" | "lease") || !self.allowed(reference) || !valid_sha(sha) {
+        if !matches!(*mode, "ff" | "lease") || !valid_sha(sha) {
             return Err("invalid forwarding request".into());
+        }
+        if !self.allowed(reference) {
+            return Err(prefix_error(reference, &self.prefixes).into());
         }
         let url = self.origin(repository)?;
         // Observe origin before receiving, so a concurrent update cannot be
@@ -321,6 +324,15 @@ fn allowed_ref(reference: &str, prefixes: &[String]) -> bool {
             .any(|prefix| branch.starts_with(prefix) && branch.len() > prefix.len())
 }
 
+fn prefix_error(reference: &str, prefixes: &[String]) -> String {
+    let allowed = if prefixes.is_empty() {
+        "none (branch updates are disabled)".to_owned()
+    } else {
+        prefixes.join(", ")
+    };
+    format!("ref {reference} is not permitted; allowed branch prefixes: {allowed}")
+}
+
 fn check(git: &Path, prefixes: &[String]) -> Result<()> {
     for line in io::stdin().lock().lines() {
         let line = line?;
@@ -329,11 +341,13 @@ fn check(git: &Path, prefixes: &[String]) -> Result<()> {
             || !valid_sha(fields[0])
             || !valid_sha(fields[1])
             || fields[1].bytes().all(|byte| byte == b'0')
-            || !allowed_ref(fields[2], prefixes)
         {
             return Err(
                 "only non-deletion updates to permitted branch prefixes are allowed".into(),
             );
+        }
+        if !allowed_ref(fields[2], prefixes) {
+            return Err(prefix_error(fields[2], prefixes).into());
         }
         // receive-pack dereferences symbolic refs: an allowed name could otherwise
         // update a forbidden branch. Only direct refs may be received.
