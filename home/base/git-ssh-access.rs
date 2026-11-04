@@ -4,7 +4,7 @@ use std::fs;
 use std::io::{self, BufRead};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -94,6 +94,8 @@ impl Access {
             .arg("push.followTags=false")
             .arg("-c")
             .arg("push.recurseSubmodules=no")
+            .arg("-c")
+            .arg("advice.pushUpdateRejected=false")
             .arg("-C")
             .arg(repository);
         command
@@ -103,9 +105,12 @@ impl Access {
         let output = self
             .outbound(repository)
             .args(["ls-remote", "--refs", url, reference])
+            .stderr(Stdio::inherit())
             .output()?;
         if !output.status.success() {
-            return Err("could not read origin branch tip".into());
+            return Err(format!(
+                "cannot read {reference} at origin {url}; check the destination account's SSH access to origin. Local receipt has not started"
+            ).into());
         }
         let value = String::from_utf8(output.stdout)?;
         if value.is_empty() {
@@ -133,6 +138,7 @@ impl Access {
             return Err(prefix_error(reference, &self.prefixes).into());
         }
         let url = self.origin(repository)?;
+        let previous = self.metadata(repository, &["--verify", reference]).ok();
         // Observe origin before receiving, so a concurrent update cannot be
         // silently overwritten by the onward lease-protected push.
         let expected = if *mode == "lease" {
@@ -147,7 +153,7 @@ impl Access {
             .status()?
             .success()
         {
-            return Err("local Git receive failed; origin was not updated".into());
+            return Err(format!("local receipt of {reference} into {} failed; origin {url} was not updated. Resolve the receive error above before retrying", repository.display()).into());
         }
         let symbolic = self
             .git()
@@ -155,24 +161,49 @@ impl Access {
             .arg(repository)
             .args(["symbolic-ref", "--quiet", reference])
             .output()?;
-        if symbolic.status.code() != Some(1)
-            || self.metadata(repository, &["--verify", reference])? != *sha
-        {
-            return Err("local branch changed or requested commit was not received".into());
+        let current = self.metadata(repository, &["--verify", reference]).ok();
+        if symbolic.status.code() != Some(1) {
+            return Err(format!(
+                "cannot forward {reference} in {} as a direct branch; it is symbolic or could not be inspected. Select a direct branch or ask the destination account owner to repair the ref. Origin {url} was not updated", repository.display()
+            ).into());
+        }
+        if current.as_deref() != Some(*sha) {
+            let hint = if current != previous {
+                "The destination branch changed during receipt; inspect its new tip before retrying."
+            } else if *mode == "lease" {
+                "Review Git's receive rejection and the destination's current tip before retrying; do not blindly refresh the lease."
+            } else {
+                "Resolve Git's receive rejection. If it reports non-fast-forward, integrate the destination changes, or retry git send --force-with-lease only if intentionally replacing rebased history."
+            };
+            return Err(format!(
+                "{reference} at {} is not the requested commit {sha} (current tip: {}). Origin {url} was not updated.\n{hint}",
+                repository.display(), current.as_deref().unwrap_or("missing or unreadable")
+            ).into());
         }
         let mut command = self.outbound(repository);
-        command.arg("push");
+        command.args(["push", "--porcelain"]);
         if let Some(expected) = expected {
             command.arg(format!("--force-with-lease={reference}:{expected}"));
         }
-        // Git's normal push output goes to stderr, leaving the receive protocol
-        // on stdout undisturbed. Use the requested SHA even if the ref moves.
+        // Capture porcelain for classification and print it on stderr, leaving
+        // the receive protocol on stdout undisturbed. Keep native diagnostics.
         command.arg(&url).arg(format!("{sha}:{reference}"));
-        if !command.status()?.success() {
-            return Err(
-                "branch received locally, but publication to origin failed; retry git send".into(),
-            );
+        let output = command.stderr(Stdio::inherit()).output()?;
+        let report = String::from_utf8_lossy(&output.stdout);
+        if !output.status.success() {
+            let hint = push_rejection_hint(&report);
+            let reason = report
+                .lines()
+                .find_map(|line| {
+                    line.strip_prefix("!\t")
+                        .and_then(|line| line.split_once('\t').map(|(_, reason)| reason))
+                })
+                .unwrap_or("see Git's diagnostic above");
+            return Err(format!(
+                "origin publication failed for {reference} at {url}: {reason}.\nCommit {sha} was received into {}.\nInspect origin with: git fetch {url} {reference}\n{hint}", repository.display()
+            ).into());
         }
+        eprintln!("Forwarded {reference} to {url}");
         Ok(())
     }
 
@@ -297,6 +328,26 @@ impl Access {
             _ => {}
         }
         Ok(repository)
+    }
+}
+
+fn push_rejection_hint(report: &str) -> &'static str {
+    let rejected: Vec<_> = report
+        .lines()
+        .filter(|line| line.starts_with("!\t"))
+        .collect();
+    if rejected
+        .iter()
+        .any(|line| line.ends_with("\t[rejected] (stale info)"))
+    {
+        "Origin changed during this send. Fetch and review its new tip before retrying; do not blindly refresh the lease."
+    } else if rejected.iter().any(|line| {
+        line.ends_with("\t[rejected] (non-fast-forward)")
+            || line.ends_with("\t[rejected] (fetch first)")
+    }) {
+        "Integrate origin's changes. If intentionally replacing rebased history, retry git send --force-with-lease with the same branch and SSH destination."
+    } else {
+        "Resolve the origin authentication, connectivity, or server-policy error above, then retry git send with the same branch and SSH destination."
     }
 }
 
