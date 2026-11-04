@@ -117,6 +117,11 @@ in {
     modules.development.t3code.settings = {
       enableProviderUpdateChecks = mkDefault false;
       worktreesDirectory = mkDefault "${config.modules.git.directory}/.worktrees";
+      defaultThreadEnvMode = mkDefault "local";
+      branchNamingMode = mkDefault "custom";
+      branchNameInstructions = mkDefault "Use `@kitten/` followed by semantic keyword (`fix/`, `refactor/`, `chore/`, etc), followed by short description or issue ID.";
+      removeAgentCreditsOnMerge = mkDefault true;
+      pullRequestMergeMethod = mkDefault "squash";
     };
     home.packages = [ (if cfg.desktop.enable then desktopPackage else cliPackage) ];
     home.activation.t3codeSettings = mkIf (cfg.settings != { }) (hm.dag.entryAfter [ "writeBoundary" ] ''
