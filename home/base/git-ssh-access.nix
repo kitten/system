@@ -46,7 +46,7 @@ in {
     allowPush = lib.mkOption {
       default = true;
       type = lib.types.bool;
-      description = "Whether these keys may receive and promote branches in existing repositories. Checked-out branches remain protected; only the managed policy hook runs.";
+      description = "Whether these keys may receive and forward branches in existing repositories. Checked-out branches remain protected; only the managed policy hook runs.";
     };
 
     allowedPushPrefixes = lib.mkOption {

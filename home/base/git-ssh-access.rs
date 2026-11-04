@@ -121,13 +121,13 @@ impl Access {
         Ok(sha.to_owned())
     }
 
-    fn receive_and_promote(&self, repository: &Path, request: &str) -> Result<()> {
+    fn receive_and_send(&self, repository: &Path, request: &str) -> Result<()> {
         let fields: Vec<_> = request.split(':').collect();
         let [mode, reference, sha] = fields.as_slice() else {
-            return Err("expected promotion mode, branch ref, and commit".into());
+            return Err("expected forwarding mode, branch ref, and commit".into());
         };
         if !matches!(*mode, "ff" | "lease") || !self.allowed(reference) || !valid_sha(sha) {
-            return Err("invalid promotion request".into());
+            return Err("invalid forwarding request".into());
         }
         let url = self.origin(repository)?;
         // Observe origin before receiving, so a concurrent update cannot be
@@ -167,8 +167,7 @@ impl Access {
         command.arg(&url).arg(format!("{sha}:{reference}"));
         if !command.status()?.success() {
             return Err(
-                "branch received locally, but publication to origin failed; retry git promote"
-                    .into(),
+                "branch received locally, but publication to origin failed; retry git send".into(),
             );
         }
         Ok(())
@@ -372,12 +371,11 @@ fn run() -> Result<()> {
     };
     // Git's SSH transport quotes the path. Parse only ordinary repository names;
     // never interpret the supplied command as shell code.
-    let (argument, promotion) = if operation == "receive-pack" && argument.starts_with("--promote=")
-    {
+    let (argument, forwarding) = if operation == "receive-pack" && argument.starts_with("--send=") {
         let (option, path) = argument
             .split_once(' ')
-            .ok_or("expected promotion option and repository")?;
-        (path, Some(option.strip_prefix("--promote=").unwrap()))
+            .ok_or("expected forwarding option and repository")?;
+        (path, Some(option.strip_prefix("--send=").unwrap()))
     } else {
         (argument, None)
     };
@@ -408,8 +406,8 @@ fn run() -> Result<()> {
             .collect::<std::result::Result<Vec<_>, _>>()?,
     };
     let repository = access.repository(name)?;
-    if let Some(request) = promotion {
-        return access.receive_and_promote(&repository, request);
+    if let Some(request) = forwarding {
+        return access.receive_and_send(&repository, request);
     }
     Err(access.git().arg(operation).arg(repository).exec().into())
 }

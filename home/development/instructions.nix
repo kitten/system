@@ -9,7 +9,7 @@ let
       - For forks, `origin` is the fork and `upstream` the canonical repo. The local default branch tracks `upstream/<default>`
       - After adding any remote, run `git normalize-remotes`
       - Fetch third-party PRs with `git pr <number>` (no fork remote needed; detached HEAD)
-      - Send your branch to other accounts or machines with `git promote --local-only [user@host|host]`. Omitting `--local-only` instructs the destination to push to its `origin`
+      - Send your branch to other accounts or machines with `git send --local-only [user@host|host]`. Omitting `--local-only` instructs the destination to push to its `origin`
       - Check branch/status and preserve unrelated changes. Other threads may share checkouts
     - Tools come from Nix; use `nix run nixpkgs#tool -- args` for additional tools
       - Don't directly alter live configs or tooling outside ~/git unless requested
@@ -30,10 +30,10 @@ let
     Agent account:
     - You are operating in the dedicated agent account `${config.home.username}`, separate from the operator account `${user}`
     - This account is headless; don't depend on a desktop login
-    - Use `git promote ${user}@localhost` to target the operator's matching repo; this destination is the default
+    - Use `git send ${user}@localhost` to target the operator's matching repo; this destination is the default
   '';
-  promote = pkgs.writeShellApplication {
-    name = "git-promote";
+  send = pkgs.writeShellApplication {
+    name = "git-send";
     runtimeInputs = [ pkgs.git pkgs.openssh ];
     text = ''
       local_only=false
@@ -52,7 +52,7 @@ let
           shift
           ;;
         --help | -h)
-          echo 'Usage: git promote [--local-only] [--force-with-lease] [--branch name] [user@host|host]'
+          echo 'Usage: git send [--local-only] [--force-with-lease] [--branch name] [user@host|host]'
           exit 0
           ;;
         *) break ;;
@@ -60,7 +60,7 @@ let
         shift
       done
       if [[ $# -gt 1 || ''${1-} == -* ]]; then
-        echo 'Usage: git promote [--local-only] [--force-with-lease] [--branch name] [user@host|host]' >&2
+        echo 'Usage: git send [--local-only] [--force-with-lease] [--branch name] [user@host|host]' >&2
         exit 2
       fi
 
@@ -96,7 +96,7 @@ let
 
       receive=()
       if ! $local_only; then
-        receive=("--receive-pack=git-receive-pack --promote=$mode:$ref:$sha")
+        receive=("--receive-pack=git-receive-pack --send=$mode:$ref:$sha")
       fi
       exec git -c push.followTags=false -c push.recurseSubmodules=no push \
         "''${receive[@]}" "''${lease[@]}" "$host:$path" "$sha:$ref"
@@ -142,8 +142,8 @@ in {
       enable = mkDefault true;
       authorizedKeys = cfg.authorizedGitKeys;
     };
-    programs.git.settings.alias.promote = mkIf config.modules.git.enable
-      "!${promote}/bin/git-promote";
+    programs.git.settings.alias.send = mkIf config.modules.git.enable
+      "!${send}/bin/git-send";
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
   };
 }
