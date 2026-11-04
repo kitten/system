@@ -1,8 +1,78 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, user, ... }:
 
 with lib;
 let
   cfg = config.modules.development.instructions;
+  promote = pkgs.writeShellApplication {
+    name = "git-promote";
+    runtimeInputs = [ pkgs.git pkgs.openssh ];
+    text = ''
+      local_only=false
+      force=false
+      branch=""
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+        --local-only) local_only=true ;;
+        --force-with-lease) force=true ;;
+        --branch)
+          if [[ $# -lt 2 || -z "$2" ]]; then
+            echo '--branch requires a branch name' >&2
+            exit 2
+          fi
+          branch=$2
+          shift
+          ;;
+        --help | -h)
+          echo 'Usage: git promote [--local-only] [--force-with-lease] [--branch name] [user@host|host]'
+          exit 0
+          ;;
+        *) break ;;
+        esac
+        shift
+      done
+      if [[ $# -gt 1 || ''${1-} == -* ]]; then
+        echo 'Usage: git promote [--local-only] [--force-with-lease] [--branch name] [user@host|host]' >&2
+        exit 2
+      fi
+
+      host=''${1-localhost}
+      if [[ "$host" != *@* ]]; then host=${escapeShellArg user}@"$host"; fi
+      if [[ ! "$host" =~ ^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+$ ]]; then
+        echo 'Expected a hostname or user@hostname' >&2
+        exit 2
+      fi
+      root=$(cd ${escapeShellArg config.modules.git.directory} && pwd -P)
+      common=$(git rev-parse --path-format=absolute --git-common-dir)
+      case "$common" in
+        "$root"/*/.git)
+          path="git/''${common#"$root"/}"
+          path=''${path%/.git}
+          ;;
+        *) echo "Repository must live beneath $root" >&2; exit 2 ;;
+      esac
+      ref="refs/heads/''${branch:-$(git symbolic-ref --quiet --short HEAD)}"
+      if [[ ! "$ref" =~ ^refs/heads/[a-zA-Z0-9@._/-]+$ ]]; then
+        echo "Unsupported branch: $ref" >&2
+        exit 2
+      fi
+      sha=$(git rev-parse --verify "$ref^{commit}")
+
+      lease=()
+      mode=ff
+      if $force; then
+        mode=lease
+        tip=$(git ls-remote --refs "$host:$path" "$ref")
+        lease=("--force-with-lease=$ref:''${tip%%$'\t'*}")
+      fi
+
+      receive=()
+      if ! $local_only; then
+        receive=("--receive-pack=git-receive-pack --promote=$mode:$ref:$sha")
+      fi
+      exec git -c push.followTags=false -c push.recurseSubmodules=no push \
+        "''${receive[@]}" "''${lease[@]}" "$host:$path" "$sha:$ref"
+    '';
+  };
 in {
   options.modules.development.instructions = {
     enable = mkOption {
@@ -41,6 +111,8 @@ in {
       enable = mkDefault true;
       authorizedKeys = cfg.authorizedGitKeys;
     };
+    programs.git.settings.alias.promote = mkIf config.modules.git.enable
+      "!${promote}/bin/git-promote";
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
   };
 }

@@ -1,7 +1,7 @@
 use std::env;
 use std::error::Error;
 use std::fs;
-use std::io;
+use std::io::{self, BufRead};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -35,9 +35,145 @@ struct Access {
     root: PathBuf,
     git: PathBuf,
     hooks: PathBuf,
+    ssh: PathBuf,
+    prefixes: Vec<String>,
 }
 
 impl Access {
+    fn allowed(&self, reference: &str) -> bool {
+        allowed_ref(reference, &self.prefixes)
+    }
+
+    fn origin(&self, repository: &Path) -> Result<String> {
+        let output = self
+            .git()
+            .arg("-C")
+            .arg(repository)
+            .args(["remote", "get-url", "--push", "--all", "origin"])
+            .output()?;
+        if !output.status.success() {
+            return Err("receiving repository has no usable origin".into());
+        }
+        let value = String::from_utf8(output.stdout)?;
+        let urls: Vec<_> = value.lines().collect();
+        if urls.len() != 1 {
+            return Err("origin must have exactly one push URL".into());
+        }
+        let name = urls[0]
+            .strip_prefix("git@github.com:")
+            .or_else(|| urls[0].strip_prefix("ssh://git@github.com/"))
+            .ok_or("origin must be a GitHub SSH URL")?;
+        let name = name.strip_suffix(".git").unwrap_or(name);
+        let parts: Vec<_> = name.split('/').collect();
+        if parts.len() != 2
+            || parts.iter().any(|part| {
+                part.is_empty()
+                    || matches!(*part, "." | "..")
+                    || !part
+                        .bytes()
+                        .all(|byte| byte.is_ascii_alphanumeric() || b"._-".contains(&byte))
+            })
+        {
+            return Err("invalid GitHub origin".into());
+        }
+        Ok(format!("git@github.com:{name}.git"))
+    }
+
+    fn outbound(&self, repository: &Path) -> Command {
+        let mut command = self.git();
+        command
+            .env("HOME", &self.home)
+            .arg("-c")
+            .arg(format!(
+                "core.sshCommand={} -oBatchMode=yes -oForwardAgent=no",
+                self.ssh.display()
+            ))
+            .arg("-c")
+            .arg("push.gpgSign=false")
+            .arg("-c")
+            .arg("push.followTags=false")
+            .arg("-c")
+            .arg("push.recurseSubmodules=no")
+            .arg("-C")
+            .arg(repository);
+        command
+    }
+
+    fn remote_tip(&self, repository: &Path, url: &str, reference: &str) -> Result<String> {
+        let output = self
+            .outbound(repository)
+            .args(["ls-remote", "--refs", url, reference])
+            .output()?;
+        if !output.status.success() {
+            return Err("could not read origin branch tip".into());
+        }
+        let value = String::from_utf8(output.stdout)?;
+        if value.is_empty() {
+            return Ok(String::new());
+        }
+        let (sha, name) = value
+            .trim_end()
+            .split_once('\t')
+            .ok_or("invalid origin response")?;
+        if !valid_sha(sha) || name != reference {
+            return Err("unexpected origin response".into());
+        }
+        Ok(sha.to_owned())
+    }
+
+    fn receive_and_promote(&self, repository: &Path, request: &str) -> Result<()> {
+        let fields: Vec<_> = request.split(':').collect();
+        let [mode, reference, sha] = fields.as_slice() else {
+            return Err("expected promotion mode, branch ref, and commit".into());
+        };
+        if !matches!(*mode, "ff" | "lease") || !self.allowed(reference) || !valid_sha(sha) {
+            return Err("invalid promotion request".into());
+        }
+        let url = self.origin(repository)?;
+        // Observe origin before receiving, so a concurrent update cannot be
+        // silently overwritten by the onward lease-protected push.
+        let expected = if *mode == "lease" {
+            Some(self.remote_tip(repository, &url, reference)?)
+        } else {
+            None
+        };
+        if !self
+            .git()
+            .arg("receive-pack")
+            .arg(repository)
+            .status()?
+            .success()
+        {
+            return Err("local Git receive failed; origin was not updated".into());
+        }
+        let symbolic = self
+            .git()
+            .arg("-C")
+            .arg(repository)
+            .args(["symbolic-ref", "--quiet", reference])
+            .output()?;
+        if symbolic.status.code() != Some(1)
+            || self.metadata(repository, &["--verify", reference])? != *sha
+        {
+            return Err("local branch changed or requested commit was not received".into());
+        }
+        let mut command = self.outbound(repository);
+        command.arg("push");
+        if let Some(expected) = expected {
+            command.arg(format!("--force-with-lease={reference}:{expected}"));
+        }
+        // Git's normal push output goes to stderr, leaving the receive protocol
+        // on stdout undisturbed. Use the requested SHA even if the ref moves.
+        command.arg(&url).arg(format!("{sha}:{reference}"));
+        if !command.status()?.success() {
+            return Err(
+                "branch received locally, but publication to origin failed; retry git promote"
+                    .into(),
+            );
+        }
+        Ok(())
+    }
+
     fn within_root(&self, path: &Path) -> Result<PathBuf> {
         let path = resolve(path, 0)?;
         if !path.starts_with(&self.root) {
@@ -162,11 +298,69 @@ impl Access {
     }
 }
 
+fn valid_sha(value: &str) -> bool {
+    matches!(value.len(), 40 | 64) && value.bytes().all(|byte| byte.is_ascii_hexdigit())
+}
+
+fn allowed_ref(reference: &str, prefixes: &[String]) -> bool {
+    let Some(branch) = reference.strip_prefix("refs/heads/") else {
+        return false;
+    };
+    !branch.is_empty()
+        && !branch.contains("..")
+        && !branch.contains("@{")
+        && !branch.ends_with('/')
+        && !branch.ends_with('.')
+        && branch
+            .split('/')
+            .all(|part| !part.is_empty() && !part.starts_with('.') && !part.ends_with(".lock"))
+        && branch
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || b"@._/-".contains(&byte))
+        && prefixes
+            .iter()
+            .any(|prefix| branch.starts_with(prefix) && branch.len() > prefix.len())
+}
+
+fn check(git: &Path, prefixes: &[String]) -> Result<()> {
+    for line in io::stdin().lock().lines() {
+        let line = line?;
+        let fields: Vec<_> = line.split_whitespace().collect();
+        if fields.len() != 3
+            || !valid_sha(fields[0])
+            || !valid_sha(fields[1])
+            || fields[1].bytes().all(|byte| byte == b'0')
+            || !allowed_ref(fields[2], prefixes)
+        {
+            return Err(
+                "only non-deletion updates to permitted branch prefixes are allowed".into(),
+            );
+        }
+        // receive-pack dereferences symbolic refs: an allowed name could otherwise
+        // update a forbidden branch. Only direct refs may be received.
+        let symbolic = Command::new(git)
+            .args(["symbolic-ref", "--quiet", fields[2]])
+            .output()?;
+        if symbolic.status.code() != Some(1) {
+            return Err("updates to symbolic branch refs are forbidden".into());
+        }
+    }
+    Ok(())
+}
+
 fn run() -> Result<()> {
     let arguments: Vec<_> = env::args_os().skip(1).collect();
-    if arguments.len() != 5 || !matches!(arguments[4].to_str(), Some("true" | "false")) {
+    if arguments.first().is_some_and(|value| value == "check") {
+        let git = arguments.get(1).ok_or("expected Git executable")?;
+        let prefixes = arguments[2..]
+            .iter()
+            .map(|value| value.to_str().map(str::to_owned).ok_or("invalid prefix"))
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        return check(Path::new(git), &prefixes);
+    }
+    if arguments.len() < 6 || !matches!(arguments[4].to_str(), Some("true" | "false")) {
         return Err(
-            "expected home, Git root, Git executable, hooks directory, and push policy".into(),
+            "expected home, Git root, Git executable, hooks directory, push policy, SSH executable, and prefixes".into(),
         );
     }
     let request = env::var("SSH_ORIGINAL_COMMAND")?;
@@ -178,6 +372,15 @@ fn run() -> Result<()> {
     };
     // Git's SSH transport quotes the path. Parse only ordinary repository names;
     // never interpret the supplied command as shell code.
+    let (argument, promotion) = if operation == "receive-pack" && argument.starts_with("--promote=")
+    {
+        let (option, path) = argument
+            .split_once(' ')
+            .ok_or("expected promotion option and repository")?;
+        (path, Some(option.strip_prefix("--promote=").unwrap()))
+    } else {
+        (argument, None)
+    };
     let name = argument
         .strip_prefix('\'')
         .and_then(|value| value.strip_suffix('\''))
@@ -198,8 +401,16 @@ fn run() -> Result<()> {
         root: PathBuf::from(&arguments[1]).canonicalize()?,
         git: PathBuf::from(&arguments[2]),
         hooks: PathBuf::from(&arguments[3]),
+        ssh: PathBuf::from(&arguments[5]),
+        prefixes: arguments[6..]
+            .iter()
+            .map(|value| value.to_str().map(str::to_owned).ok_or("invalid prefix"))
+            .collect::<std::result::Result<Vec<_>, _>>()?,
     };
     let repository = access.repository(name)?;
+    if let Some(request) = promotion {
+        return access.receive_and_promote(&repository, request);
+    }
     Err(access.git().arg(operation).arg(repository).exec().into())
 }
 
