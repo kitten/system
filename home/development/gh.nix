@@ -24,6 +24,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    modules.development.gh.environmentFile.enable = lib.mkDefault true;
     home.packages = [ package ];
     xdg.configFile."gh/hosts.yml".text = ''
       github.com:

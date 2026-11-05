@@ -17,7 +17,7 @@ let
   homeCfg = hm.modules.development.t3code;
   parentDevelopment = config.home-manager.users.${user}.modules.development;
   developmentDefaults = mapAttrs (_: mkDefault) (removeAttrs parentDevelopment [
-    "enable" "instructions" "claude" "codex" "cursor" "grok" "t3code"
+    "enable" "instructions" "claude" "codex" "cursor" "grok" "t3code" "gh"
   ]);
 
   shell = "${hm.programs.zsh.package}/bin/zsh";
