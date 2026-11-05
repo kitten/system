@@ -3,8 +3,9 @@ use rand::rngs::OsRng;
 use ssh_agent_client_rs::Client;
 use ssh_key::{Algorithm, LineEnding, PrivateKey};
 use std::fs;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::os::unix::fs::PermissionsExt;
+use std::os::unix::net::{UnixListener, UnixStream};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Output, Stdio};
@@ -125,9 +126,28 @@ impl Fixture {
 
     fn stub(&self) -> PathBuf {
         let path = self.path("ssh-stub");
-        // Report the explicit public-key selection and agent socket; check the
-        // outbound options without contacting GitHub.
-        fs::write(&path, format!("#!{}\ncase \"$*\" in *'ForwardAgent=no'*'StrictHostKeyChecking=yes'*) ;; *) exit 9;; esac\nprintf '%s\\n' \"$SSH_AUTH_SOCK\" >&2\nwhile [ \"$#\" -gt 0 ]; do if [ \"$1\" = -i ]; then shift; {} \"$1\"; fi; shift; done\n", tool("sh").display(), tool("cat").display())).unwrap();
+        // ssh-add -T signs and verifies a challenge for each selected key.
+        fs::write(
+            &path,
+            format!(
+                r#"#!{}
+case "$*" in *'ForwardAgent=no'*'StrictHostKeyChecking=yes'*) ;; *) exit 9;; esac
+printf '%s\n' "$SSH_AUTH_SOCK" >&2
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = -i ]; then
+    shift
+    {} -T "$1" || exit
+    {} "$1"
+  fi
+  shift
+done
+"#,
+                tool("sh").display(),
+                tool("ssh-add").display(),
+                tool("cat").display()
+            ),
+        )
+        .unwrap();
         fs::set_permissions(&path, fs::Permissions::from_mode(0o700)).unwrap();
         path
     }
@@ -234,6 +254,55 @@ fn metadata_checksum_version_and_key_type_are_validated() {
     )
     .unwrap();
     assert!(Metadata::generate(ecdsa.public_key()).is_err());
+}
+
+#[test]
+fn wrapped_transport_lists_source_identities_only_once() {
+    let fixture = Fixture::new();
+    fixture.wrap();
+    let socket = fixture.path("counting-agent");
+    let listener = UnixListener::bind(&socket).unwrap();
+    let upstream = fixture.socket.clone();
+    let proxy = thread::spawn(move || {
+        let (mut client, _) = listener.accept().unwrap();
+        let mut source = UnixStream::connect(upstream).unwrap();
+        let mut lists = 0;
+        loop {
+            let mut length = [0; 4];
+            if client.read_exact(&mut length).is_err() {
+                break;
+            }
+            let mut request = vec![0; u32::from_be_bytes(length) as usize];
+            client.read_exact(&mut request).unwrap();
+            // SSH_AGENTC_REQUEST_IDENTITIES; reject repeated selection attempts.
+            if request[0] == 11 {
+                lists += 1;
+                if lists > 1 {
+                    client.write_all(&[0, 0, 0, 1, 5]).unwrap();
+                    continue;
+                }
+            }
+            source.write_all(&length).unwrap();
+            source.write_all(&request).unwrap();
+            source.read_exact(&mut length).unwrap();
+            let mut response = vec![0; u32::from_be_bytes(length) as usize];
+            source.read_exact(&mut response).unwrap();
+            client.write_all(&length).unwrap();
+            client.write_all(&response).unwrap();
+        }
+        lists
+    });
+    let output = fixture
+        .transport("source.pub", "wrapped", &fixture.stub())
+        .env("SSH_AUTH_SOCK", &socket)
+        .output()
+        .unwrap();
+    assert_eq!(proxy.join().unwrap(), 1);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 #[test]
@@ -352,6 +421,63 @@ fn wrapping_requires_an_unambiguous_supported_identity_or_explicit_selection() {
 }
 
 #[test]
+fn cli_help_and_argument_errors_do_not_require_an_agent() {
+    for socket in [None, Some("/nonexistent/ssh-agent")] {
+        for arguments in [
+            vec!["--help"],
+            vec!["wrap", "--help"],
+            vec!["wrap", "-h"],
+            vec!["unwrap", "--help"],
+            vec!["unwrap", "-h"],
+        ] {
+            let mut command = Command::new(env!("CARGO_BIN_EXE_git-ssh-access"));
+            command.env_clear().args(arguments);
+            if let Some(socket) = socket {
+                command.env("SSH_AUTH_SOCK", socket);
+            }
+            let output = command.output().unwrap();
+            assert!(output.status.success());
+            assert!(String::from_utf8_lossy(&output.stdout).contains("Usage:"));
+        }
+        for arguments in [
+            vec!["wrap", "-i"],
+            vec!["wrap", "unexpected"],
+            vec!["unwrap", "extra"],
+        ] {
+            let mut command = Command::new(env!("CARGO_BIN_EXE_git-ssh-access"));
+            command.env_clear().args(arguments);
+            if let Some(socket) = socket {
+                command.env("SSH_AUTH_SOCK", socket);
+            }
+            let output = command.output().unwrap();
+            assert!(!output.status.success());
+            assert!(String::from_utf8_lossy(&output.stderr).contains("Usage:"));
+            assert!(output.stdout.is_empty());
+        }
+    }
+}
+
+#[test]
+fn authentication_stub_rejects_keys_missing_from_the_selected_agent() {
+    let fixture = Fixture::new();
+    let mut command = Command::new(fixture.stub());
+    command
+        .env_clear()
+        .env("SSH_AUTH_SOCK", &fixture.socket)
+        .args([
+            "-o",
+            "ForwardAgent=no",
+            "-o",
+            "StrictHostKeyChecking=yes",
+            "-i",
+        ])
+        .arg(fixture.path("publication.pub"));
+    let output = command.output().unwrap();
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty());
+}
+
+#[test]
 fn transport_uses_unlisted_keys_directly_and_requires_a_socket() {
     let fixture = Fixture::new();
     let mut command = fixture.transport("publication.pub", "", &fixture.stub());
@@ -448,7 +574,8 @@ fn listed_identity_must_match_the_bundle_source() {
     assert!(!output.status.success());
     assert!(output.stdout.is_empty());
     assert!(
-        String::from_utf8_lossy(&output.stderr).contains("not an authorized replacement identity")
+        String::from_utf8_lossy(&output.stderr)
+            .contains("no authorized forwarded identity matches")
     );
     // An empty forwarded agent cannot unlock a bundle even when its source is listed.
     fixture.client().remove_all_identities().unwrap();

@@ -271,26 +271,44 @@ fn source_identity(client: &mut Client) -> Result<PublicKey> {
     source.ok_or_else(|| "no supported Ed25519 identity is available in the SSH agent".into())
 }
 
+pub const USAGE: &str = "Usage:\n  git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key\n  git-ssh-access unwrap < wrapped-key\n\nThe source identity must be available through SSH_AUTH_SOCK.\nWithout -i, wrap requires exactly one supported Ed25519 identity in the agent.\nGit transport and forced-command modes are configured by the Nix module.";
+
 pub fn run(arguments: &[OsString]) -> Result<()> {
+    enum Operation<'a> {
+        Wrap(Option<&'a Path>),
+        Unwrap,
+    }
+    let operation = match arguments {
+        [command] if command == "wrap" => Operation::Wrap(None),
+        [command, flag, path] if command == "wrap" && flag == "-i" => {
+            Operation::Wrap(Some(Path::new(path)))
+        }
+        [command] if command == "unwrap" => Operation::Unwrap,
+        [command, flag]
+            if (command == "wrap" || command == "unwrap") && (flag == "--help" || flag == "-h") =>
+        {
+            println!("{USAGE}");
+            return Ok(());
+        }
+        _ => return Err(USAGE.into()),
+    };
     let socket = std::env::var_os("SSH_AUTH_SOCK").ok_or("SSH_AUTH_SOCK is required")?;
     let mut client = connect(Path::new(&socket))?;
-    match arguments {
-        [command, options @ ..] if command == "wrap" => {
-            let source = match options {
-                [] => source_identity(&mut client)?,
-                [flag, path] if flag == "-i" => read_public(Path::new(path))?,
-                _ => return Err("Usage: git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key".into()),
+    match operation {
+        Operation::Wrap(path) => {
+            let source = match path {
+                None => source_identity(&mut client)?,
+                Some(path) => read_public(path)?,
             };
             let plaintext = read_bounded(std::io::stdin(), MAX_KEY_SIZE)?;
             Bundle::wrap(&mut client, &source, &plaintext)?.write(std::io::stdout())?;
         }
-        [command] if command == "unwrap" => {
+        Operation::Unwrap => {
             let bundle = Bundle::read(std::io::stdin())?;
             let plaintext = bundle.unlock(&mut client)?;
             drop(parse_private(&plaintext)?);
             std::io::stdout().write_all(&plaintext)?;
         }
-        _ => return Err("Usage: git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key; git-ssh-access unwrap < wrapped-key".into()),
     }
     Ok(())
 }

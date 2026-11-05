@@ -185,22 +185,20 @@ fn prepare(config: &Config<'_>, socket: &Path) -> Result<Credential> {
     let mut client = wrapping::connect(socket)?;
     // Select only identities outside the replacement set for direct SSH. Mixed
     // agents take this route without falling back to the wrapped credential.
-    let direct = client
+    let offered = client
         .list_all_identities()
         .map_err(|_| "cannot list forwarded SSH identities")?
         .into_iter()
         .filter_map(|identity| match identity {
-            ssh_agent_client_rs::Identity::PublicKey(key)
-                if !config
-                    .authorized
-                    .iter()
-                    .any(|listed| listed.key_data() == key.key_data()) =>
-            {
-                Some(key.into_owned())
-            }
+            ssh_agent_client_rs::Identity::PublicKey(key) => Some(key.into_owned()),
             _ => None,
-        })
-        .collect::<Vec<_>>();
+        });
+    let (listed, direct): (Vec<_>, Vec<_>) = offered.partition(|key| {
+        config
+            .authorized
+            .iter()
+            .any(|listed| listed.key_data() == key.key_data())
+    });
     if !direct.is_empty() {
         return Ok(Credential {
             public: direct,
@@ -211,14 +209,17 @@ fn prepare(config: &Config<'_>, socket: &Path) -> Result<Credential> {
         .wrapped
         .ok_or("no wrapped publication key is configured for the forwarded identities")?;
     let bundle = wrapping::Bundle::read(fs::File::open(path)?)?;
-    if !config
-        .authorized
-        .iter()
-        .any(|key| bundle.metadata.matches(key).unwrap_or(false))
-    {
-        return Err("wrapped key source is not an authorized replacement identity".into());
+    let mut source = None;
+    for key in &listed {
+        if bundle.metadata.matches(key)? {
+            if source.is_some() {
+                return Err("forwarded agent offered duplicate source identities".into());
+            }
+            source = Some(key);
+        }
     }
-    let plaintext = bundle.unlock(&mut client)?;
+    let source = source.ok_or("no authorized forwarded identity matches the wrapped key source")?;
+    let plaintext = wrapping::decrypt(&bundle.metadata, &mut client, source, &bundle.ciphertext)?;
     let private = wrapping::parse_private(&plaintext)?;
     drop(plaintext);
     Ok(Credential {
