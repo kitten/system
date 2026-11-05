@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, options, pkgs, user, ... }:
 
 with lib;
 let
@@ -237,15 +237,21 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable ({
     modules.git.sshAccess = {
       enable = mkDefault true;
       authorizedKeys = cfg.authorizedGitKeys;
+      forwarding.wrappedKey = mkIf (!isAgent) config.age.secrets.git-publication.path;
     };
     programs.git.settings.alias.send = mkIf config.modules.git.enable
       "!${send}/bin/git-send";
     programs.git.settings.alias.receive = mkIf config.modules.git.enable
       "!${receive}/bin/git-receive";
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
-  };
+  } // optionalAttrs (options ? age.secrets) {
+    age.secrets.git-publication = mkIf (!isAgent) {
+      file = ./encrypt/git-publication.age;
+      path = "${config.xdg.dataHome}/git-ssh-access/publication.wrapped";
+    };
+  });
 }
