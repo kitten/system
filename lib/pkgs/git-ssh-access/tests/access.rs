@@ -158,7 +158,12 @@ fn restricted_receipt_and_publication_preserve_git_policy() {
     );
     success(push(Some("lease"), reference, true));
     assert_eq!(success(git(&origin, &["rev-parse", reference])), second);
-    assert!(!push(Some("ff"), "refs/heads/main", true).status.success());
+    let disallowed = push(Some("ff"), "refs/heads/main", true);
+    assert!(!disallowed.status.success());
+    assert!(
+        String::from_utf8_lossy(&disallowed.stderr)
+            .contains("Rename your branch before sending it.")
+    );
     assert!(!push(Some("ff"), "refs/tags/release", true).status.success());
     assert!(
         !git(&destination, &["show-ref", "--verify", "refs/heads/main"])

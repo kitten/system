@@ -387,7 +387,9 @@ fn prefix_error(reference: &str, prefixes: &[String]) -> String {
     } else {
         prefixes.join(", ")
     };
-    format!("ref {reference} is not permitted; allowed branch prefixes: {allowed}")
+    format!(
+        "ref {reference} is not permitted; allowed branch prefixes: {allowed}. Rename your branch before sending it."
+    )
 }
 
 fn check(git: &Path, prefixes: &[String]) -> Result<()> {
