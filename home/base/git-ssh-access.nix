@@ -12,7 +12,7 @@ let
       (if access.forwarding.wrappedKey == null then "" else access.forwarding.wrappedKey)
     ] ++ access.authorizedKeys)} -- "$@"
   '';
-  helper = pkgs.callPackage ./git-ssh-access/package.nix { };
+  helper = pkgs.git-ssh-access;
   preReceive = pkgs.writeShellScript "git-ssh-pre-receive" ''
     exec ${helper}/bin/git-ssh-access check ${pkgs.git}/bin/git ${lib.escapeShellArgs access.allowedPushPrefixes}
   '';
