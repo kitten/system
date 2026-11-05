@@ -57,6 +57,13 @@ in {
         export GNUPGHOME="${home}"
       '';
 
+      # Missing SSH forwarding must not fall back to this account's personal key.
+      sshAuthSock.initialization.zsh = mkForce ''
+        if [ -z "$SSH_CONNECTION" ]; then
+          ${config.sshAuthSock.initialization.bash}
+        fi
+      '';
+
       modules.git.signingKey = mkDefault "4EAF3D43CDBB01C9";
 
       # ed25519 2025-09-06 [C]

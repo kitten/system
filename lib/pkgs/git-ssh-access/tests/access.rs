@@ -86,10 +86,11 @@ fn restricted_receipt_and_publication_preserve_git_policy() {
         ),
     );
     let inbound = home.join("inbound");
+    // Model shell startup replacing SSH_AUTH_SOCK after capturing sshd's value.
     script(
         &inbound,
         &format!(
-            "shift\nexport SSH_ORIGINAL_COMMAND=\"$*\"\nexec '{helper}' '{}' '{}' '{}' '{}' true '{}' '@kitten/'",
+            "shift\nexport GIT_SSH_ACCESS_AUTH_SOCK=\"${{SSH_AUTH_SOCK-}}\"\nexport SSH_AUTH_SOCK=unrelated-local-agent\nexport SSH_ORIGINAL_COMMAND=\"$*\"\nexec '{helper}' '{}' '{}' '{}' '{}' true '{}' '@kitten/'",
             home.display(),
             root.display(),
             tool("git").display(),
@@ -144,7 +145,12 @@ fn restricted_receipt_and_publication_preserve_git_policy() {
     fs::write(source.join("file"), "second").unwrap();
     success(git(&source, &["commit", "-am", "second"]));
     let second = success(git(&source, &["rev-parse", "HEAD"]));
-    assert!(!push(Some("ff"), reference, false).status.success());
+    let missing_forwarding = push(Some("ff"), reference, false);
+    assert!(!missing_forwarding.status.success());
+    assert!(
+        String::from_utf8_lossy(&missing_forwarding.stderr)
+            .contains("requires SSH agent forwarding captured by the receiving shell")
+    );
     assert_eq!(
         success(git(&destination, &["rev-parse", reference])),
         first,

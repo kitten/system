@@ -17,7 +17,8 @@ let
     MaxSessions = 5;
     ClientAliveInterval = 60;
     ClientAliveCountMax = 3;
-    AllowAgentForwarding = false;
+    # Clients keep forwarding disabled by default; git send requests it explicitly.
+    AllowAgentForwarding = true;
     AllowTcpForwarding = false;
     X11Forwarding = false;
     AllowStreamLocalForwarding = false;

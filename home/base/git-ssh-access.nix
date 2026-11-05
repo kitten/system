@@ -79,6 +79,12 @@ in {
 
   config = lib.mkIf (cfg.enable && access.enable) {
     home.packages = [ helper ];
+    # Capture sshd's socket before shell integrations can replace it with a local agent.
+    programs.zsh.envExtra = lib.mkBefore ''
+      if [[ -n "''${SSH_CONNECTION-}" && -n "''${SSH_ORIGINAL_COMMAND-}" ]]; then
+        export GIT_SSH_ACCESS_AUTH_SOCK="''${SSH_AUTH_SOCK-}"
+      fi
+    '';
     assertions = [{
       assertion = access.forwarding.wrappedKey == null
         || !(lib.hasPrefix "/nix/store/" access.forwarding.wrappedKey);

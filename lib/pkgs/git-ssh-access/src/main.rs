@@ -83,7 +83,7 @@ impl Access {
             .env("HOME", &self.home)
             .env(
                 "SSH_AUTH_SOCK",
-                env::var_os("SSH_AUTH_SOCK").unwrap_or_default(),
+                env::var_os("GIT_SSH_ACCESS_AUTH_SOCK").unwrap_or_default(),
             )
             .arg("-c")
             .arg(format!("core.sshCommand={}", self.ssh.display()))
@@ -137,6 +137,12 @@ impl Access {
         }
         if !self.allowed(reference) {
             return Err(prefix_error(reference, &self.prefixes).into());
+        }
+        if env::var_os("GIT_SSH_ACCESS_AUTH_SOCK").is_none_or(|socket| socket.is_empty()) {
+            return Err(
+                "onward publication requires SSH agent forwarding captured by the receiving shell"
+                    .into(),
+            );
         }
         let url = self.origin(repository)?;
         let previous = self.metadata(repository, &["--verify", reference]).ok();
