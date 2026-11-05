@@ -1,4 +1,5 @@
 /result
+/home/base/git-ssh-access/target
 
 .*
 *.log

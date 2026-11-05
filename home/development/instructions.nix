@@ -98,7 +98,22 @@ let
       if ! $local_only; then
         receive=("--receive-pack=git-receive-pack --send=$mode:$ref:$sha")
       fi
-      exec git -c push.followTags=false -c push.recurseSubmodules=no push \
+      ssh_command=''${GIT_SSH_COMMAND:-$(git config --get core.sshCommand || true)}
+      ssh_command=''${ssh_command:-''${GIT_SSH:-${pkgs.openssh}/bin/ssh}}
+      # Expand the socket when Git starts SSH, after any source agent bootstrap.
+      # Disable sharing so an existing master's forwarded socket cannot be reused.
+      export GIT_SSH_COMMAND="$ssh_command -o \"ForwardAgent=\''${SSH_AUTH_SOCK:-no}\" -S none"
+      export GIT_SSH_VARIANT=ssh
+      # shellcheck disable=SC2016
+      exec ${optionalString (isAgent && config.modules.agent.sshKey != null) ''
+        ssh-agent -t 1200 ${pkgs.runtimeShell} -c '
+          export SSH_ASKPASS_REQUIRE=never
+          ssh-add "$1" </dev/null || exit
+          shift
+          export GIT_SEND_AGENT_SOCKET=$SSH_AUTH_SOCK
+          exec "$@"
+        ' git-send ${escapeShellArg config.modules.agent.sshKey} ''}git \
+        -c push.followTags=false -c push.recurseSubmodules=no push \
         "''${receive[@]}" "''${lease[@]}" "$host:$path" "$sha:$ref"
     '';
   };

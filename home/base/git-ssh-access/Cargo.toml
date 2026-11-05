@@ -1,0 +1,19 @@
+[package]
+name = "git-ssh-access"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+age = { version = "0.12.1", default-features = false }
+bech32 = "0.11.1"
+hkdf = "0.12.4"
+libc = "0.2"
+rand = "0.8.5"
+sha2 = "0.10.9"
+signature = "2.2.0"
+signal-hook = "0.3.18"
+ssh-agent-client-rs = "1.1.4"
+ssh-key = { version = "0.6.7", features = ["ed25519"] }
+zeroize = "1.8.2"
+tempfile = "3.23"
