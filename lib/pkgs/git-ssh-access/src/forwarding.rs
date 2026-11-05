@@ -15,6 +15,10 @@ use std::sync::{
 use std::thread;
 use std::time::{Duration, Instant};
 
+// The publication identity must remain usable for the entire supervised session.
+const SESSION_TIMEOUT: u64 = 1200;
+const SHUTDOWN_TIMEOUT: u64 = 5;
+
 struct Process(Child);
 
 impl Drop for Process {
@@ -165,7 +169,7 @@ struct Supervisor {
 impl Drop for Supervisor {
     fn drop(&mut self) {
         drop(self.control.take());
-        let _ = wait(&mut self.process.0, 5);
+        let _ = wait(&mut self.process.0, SHUTDOWN_TIMEOUT);
     }
 }
 
@@ -244,7 +248,7 @@ fn supervise(config: &Config<'_>) -> Result<()> {
         let _ = control.read(&mut [0]);
         disconnected.store(true, Ordering::Relaxed);
     });
-    let deadline = Instant::now() + Duration::from_secs(1200);
+    let deadline = Instant::now() + Duration::from_secs(SESSION_TIMEOUT);
     let source = source_socket()?;
     let Credential { public, private } = prepare(config, &source)?;
     if stopping.load(Ordering::Relaxed) {
@@ -274,7 +278,8 @@ fn supervise(config: &Config<'_>) -> Result<()> {
                 .command(config.tools.agent, None)
                 .args(["-D", "-a"])
                 .arg(&socket)
-                .args(["-t", "60"])
+                .arg("-t")
+                .arg(SESSION_TIMEOUT.to_string())
                 .stdin(Stdio::null())
                 .stdout(Stdio::null())
                 .stderr(Stdio::null())
@@ -383,7 +388,12 @@ pub fn run(arguments: &[OsString]) -> Result<()> {
         process,
         control: Some(control),
     };
-    if !wait(&mut supervisor.process.0, 1205)?.success() {
+    if !wait(
+        &mut supervisor.process.0,
+        SESSION_TIMEOUT + SHUTDOWN_TIMEOUT,
+    )?
+    .success()
+    {
         return Err("onward SSH authentication or Git operation failed".into());
     }
     Ok(())
