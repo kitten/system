@@ -160,12 +160,12 @@ in {
           commit.gpgSign = mkOverride 60 false;
           tag.gpgSign = mkOverride 60 false;
           push.gpgSign = mkOverride 60 false;
-          # This key only, no ssh-agent; remember new hosts and reject changed keys.
+          # Only this identity, from the selected agent or its private key file.
           core.sshCommand = mkIf (cfg.sshKey != null) (concatStringsSep " " [
             "${pkgs.openssh}/bin/ssh"
             "-i ${cfg.sshKey}"
             "-o IdentitiesOnly=yes"
-            "-o IdentityAgent=none"
+            "-o IdentityAgent=SSH_AUTH_SOCK"
             "-o ${escapeShellArg "UserKnownHostsFile=~/.ssh/known_hosts ${knownHostsFile}"}"
             "-o StrictHostKeyChecking=accept-new"
           ]);

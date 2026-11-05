@@ -1,4 +1,5 @@
 self: super: {
+  git-ssh-access = self.callPackage ./git-ssh-access { };
   sf-pro = import ./sf-pro.nix super;
   sf-mono = import ./sf-mono.nix super;
   new-york = import ./new-york.nix super;

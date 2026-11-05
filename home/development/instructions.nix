@@ -1,4 +1,4 @@
-{ lib, config, pkgs, user, ... }:
+{ lib, config, options, pkgs, user, ... }:
 
 with lib;
 let
@@ -37,12 +37,12 @@ let
     runtimeInputs = [ pkgs.git pkgs.openssh ];
     text = ''
       local_only=${boolToString (!isAgent)}
-      force=false
+      mode=ff
       branch=""
       while [[ $# -gt 0 ]]; do
         case "$1" in
         --local-only) local_only=true ;;
-        --force-with-lease) force=true ;;
+        --force-with-lease) mode=lease ;;
         --branch)
           if [[ $# -lt 2 || -z "$2" ]]; then
             echo '--branch requires a branch name' >&2
@@ -87,9 +87,7 @@ let
       sha=$(git rev-parse --verify "$ref^{commit}")
 
       lease=()
-      mode=ff
-      if $force; then
-        mode=lease
+      if [[ "$mode" == lease ]]; then
         tip=$(git ls-remote --refs "$host:$path" "$ref")
         lease=("--force-with-lease=$ref:''${tip%%$'\t'*}")
       fi
@@ -98,7 +96,20 @@ let
       if ! $local_only; then
         receive=("--receive-pack=git-receive-pack --send=$mode:$ref:$sha")
       fi
-      exec git -c push.followTags=false -c push.recurseSubmodules=no push \
+      ssh_command=''${GIT_SSH_COMMAND:-$(git config --get core.sshCommand || true)}
+      ssh_command=''${ssh_command:-''${GIT_SSH:-${pkgs.openssh}/bin/ssh}}
+      # Forward the selected authentication agent and bypass existing masters.
+      export GIT_SSH_COMMAND="$ssh_command -A -S none"
+      export GIT_SSH_VARIANT=ssh
+      # shellcheck disable=SC2016
+      exec ${optionalString (isAgent && config.modules.agent.sshKey != null) ''
+        ssh-agent -t 1200 ${pkgs.runtimeShell} -c '
+          export SSH_ASKPASS_REQUIRE=never
+          ssh-add "$1" </dev/null || exit
+          shift
+          exec "$@"
+        ' git-send ${escapeShellArg config.modules.agent.sshKey} ''}git \
+        -c push.followTags=false -c push.recurseSubmodules=no push \
         "''${receive[@]}" "''${lease[@]}" "$host:$path" "$sha:$ref"
     '';
   };
@@ -226,15 +237,21 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf cfg.enable ({
     modules.git.sshAccess = {
       enable = mkDefault true;
       authorizedKeys = cfg.authorizedGitKeys;
+      forwarding.wrappedKey = mkIf (!isAgent) config.age.secrets.git-publication.path;
     };
     programs.git.settings.alias.send = mkIf config.modules.git.enable
       "!${send}/bin/git-send";
     programs.git.settings.alias.receive = mkIf config.modules.git.enable
       "!${receive}/bin/git-receive";
     home.file."${config.modules.git.directory}/AGENTS.md".text = cfg.text;
-  };
+  } // optionalAttrs (options ? age.secrets) {
+    age.secrets.git-publication = mkIf (!isAgent) {
+      file = ./encrypt/git-publication.age;
+      path = "${config.xdg.dataHome}/git-ssh-access/publication.wrapped";
+    };
+  });
 }

@@ -1,12 +1,10 @@
+use git_ssh_access::{Result, forwarding, wrapping};
 use std::env;
-use std::error::Error;
 use std::fs;
 use std::io::{self, BufRead};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
-
-type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 // Resolve missing metadata paths too, following dangling symlinks so that a
 // future ref or object directory cannot silently extend the exposed root.
@@ -83,13 +81,16 @@ impl Access {
         let mut command = self.git();
         command
             .env("HOME", &self.home)
+            .env(
+                "SSH_AUTH_SOCK",
+                env::var_os("SSH_AUTH_SOCK").unwrap_or_default(),
+            )
             .arg("-c")
-            .arg(format!(
-                "core.sshCommand={} -oBatchMode=yes -oForwardAgent=no",
-                self.ssh.display()
-            ))
+            .arg(format!("core.sshCommand={}", self.ssh.display()))
             .arg("-c")
             .arg("push.gpgSign=false")
+            .arg("-c")
+            .arg("ssh.variant=ssh")
             .arg("-c")
             .arg("push.followTags=false")
             .arg("-c")
@@ -141,11 +142,10 @@ impl Access {
         let previous = self.metadata(repository, &["--verify", reference]).ok();
         // Observe origin before receiving, so a concurrent update cannot be
         // silently overwritten by the onward lease-protected push.
-        let expected = if *mode == "lease" {
-            Some(self.remote_tip(repository, &url, reference)?)
-        } else {
-            None
-        };
+        // Authenticate before receipt even for fast-forward sends. Never silently
+        // fall back to a receiver-local identity when forwarding is unavailable.
+        let tip = self.remote_tip(repository, &url, reference)?;
+        let expected = (*mode == "lease").then_some(tip);
         if !self
             .git()
             .arg("receive-pack")
@@ -228,10 +228,10 @@ impl Access {
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
             .env("GIT_NO_LAZY_FETCH", "1")
             .env("GIT_TERMINAL_PROMPT", "0");
-        if let Ok(protocol) = env::var("GIT_PROTOCOL") {
-            if matches!(protocol.as_str(), "version=0" | "version=1" | "version=2") {
-                command.env("GIT_PROTOCOL", protocol);
-            }
+        if let Ok(protocol) = env::var("GIT_PROTOCOL")
+            && matches!(protocol.as_str(), "version=0" | "version=1" | "version=2")
+        {
+            command.env("GIT_PROTOCOL", protocol);
         }
         for setting in [
             format!("core.hooksPath={}", self.hooks.display()),
@@ -414,6 +414,25 @@ fn check(git: &Path, prefixes: &[String]) -> Result<()> {
 
 fn run() -> Result<()> {
     let arguments: Vec<_> = env::args_os().skip(1).collect();
+    if arguments
+        .first()
+        .is_some_and(|value| value == "--help" || value == "-h" || value == "help")
+    {
+        println!("{}", wrapping::USAGE);
+        return Ok(());
+    }
+    if arguments
+        .first()
+        .is_some_and(|value| value == "wrap" || value == "unwrap")
+    {
+        return wrapping::run(&arguments);
+    }
+    if arguments
+        .first()
+        .is_some_and(|value| value == "transport" || value == "transport-supervisor")
+    {
+        return forwarding::run(&arguments);
+    }
     if arguments.first().is_some_and(|value| value == "check") {
         let git = arguments.get(1).ok_or("expected Git executable")?;
         let prefixes = arguments[2..]

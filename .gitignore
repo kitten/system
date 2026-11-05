@@ -1,4 +1,5 @@
 /result
+/lib/pkgs/git-ssh-access/target
 
 .*
 *.log

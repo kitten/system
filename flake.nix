@@ -152,6 +152,7 @@
       inherit (inputs.darwin.packages.${system}) darwin-rebuild;
     } // {
       inherit (pkgs)
+        git-ssh-access
         pinentry-touchid
         steamworks-sdk-redist
         systemd-transparent-udp-forwarderd
