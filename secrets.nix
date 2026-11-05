@@ -21,6 +21,7 @@ in
   "./home/development/encrypt/claude.env.age".publicKeys = keys;
   "./home/development/encrypt/cursor.env.age".publicKeys = keys;
   "./home/development/encrypt/grok.env.age".publicKeys = keys;
+  "./home/development/encrypt/gh.env.age".publicKeys = keys;
   "./home/development/encrypt/git-publication.age".publicKeys = keys;
 
   "./home/fonts/encrypt/DankMono-Regular.otf.age".publicKeys = keys;

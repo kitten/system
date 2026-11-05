@@ -16,6 +16,7 @@ with lib; {
     ./codex.nix
     ./cursor.nix
     ./grok.nix
+    ./gh.nix
     ./js.nix
     ./react-native.nix
     ./terraform.nix
