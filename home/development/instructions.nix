@@ -37,12 +37,12 @@ let
     runtimeInputs = [ pkgs.git pkgs.openssh ];
     text = ''
       local_only=${boolToString (!isAgent)}
-      force=false
+      mode=ff
       branch=""
       while [[ $# -gt 0 ]]; do
         case "$1" in
         --local-only) local_only=true ;;
-        --force-with-lease) force=true ;;
+        --force-with-lease) mode=lease ;;
         --branch)
           if [[ $# -lt 2 || -z "$2" ]]; then
             echo '--branch requires a branch name' >&2
@@ -87,9 +87,7 @@ let
       sha=$(git rev-parse --verify "$ref^{commit}")
 
       lease=()
-      mode=ff
-      if $force; then
-        mode=lease
+      if [[ "$mode" == lease ]]; then
         tip=$(git ls-remote --refs "$host:$path" "$ref")
         lease=("--force-with-lease=$ref:''${tip%%$'\t'*}")
       fi
@@ -100,9 +98,8 @@ let
       fi
       ssh_command=''${GIT_SSH_COMMAND:-$(git config --get core.sshCommand || true)}
       ssh_command=''${ssh_command:-''${GIT_SSH:-${pkgs.openssh}/bin/ssh}}
-      # Expand the socket when Git starts SSH, after any source agent bootstrap.
-      # Disable sharing so an existing master's forwarded socket cannot be reused.
-      export GIT_SSH_COMMAND="$ssh_command -o \"ForwardAgent=\''${SSH_AUTH_SOCK:-no}\" -S none"
+      # Forward the selected authentication agent and bypass existing masters.
+      export GIT_SSH_COMMAND="$ssh_command -A -S none"
       export GIT_SSH_VARIANT=ssh
       # shellcheck disable=SC2016
       exec ${optionalString (isAgent && config.modules.agent.sshKey != null) ''
@@ -110,7 +107,6 @@ let
           export SSH_ASKPASS_REQUIRE=never
           ssh-add "$1" </dev/null || exit
           shift
-          export GIT_SEND_AGENT_SOCKET=$SSH_AUTH_SOCK
           exec "$@"
         ' git-send ${escapeShellArg config.modules.agent.sshKey} ''}git \
         -c push.followTags=false -c push.recurseSubmodules=no push \

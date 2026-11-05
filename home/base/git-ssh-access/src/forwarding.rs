@@ -3,7 +3,7 @@ use ssh_key::{PrivateKey, PublicKey};
 use std::env;
 use std::ffi::{OsStr, OsString};
 use std::fs;
-use std::io::{BufRead, BufReader, Read, Write};
+use std::io::Read;
 use std::os::fd::{AsRawFd, FromRawFd};
 use std::os::unix::{net::UnixStream, process::CommandExt};
 use std::path::{Path, PathBuf};
@@ -11,7 +11,6 @@ use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::{
     Arc,
     atomic::{AtomicBool, Ordering},
-    mpsc,
 };
 use std::thread;
 use std::time::{Duration, Instant};
@@ -64,11 +63,13 @@ impl Tools<'_> {
         command
     }
 
-    fn ssh(&self, socket: &Path, public: &Path, destination: &[OsString]) -> Command {
+    fn ssh(&self, socket: &Path, public: &[PathBuf], destination: &[OsString]) -> Command {
         let mut command = self.command(self.ssh, Some(socket));
+        command.args(["-F", "/dev/null"]);
+        for path in public {
+            command.arg("-i").arg(path);
+        }
         command
-            .args(["-F", "/dev/null", "-i"])
-            .arg(public)
             .arg("-o")
             .arg(format!("IdentityAgent={}", socket.display()))
             .args([
@@ -88,74 +89,37 @@ impl Tools<'_> {
     }
 }
 
-enum Credential<'a> {
-    Direct,
-    Wrapped {
-        ciphertext: &'a Path,
-        metadata: &'a Path,
-        publication: &'a Path,
-    },
-}
-
-struct Identity<'a> {
-    source_file: &'a Path,
-    source: PublicKey,
-    credential: Credential<'a>,
-}
-
 struct Config<'a> {
     tools: Tools<'a>,
-    identities: Vec<Identity<'a>>,
+    authorized: Vec<PublicKey>,
+    wrapped: Option<&'a Path>,
     destination: &'a [OsString],
 }
 
 impl<'a> Config<'a> {
     fn parse(arguments: &'a [OsString]) -> Result<Self> {
-        let [_, home, ssh, agent, rest @ ..] = arguments else {
+        let [_, home, ssh, agent, wrapped, remaining @ ..] = arguments else {
             return Err("invalid forwarding transport configuration".into());
         };
-        let separator = rest
+        let separator = remaining
             .iter()
             .position(|value| value == "--")
             .ok_or("missing forwarding transport arguments")?;
-        let (identities, tail) = rest.split_at(separator);
-        let destination = &tail[1..];
+        let (authorized, destination) = remaining.split_at(separator);
+        let destination = &destination[1..];
         validate_destination(destination)?;
-        let (groups, remainder) = identities.as_chunks::<4>();
-        if !remainder.is_empty() {
-            return Err("invalid forwarding identity configuration".into());
-        }
-        let identities = groups
+        let authorized = authorized
             .iter()
-            .map(|[source, ciphertext, metadata, publication]| {
-                let credential = if ciphertext.is_empty()
-                    && metadata.is_empty()
-                    && publication.is_empty()
-                {
-                    Credential::Direct
-                } else if !ciphertext.is_empty() && !metadata.is_empty() && !publication.is_empty()
-                {
-                    Credential::Wrapped {
-                        ciphertext: Path::new(ciphertext),
-                        metadata: Path::new(metadata),
-                        publication: Path::new(publication),
-                    }
-                } else {
-                    return Err(
-                        "wrapped credentials need ciphertext, metadata, and publication identity"
-                            .into(),
-                    );
-                };
-                Ok(Identity {
-                    source_file: Path::new(source),
-                    source: wrapping::read_public(Path::new(source))?,
-                    credential,
-                })
+            .map(|key| {
+                PublicKey::from_openssh(key.to_str().ok_or("invalid authorized public key")?)
+                    .map_err(|_| "invalid authorized public key".into())
             })
-            .collect::<Result<_>>()?;
+            .collect::<Result<Vec<_>>>()?;
+        let wrapped = (!wrapped.is_empty()).then(|| Path::new(wrapped));
         Ok(Self {
             tools: Tools { home, ssh, agent },
-            identities,
+            authorized,
+            wrapped,
             destination,
         })
     }
@@ -193,96 +157,77 @@ fn receive_control() -> Result<UnixStream> {
     Ok(socket)
 }
 
-struct Session {
-    supervisor: Process,
+struct Supervisor {
+    process: Process,
     control: Option<UnixStream>,
-    socket: PathBuf,
 }
 
-impl Session {
-    fn new(
-        config: &Config<'_>,
-        source_socket: &Path,
-        publication: &Path,
-        wrapped: bool,
-    ) -> Result<Self> {
-        let (control, inherited) = UnixStream::pair()?;
-        control.set_read_timeout(Some(Duration::from_secs(10)))?;
-        control.set_write_timeout(Some(Duration::from_secs(5)))?;
-        let mut command = config.tools.command(env::current_exe()?.as_os_str(), None);
-        command
-            .arg("transport-supervisor")
-            .arg(config.tools.home)
-            .arg(config.tools.ssh)
-            .arg(if wrapped {
-                config.tools.agent
-            } else {
-                OsStr::new("")
-            })
-            .arg(source_socket)
-            .arg(publication)
-            .arg("--")
-            .args(config.destination)
-            // Session-wide signals to the caller must leave its watchdog alive.
-            .process_group(0);
-        inherit_control(&mut command, &inherited);
-        let supervisor = Process(command.spawn()?);
-        drop(inherited);
-        let mut session = Self {
-            supervisor,
-            control: Some(control),
-            socket: PathBuf::new(),
-        };
-        let mut socket = String::new();
-        BufReader::new(session.control.as_ref().unwrap())
-            .take(4096)
-            .read_line(&mut socket)?;
-        if !socket.ends_with('\n') {
-            return Err("publication supervisor failed to start".into());
-        }
-        session.socket = PathBuf::from(socket.trim_end_matches('\n'));
-        Ok(session)
-    }
-
-    fn run(mut self) -> Result<()> {
-        self.control.as_mut().unwrap().write_all(b"start\n")?;
-        if !wait(&mut self.supervisor.0, 1205)?.success() {
-            return Err("onward SSH authentication or Git operation failed".into());
-        }
-        Ok(())
-    }
-}
-
-impl Drop for Session {
+impl Drop for Supervisor {
     fn drop(&mut self) {
         drop(self.control.take());
-        let _ = wait(&mut self.supervisor.0, 5);
+        let _ = wait(&mut self.process.0, 5);
     }
 }
 
-fn supervise(arguments: &[OsString]) -> Result<()> {
-    let [
-        _,
-        home,
-        ssh,
-        agent_executable,
-        source_socket,
-        public,
-        separator,
-        destination @ ..,
-    ] = arguments
-    else {
-        return Err("invalid publication supervisor arguments".into());
-    };
-    if separator != "--" {
-        return Err("missing supervisor destination".into());
+fn source_socket() -> Result<PathBuf> {
+    env::var_os("SSH_AUTH_SOCK")
+        .filter(|value| !value.is_empty())
+        .map(PathBuf::from)
+        .ok_or_else(|| "onward publication requires a forwarded SSH agent".into())
+}
+
+struct Credential {
+    public: Vec<PublicKey>,
+    private: Option<PrivateKey>,
+}
+
+fn prepare(config: &Config<'_>, socket: &Path) -> Result<Credential> {
+    let mut client = wrapping::connect(socket)?;
+    // Select only identities outside the replacement set for direct SSH. Mixed
+    // agents take this route without falling back to the wrapped credential.
+    let direct = client
+        .list_all_identities()
+        .map_err(|_| "cannot list forwarded SSH identities")?
+        .into_iter()
+        .filter_map(|identity| match identity {
+            ssh_agent_client_rs::Identity::PublicKey(key)
+                if !config
+                    .authorized
+                    .iter()
+                    .any(|listed| listed.key_data() == key.key_data()) =>
+            {
+                Some(key.into_owned())
+            }
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    if !direct.is_empty() {
+        return Ok(Credential {
+            public: direct,
+            private: None,
+        });
     }
-    validate_destination(destination)?;
-    let tools = Tools {
-        home,
-        ssh,
-        agent: agent_executable,
-    };
+    let path = config
+        .wrapped
+        .ok_or("no wrapped publication key is configured for the forwarded identities")?;
+    let bundle = wrapping::Bundle::read(fs::File::open(path)?)?;
+    if !config
+        .authorized
+        .iter()
+        .any(|key| bundle.metadata.matches(key).unwrap_or(false))
+    {
+        return Err("wrapped key source is not an authorized replacement identity".into());
+    }
+    let plaintext = bundle.unlock(&mut client)?;
+    let private = wrapping::parse_private(&plaintext)?;
+    drop(plaintext);
+    Ok(Credential {
+        public: vec![private.public_key().clone()],
+        private: Some(private),
+    })
+}
+
+fn supervise(config: &Config<'_>) -> Result<()> {
     let mut control = receive_control()?;
     let stopping = Arc::new(AtomicBool::new(false));
     for signal in [
@@ -292,19 +237,40 @@ fn supervise(arguments: &[OsString]) -> Result<()> {
     ] {
         signal_hook::flag::register(signal, Arc::clone(&stopping))?;
     }
-    // The supervisor alone owns the directory, agent, and SSH child. Their drop
-    // order stops SSH and the agent before removing the private runtime files.
+    let disconnected = Arc::clone(&stopping);
+    thread::spawn(move || {
+        // The parent sends no data. EOF/error means its lifetime has ended.
+        let _ = control.read(&mut [0]);
+        disconnected.store(true, Ordering::Relaxed);
+    });
+    let deadline = Instant::now() + Duration::from_secs(1200);
+    let source = source_socket()?;
+    let Credential { public, private } = prepare(config, &source)?;
+    if stopping.load(Ordering::Relaxed) {
+        return Err("publication caller disconnected".into());
+    }
+    // All credential work and children live here. Drop SSH and the agent before
+    // the directory; neither private keys nor derived secrets are written to it.
     let directory = tempfile::Builder::new()
         .prefix("git-forward-")
         .tempdir_in("/tmp")?;
+    let public_files = public
+        .into_iter()
+        .enumerate()
+        .map(|(index, mut key)| {
+            key.set_comment("");
+            let path = directory.path().join(format!("identity-{index}.pub"));
+            fs::write(&path, key.to_openssh()? + "\n")?;
+            Ok(path)
+        })
+        .collect::<Result<Vec<_>>>()?;
     let mut agent = None;
-    let socket = if agent_executable.is_empty() {
-        PathBuf::from(source_socket)
-    } else {
+    let socket = if let Some(private) = private {
         let socket = directory.path().join("agent");
         let mut child = Process(
-            tools
-                .command(agent_executable, None)
+            config
+                .tools
+                .command(config.tools.agent, None)
                 .args(["-D", "-a"])
                 .arg(&socket)
                 .args(["-t", "60"])
@@ -313,33 +279,33 @@ fn supervise(arguments: &[OsString]) -> Result<()> {
                 .stderr(Stdio::null())
                 .spawn()?,
         );
-        let deadline = Instant::now() + Duration::from_secs(5);
-        while !socket.exists() {
+        let startup_deadline = Instant::now() + Duration::from_secs(5);
+        while wrapping::connect(&socket).is_err() {
             if child.0.try_wait()?.is_some()
                 || stopping.load(Ordering::Relaxed)
-                || Instant::now() >= deadline
+                || Instant::now() >= startup_deadline
             {
                 return Err("isolated publication agent failed to start".into());
             }
             thread::sleep(Duration::from_millis(10));
         }
+        wrapping::connect(&socket)?
+            .add_identity(&private)
+            .map_err(|_| "cannot load isolated publication identity")?;
         agent = Some(child);
         socket
+    } else {
+        source
     };
-    writeln!(control, "{}", socket.display())?;
-    let (sender, receiver) = mpsc::channel();
-    thread::spawn(move || {
-        let mut input = BufReader::new(control);
-        let mut line = String::new();
-        if input.read_line(&mut line).is_ok() && line == "start\n" {
-            let _ = sender.send(true);
-            line.clear();
-            let _ = input.read_line(&mut line);
-        }
-        let _ = sender.send(false);
-    });
-    let mut outbound = None;
-    let deadline = Instant::now() + Duration::from_secs(1200);
+    if stopping.load(Ordering::Relaxed) {
+        return Err("publication caller disconnected".into());
+    }
+    let mut outbound = Process(
+        config
+            .tools
+            .ssh(&socket, &public_files, config.destination)
+            .spawn()?,
+    );
     loop {
         if stopping.load(Ordering::Relaxed) || Instant::now() >= deadline {
             return Err("publication session interrupted or timed out".into());
@@ -349,26 +315,14 @@ fn supervise(arguments: &[OsString]) -> Result<()> {
         {
             return Err("publication agent exited unexpectedly".into());
         }
-        if let Some(Process(child)) = &mut outbound
-            && let Some(status) = child.try_wait()?
-        {
+        if let Some(status) = outbound.0.try_wait()? {
             return if status.success() {
                 Ok(())
             } else {
                 Err("onward SSH operation failed".into())
             };
         }
-        match receiver.recv_timeout(Duration::from_millis(50)) {
-            Ok(true) if outbound.is_none() => {
-                outbound = Some(Process(
-                    tools.ssh(&socket, Path::new(public), destination).spawn()?,
-                ));
-            }
-            Ok(_) | Err(mpsc::RecvTimeoutError::Disconnected) => {
-                return Err("publication caller disconnected".into());
-            }
-            Err(mpsc::RecvTimeoutError::Timeout) => {}
-        }
+        thread::sleep(Duration::from_millis(50));
     }
 }
 
@@ -405,59 +359,31 @@ fn validate_destination(mut arguments: &[OsString]) -> Result<()> {
 }
 
 pub fn run(arguments: &[OsString]) -> Result<()> {
+    let config = Config::parse(arguments)?;
     if arguments
         .first()
         .is_some_and(|value| value == "transport-supervisor")
     {
-        return supervise(arguments);
+        return supervise(&config);
     }
-    let config = Config::parse(arguments)?;
-    let socket = env::var_os("SSH_AUTH_SOCK")
-        .filter(|value| !value.is_empty())
-        .ok_or("onward publication requires a forwarded SSH agent")?;
-    let socket = Path::new(&socket);
-    let mut client = wrapping::connect(socket)?;
-    let offered = client
-        .list_all_identities()
-        .map_err(|_| "cannot list forwarded SSH identities")?;
-    let mut matches = config.identities.iter().filter(|identity| offered.iter().any(|offered|
-        matches!(offered, ssh_agent_client_rs::Identity::PublicKey(key) if key.key_data() == identity.source.key_data())
-    ));
-    let identity = matches
-        .next()
-        .ok_or("forwarded agent must offer exactly one configured identity")?;
-    if matches.next().is_some() {
-        return Err("forwarded agent must offer exactly one configured identity".into());
+    let source = source_socket()?;
+    let (control, inherited) = UnixStream::pair()?;
+    let mut command = config
+        .tools
+        .command(env::current_exe()?.as_os_str(), Some(&source));
+    command
+        .arg("transport-supervisor")
+        .args(&arguments[1..])
+        .process_group(0);
+    inherit_control(&mut command, &inherited);
+    let process = Process(command.spawn()?);
+    drop(inherited);
+    let mut supervisor = Supervisor {
+        process,
+        control: Some(control),
+    };
+    if !wait(&mut supervisor.process.0, 1205)?.success() {
+        return Err("onward SSH authentication or Git operation failed".into());
     }
-    match &identity.credential {
-        Credential::Direct => Session::new(&config, socket, identity.source_file, false)?.run(),
-        Credential::Wrapped {
-            ciphertext,
-            metadata,
-            publication,
-        } => {
-            let metadata = wrapping::Metadata::parse(&fs::read_to_string(metadata)?)?;
-            let ciphertext = fs::read(ciphertext)?;
-            if ciphertext.len() > 1024 * 1024 + 4096 {
-                return Err("wrapped credential exceeds size limit".into());
-            }
-            let plaintext =
-                wrapping::decrypt(&metadata, &mut client, &identity.source, &ciphertext)?;
-            let private = PrivateKey::from_openssh(&*plaintext)
-                .map_err(|_| "unwrapped credential is not an unencrypted OpenSSH private key")?;
-            drop(plaintext);
-            let expected = wrapping::read_public(publication)?;
-            if private.is_encrypted() || private.public_key().key_data() != expected.key_data() {
-                return Err(
-                    "unwrapped publication key does not match configured public key".into(),
-                );
-            }
-            let session = Session::new(&config, socket, publication, true)?;
-            wrapping::connect(&session.socket)?
-                .add_identity(&private)
-                .map_err(|_| "cannot load isolated publication identity")?;
-            drop(private);
-            session.run()
-        }
-    }
+    Ok(())
 }

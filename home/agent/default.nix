@@ -160,13 +160,12 @@ in {
           commit.gpgSign = mkOverride 60 false;
           tag.gpgSign = mkOverride 60 false;
           push.gpgSign = mkOverride 60 false;
-          # Ordinary Git uses this file only. git send supplies a temporary agent
-          # containing the same key so its receiving connection can forward it.
+          # Only this identity, from the selected agent or its private key file.
           core.sshCommand = mkIf (cfg.sshKey != null) (concatStringsSep " " [
             "${pkgs.openssh}/bin/ssh"
             "-i ${cfg.sshKey}"
             "-o IdentitiesOnly=yes"
-            "-o IdentityAgent=\"\${GIT_SEND_AGENT_SOCKET:-none}\""
+            "-o IdentityAgent=SSH_AUTH_SOCK"
             "-o ${escapeShellArg "UserKnownHostsFile=~/.ssh/known_hosts ${knownHostsFile}"}"
             "-o StrictHostKeyChecking=accept-new"
           ]);

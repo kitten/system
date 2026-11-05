@@ -419,13 +419,14 @@ fn run() -> Result<()> {
         .is_some_and(|value| value == "--help" || value == "-h" || value == "help")
     {
         println!(
-            "Usage: git-ssh-access <command> source.pub identity.txt\n\n  wrap-keygen     Create public wrapping metadata; print the age recipient\n  wrap-recipient  Reproduce the public age recipient\n  wrap            Wrap an unencrypted OpenSSH private key from stdin to stdout\n  unwrap          Unwrap a credential from stdin to stdout\n\nThese commands require the source identity through SSH_AUTH_SOCK.\nGit transport and forced-command modes are configured by the Nix module."
+            "Usage:\n  git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key\n  git-ssh-access unwrap < wrapped-key\n\nThe source identity must be available through SSH_AUTH_SOCK.\nWithout -i, wrap requires exactly one supported Ed25519 identity in the agent.\nGit transport and forced-command modes are configured by the Nix module."
         );
         return Ok(());
     }
-    if arguments.first().is_some_and(|value| {
-        value == "wrap-keygen" || value == "wrap-recipient" || value == "wrap" || value == "unwrap"
-    }) {
+    if arguments
+        .first()
+        .is_some_and(|value| value == "wrap" || value == "unwrap")
+    {
         return wrapping::run(&arguments);
     }
     if arguments

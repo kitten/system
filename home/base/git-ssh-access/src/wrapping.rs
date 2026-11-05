@@ -12,15 +12,18 @@ use signature::Verifier;
 use ssh_agent_client_rs::Client;
 use ssh_key::PublicKey;
 use std::ffi::OsString;
-use std::fs::{self, OpenOptions};
+use std::fs;
 use std::io::{Read, Write};
-use std::os::unix::{fs::OpenOptionsExt, net::UnixStream};
+use std::os::unix::net::UnixStream;
 use std::path::Path;
 use std::time::Duration;
 use zeroize::Zeroizing;
 
 const IDENTITY_HRP: &str = "age-plugin-sshagent-";
-const MAX_KEY_SIZE: u64 = 1024 * 1024;
+pub const MAX_KEY_SIZE: usize = 1024 * 1024;
+const MAX_CIPHERTEXT_SIZE: usize = MAX_KEY_SIZE + 4096;
+const MAX_BUNDLE_SIZE: usize = MAX_CIPHERTEXT_SIZE + 512;
+const BUNDLE_HEADER: &[u8] = b"git-ssh-access wrapped-key v1\n";
 
 pub struct Metadata {
     fingerprint: [u8; 32],
@@ -75,6 +78,10 @@ impl Metadata {
             Hrp::parse(IDENTITY_HRP)?,
             &payload,
         )?)
+    }
+
+    pub fn matches(&self, public: &PublicKey) -> Result<bool> {
+        Ok(self.fingerprint == fingerprint(public)?)
     }
 
     pub fn derive(&self, client: &mut Client, public: &PublicKey) -> Result<age::x25519::Identity> {
@@ -140,66 +147,150 @@ pub fn decrypt(
     // failure cannot result in loading a partially verified credential.
     let mut plaintext = Zeroizing::new(Vec::new());
     (&mut reader)
-        .take(MAX_KEY_SIZE + 1)
+        .take(MAX_KEY_SIZE as u64 + 1)
         .read_to_end(&mut plaintext)
         .map_err(|_| "wrapped credential authentication failed")?;
-    if plaintext.len() as u64 > MAX_KEY_SIZE {
+    if plaintext.len() > MAX_KEY_SIZE {
         return Err("wrapped credential exceeds size limit".into());
     }
     Ok(plaintext)
 }
 
-pub fn run(arguments: &[OsString]) -> Result<()> {
-    if arguments.len() != 3 {
-        return Err("Usage: git-ssh-access {wrap-keygen|wrap-recipient|wrap|unwrap} source.pub identity.txt; wrap/unwrap read stdin and write stdout".into());
-    }
-    let public = read_public(Path::new(&arguments[1]))?;
-    let socket = std::env::var_os("SSH_AUTH_SOCK").ok_or("SSH_AUTH_SOCK is required")?;
-    let mut client = connect(Path::new(&socket))?;
-    let path = Path::new(&arguments[2]);
-    if arguments[0] == "wrap-keygen" {
-        let metadata = Metadata::generate(&public)?;
-        let first = metadata.derive(&mut client, &public)?.to_public();
-        let second = metadata.derive(&mut client, &public)?.to_public();
-        if first != second {
-            return Err("source agent did not produce deterministic signatures".into());
-        }
-        let mut output = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .mode(0o600)
-            .open(path)?;
-        writeln!(output, "# public key: {first}\n{}", metadata.encode()?)?;
-        println!("{first}");
-        return Ok(());
-    }
-    let metadata = Metadata::parse(&fs::read_to_string(path)?)?;
-    if arguments[0] == "wrap-recipient" {
-        println!("{}", metadata.derive(&mut client, &public)?.to_public());
-        return Ok(());
-    }
-    let mut input = Zeroizing::new(Vec::new());
-    std::io::stdin()
-        .take(MAX_KEY_SIZE + 4096)
-        .read_to_end(&mut input)?;
-    if input.len() as u64 >= MAX_KEY_SIZE + 4096 {
+/// The bundle stores only public derivation metadata and encrypted key bytes.
+/// The inner age ciphertext and derivation remain reference-plugin compatible.
+pub struct Bundle {
+    pub metadata: Metadata,
+    pub ciphertext: Vec<u8>,
+}
+
+pub fn read_bounded(reader: impl Read, limit: usize) -> Result<Zeroizing<Vec<u8>>> {
+    let mut bytes = Zeroizing::new(Vec::new());
+    reader.take(limit as u64 + 1).read_to_end(&mut bytes)?;
+    if bytes.len() > limit {
         return Err("input exceeds credential size limit".into());
     }
-    if arguments[0] == "wrap" {
-        let identity = metadata.derive(&mut client, &public)?;
-        // Reject invalid/encrypted SSH keys before producing a provisioning file.
-        let private = ssh_key::PrivateKey::from_openssh(&*input)
-            .map_err(|_| "input must be an unencrypted OpenSSH private key")?;
-        if private.is_encrypted() {
-            return Err("input must be an unencrypted OpenSSH private key".into());
+    Ok(bytes)
+}
+
+pub fn parse_private(plaintext: &[u8]) -> Result<ssh_key::PrivateKey> {
+    let key = ssh_key::PrivateKey::from_openssh(plaintext)
+        .map_err(|_| "credential must be an unencrypted OpenSSH private key")?;
+    if key.is_encrypted() {
+        return Err("credential must be an unencrypted OpenSSH private key".into());
+    }
+    Ok(key)
+}
+
+impl Bundle {
+    pub fn wrap(client: &mut Client, source: &PublicKey, plaintext: &[u8]) -> Result<Self> {
+        if plaintext.len() > MAX_KEY_SIZE {
+            return Err("input exceeds credential size limit".into());
         }
-        let ciphertext = age::encrypt(&identity.to_public(), &input)?;
-        std::io::stdout().write_all(&ciphertext)?;
-    } else if arguments[0] == "unwrap" {
-        let plaintext = decrypt(&metadata, &mut client, &public, &input)?;
-        std::io::stdout().write_all(&plaintext)?;
-    } else {
-        return Err("unknown wrapping command".into());
+        drop(parse_private(plaintext)?);
+        let metadata = Metadata::generate(source)?;
+        let identity = metadata.derive(client, source)?;
+        if identity.to_public() != metadata.derive(client, source)?.to_public() {
+            return Err("source agent did not produce deterministic signatures".into());
+        }
+        Ok(Self {
+            metadata,
+            ciphertext: age::encrypt(&identity.to_public(), plaintext)?,
+        })
+    }
+
+    pub fn read(reader: impl Read) -> Result<Self> {
+        let bytes = read_bounded(reader, MAX_BUNDLE_SIZE)?;
+        let payload = bytes
+            .strip_prefix(BUNDLE_HEADER)
+            .ok_or("unsupported wrapped-key bundle format or version")?;
+        let newline = payload
+            .iter()
+            .position(|byte| *byte == b'\n')
+            .filter(|position| *position <= 256)
+            .ok_or("missing wrapped-key derivation metadata")?;
+        let metadata = Metadata::parse(std::str::from_utf8(&payload[..newline])?)?;
+        let ciphertext = &payload[newline + 1..];
+        if ciphertext.is_empty() || ciphertext.len() > MAX_CIPHERTEXT_SIZE {
+            return Err("invalid wrapped-key ciphertext size".into());
+        }
+        Ok(Self {
+            metadata,
+            ciphertext: ciphertext.to_vec(),
+        })
+    }
+
+    pub fn write(&self, mut output: impl Write) -> Result<()> {
+        if self.ciphertext.is_empty() || self.ciphertext.len() > MAX_CIPHERTEXT_SIZE {
+            return Err("invalid wrapped-key ciphertext size".into());
+        }
+        output.write_all(BUNDLE_HEADER)?;
+        writeln!(output, "{}", self.metadata.encode()?)?;
+        output.write_all(&self.ciphertext)?;
+        Ok(())
+    }
+
+    pub fn unlock(&self, client: &mut Client) -> Result<Zeroizing<Vec<u8>>> {
+        let mut source = None;
+        for identity in client
+            .list_all_identities()
+            .map_err(|_| "cannot list forwarded SSH identities")?
+        {
+            if let ssh_agent_client_rs::Identity::PublicKey(public) = identity
+                && self.metadata.matches(&public)?
+            {
+                if source.is_some() {
+                    return Err("forwarded agent offered duplicate source identities".into());
+                }
+                source = Some(public.into_owned());
+            }
+        }
+        let source =
+            source.ok_or("approved source identity is not available in the forwarded agent")?;
+        decrypt(&self.metadata, client, &source, &self.ciphertext)
+    }
+}
+
+fn source_identity(client: &mut Client) -> Result<PublicKey> {
+    let mut source = None;
+    for identity in client
+        .list_all_identities()
+        .map_err(|_| "cannot list SSH agent identities")?
+    {
+        if let ssh_agent_client_rs::Identity::PublicKey(public) = identity
+            && require_ed25519(&public).is_ok()
+        {
+            if source.is_some() {
+                return Err(
+                    "multiple supported SSH agent identities; select one with -i public-key-file"
+                        .into(),
+                );
+            }
+            source = Some(public.into_owned());
+        }
+    }
+    source.ok_or_else(|| "no supported Ed25519 identity is available in the SSH agent".into())
+}
+
+pub fn run(arguments: &[OsString]) -> Result<()> {
+    let socket = std::env::var_os("SSH_AUTH_SOCK").ok_or("SSH_AUTH_SOCK is required")?;
+    let mut client = connect(Path::new(&socket))?;
+    match arguments {
+        [command, options @ ..] if command == "wrap" => {
+            let source = match options {
+                [] => source_identity(&mut client)?,
+                [flag, path] if flag == "-i" => read_public(Path::new(path))?,
+                _ => return Err("Usage: git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key".into()),
+            };
+            let plaintext = read_bounded(std::io::stdin(), MAX_KEY_SIZE)?;
+            Bundle::wrap(&mut client, &source, &plaintext)?.write(std::io::stdout())?;
+        }
+        [command] if command == "unwrap" => {
+            let bundle = Bundle::read(std::io::stdin())?;
+            let plaintext = bundle.unlock(&mut client)?;
+            drop(parse_private(&plaintext)?);
+            std::io::stdout().write_all(&plaintext)?;
+        }
+        _ => return Err("Usage: git-ssh-access wrap [-i public-key-file] < private-key > wrapped-key; git-ssh-access unwrap < wrapped-key".into()),
     }
     Ok(())
 }
