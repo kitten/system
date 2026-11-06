@@ -93,7 +93,8 @@ in {
     home.packages = with pkgs; [ git-crypt ];
 
     home.activation.gitDirectory = hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
-      run mkdir -p -m 0755 -- ${escapeShellArg cfg.directory}
+      run mkdir -p -m 0700 -- ${escapeShellArg cfg.directory}
+      run chmod 0700 -- ${escapeShellArg cfg.directory}
     '';
 
     programs.git = {

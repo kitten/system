@@ -20,6 +20,17 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.activation.xdgDirectories = hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+      (concatMapStringsSep "\n" (directory: ''
+        run mkdir -p -m 0700 -- ${escapeShellArg directory}
+        run chmod 0700 -- ${escapeShellArg directory}
+      '') (unique [
+        config.xdg.configHome
+        config.xdg.dataHome
+        config.xdg.stateHome
+        config.xdg.cacheHome
+      ]));
+
     xdg = {
       enable = true;
       userDirs = {
