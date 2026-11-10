@@ -32,16 +32,16 @@ let
     makeWrapper ${cfg.package}/bin/t3 $out/bin/t3 ${escapeShellArgs wrapperArgs}
   '';
 
-  # nixpkgs' "T3 Code (Alpha).app" runs the *unwrapped* t3code-desktop; point
-  # the bundle at the wrapped binary instead.
+  # Route Finder launches through the environment wrapper too.
   desktopPackage = pkgs.symlinkJoin {
-    name = "t3code-desktop-${cfg.package.version or "unknown"}";
-    paths = [ cfg.package ];
+    name = "t3code-desktop-${cfg.desktop.package.version or "unknown"}";
+    paths = [ cfg.desktop.package ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       for program in t3 t3code-desktop; do
+        [ -e "$out/bin/$program" ] || continue
         rm "$out/bin/$program"
-        makeWrapper ${cfg.package}/bin/$program "$out/bin/$program" ${escapeShellArgs wrapperArgs}
+        makeWrapper ${cfg.desktop.package}/bin/$program "$out/bin/$program" ${escapeShellArgs wrapperArgs}
       done
     '' + optionalString pkgs.stdenv.hostPlatform.isDarwin ''
       for exe in "$out"/Applications/*.app/Contents/MacOS/*; do
@@ -49,7 +49,7 @@ let
         ln -s "$out/bin/t3code-desktop" "$exe"
       done
     '';
-    meta = (cfg.package.meta or { }) // { mainProgram = "t3code-desktop"; };
+    meta = (cfg.desktop.package.meta or { }) // { mainProgram = "t3code-desktop"; };
   };
 in {
   options.modules.development.t3code = {
@@ -78,7 +78,7 @@ in {
     enable = mkOption {
       default = false;
       example = true;
-      description = "Whether to install the T3 Code CLI and optional desktop app.";
+      description = "Whether to install T3 Code.";
       type = types.bool;
     };
 
@@ -89,7 +89,7 @@ in {
         enableGit = false;
       };
       defaultText = literalExpression "pkgs.t3code.override { enableCodex = false; enableGitHub = false; enableGit = false; }";
-      description = "T3 Code package (bin/t3, bin/t3code-desktop, and the macOS app bundle).";
+      description = "T3 Code CLI/server package providing bin/t3, independent of the desktop package.";
       type = types.package;
     };
 
@@ -100,12 +100,26 @@ in {
       type = types.bool;
     };
 
+    cli.enable = mkOption {
+      default = !cfg.desktop.enable;
+      defaultText = literalExpression "!config.modules.development.t3code.desktop.enable";
+      description = "Whether to install the standalone t3 CLI. Defaults to enabled only without the desktop app.";
+      type = types.bool;
+    };
+
     desktop = {
+      package = mkOption {
+        default = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.t3code-desktop-bin else cfg.package;
+        defaultText = literalExpression "if pkgs.stdenv.hostPlatform.isDarwin then pkgs.t3code-desktop-bin else config.modules.development.t3code.package";
+        description = "Desktop package providing bin/t3code-desktop and, on macOS, an app bundle.";
+        type = types.package;
+      };
+
       enable = mkOption {
         default = true;
         example = false;
         description = ''
-          Whether to install the desktop app alongside the `t3` CLI. The app runs
+          Whether to install the desktop app. The app runs
           its own local server as this user; remote servers are paired in the app.
         '';
         type = types.bool;
@@ -123,7 +137,7 @@ in {
       removeAgentCreditsOnMerge = mkDefault true;
       pullRequestMergeMethod = mkDefault "squash";
     };
-    home.packages = [ (if cfg.desktop.enable then desktopPackage else cliPackage) ];
+    home.packages = optional cfg.desktop.enable desktopPackage ++ optional cfg.cli.enable cliPackage;
     home.activation.t3codeSettings = mkIf (cfg.settings != { }) (hm.dag.entryAfter [ "writeBoundary" ] ''
       run ${configureSettings}
     '');

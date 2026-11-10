@@ -1,4 +1,5 @@
 self: super: {
+  t3code-desktop-bin = self.callPackage ./t3code-desktop-bin.nix { };
   git-ssh-access = self.callPackage ./git-ssh-access { };
   sf-pro = import ./sf-pro.nix super;
   sf-mono = import ./sf-mono.nix super;
