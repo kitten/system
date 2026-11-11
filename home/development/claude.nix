@@ -22,6 +22,13 @@ in {
       type = types.package;
     };
 
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ pkgs.linn ];
+      defaultText = literalExpression "[ pkgs.linn ]";
+      description = "Packages added to Claude Code's PATH.";
+    };
+
     settings = mkOption {
       type = json.type;
       default = { };
@@ -32,7 +39,10 @@ in {
   config = mkIf cfg.claude.enable {
     programs.claude-code = {
       enable = true;
-      package = auth.wrap cfg.claude.package (auth.runtimeFiles "${config.home.username}-claude" cfg.claude.environmentFile osConfig.age.secrets) [ "claude" ];
+      package = auth.wrapWithArgs cfg.claude.package (
+        [ "--prefix" "PATH" ":" (makeBinPath cfg.claude.extraPackages) ]
+        ++ auth.wrapperArgs (auth.runtimeFiles "${config.home.username}-claude" cfg.claude.environmentFile osConfig.age.secrets)
+      ) [ "claude" ];
       context = mkIf cfg.instructions.enable (mkBefore "@${config.modules.git.directory}/AGENTS.md\n");
       settings = recursiveUpdate {
         env = {
@@ -40,8 +50,10 @@ in {
           DISABLE_FEEDBACK_COMMAND = "1";
           DISABLE_ERROR_REPORTING = "1";
           CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING = "1";
+          CLAUDE_CODE_DISABLE_AUTO_MEMORY = "1";
         };
         autoUpdates = false;
+        autoMemoryEnabled = false;
         attribution = { commit = ""; pr = ""; };
         spinnerTipsEnabled = false;
         awaySummaryEnabled = false;
