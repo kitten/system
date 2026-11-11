@@ -23,12 +23,15 @@ rec {
   ]) environmentFiles;
 
   wrap = package: environmentFiles: binaries:
-    if environmentFiles == [ ] then package else pkgs.symlinkJoin {
+    wrapWithArgs package (wrapperArgs environmentFiles) binaries;
+
+  wrapWithArgs = package: args: binaries:
+    if args == [ ] then package else pkgs.symlinkJoin {
       name = "${package.name}-with-env";
       paths = [ package ];
       nativeBuildInputs = [ pkgs.makeWrapper ];
       postBuild = lib.concatMapStringsSep "\n" (binary: ''
-        wrapProgram "$out/bin/${binary}" ${lib.escapeShellArgs (wrapperArgs environmentFiles)}
+        wrapProgram "$out/bin/${binary}" ${lib.escapeShellArgs args}
       '') binaries;
       meta = package.meta or { };
     } // lib.optionalAttrs (package ? version) { inherit (package) version; };

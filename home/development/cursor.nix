@@ -13,7 +13,10 @@ let
     };
   } cfg.settings;
   envFiles = auth.runtimeFiles "${config.home.username}-cursor" cfg.environmentFile osConfig.age.secrets;
-  wrapperArgs = [ "--set-default" "CURSOR_CONFIG_DIR" cfg.configDir ] ++ auth.wrapperArgs envFiles;
+  wrapperArgs = [
+    "--set-default" "CURSOR_CONFIG_DIR" cfg.configDir
+    "--prefix" "PATH" ":" (makeBinPath cfg.extraPackages)
+  ] ++ auth.wrapperArgs envFiles;
   package = pkgs.symlinkJoin {
     name = "${cfg.package.name}-configured";
     paths = [ cfg.package ];
@@ -27,6 +30,12 @@ in {
   options.modules.development.cursor = {
     enable = mkEnableOption "the cursor CLI";
     package = mkPackageOption pkgs "cursor-cli" { };
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ pkgs.linn ];
+      defaultText = literalExpression "[ pkgs.linn ]";
+      description = "Packages added to Cursor CLI's PATH.";
+    };
     environmentFile = auth.environmentFileOptions ./encrypt/cursor.env.age;
     configDir = mkOption {
       type = types.strMatching "/[^\n]+";

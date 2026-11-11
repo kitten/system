@@ -6,6 +6,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    linn = {
+      url = "github:kitten/linn/v0.1.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -88,6 +93,7 @@
     overlays = [
       self.overlays.default
       self.overlays.lix
+      inputs.linn.overlays.default
       inputs.android-sdk.overlays.default
       (self: super: {
         zen-browser = inputs.zen-browser.packages.${self.system}.beta;

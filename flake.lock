@@ -453,6 +453,27 @@
         "type": "github"
       }
     },
+    "linn": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794430309,
+        "narHash": "sha256-bg0cv4Z8ZI1LYitIolfn/e5wyNyGT2nJlf5b1myzzMU=",
+        "owner": "kitten",
+        "repo": "linn",
+        "rev": "f2250acf77d1d5a80da9c9e59dc28d6223616341",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kitten",
+        "ref": "v0.1.0",
+        "repo": "linn",
+        "type": "github"
+      }
+    },
     "lucide-src": {
       "flake": false,
       "locked": {
@@ -735,6 +756,7 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
+        "linn": "linn",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "pinentry-touchid": "pinentry-touchid",
