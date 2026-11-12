@@ -240,6 +240,7 @@ in {
   };
 
   config = mkIf cfg.enable ({
+    home.packages = [ pkgs.linn ];
     modules.git.sshAccess = {
       enable = mkDefault true;
       authorizedKeys = cfg.authorizedGitKeys;
