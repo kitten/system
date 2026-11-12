@@ -460,16 +460,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1794430309,
-        "narHash": "sha256-bg0cv4Z8ZI1LYitIolfn/e5wyNyGT2nJlf5b1myzzMU=",
+        "lastModified": 1794447890,
+        "narHash": "sha256-BO8kkLnJiMuGTRFvdgxgRaicsDni2Pv+8tlpaC4zFVg=",
         "owner": "kitten",
         "repo": "linn",
-        "rev": "f2250acf77d1d5a80da9c9e59dc28d6223616341",
+        "rev": "29aa52aa039240e6208f84909a5f034250665d30",
         "type": "github"
       },
       "original": {
         "owner": "kitten",
-        "ref": "v0.1.0",
+        "ref": "v0.1.1",
         "repo": "linn",
         "type": "github"
       }
