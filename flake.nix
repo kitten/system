@@ -7,7 +7,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     linn = {
-      url = "github:kitten/linn/v0.1.1";
+      url = "github:kitten/linn/v0.1.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
