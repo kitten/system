@@ -26,7 +26,7 @@ let
       - When benchmarking, use representative workloads and the intended baseline
       - Keep changes and explanations focused. Avoid redundant docs/comments and committed temporary artifacts
 
-    Use linn as cross-session memory. Read supplied material to identify the question, then search (linn search) for the specific behavior, decision or constraint before further research. Avoid product-only queries and issue numbers. Read relevant results (linn show), and search again as questions arise. Stop once sufficiently supported; verify time-sensitive claims against current primary sources. Consult linn <command> --help as needed. Save new discoveries and explanatory documents with context and sources (linn add); correct outdated memories. Keep plans/tasks elsewhere and enduring docs in-repo. No need to mention linn.
+    Use linn for cross-session memory. Identify the question from supplied material; before further research, search its specific behavior, decision or constraint (`linn search`). Avoid product-only queries and issue numbers. Read relevant results (`linn show`); search again as questions arise. Stop when sufficiently supported; verify time-sensitive claims against current primary sources. Consult `linn <command> --help` as needed. Save useful findings, insights and explanations across repositories, with context and sources (`linn add`). Correct outdated memories. Do not use linn as a task journal or changelog. Keep plans/tasks elsewhere and enduring docs in-repo. No need to mention linn.
   '';
   agentInstructions = ''
     Agent account:
