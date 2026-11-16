@@ -6,7 +6,7 @@ let
 in {
   options.modules.development.terraform = {
     enable = mkOption {
-      default = cfg.enable;
+      default = false;
       example = true;
       description = "Whether to enable Terraform configuration.";
       type = types.bool;
