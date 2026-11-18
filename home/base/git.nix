@@ -58,7 +58,7 @@ let
     };
   };
 in {
-  imports = [ ./git-ssh-access.nix ];
+  imports = [ ./git-porter.nix ];
 
   options.modules.git = {
     enable = mkOption {

@@ -6,6 +6,14 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    git-porter = {
+      url = "github:kitten/git-porter/main";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
+
     linn = {
       url = "github:kitten/linn/v0.2.5";
       inputs.nixpkgs.follows = "nixpkgs";

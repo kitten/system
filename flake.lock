@@ -262,6 +262,30 @@
         "type": "github"
       }
     },
+    "git-porter": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1795044957,
+        "narHash": "sha256-B8mKLG49Zbns7GbfwQlmANGFi9zY/G8W0V3oHLDYzxE=",
+        "owner": "kitten",
+        "repo": "git-porter",
+        "rev": "51299fd11f94e546c83aebb32440cfa4e57afca4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kitten",
+        "ref": "main",
+        "repo": "git-porter",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -754,6 +778,7 @@
         "apple-silicon": "apple-silicon",
         "darwin": "darwin",
         "flake-utils": "flake-utils",
+        "git-porter": "git-porter",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "linn": "linn",

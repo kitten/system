@@ -60,11 +60,8 @@ in {
     services.openssh = {
       enable = true;
     } // helpers.darwinAttrs {
-      extraConfig = renderSettings sshSettings + ''
-        AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys_home
-      '';
+      extraConfig = renderSettings sshSettings;
     } // helpers.linuxAttrs {
-      authorizedKeysFiles = [ "%h/.ssh/authorized_keys_home" ];
       openFirewall = mkDefault true;
       ports = [ 22 ];
       settings = sshSettings // {
