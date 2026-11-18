@@ -19,6 +19,7 @@ in {
     };
 
     programs.git-porter = {
+      enable = lib.mkDefault (config.modules.git.enable && config.modules.development.instructions.enable);
       seedFile = lib.mkIf (!isAgent) ../development/encrypt/git-publication.age;
       sender.destination = "${user}@localhost";
       searchRoot = [ config.modules.git.directory ];
