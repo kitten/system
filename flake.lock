@@ -272,16 +272,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1795044957,
-        "narHash": "sha256-B8mKLG49Zbns7GbfwQlmANGFi9zY/G8W0V3oHLDYzxE=",
+        "lastModified": 1795049406,
+        "narHash": "sha256-8UECpZV++n26NV9FSFuKoMuL2BSqRGlj9H6ZSweXbqA=",
         "owner": "kitten",
         "repo": "git-porter",
-        "rev": "51299fd11f94e546c83aebb32440cfa4e57afca4",
+        "rev": "e0aa2e973a537f8a654c68bd23a8a51cacf3f149",
         "type": "github"
       },
       "original": {
         "owner": "kitten",
-        "ref": "main",
+        "ref": "v0.1.0",
         "repo": "git-porter",
         "type": "github"
       }
@@ -735,15 +735,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1792631796,
-        "narHash": "sha256-OwWlZ11RncCuEjrgLV7SXjT2m0M1c8S2nwmnimy5uuA=",
+        "lastModified": 1795049380,
+        "narHash": "sha256-yg566o5XtGfrYeienG6C2Di7k/1ORgTPzGwQn097Paw=",
         "owner": "kitten",
         "repo": "pinentry-touchid",
-        "rev": "ef65e0d899f48108c60b78c6ba44ac1539397b80",
+        "rev": "4e52e0a40fd9c4dd36dafa566ab2b7af06fff168",
         "type": "github"
       },
       "original": {
         "owner": "kitten",
+        "ref": "v0.1.6",
         "repo": "pinentry-touchid",
         "type": "github"
       }

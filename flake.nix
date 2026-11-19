@@ -7,7 +7,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     git-porter = {
-      url = "github:kitten/git-porter/main";
+      url = "github:kitten/git-porter/v0.1.0";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
@@ -86,7 +86,7 @@
     };
 
     pinentry-touchid = {
-      url = "github:kitten/pinentry-touchid";
+      url = "github:kitten/pinentry-touchid/v0.1.6";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
