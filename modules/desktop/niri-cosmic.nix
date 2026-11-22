@@ -165,7 +165,6 @@ in {
   config = mkIf cfg.niri-cosmic.enable {
     boot = {
       plymouth.enable = true;
-      initrd.verbose = mkDefault false;
       consoleLogLevel = 0;
     };
 
