@@ -4,6 +4,9 @@ with lib;
 let
   cfg = config.modules.fonts;
   fontsPath = if helpers.isDarwin then "${config.home.homeDirectory}/Library/Fonts" else "${config.xdg.dataHome}/fonts";
+  fontTempFiles = mapAttrsToList (_: secret: "${secret.path}.tmp") (
+    filterAttrs (_: secret: secret.enable && !secret.symlink && dirOf secret.path == fontsPath) config.age.secrets
+  );
 in {
   options.modules.fonts = {
     enable = mkOption {
@@ -15,6 +18,17 @@ in {
 
   config = mkIf cfg.enable {
     fonts.fontconfig.enable = true;
+
+    # An interrupted agenix run can leave a read-only temp file that blocks every retry.
+    launchd.agents.activate-agenix.config.ProgramArguments = helpers.mkIfDarwin (mkBefore (optionals (fontTempFiles != [ ]) [
+      "/bin/sh"
+      "-ec"
+      ''
+        /bin/rm -f -- ${escapeShellArgs fontTempFiles}
+        exec "$@"
+      ''
+      "agenix-font-cleanup"
+    ]));
 
     age.secrets."DankMono-Regular.otf" = {
       symlink = false;
