@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   programs.ssh = {
@@ -10,7 +10,7 @@
       HashKnownHosts = false;
       UserKnownHostsFile = "~/.ssh/known_hosts";
       ControlMaster = "auto";
-      ControlPath = "~/.ssh/master-%C";
+      ControlPath = "${config.xdg.cacheHome}/ssh-master-%C";
       ControlPersist = "5m";
 
       Compression = true;

@@ -1,4 +1,4 @@
-{ lib, config, pkgs, helpers, hostname, user, ... }:
+inputs @ { lib, config, pkgs, helpers, hostname, user, ... }:
 
 with lib;
 let
@@ -21,6 +21,7 @@ let
   ]);
 
   shell = "${hm.programs.zsh.package}/bin/zsh";
+  sandbox = import ./sandbox.nix inputs { inherit home; };
 
   withEnv = pkgs.writeShellScript "t3code-env" ''
     set -euo pipefail
@@ -56,11 +57,14 @@ let
     done
     export GITHUB_TOKEN="''${GITHUB_TOKEN:-''${GH_TOKEN:-}}"
 
+    # Seatbelt blocks Codex from obtaining TLS roots through the Keychain.
+    export SSL_CERT_FILE="''${SSL_CERT_FILE:-/private/etc/ssl/cert.pem}"
+
     ${optionalString (cfg.extraPackages != [ ]) ''
       export PATH=${escapeShellArg (makeBinPath cfg.extraPackages)}:"$PATH"
     ''}
 
-    exec "$@"
+    exec ${sandbox} "$@"
   '';
 
   # `t3 serve` prints a one-time admin pairing token, URL and QR code at every
