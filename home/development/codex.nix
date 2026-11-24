@@ -36,8 +36,14 @@ in {
       mutableSettings = true;
       settings = recursiveUpdate {
         check_for_update_on_startup = false;
-        features.memories = false;
-        features.external_agent_memory_import = false;
+        skills.bundled.enabled = false;
+        features = {
+          external_agent_memory_import = false;
+          memories = false;
+          apps = false;
+          plugins = false;
+          remote_plugin = false;
+        };
         memories = {
           generate_memories = false;
           use_memories = false;

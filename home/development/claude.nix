@@ -54,6 +54,10 @@ in {
         };
         autoUpdates = false;
         autoMemoryEnabled = false;
+        disableClaudeAiConnectors = true;
+        syncClaudeAiSkills = false;
+        syncClaudeAiPlugins = false;
+        disableBundledSkills = true;
         attribution = { commit = ""; pr = ""; };
         spinnerTipsEnabled = false;
         awaySummaryEnabled = false;

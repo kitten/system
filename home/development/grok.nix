@@ -8,9 +8,36 @@ let
   toml = pkgs.formats.toml { };
   settings = recursiveUpdate {
     cli.auto_update = false;
+    compat = {
+      claude = {
+        agents = false;
+        hooks = false;
+        mcps = false;
+        rules = false;
+        skills = false;
+        sessions = false;
+      };
+      cursor = {
+        agents = false;
+        hooks = false;
+        mcps = false;
+        rules = false;
+        skills = false;
+        sessions = false;
+      };
+      codex = {
+        agents = false;
+        hooks = false;
+        mcps = false;
+        rules = false;
+        skills = false;
+        sessions = false;
+      };
+    };
     features = {
       telemetry = false;
       feedback = false;
+      subagent_bundle = false;
     };
   } cfg.settings;
 in {
