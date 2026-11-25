@@ -15,7 +15,7 @@
     };
 
     linn = {
-      url = "github:kitten/linn/v0.3.1";
+      url = "github:kitten/linn/v0.4.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
