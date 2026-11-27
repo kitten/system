@@ -3,6 +3,8 @@ inputs:
 
 import ../../../lib/mk-nono-sandbox.nix inputs {
   name = "t3code";
+  # Disable Chromium's inner sandbox under Seatbelt.
+  env.PLAYWRIGHT_MCP_SANDBOX = "false";
   profile = {
     allow_parent_of_protected = true;
     # The default group grants /System/Volumes, including every user's home.
@@ -42,11 +44,16 @@ import ../../../lib/mk-nono-sandbox.nix inputs {
     };
     network.block = false;
     unsafe_macos_seatbelt_rules = [
-      # OpenSSH can create known_hosts on first use and append new host keys.
+      # Browser subprocesses need Mach service registration.
+      ''(allow mach-register (global-name-prefix "org.chromium.Chromium.MachPortRendezvousServer."))''
+      ''(allow mach-register (global-name-prefix "com.google.Chrome.MachPortRendezvousServer."))''
+      ''(allow mach-register (global-name-prefix "com.google.chrome.for.testing.MachPortRendezvousServer."))''
+      ''(allow mach-register (global-name-prefix "org.mozilla.machname."))''
+      # OpenSSH host-key updates.
       ''(allow file-read-data file-write-data file-write-create (literal "${home}/.ssh/known_hosts"))''
       # IOKit access for developer tools and Simulator.
       "(allow iokit-open)"
-      # Expo opens Simulator or DeviceHub and queries its process through System Events.
+      # Expo's Simulator and DeviceHub integration.
       "(allow lsopen)"
       ''(allow appleevent-send (appleevent-destination "com.apple.systemevents"))''
       # macOS's setuid ps cannot inherit Seatbelt; keep this exception path-specific.

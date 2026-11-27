@@ -1,11 +1,13 @@
 { lib, pkgs, ... }:
-{ name, profile }:
+{ name, profile, env ? { } }:
 
 assert lib.assertMsg
   (builtins.isString name && builtins.match "[A-Za-z0-9][A-Za-z0-9._-]*" name != null)
   "mk-nono-sandbox: name must be a nonempty package-safe name";
 assert lib.assertMsg (builtins.isAttrs profile)
   "mk-nono-sandbox: profile must be an attribute set";
+assert lib.assertMsg (builtins.isAttrs env && lib.all builtins.isString (builtins.attrValues env))
+  "mk-nono-sandbox: env must be an attribute set of strings";
 
 let
   generatedProfile = (pkgs.formats.json { }).generate "${name}-nono-unchecked.json"
@@ -29,5 +31,6 @@ pkgs.runCommand "${name}-sandbox" {
   nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
 } ''
   makeBinaryWrapper ${lib.getExe pkgs.nono} "$out" \
+    ${lib.escapeShellArgs (lib.concatLists (lib.mapAttrsToList (name: value: [ "--set-default" name value ]) env))} \
     --add-flags "wrap --silent --profile ${profileFile} --"
 ''
