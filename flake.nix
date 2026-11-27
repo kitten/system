@@ -7,7 +7,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     git-porter = {
-      url = "github:kitten/git-porter/v0.1.3";
+      url = "github:kitten/git-porter/v0.1.4";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
